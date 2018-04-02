@@ -1,12 +1,27 @@
+"""
+stories
+-------
+
+This module implements Business Transaction DSL.
+
+:copyright: (c) 2018 by Artem Malyshev.
+:license: BSD, see LICENSE for more details.
+"""
+
+
 __all__ = ["story", "argument", "Result", "Success", "Failure"]
 
 
 def story(f):
 
-    def wrapper(self, *args):
+    def wrapper(self, *args, **kwargs):
+        assert not (args and kwargs)
         arguments = getattr(f, "arguments", [])
-        assert len(arguments) == len(args)
-        kwargs = {k: v for k, v in zip(arguments, args)}
+        if args:
+            assert len(arguments) == len(args)
+            kwargs = {k: v for k, v in zip(arguments, args)}
+        else:
+            assert set(arguments) == set(kwargs)
         inp = Input(kwargs)
         proxy = Proxy(self, inp)
         f(proxy)

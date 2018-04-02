@@ -41,11 +41,23 @@ class StoryTest(TestCase):
         result = My().x(1, 2)
         self.assertEqual(result, -2)
 
+    def test_success_keywords(self):
+
+        result = My().x(a=1, b=2)
+        self.assertEqual(result, -2)
+
     def test_assertion_error(self):
 
         with self.assertRaises(AssertionError):
             My().x(1)
 
+    def test_assertion_error_keywords(self):
+
+        with self.assertRaises(AssertionError):
+            My().x(1, b=2)
+
+
+# TODO: test My().y() without arguments at all.
 
 if __name__ == "__main__":
     main()
