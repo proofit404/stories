@@ -1,6 +1,6 @@
 from unittest import TestCase, main
 
-from userstories import Failure, Result, Success, argument, story
+from stories import Failure, Result, Success, argument, story
 
 
 class My:

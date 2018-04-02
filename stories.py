@@ -1,3 +1,6 @@
+__all__ = ["story", "argument", "Result", "Success", "Failure"]
+
+
 def story(f):
 
     def wrapper(self, *args):
