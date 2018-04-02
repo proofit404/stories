@@ -19,14 +19,14 @@ class My:
 
     def two(self):
 
-        if self.input.a > 1:
+        if self.ctx.a > 1:
             return Failure()
 
         return Success(c=4)
 
     def three(self):
 
-        return Result(self.input.b - self.input.c)
+        return Result(self.ctx.b - self.ctx.c)
 
 
 class StoryTest(TestCase):

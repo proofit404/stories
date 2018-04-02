@@ -22,8 +22,7 @@ def story(f):
             kwargs = {k: v for k, v in zip(arguments, args)}
         else:
             assert set(arguments) == set(kwargs)
-        inp = Input(kwargs)
-        proxy = Proxy(self, inp)
+        proxy = Proxy(self, Context(kwargs))
         f(proxy)
         return proxy.value
 
@@ -59,7 +58,7 @@ class Failure:
         return self.__class__.__name__
 
 
-class Input:
+class Context:
 
     def __init__(self, ns):
         self.ns = ns
@@ -70,9 +69,9 @@ class Input:
 
 class Proxy:
 
-    def __init__(self, other, inp):
+    def __init__(self, other, ctx):
         self.other = other
-        self.input = inp
+        self.ctx = ctx
 
     def __getattr__(self, name):
         attr = getattr(self.other.__class__, name)
@@ -98,6 +97,6 @@ class MethodWrapper:
             value = self.proxy.value = result.value
             self.proxy.done = True
         else:
-            self.proxy.input.ns.update(result.kwargs)
+            self.proxy.ctx.ns.update(result.kwargs)
             value = self.proxy.value = None
         return value
