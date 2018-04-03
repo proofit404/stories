@@ -1,5 +1,4 @@
-from unittest import TestCase, main
-
+import pytest
 from stories import Failure, Result, Success, argument, story
 
 
@@ -29,35 +28,34 @@ class My:
         return Result(self.ctx.b - self.ctx.c)
 
 
-class StoryTest(TestCase):
+def test_failure():
 
-    def test_failure(self):
+    result = My().x(2, 2)
+    assert isinstance(result, Failure)
 
-        result = My().x(2, 2)
-        self.assertIsInstance(result, Failure)
 
-    def test_success(self):
+def test_success():
 
-        result = My().x(1, 2)
-        self.assertEqual(result, -2)
+    result = My().x(1, 2)
+    assert result == -2
 
-    def test_success_keywords(self):
 
-        result = My().x(a=1, b=2)
-        self.assertEqual(result, -2)
+def test_success_keywords():
 
-    def test_assertion_error(self):
+    result = My().x(a=1, b=2)
+    assert result == -2
 
-        with self.assertRaises(AssertionError):
-            My().x(1)
 
-    def test_assertion_error_keywords(self):
+def test_assertion_error():
 
-        with self.assertRaises(AssertionError):
-            My().x(1, b=2)
+    with pytest.raises(AssertionError):
+        My().x(1)
+
+
+def test_assertion_error_keywords():
+
+    with pytest.raises(AssertionError):
+        My().x(1, b=2)
 
 
 # TODO: test My().y() without arguments at all.
-
-if __name__ == "__main__":
-    main()
