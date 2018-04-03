@@ -69,6 +69,20 @@ class My3:
         return 1
 
 
+class My4:
+    clsattr = 1
+
+    @story
+    def x(self):
+        self.one()
+
+    def one(self):
+        if self.clsattr == 1:
+            return Result(True)
+
+        return Failure()
+
+
 def test_failure():
 
     result = My().x(2, 2)
@@ -121,4 +135,7 @@ def test_assertion_result():
         My3().x()
 
 
-# TODO: test My().y() without arguments at all.
+def test_class_attribute_access():
+
+    result = My4().x()
+    assert result is True

@@ -79,11 +79,11 @@ class Proxy:
 
     def __getattr__(self, name):
         attr = getattr(self.other.__class__, name, undefined)
-        if attr is not undefined:
-            # TODO: Check if this is a method.
-            return MethodWrapper(self, attr)
-
-        return getattr(self.other, name)
+        if attr is undefined:
+            attr = getattr(self.other, name)
+        elif callable(attr):
+            attr = MethodWrapper(self, attr)
+        return attr
 
 
 class MethodWrapper:
