@@ -105,6 +105,7 @@ class MethodWrapper:
             value = self.proxy.value = result.value
             self.proxy.done = True
         else:
+            assert not set(self.proxy.ctx.ns) & set(result.kwargs)
             self.proxy.ctx.ns.update(result.kwargs)
             value = self.proxy.value = None
 

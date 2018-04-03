@@ -47,6 +47,18 @@ class My1:
         return Failure()
 
 
+class My2:
+
+    @story
+    @argument("a")
+    def x(self):
+        self.one()
+
+    def one(self):
+
+        return Success(a=2)
+
+
 def test_failure():
 
     result = My().x(2, 2)
@@ -85,6 +97,12 @@ def test_injectable():
 
     result = My1(f=foo).x(a=1)
     assert result == 2
+
+
+def test_immutable_context():
+
+    with pytest.raises(AssertionError):
+        My2().x(a=1)
 
 
 # TODO: test My().y() without arguments at all.
