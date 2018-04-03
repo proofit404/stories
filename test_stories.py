@@ -59,6 +59,16 @@ class My2:
         return Success(a=2)
 
 
+class My3:
+
+    @story
+    def x(self):
+        self.one()
+
+    def one(self):
+        return 1
+
+
 def test_failure():
 
     result = My().x(2, 2)
@@ -103,6 +113,12 @@ def test_immutable_context():
 
     with pytest.raises(AssertionError):
         My2().x(a=1)
+
+
+def test_assertion_result():
+
+    with pytest.raises(AssertionError):
+        My3().x()
 
 
 # TODO: test My().y() without arguments at all.

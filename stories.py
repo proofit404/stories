@@ -97,11 +97,13 @@ class MethodWrapper:
             return self.proxy.value
 
         result = self.method(self.proxy)
+        restype = type(result)
+        assert restype in (Result, Success, Failure)
 
-        if isinstance(result, Failure):
+        if restype is Failure:
             value = self.proxy.value = result
             self.proxy.done = True
-        elif isinstance(result, Result):
+        elif restype is Result:
             value = self.proxy.value = result.value
             self.proxy.done = True
         else:
