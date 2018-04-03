@@ -28,6 +28,25 @@ class My:
         return Result(self.ctx.b - self.ctx.c)
 
 
+class My1:
+
+    def __init__(self, f):
+
+        self.f = f
+
+    @story
+    @argument("a")
+    def x(self):
+        self.one()
+
+    def one(self):
+
+        if self.f(self.ctx.a):
+            return Result(2)
+
+        return Failure()
+
+
 def test_failure():
 
     result = My().x(2, 2)
@@ -56,6 +75,16 @@ def test_assertion_error_keywords():
 
     with pytest.raises(AssertionError):
         My().x(1, b=2)
+
+
+def test_injectable():
+
+    def foo(arg):
+        assert arg == 1
+        return True
+
+    result = My1(f=foo).x(a=1)
+    assert result == 2
 
 
 # TODO: test My().y() without arguments at all.

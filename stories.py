@@ -12,6 +12,9 @@ This module implements Business Transaction DSL.
 __all__ = ["story", "argument", "Result", "Success", "Failure"]
 
 
+undefined = object()
+
+
 def story(f):
 
     def wrapper(self, *args, **kwargs):
@@ -72,11 +75,15 @@ class Proxy:
     def __init__(self, other, ctx):
         self.other = other
         self.ctx = ctx
+        self.done = False
 
     def __getattr__(self, name):
-        attr = getattr(self.other.__class__, name)
-        # TODO: Check if this is a method.
-        return MethodWrapper(self, attr)
+        attr = getattr(self.other.__class__, name, undefined)
+        if attr is not undefined:
+            # TODO: Check if this is a method.
+            return MethodWrapper(self, attr)
+
+        return getattr(self.other, name)
 
 
 class MethodWrapper:
@@ -86,10 +93,11 @@ class MethodWrapper:
         self.method = method
 
     def __call__(self):
-        if hasattr(self.proxy, "done"):
+        if self.proxy.done:
             return self.proxy.value
 
         result = self.method(self.proxy)
+
         if isinstance(result, Failure):
             value = self.proxy.value = result
             self.proxy.done = True
@@ -99,4 +107,5 @@ class MethodWrapper:
         else:
             self.proxy.ctx.ns.update(result.kwargs)
             value = self.proxy.value = None
+
         return value
