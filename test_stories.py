@@ -83,6 +83,52 @@ class My4:
         return Failure()
 
 
+# Substories.
+#
+# TODO: Test substory attribute access.
+#
+# TODO: Test substory attribute wrapping.
+#
+# TODO: Test all subproxy asserts.
+#
+# TODO: Test subsubstories.
+
+
+class My5:
+
+    @story
+    def x(self):
+        self.one()
+        self.two()
+        self.four()
+
+    @story
+    @argument("a")
+    def y(self):
+        self.three()
+
+    def one(self):
+        return Success(a=1)
+
+    def two(self):
+        return self.y()
+
+    def three(self):
+        if self.ctx.a != 1:
+            return Failure()
+
+        return Success(b=2)
+
+    def four(self):
+        if self.ctx.b != 2:
+            return Failure()
+
+        return Result(True)
+
+
+# Tests.
+
+
 def test_failure():
 
     result = My().x(2, 2)
@@ -138,4 +184,10 @@ def test_assertion_result():
 def test_class_attribute_access():
 
     result = My4().x()
+    assert result is True
+
+
+def test_substory():
+
+    result = My5().x()
     assert result is True
