@@ -99,6 +99,8 @@ class My4:
 # TODO: Test all subproxy asserts.
 #
 # TODO: Test subsubstories.
+#
+# TODO: Test direct substories calls from stories.
 
 
 class My5:
@@ -131,6 +133,21 @@ class My5:
             return Failure()
 
         return Result(True)
+
+
+class My6:
+
+    @story
+    def x(self):
+        self.one()
+
+    @story
+    @argument("a")
+    def y(self):
+        pass
+
+    def one(self):
+        return self.y()
 
 
 # Tests.
@@ -204,3 +221,9 @@ def test_substory():
 
     result = My5().x()
     assert result is True
+
+
+def test_assertion_substory_context():
+
+    with pytest.raises(AssertionError):
+        My6().x()

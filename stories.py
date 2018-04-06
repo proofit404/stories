@@ -43,6 +43,9 @@ def wrap_story(f, obj, args, kwargs):
 
 
 def wrap_substory(f, proxy, args, kwargs):
+    assert not args and not kwargs
+    arguments = getattr(f, "arguments", [])
+    assert set(arguments) <= set(proxy.ctx.ns)
     subproxy = SubProxy(proxy)
     f(subproxy)
     return subproxy.value
