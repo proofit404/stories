@@ -10,6 +10,10 @@ This module implements Business Transaction DSL.
 
 import functools
 
+# TODO: Remove copypasta from code & tests.
+#
+# TODO: Write documentation.
+
 __all__ = ["story", "argument", "Result", "Success", "Failure"]
 
 
@@ -19,8 +23,11 @@ undefined = object()
 def story(f):
 
     def wrapper(self, *args, **kwargs):
-        if type(self) is Proxy:
+        selftype = type(self)
+        if selftype is Proxy:
             value = wrap_substory(f, self, args, kwargs)
+        elif selftype is SubProxy:
+            value = wrap_substory(f, self.proxy, args, kwargs)
         else:
             value = wrap_story(f, self, args, kwargs)
         return value
@@ -146,8 +153,14 @@ class SubProxy:
         self.done = False
 
     def __getattr__(self, name):
-        attr = getattr(self.proxy.other.__class__, name)
-        attr = SubMethodWrapper(self, attr)
+        attr = getattr(self.proxy.other.__class__, name, undefined)
+        if attr is undefined:
+            attr = getattr(self.proxy.other, name)
+        elif callable(attr):
+            if getattr(attr, "is_story", False):
+                attr = functools.partial(attr, self)
+            else:
+                attr = SubMethodWrapper(self, attr)
         return attr
 
 

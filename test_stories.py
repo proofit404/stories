@@ -85,18 +85,6 @@ class My4:
 
 
 # Substories.
-#
-# TODO: Remove copy-past code.
-#
-# TODO: Test substory attribute access.
-#
-# TODO: Test substory attribute wrapping.
-#
-# TODO: Test all subproxy asserts.
-#
-# TODO: Test subsubstories.
-#
-# TODO: Test direct substories calls from stories.
 
 
 class My5:
@@ -169,6 +157,101 @@ class My7:
 
     def three(self):
         raise Exception
+
+
+class My8:
+
+    def __init__(self, f):
+        self.f = f
+
+    @story
+    @argument("a")
+    def x(self):
+        self.one()
+
+    @story
+    def y(self):
+        self.two()
+
+    def one(self):
+        return self.y()
+
+    def two(self):
+        if self.f(self.ctx.a):
+            return Result(2)
+
+        return Failure()
+
+
+class My9:
+    clsattr = 1
+
+    @story
+    def x(self):
+        self.one()
+
+    @story
+    def y(self):
+        self.two()
+
+    def one(self):
+        return self.y()
+
+    def two(self):
+        if self.clsattr == 1:
+            return Result(True)
+
+        return Failure()
+
+
+class My10:
+
+    @story
+    def x(self):
+        self.one()
+        self.five()
+
+    @story
+    def y(self):
+        self.two()
+        self.four()
+
+    @story
+    def z(self):
+        self.three()
+
+    def one(self):
+        return self.y()
+
+    def two(self):
+        return self.z()
+
+    def three(self):
+        return Success(a=1)
+
+    def four(self):
+        return Success(b=self.ctx.a + 1)
+
+    def five(self):
+        return Result(self.ctx.b == 2)
+
+
+class My11:
+
+    @story
+    def x(self):
+        self.y()
+
+    @story
+    def y(self):
+        self.one()
+        self.two()
+
+    def one(self):
+        return Success(a=True)
+
+    def two(self):
+        return Result(self.ctx.a)
 
 
 # Tests.
@@ -259,4 +342,32 @@ def test_failure_substory():
 def test_result_substory():
 
     result = My7().x(2)
+    assert result is True
+
+
+def test_injectable_substory():
+
+    def foo(arg):
+        assert arg == 1
+        return True
+
+    result = My8(f=foo).x(a=1)
+    assert result == 2
+
+
+def test_class_attribute_access_substory():
+
+    result = My9().x()
+    assert result is True
+
+
+def test_substory_for_substory():
+
+    result = My10().x()
+    assert result is True
+
+
+def test_direct_substory():
+
+    result = My11().x()
     assert result is True
