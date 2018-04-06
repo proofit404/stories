@@ -20,25 +20,21 @@ class My:
         self.three()
 
     def one(self):
-
         return Success()
 
     def two(self):
-
         if self.ctx.a > 1:
             return Failure()
 
         return Success(c=4)
 
     def three(self):
-
         return Result(self.ctx.b - self.ctx.c)
 
 
 class My1:
 
     def __init__(self, f):
-
         self.f = f
 
     @story
@@ -47,7 +43,6 @@ class My1:
         self.one()
 
     def one(self):
-
         if self.f(self.ctx.a):
             return Result(2)
 
@@ -62,7 +57,6 @@ class My2:
         self.one()
 
     def one(self):
-
         return Success(a=2)
 
 
@@ -91,6 +85,8 @@ class My4:
 
 
 # Substories.
+#
+# TODO: Remove copy-past code.
 #
 # TODO: Test substory attribute access.
 #
@@ -148,6 +144,31 @@ class My6:
 
     def one(self):
         return self.y()
+
+
+class My7:
+
+    @story
+    @argument("a")
+    def x(self):
+        self.one()
+        self.three()
+
+    @story
+    def y(self):
+        self.two()
+
+    def one(self):
+        return self.y()
+
+    def two(self):
+        if self.ctx.a > 1:
+            return Result(True)
+
+        return Failure()
+
+    def three(self):
+        raise Exception
 
 
 # Tests.
@@ -227,3 +248,15 @@ def test_assertion_substory_context():
 
     with pytest.raises(AssertionError):
         My6().x()
+
+
+def test_failure_substory():
+
+    result = My7().x(1)
+    assert isinstance(result, Failure)
+
+
+def test_result_substory():
+
+    result = My7().x(2)
+    assert result is True
