@@ -2,6 +2,13 @@ import pytest
 from stories import Failure, Result, Success, argument, story
 
 
+class Empty:
+
+    @story
+    def x(self):
+        pass
+
+
 class My:
 
     @story
@@ -127,6 +134,12 @@ class My5:
 
 
 # Tests.
+
+
+def test_empty():
+
+    result = Empty().x()
+    assert result is None
 
 
 def test_failure():

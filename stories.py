@@ -91,6 +91,7 @@ class Proxy:
     def __init__(self, other, ctx):
         self.other = other
         self.ctx = ctx
+        self.value = None
         self.done = False
 
     def __getattr__(self, name):
@@ -139,6 +140,7 @@ class SubProxy:
 
         self.proxy = proxy
         self.ctx = self.proxy.ctx
+        self.value = Success()
         self.done = False
 
     def __getattr__(self, name):
