@@ -107,6 +107,10 @@ class Proxy:
         attr = getattr(self.other.__class__, name, undefined)
         if attr is undefined:
             attr = getattr(self.other, name)
+            if callable(attr) and getattr(attr, "is_story", False):
+                attr = functools.partial(
+                    wrap_substory, attr.__func__, Proxy(attr.__self__, self.ctx), (), {}
+                )
         elif callable(attr):
             if getattr(attr, "is_story", False):
                 attr = functools.partial(attr, self)
@@ -156,6 +160,10 @@ class SubProxy:
         attr = getattr(self.proxy.other.__class__, name, undefined)
         if attr is undefined:
             attr = getattr(self.proxy.other, name)
+            if callable(attr) and getattr(attr, "is_story", False):
+                attr = functools.partial(
+                    wrap_substory, attr.__func__, Proxy(attr.__self__, self.ctx), (), {}
+                )
         elif callable(attr):
             if getattr(attr, "is_story", False):
                 attr = functools.partial(attr, self)

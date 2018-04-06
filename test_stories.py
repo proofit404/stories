@@ -254,6 +254,45 @@ class My11:
         return Result(self.ctx.a)
 
 
+class My12:
+
+    def __init__(self, y):
+        self.y = y
+
+    @story
+    def x(self):
+        self.y()
+        self.three()
+
+    def three(self):
+        return Result(self.ctx.b + 1)
+
+
+class My13:
+
+    def __init__(self, z):
+
+        self.z = z
+
+    @story
+    def y(self):
+        self.z()
+        self.two()
+
+    def two(self):
+        return Success(b=self.ctx.a + 1)
+
+
+class My14:
+
+    @story
+    def z(self):
+        self.one()
+
+    def one(self):
+        return Success(a=1)
+
+
 # Tests.
 
 
@@ -371,3 +410,11 @@ def test_direct_substory():
 
     result = My11().x()
     assert result is True
+
+
+def test_injectable_substory_to_story():
+
+    z = My14().z
+    y = My13(z).y
+    result = My12(y).x()
+    assert result == 3
