@@ -293,6 +293,44 @@ class My14:
         return Success(a=1)
 
 
+class My15:
+
+    def __init__(self, y):
+        self.y = y
+
+    @story
+    def x(self):
+        self.y()
+        self.three()
+
+    def three(self):
+        raise Exception
+
+
+class My16:
+
+    def __init__(self, z):
+        self.z = z
+
+    @story
+    def y(self):
+        self.z()
+        self.two()
+
+    def two(self):
+        raise Exception
+
+
+class My17:
+
+    @story
+    def z(self):
+        self.one()
+
+    def one(self):
+        return Result(3)
+
+
 # Tests.
 
 
@@ -417,4 +455,12 @@ def test_injectable_substory_to_story():
     z = My14().z
     y = My13(z).y
     result = My12(y).x()
+    assert result == 3
+
+
+def test_injectable_substory_to_story_result():
+
+    z = My17().z
+    y = My16(z).y
+    result = My15(y).x()
     assert result == 3

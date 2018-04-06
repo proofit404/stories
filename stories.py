@@ -10,10 +10,6 @@ This module implements Business Transaction DSL.
 
 import functools
 
-# TODO: Remove copypasta from code & tests.
-#
-# TODO: Write documentation.
-
 __all__ = ["story", "argument", "Result", "Success", "Failure"]
 
 
