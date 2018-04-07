@@ -56,7 +56,6 @@ class Skip:
 
 
 undefined = object()
-skip_result = object()
 
 
 def tell_the_story(obj, f, args, kwargs):
@@ -75,7 +74,7 @@ def tell_the_story(obj, f, args, kwargs):
             skip = undefined
 
         result = method(Proxy(self, ctx))
-        if result is skip_result:
+        if result is undefined:
             continue
 
         restype = type(result)
@@ -162,7 +161,7 @@ def collect_substory(story, obj, method_calls):
 
     def validate_substory_arguments(self):
         assert set(arguments) <= set(self.ctx.ns)
-        return skip_result
+        return undefined
 
     method_calls.append((obj, validate_substory_arguments, story.f))
     story.f(Collector(obj, method_calls, story.f))
