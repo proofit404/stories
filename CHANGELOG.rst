@@ -4,6 +4,13 @@
 Changelog
 ---------
 
+0.4.0 (2018-04-07)
+++++++++++++++++++
+
+- Package was rewritten with linearization algorithm.
+- ``Skip`` result was added to finish nested stories without finish
+  the caller.
+
 0.0.3 (2018-04-06)
 ++++++++++++++++++
 
