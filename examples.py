@@ -67,6 +67,16 @@ class SimpleSubstory(Simple):
     def after(self):
         return Result(self.ctx.d * 2)
 
+    @story
+    @argument("a")
+    @argument("b")
+    def z(self):
+        self.first()
+        self.x()
+
+    def first(self):
+        return Skip()
+
 
 # Dependency injection of the substory.
 

@@ -50,6 +50,9 @@ def test_skip():
     result = examples.SubstoryDI(examples.Simple().x).y(-2)
     assert result == -4
 
+    result = examples.SubstoryDI(examples.SimpleSubstory().z).y(2)
+    assert result == 4
+
 
 def test_arguments_validation():
 

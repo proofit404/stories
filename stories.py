@@ -61,17 +61,16 @@ undefined = object()
 def tell_the_story(obj, f, args, kwargs):
 
     ctx = Context(validate_arguments(f, args, kwargs))
-    story = []
-    f(Collector(obj, story, f))
-    skip = undefined
+    the_story = []
+    f(Collector(obj, the_story, f))
+    skipped = undefined
 
-    for self, method, of in story:
+    for self, method, of in the_story:
 
-        if of is skip:
+        if skipped is not undefined:
+            if method is end_of_story and skipped is of:
+                skipped = undefined
             continue
-
-        if skip is not undefined:
-            skip = undefined
 
         result = method(Proxy(self, ctx))
         if result is undefined:
@@ -87,7 +86,7 @@ def tell_the_story(obj, f, args, kwargs):
             return result.value
 
         if restype is Skip:
-            skip = of
+            skipped = of
             continue
 
         assert not set(ctx.ns) & set(result.kwargs)
@@ -165,3 +164,8 @@ def collect_substory(story, obj, method_calls):
 
     method_calls.append((obj, validate_substory_arguments, story.f))
     story.f(Collector(obj, method_calls, story.f))
+    method_calls.append((obj, end_of_story, story.f))
+
+
+def end_of_story(self):
+    return undefined
