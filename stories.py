@@ -8,50 +8,18 @@ This module implements Business Transaction DSL.
 :license: BSD, see LICENSE for more details.
 """
 
-import functools
 
-__all__ = ["story", "argument", "Result", "Success", "Failure"]
-
-
-undefined = object()
+__all__ = ["story", "argument", "Result", "Success", "Failure", "Skip"]
 
 
 def story(f):
 
     def wrapper(self, *args, **kwargs):
-        selftype = type(self)
-        if selftype is Proxy:
-            value = wrap_substory(f, self, args, kwargs)
-        elif selftype is SubProxy:
-            value = wrap_substory(f, self.proxy, args, kwargs)
-        else:
-            value = wrap_story(f, self, args, kwargs)
-        return value
+        return tell_the_story(self, f, args, kwargs)
 
     wrapper.is_story = True
+    wrapper.f = f
     return wrapper
-
-
-def wrap_story(f, obj, args, kwargs):
-    assert not (args and kwargs)
-    arguments = getattr(f, "arguments", [])
-    if args:
-        assert len(arguments) == len(args)
-        kwargs = {k: v for k, v in zip(arguments, args)}
-    else:
-        assert set(arguments) == set(kwargs)
-    proxy = Proxy(obj, Context(kwargs))
-    f(proxy)
-    return proxy.value
-
-
-def wrap_substory(f, proxy, args, kwargs):
-    assert not args and not kwargs
-    arguments = getattr(f, "arguments", [])
-    assert set(arguments) <= set(proxy.ctx.ns)
-    subproxy = SubProxy(proxy)
-    f(subproxy)
-    return subproxy.value
 
 
 def argument(name):
@@ -82,6 +50,64 @@ class Failure:
     pass
 
 
+class Skip:
+
+    pass
+
+
+undefined = object()
+skip_result = object()
+
+
+def tell_the_story(obj, f, args, kwargs):
+
+    ctx = Context(validate_arguments(f, args, kwargs))
+    story = []
+    f(Collector(obj, story, f))
+    skip = undefined
+
+    for self, method, of in story:
+
+        if of is skip:
+            continue
+
+        if skip is not undefined:
+            skip = undefined
+
+        result = method(Proxy(self, ctx))
+        if result is skip_result:
+            continue
+
+        restype = type(result)
+        assert restype in (Result, Success, Failure, Skip)
+
+        if restype is Failure:
+            return result
+
+        if restype is Result:
+            return result.value
+
+        if restype is Skip:
+            skip = of
+            continue
+
+        assert not set(ctx.ns) & set(result.kwargs)
+        ctx.ns.update(result.kwargs)
+
+
+def validate_arguments(f, args, kwargs):
+
+    assert not (args and kwargs)
+    arguments = getattr(f, "arguments", [])
+
+    if args:
+        assert len(arguments) == len(args)
+        return {k: v for k, v in zip(arguments, args)}
+
+    assert set(arguments) == set(kwargs)
+    return kwargs
+
+
 class Context:
 
     def __init__(self, ns):
@@ -91,108 +117,52 @@ class Context:
         return self.ns[name]
 
 
+class Collector:
+
+    def __init__(self, obj, method_calls, of):
+        self.obj = obj
+        self.method_calls = method_calls
+        self.of = of
+
+    def __getattr__(self, name):
+
+        attribute = getattr(self.obj.__class__, name, undefined)
+
+        if attribute is not undefined:
+            if is_story(attribute):
+                collect_substory(attribute, self.obj, self.method_calls)
+                return lambda: None
+
+            self.method_calls.append((self.obj, attribute, self.of))
+            return lambda: None
+
+        attribute = getattr(self.obj, name)
+        assert is_story(attribute)
+        collect_substory(attribute.__func__, attribute.__self__, self.method_calls)
+        return lambda: None
+
+
 class Proxy:
 
-    def __init__(self, other, ctx):
-        self.other = other
+    def __init__(self, obj, ctx):
+        self.obj = obj
         self.ctx = ctx
-        self.value = None
-        self.done = False
 
     def __getattr__(self, name):
-        attr = getattr(self.other.__class__, name, undefined)
-        if attr is undefined:
-            attr = getattr(self.other, name)
-            if callable(attr) and getattr(attr, "is_story", False):
-                attr = functools.partial(
-                    wrap_substory, attr.__func__, Proxy(attr.__self__, self.ctx), (), {}
-                )
-        elif callable(attr):
-            if getattr(attr, "is_story", False):
-                attr = functools.partial(attr, self)
-            else:
-                attr = MethodWrapper(self, attr)
-        return attr
+        return getattr(self.obj, name)
 
 
-class MethodWrapper:
-
-    def __init__(self, proxy, method):
-        self.proxy = proxy
-        self.method = method
-
-    def __call__(self):
-        if self.proxy.done:
-            return self.proxy.value
-
-        result = self.method(self.proxy)
-        restype = type(result)
-        assert restype in (Result, Success, Failure)
-
-        if restype is Failure:
-            value = self.proxy.value = result
-            self.proxy.done = True
-        elif restype is Result:
-            value = self.proxy.value = result.value
-            self.proxy.done = True
-        else:
-            assert not set(self.proxy.ctx.ns) & set(result.kwargs)
-            self.proxy.ctx.ns.update(result.kwargs)
-            value = self.proxy.value = None
-
-        return value
+def is_story(attribute):
+    return callable(attribute) and getattr(attribute, "is_story", False)
 
 
-class SubProxy:
+def collect_substory(story, obj, method_calls):
 
-    def __init__(self, proxy):
+    arguments = getattr(story.f, "arguments", [])
 
-        self.proxy = proxy
-        self.ctx = self.proxy.ctx
-        self.value = Success()
-        self.done = False
+    def validate_substory_arguments(self):
+        assert set(arguments) <= set(self.ctx.ns)
+        return skip_result
 
-    def __getattr__(self, name):
-        attr = getattr(self.proxy.other.__class__, name, undefined)
-        if attr is undefined:
-            attr = getattr(self.proxy.other, name)
-            if callable(attr) and getattr(attr, "is_story", False):
-                attr = functools.partial(
-                    wrap_substory, attr.__func__, Proxy(attr.__self__, self.ctx), (), {}
-                )
-        elif callable(attr):
-            if getattr(attr, "is_story", False):
-                attr = functools.partial(attr, self)
-            else:
-                attr = SubMethodWrapper(self, attr)
-        return attr
-
-
-class SubMethodWrapper:
-
-    def __init__(self, subproxy, method):
-        self.subproxy = subproxy
-        self.method = method
-
-    def __call__(self):
-        if self.subproxy.done:
-            return self.subproxy.proxy.value
-
-        result = self.method(self.subproxy)
-        restype = type(result)
-        assert restype in (Result, Success, Failure)
-
-        if restype is Failure:
-            value = self.subproxy.value = self.subproxy.proxy.value = result
-            self.subproxy.done = self.subproxy.proxy.done = True
-        elif restype is Result:
-            self.subproxy.value = result
-            value = self.subproxy.proxy.value = result.value
-            self.subproxy.done = self.subproxy.proxy.done = True
-        else:
-            assert not set(self.subproxy.ctx.ns) & set(result.kwargs)
-            self.subproxy.ctx.ns.update(result.kwargs)
-            self.subproxy.value = Success()
-            value = self.subproxy.proxy.value = None
-
-        return value
+    method_calls.append((obj, validate_substory_arguments, story.f))
+    story.f(Collector(obj, method_calls, story.f))
