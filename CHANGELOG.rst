@@ -4,6 +4,11 @@
 Changelog
 ---------
 
+0.5.0 (2018-04-07)
+++++++++++++++++++
+
+- Do not execute nested stories of the skipped story.
+
 0.4.0 (2018-04-07)
 ++++++++++++++++++
 
