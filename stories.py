@@ -38,21 +38,29 @@ class Result:
     def __init__(self, value=None):
         self.value = value
 
+    def __repr__(self):
+        return self.__class__.__name__ + "(" + repr(self.value) + ")"
+
 
 class Success:
 
     def __init__(self, **kwargs):
         self.kwargs = kwargs
 
+    def __repr__(self):
+        return self.__class__.__name__ + namespace_representation(self.kwargs)
+
 
 class Failure:
 
-    pass
+    def __repr__(self):
+        return self.__class__.__name__ + "()"
 
 
 class Skip:
 
-    pass
+    def __repr__(self):
+        return self.__class__.__name__ + "()"
 
 
 undefined = object()
@@ -114,6 +122,9 @@ class Context:
     def __getattr__(self, name):
         return self.ns[name]
 
+    def __repr__(self):
+        return self.__class__.__name__ + namespace_representation(self.ns)
+
 
 class Collector:
 
@@ -169,3 +180,7 @@ def collect_substory(story, obj, method_calls):
 
 def end_of_story(self):
     return undefined
+
+
+def namespace_representation(ns):
+    return "(" + ", ".join([k + "=" + repr(v) for k, v in ns.items()]) + ")"

@@ -1,6 +1,6 @@
 import examples
 import pytest
-from stories import Failure, Result, Success
+from stories import Context, Failure, Result, Skip, Success
 
 
 def test_empty():
@@ -85,3 +85,33 @@ def test_inject_implementation():
 
     result = examples.ImplementationDI(f=lambda arg: arg + 1).x(1)
     assert result == 2
+
+
+def test_result_representation():
+
+    result = Result(1)
+    assert repr(result) == "Result(1)"
+
+
+def test_success_representation():
+
+    success = Success(foo="bar", baz=2)
+    assert repr(success) in {"Success(foo='bar', baz=2)", "Success(baz=2, foo='bar')"}
+
+
+def test_failure_representation():
+
+    failure = Failure()
+    assert repr(failure) == "Failure()"
+
+
+def test_skip_representation():
+
+    skip = Skip()
+    assert repr(skip) == "Skip()"
+
+
+def test_context_representation():
+
+    ctx = Context({"foo": "bar", "baz": 2})
+    assert repr(ctx) in {"Context(foo='bar', baz=2)", "Context(baz=2, foo='bar')"}
