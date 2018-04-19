@@ -7,7 +7,7 @@ Changelog
 0.6.0 (2018-00-00)
 ++++++++++++++++++
 
-- Representation for context and point result classes.
+- Representation methods for story, context and point result classes.
 - Python 2 support.
 
 0.5.0 (2018-04-07)

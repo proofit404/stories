@@ -15,14 +15,13 @@ __all__ = ["story", "argument", "Result", "Success", "Failure", "Skip"]
 import sys
 
 
-def story(f):
+class story(object):
 
-    def wrapper(self, *args, **kwargs):
-        return tell_the_story(self, f, args, kwargs)
+    def __init__(self, f):
+        self.f = f
 
-    wrapper.is_story = True
-    wrapper.f = f
-    return wrapper
+    def __get__(self, obj, cls):
+        return StoryWrapper(obj, cls, self.f)
 
 
 def argument(name):
@@ -67,6 +66,20 @@ class Skip(object):
 
 
 undefined = object()
+
+
+class StoryWrapper(object):
+
+    def __init__(self, obj, cls, f):
+        self.obj = obj
+        self.cls = cls
+        self.f = f
+
+    def __call__(self, *args, **kwargs):
+        return tell_the_story(self.obj, self.f, args, kwargs)
+
+    def __repr__(self):
+        return story_representation(self)
 
 
 def tell_the_story(obj, f, args, kwargs):
@@ -142,7 +155,7 @@ class Collector(object):
 
         if attribute is not undefined:
             if is_story(attribute):
-                collect_substory(attribute, self.obj, self.method_calls)
+                collect_substory(attribute.f, self.obj, self.method_calls)
                 return lambda: None
 
             self.method_calls.append((self.obj, attribute, self.of))
@@ -150,7 +163,7 @@ class Collector(object):
 
         attribute = getattr(self.obj, name)
         assert is_story(attribute)
-        collect_substory(attribute.__func__, attribute.__self__, self.method_calls)
+        collect_substory(attribute.f, attribute.obj, self.method_calls)
         return lambda: None
 
 
@@ -184,20 +197,20 @@ class Proxy(object):
 
 
 def is_story(attribute):
-    return callable(attribute) and getattr(attribute, "is_story", False)
+    return callable(attribute) and type(attribute) is StoryWrapper
 
 
-def collect_substory(story, obj, method_calls):
+def collect_substory(f, obj, method_calls):
 
-    arguments = getattr(story.f, "arguments", [])
+    arguments = getattr(f, "arguments", [])
 
     def validate_substory_arguments(self):
         assert set(arguments) <= set(self.ctx.ns)
         return undefined
 
-    method_calls.append((obj, validate_substory_arguments, story.f))
-    story.f(Collector(obj, method_calls, story.f))
-    method_calls.append((obj, end_of_story, story.f))
+    method_calls.append((obj, validate_substory_arguments, f))
+    f(Collector(obj, method_calls, f))
+    method_calls.append((obj, end_of_story, f))
 
 
 def end_of_story(self):
@@ -206,3 +219,54 @@ def end_of_story(self):
 
 def namespace_representation(ns):
     return "(" + ", ".join([k + "=" + repr(v) for k, v in ns.items()]) + ")"
+
+
+def story_representation(wrapper):
+
+    lines = [wrapper.cls.__name__ + "." + wrapper.f.__name__]
+    represent = Represent(wrapper, lines, 1)
+    wrapper.f(represent)
+    if not represent.touched:
+        lines.append("  <empty>")
+    return "\n".join(lines)
+
+
+class Represent(object):
+
+    def __init__(self, wrapper, lines, level):
+        self.wrapper = wrapper
+        self.lines = lines
+        self.level = level
+        self.touched = False
+
+    def __getattr__(self, name):
+        self.touched = True
+        attribute = getattr(self.wrapper.obj.__class__, name, undefined)
+        if attribute is not undefined and is_story(attribute):
+            self.lines.append("  " * self.level + name)
+            represent = Represent(self.wrapper, self.lines, self.level + 1)
+            attribute.f(represent)
+            if not represent.touched:
+                self.lines.append("  " * (self.level + 1) + "<empty>")
+            return lambda: None
+
+        attribute = getattr(self.wrapper.obj, name, undefined)
+        if attribute is not undefined and is_story(attribute):
+            self.lines.append(
+                "  "
+                * self.level
+                + name
+                + " ("
+                + attribute.cls.__name__
+                + "."
+                + attribute.f.__name__
+                + ")"
+            )
+            represent = Represent(attribute, self.lines, self.level + 1)
+            attribute.f(represent)
+            if not represent.touched:
+                self.lines.append("  " * (self.level + 1) + "<empty>")
+            return lambda: None
+
+        self.lines.append("  " * self.level + name)
+        return lambda: None
