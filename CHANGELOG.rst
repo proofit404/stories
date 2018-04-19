@@ -4,7 +4,7 @@
 Changelog
 ---------
 
-0.6.0 (2018-00-00)
+0.6.0 (2018-04-19)
 ++++++++++++++++++
 
 - Representation methods for story, context and point result classes.
