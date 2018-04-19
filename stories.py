@@ -12,6 +12,9 @@ This module implements Business Transaction DSL.
 __all__ = ["story", "argument", "Result", "Success", "Failure", "Skip"]
 
 
+import sys
+
+
 def story(f):
 
     def wrapper(self, *args, **kwargs):
@@ -33,7 +36,7 @@ def argument(name):
     return decorator
 
 
-class Result:
+class Result(object):
 
     def __init__(self, value=None):
         self.value = value
@@ -42,7 +45,7 @@ class Result:
         return self.__class__.__name__ + "(" + repr(self.value) + ")"
 
 
-class Success:
+class Success(object):
 
     def __init__(self, **kwargs):
         self.kwargs = kwargs
@@ -51,13 +54,13 @@ class Success:
         return self.__class__.__name__ + namespace_representation(self.kwargs)
 
 
-class Failure:
+class Failure(object):
 
     def __repr__(self):
         return self.__class__.__name__ + "()"
 
 
-class Skip:
+class Skip(object):
 
     def __repr__(self):
         return self.__class__.__name__ + "()"
@@ -80,7 +83,7 @@ def tell_the_story(obj, f, args, kwargs):
                 skipped = undefined
             continue
 
-        result = method(Proxy(self, ctx))
+        result = method(make_proxy(self, ctx))
         if result is undefined:
             continue
 
@@ -114,7 +117,7 @@ def validate_arguments(f, args, kwargs):
     return kwargs
 
 
-class Context:
+class Context(object):
 
     def __init__(self, ns):
         self.ns = ns
@@ -126,7 +129,7 @@ class Context:
         return self.__class__.__name__ + namespace_representation(self.ns)
 
 
-class Collector:
+class Collector(object):
 
     def __init__(self, obj, method_calls, of):
         self.obj = obj
@@ -151,7 +154,26 @@ class Collector:
         return lambda: None
 
 
-class Proxy:
+PY3 = sys.version_info[0] >= 3
+
+
+if PY3:
+
+    def make_proxy(obj, ctx):
+        return Proxy(obj, ctx)
+
+
+else:
+
+    def make_proxy(obj, ctx):
+
+        class ObjectProxy(Proxy, obj.__class__):
+            pass
+
+        return ObjectProxy(obj, ctx)
+
+
+class Proxy(object):
 
     def __init__(self, obj, ctx):
         self.obj = obj

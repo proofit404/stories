@@ -3,7 +3,7 @@ from stories import Failure, Result, Skip, Success, argument, story
 # Empty story.
 
 
-class Empty:
+class Empty(object):
 
     @story
     def x(self):
@@ -23,7 +23,7 @@ class EmptySubstory(Empty):
 # Simple story.
 
 
-class Simple:
+class Simple(object):
 
     @story
     @argument("a")
@@ -81,7 +81,7 @@ class SimpleSubstory(Simple):
 # Dependency injection of the substory.
 
 
-class SubstoryDI:
+class SubstoryDI(object):
 
     def __init__(self, x):
         self.x = x
@@ -103,7 +103,7 @@ class SubstoryDI:
 # Method tries to override existed context key.
 
 
-class ExistedKey:
+class ExistedKey(object):
 
     @story
     @argument("a")
@@ -117,7 +117,7 @@ class ExistedKey:
 # Method tries to return wrong type.
 
 
-class WrongResult:
+class WrongResult(object):
 
     @story
     def x(self):
@@ -130,7 +130,7 @@ class WrongResult:
 # Class attribute access.
 
 
-class AttributeAccess:
+class AttributeAccess(object):
     clsattr = 1
 
     @story
@@ -144,7 +144,7 @@ class AttributeAccess:
 # Dependency injection of the implementation methods.
 
 
-class ImplementationDI:
+class ImplementationDI(object):
 
     def __init__(self, f):
         self.f = f
