@@ -78,6 +78,9 @@ class StoryWrapper(object):
     def __call__(self, *args, **kwargs):
         return tell_the_story(self.obj, self.f, args, kwargs)
 
+    def run(self, *args, **kwargs):
+        return run_the_story(self.obj, self.f, args, kwargs)
+
     def __repr__(self):
         return story_representation(self)
 
@@ -115,6 +118,53 @@ def tell_the_story(obj, f, args, kwargs):
 
         assert not set(ctx.ns) & set(result.kwargs)
         ctx.ns.update(result.kwargs)
+
+
+def run_the_story(obj, f, args, kwargs):
+
+    ctx = Context(validate_arguments(f, args, kwargs))
+    the_story = []
+    f(Collector(obj, the_story, f))
+    skipped = undefined
+
+    for self, method, of in the_story:
+
+        if skipped is not undefined:
+            if method is end_of_story and skipped is of:
+                skipped = undefined
+            continue
+
+        result = method(make_proxy(self, ctx))
+        if result is undefined:
+            continue
+
+        restype = type(result)
+        assert restype in (Result, Success, Failure, Skip)
+
+        if restype is Failure:
+            return Summary(
+                is_success=False,
+                is_failure=True,
+                returned=None,
+                failed_method=method.__name__,
+            )
+
+        if restype is Result:
+            return Summary(
+                is_success=True,
+                is_failure=False,
+                returned=result.value,
+                failed_method=None,
+            )
+
+        if restype is Skip:
+            skipped = of
+            continue
+
+        assert not set(ctx.ns) & set(result.kwargs)
+        ctx.ns.update(result.kwargs)
+
+    return Summary(is_success=True, is_failure=False, returned=None, failed_method=None)
 
 
 def validate_arguments(f, args, kwargs):
@@ -194,6 +244,23 @@ class Proxy(object):
 
     def __getattr__(self, name):
         return getattr(self.obj, name)
+
+
+class Summary(object):
+
+    def __init__(self, is_success, is_failure, returned, failed_method):
+        self.is_success = is_success
+        self.is_failure = is_failure
+        self.returned = returned
+        self.failed_method = failed_method
+
+    def failed_on(self, method_name):
+        return self.is_failure and method_name == self.failed_method
+
+    @property
+    def value(self):
+        assert self.is_success
+        return self.returned
 
 
 def is_story(attribute):
