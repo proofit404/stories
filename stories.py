@@ -142,20 +142,10 @@ def run_the_story(obj, f, args, kwargs):
         assert restype in (Result, Success, Failure, Skip)
 
         if restype is Failure:
-            return Summary(
-                is_success=False,
-                is_failure=True,
-                returned=None,
-                failed_method=method.__name__,
-            )
+            return FailureSummary(method.__name__)
 
         if restype is Result:
-            return Summary(
-                is_success=True,
-                is_failure=False,
-                returned=result.value,
-                failed_method=None,
-            )
+            return SuccessSummary(result.value)
 
         if restype is Skip:
             skipped = of
@@ -164,7 +154,7 @@ def run_the_story(obj, f, args, kwargs):
         assert not set(ctx.ns) & set(result.kwargs)
         ctx.ns.update(result.kwargs)
 
-    return Summary(is_success=True, is_failure=False, returned=None, failed_method=None)
+    return SuccessSummary(None)
 
 
 def validate_arguments(f, args, kwargs):
@@ -246,21 +236,30 @@ class Proxy(object):
         return getattr(self.obj, name)
 
 
-class Summary(object):
+class FailureSummary(object):
 
-    def __init__(self, is_success, is_failure, returned, failed_method):
-        self.is_success = is_success
-        self.is_failure = is_failure
-        self.returned = returned
+    def __init__(self, failed_method):
+        self.is_success = False
+        self.is_failure = True
         self.failed_method = failed_method
 
     def failed_on(self, method_name):
-        return self.is_failure and method_name == self.failed_method
+        return method_name == self.failed_method
 
     @property
     def value(self):
-        assert self.is_success
-        return self.returned
+        raise AssertionError
+
+
+class SuccessSummary(object):
+
+    def __init__(self, value):
+        self.is_success = True
+        self.is_failure = False
+        self.value = value
+
+    def failed_on(self, method_name):
+        return False
 
 
 def is_story(attribute):
@@ -320,8 +319,7 @@ class Represent(object):
         attribute = getattr(self.wrapper.obj, name, undefined)
         if attribute is not undefined and is_story(attribute):
             self.lines.append(
-                "  "
-                * self.level
+                "  " * self.level
                 + name
                 + " ("
                 + attribute.cls.__name__

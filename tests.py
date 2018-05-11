@@ -1,6 +1,6 @@
 import examples
 import pytest
-from stories import Context, Failure, Result, Skip, Success, Summary
+from stories import Context, Failure, Result, Skip, Success
 
 
 def test_empty():
@@ -36,7 +36,6 @@ def test_failure():
     assert isinstance(result, Failure)
 
     result = examples.Simple().x.run(2, 2)
-    assert isinstance(result, Summary)
     assert result.is_failure
     assert result.failed_on("two")
     assert not result.failed_on("one")
@@ -48,7 +47,6 @@ def test_failure():
     assert isinstance(result, Failure)
 
     result = examples.SimpleSubstory().y.run(3)
-    assert isinstance(result, Summary)
     assert result.is_failure
     assert result.failed_on("two")
     assert not result.failed_on("one")
@@ -60,7 +58,6 @@ def test_failure():
     assert isinstance(result, Failure)
 
     result = examples.SubstoryDI(examples.Simple().x).y.run(3)
-    assert isinstance(result, Summary)
     assert result.is_failure
     assert result.failed_on("two")
     assert not result.failed_on("one")
@@ -189,41 +186,50 @@ def test_inject_implementation():
 def test_story_representation():
 
     story = repr(examples.Empty().x)
-    expected = """
+    expected = (
+        """
 Empty.x
   <empty>
 """.strip()
+    )
     assert story == expected
 
     story = repr(examples.EmptySubstory().y)
-    expected = """
+    expected = (
+        """
 EmptySubstory.y
   x
     <empty>
 """.strip()
+    )
     assert story == expected
 
     story = repr(examples.SubstoryDI(examples.Empty().x).y)
-    expected = """
+    expected = (
+        """
 SubstoryDI.y
   before
   x (Empty.x)
     <empty>
   after
 """.strip()
+    )
     assert story == expected
 
     story = repr(examples.Simple().x)
-    expected = """
+    expected = (
+        """
 Simple.x
   one
   two
   three
 """.strip()
+    )
     assert story == expected
 
     story = repr(examples.SimpleSubstory().y)
-    expected = """
+    expected = (
+        """
 SimpleSubstory.y
   before
   x
@@ -232,10 +238,12 @@ SimpleSubstory.y
     three
   after
 """.strip()
+    )
     assert story == expected
 
     story = repr(examples.SubstoryDI(examples.Simple().x).y)
-    expected = """
+    expected = (
+        """
 SubstoryDI.y
   before
   x (Simple.x)
@@ -244,10 +252,12 @@ SubstoryDI.y
     three
   after
 """.strip()
+    )
     assert story == expected
 
     story = repr(examples.SubstoryDI(examples.SimpleSubstory().z).y)
-    expected = """
+    expected = (
+        """
 SubstoryDI.y
   before
   x (SimpleSubstory.z)
@@ -258,6 +268,7 @@ SubstoryDI.y
       three
   after
 """.strip()
+    )
     assert story == expected
 
 
