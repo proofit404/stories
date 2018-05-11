@@ -118,6 +118,8 @@ def tell_the_story(obj, f, args, kwargs):
 
         assert not set(ctx.ns) & set(result.kwargs)
         ctx.ns.update(result.kwargs)
+        line = "Set by %s.%s" % (self.__class__.__name__, method.__name__)
+        ctx.lines.extend([(key, line) for key in result.kwargs])
 
 
 def run_the_story(obj, f, args, kwargs):
@@ -153,6 +155,8 @@ def run_the_story(obj, f, args, kwargs):
 
         assert not set(ctx.ns) & set(result.kwargs)
         ctx.ns.update(result.kwargs)
+        line = "Set by %s.%s" % (self.__class__.__name__, method.__name__)
+        ctx.lines.extend([(key, line) for key in result.kwargs])
 
     return SuccessSummary(None)
 
@@ -174,12 +178,19 @@ class Context(object):
 
     def __init__(self, ns):
         self.ns = ns
+        self.lines = [(key, "Story argument") for key in ns]
 
     def __getattr__(self, name):
         return self.ns[name]
 
     def __repr__(self):
-        return self.__class__.__name__ + namespace_representation(self.ns)
+        return "\n".join(
+            [self.__class__.__name__ + ":"]
+            + [
+                "    %s = %s  # %s" % (key, repr(self.ns[key]), line)
+                for key, line in self.lines
+            ]
+        )
 
 
 class Collector(object):

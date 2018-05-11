@@ -298,5 +298,52 @@ def test_skip_representation():
 
 def test_context_representation():
 
-    ctx = Context({"foo": "bar", "baz": 2})
-    assert repr(ctx) in {"Context(foo='bar', baz=2)", "Context(baz=2, foo='bar')"}
+    expected = (
+        """
+Context:
+    a = 0  # Story argument
+    b = 1  # Set by SimpleCtxRepr.one
+    c = 2  # Set by SimpleCtxRepr.two
+    d = 3  # Set by SimpleCtxRepr.three
+    """.strip()
+    )
+
+    result = examples.SimpleCtxRepr().x(0)
+    assert result == expected
+
+    result = examples.SimpleCtxRepr().x.run(0)
+    assert result.value == expected
+
+    expected = (
+        """
+Context:
+    e = 4  # Story argument
+    a = 0  # Set by SimpleSubstoryCtxRepr.before
+    b = 1  # Set by SimpleSubstoryCtxRepr.one
+    c = 2  # Set by SimpleSubstoryCtxRepr.two
+    d = 3  # Set by SimpleSubstoryCtxRepr.three
+    """.strip()
+    )
+
+    result = examples.SimpleSubstoryCtxRepr().y(4)
+    assert result == expected
+
+    result = examples.SimpleSubstoryCtxRepr().y.run(4)
+    assert result.value == expected
+
+    expected = (
+        """
+Context:
+    e = 4  # Story argument
+    a = 0  # Set by SubstoryDICtxRepr.before
+    b = 1  # Set by SimpleCtxRepr.one
+    c = 2  # Set by SimpleCtxRepr.two
+    d = 3  # Set by SimpleCtxRepr.three
+    """.strip()
+    )
+
+    result = examples.SubstoryDICtxRepr(examples.SimpleCtxRepr().x).y(4)
+    assert result == expected
+
+    result = examples.SubstoryDICtxRepr(examples.SimpleCtxRepr().x).y.run(4)
+    assert result.value == expected

@@ -156,3 +156,56 @@ class ImplementationDI(object):
 
     def one(self):
         return Result(self.f(self.ctx.a))
+
+
+# Context representation.
+
+
+class SimpleCtxRepr(object):
+
+    @story
+    @argument("a")
+    def x(self):
+        self.one()
+        self.two()
+        self.three()
+        self.four()
+
+    def one(self):
+        return Success(b=1)
+
+    def two(self):
+        return Success(c=2)
+
+    def three(self):
+        return Success(d=3)
+
+    def four(self):
+        return Result(repr(self.ctx))
+
+
+class SimpleSubstoryCtxRepr(SimpleCtxRepr):
+
+    @story
+    @argument("e")
+    def y(self):
+        self.before()
+        self.x()
+
+    def before(self):
+        return Success(a=0)
+
+
+class SubstoryDICtxRepr(object):
+
+    def __init__(self, x):
+        self.x = x
+
+    @story
+    @argument("e")
+    def y(self):
+        self.before()
+        self.x()
+
+    def before(self):
+        return Success(a=0)
