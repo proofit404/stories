@@ -65,7 +65,11 @@ class Skip(object):
         return self.__class__.__name__ + "()"
 
 
-undefined = object()
+class Undefined(object):
+    pass
+
+
+undefined = Undefined()
 
 
 class StoryWrapper(object):
@@ -194,6 +198,13 @@ class Context(object):
                 for key, line in self.lines
             ]
         )
+
+    def __dir__(self):
+        parent = set(dir(undefined))
+        current = set(self.__dict__) - {"ns", "lines"}
+        scope = set(self.ns)
+        attributes = sorted(parent | current | scope)
+        return attributes
 
 
 class Collector(object):

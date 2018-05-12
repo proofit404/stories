@@ -350,3 +350,13 @@ Context:
 
     result = examples.SubstoryDICtxRepr(examples.SimpleCtxRepr().x).y.run(4)
     assert result.value == expected
+
+
+def test_context_dir():
+    """Show context variables in the `dir` output."""
+
+    class Ctx(object):
+        a = 2
+        b = 2
+
+    assert dir(Context({"a": 2, "b": 2})) == dir(Ctx())
