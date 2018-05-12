@@ -4,7 +4,13 @@
 Changelog
 ---------
 
-0.7.0 (2016-05-06)
+0.8.0 (2018-05-12)
+++++++++++++++++++
+
+- Add ``dir()`` and ``repr()`` support to the context class.
+- Failed result holds a link to the context.
+
+0.7.0 (2018-05-06)
 ++++++++++++++++++
 
 - Add ``run`` interface to the story.
