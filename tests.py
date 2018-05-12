@@ -36,10 +36,11 @@ def test_failure():
     assert isinstance(result, Failure)
 
     result = examples.Simple().x.run(2, 2)
+    assert not result.is_success
     assert result.is_failure
+    assert result.ctx == {"a": 2, "b": 2}
     assert result.failed_on("two")
     assert not result.failed_on("one")
-    assert not result.is_success
     with pytest.raises(AssertionError):
         result.value
 
@@ -47,10 +48,11 @@ def test_failure():
     assert isinstance(result, Failure)
 
     result = examples.SimpleSubstory().y.run(3)
+    assert not result.is_success
     assert result.is_failure
+    assert result.ctx == {"a": 2, "b": 4, "d": 3}
     assert result.failed_on("two")
     assert not result.failed_on("one")
-    assert not result.is_success
     with pytest.raises(AssertionError):
         result.value
 
@@ -58,10 +60,11 @@ def test_failure():
     assert isinstance(result, Failure)
 
     result = examples.SubstoryDI(examples.Simple().x).y.run(3)
+    assert not result.is_success
     assert result.is_failure
+    assert result.ctx == {"a": 2, "b": 4, "d": 3}
     assert result.failed_on("two")
     assert not result.failed_on("one")
-    assert not result.is_success
     with pytest.raises(AssertionError):
         result.value
 

@@ -144,7 +144,7 @@ def run_the_story(obj, f, args, kwargs):
         assert restype in (Result, Success, Failure, Skip)
 
         if restype is Failure:
-            return FailureSummary(method.__name__)
+            return FailureSummary(ctx, method.__name__)
 
         if restype is Result:
             return SuccessSummary(result.value)
@@ -182,6 +182,9 @@ class Context(object):
 
     def __getattr__(self, name):
         return self.ns[name]
+
+    def __eq__(self, other):
+        return self.ns == other
 
     def __repr__(self):
         return "\n".join(
@@ -249,9 +252,10 @@ class Proxy(object):
 
 class FailureSummary(object):
 
-    def __init__(self, failed_method):
+    def __init__(self, ctx, failed_method):
         self.is_success = False
         self.is_failure = True
+        self.ctx = ctx
         self.failed_method = failed_method
 
     def failed_on(self, method_name):
