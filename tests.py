@@ -304,10 +304,10 @@ def test_context_representation():
     expected = (
         """
 Context:
-    a = 0  # Story argument
-    b = 1  # Set by SimpleCtxRepr.one
-    c = 2  # Set by SimpleCtxRepr.two
-    d = 3  # Set by SimpleCtxRepr.three
+    aaaa = 0  # Story argument
+    bbb = 1   # Set by SimpleCtxRepr.one
+    c = 2     # Set by SimpleCtxRepr.two
+    dd = 3    # Set by SimpleCtxRepr.three
     """.strip()
     )
 
@@ -320,11 +320,11 @@ Context:
     expected = (
         """
 Context:
-    e = 4  # Story argument
-    a = 0  # Set by SimpleSubstoryCtxRepr.before
-    b = 1  # Set by SimpleSubstoryCtxRepr.one
-    c = 2  # Set by SimpleSubstoryCtxRepr.two
-    d = 3  # Set by SimpleSubstoryCtxRepr.three
+    e = 4     # Story argument
+    aaaa = 0  # Set by SimpleSubstoryCtxRepr.before
+    bbb = 1   # Set by SimpleSubstoryCtxRepr.one
+    c = 2     # Set by SimpleSubstoryCtxRepr.two
+    dd = 3    # Set by SimpleSubstoryCtxRepr.three
     """.strip()
     )
 
@@ -337,11 +337,11 @@ Context:
     expected = (
         """
 Context:
-    e = 4  # Story argument
-    a = 0  # Set by SubstoryDICtxRepr.before
-    b = 1  # Set by SimpleCtxRepr.one
-    c = 2  # Set by SimpleCtxRepr.two
-    d = 3  # Set by SimpleCtxRepr.three
+    e = 4     # Story argument
+    aaaa = 0  # Set by SubstoryDICtxRepr.before
+    bbb = 1   # Set by SimpleCtxRepr.one
+    c = 2     # Set by SimpleCtxRepr.two
+    dd = 3    # Set by SimpleCtxRepr.three
     """.strip()
     )
 

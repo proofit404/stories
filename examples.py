@@ -1,5 +1,6 @@
 from stories import Failure, Result, Skip, Success, argument, story
 
+
 # Empty story.
 
 
@@ -164,7 +165,7 @@ class ImplementationDI(object):
 class SimpleCtxRepr(object):
 
     @story
-    @argument("a")
+    @argument("aaaa")
     def x(self):
         self.one()
         self.two()
@@ -172,13 +173,13 @@ class SimpleCtxRepr(object):
         self.four()
 
     def one(self):
-        return Success(b=1)
+        return Success(bbb=1)
 
     def two(self):
         return Success(c=2)
 
     def three(self):
-        return Success(d=3)
+        return Success(dd=3)
 
     def four(self):
         return Result(repr(self.ctx))
@@ -193,7 +194,7 @@ class SimpleSubstoryCtxRepr(SimpleCtxRepr):
         self.x()
 
     def before(self):
-        return Success(a=0)
+        return Success(aaaa=0)
 
 
 class SubstoryDICtxRepr(object):
@@ -208,4 +209,4 @@ class SubstoryDICtxRepr(object):
         self.x()
 
     def before(self):
-        return Success(a=0)
+        return Success(aaaa=0)

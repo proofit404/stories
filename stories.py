@@ -191,11 +191,15 @@ class Context(object):
         return self.ns == other
 
     def __repr__(self):
+        assignments = [
+            ("%s = %s" % (key, repr(self.ns[key])), line) for key, line in self.lines
+        ]
+        longest = max(map(lambda x: len(x[0]), assignments))
         return "\n".join(
             [self.__class__.__name__ + ":"]
             + [
-                "    %s = %s  # %s" % (key, repr(self.ns[key]), line)
-                for key, line in self.lines
+                "    %s  # %s" % (assignment.ljust(longest), line)
+                for assignment, line in assignments
             ]
         )
 
