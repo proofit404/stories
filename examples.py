@@ -210,3 +210,64 @@ class SubstoryDICtxRepr(object):
 
     def before(self):
         return Success(aaaa=0)
+
+
+# Proxy representation.
+
+
+class SimpleProxyRepr(object):
+
+    @story
+    def x(self):
+        self.one()
+        self.two()
+        self.three()
+        self.four()
+
+    def one(self):
+        return Success()
+
+    def two(self):
+        return Success()
+
+    def three(self):
+        return Success()
+
+    def four(self):
+        return Result(repr(self))
+
+
+class SimpleSubstoryProxyRepr(SimpleProxyRepr):
+
+    @story
+    def y(self):
+        self.before()
+        self.x()
+        self.after()
+
+    def before(self):
+        return Success()
+
+    def after(self):
+        return Result(repr(self))
+
+    def four(self):
+        return Success()
+
+
+class SubstoryDIProxyRepr(object):
+
+    def __init__(self, z):
+        self.z = z
+
+    @story
+    def y(self):
+        self.before()
+        self.z()
+        self.after()
+
+    def before(self):
+        return Success()
+
+    def after(self):
+        return Result(repr(self))

@@ -65,7 +65,7 @@ class Skip(object):
         return self.__class__.__name__ + "()"
 
 
-class Undefined(object):
+class Undefined(object):  # TODO: Rename to Marker.
     pass
 
 
@@ -95,6 +95,8 @@ def tell_the_story(obj, f, args, kwargs):
     the_story = []
     f(Collector(obj, the_story, f))
     skipped = undefined
+    history = ["Proxy(" + obj.__class__.__name__ + "." + f.__name__ + "):"]
+    indent_level = 1
 
     for self, method, of in the_story:
 
@@ -103,12 +105,11 @@ def tell_the_story(obj, f, args, kwargs):
                 skipped = undefined
             continue
 
-        result = method(make_proxy(self, ctx))
-        if result is undefined:
-            continue
+        history.append("  " * indent_level + method.__name__)
+        result = method(make_proxy(self, ctx, history))
 
         restype = type(result)
-        assert restype in (Result, Success, Failure, Skip)
+        assert restype in (Result, Success, Failure, Skip, Undefined)
 
         if restype is Failure:
             return result
@@ -118,6 +119,17 @@ def tell_the_story(obj, f, args, kwargs):
 
         if restype is Skip:
             skipped = of
+            continue
+
+        if restype is Undefined:
+            history.pop()
+            if result is valid_arguments:
+                # The beginning of substory.
+                history.append("  " * indent_level + method.method_name)
+                indent_level += 1
+            else:
+                # The end of substory.
+                indent_level -= 1
             continue
 
         assert not set(ctx.ns) & set(result.kwargs)
@@ -132,6 +144,8 @@ def run_the_story(obj, f, args, kwargs):
     the_story = []
     f(Collector(obj, the_story, f))
     skipped = undefined
+    history = ["Proxy(" + obj.__class__.__name__ + "." + f.__name__ + "):"]
+    indent_level = 1
 
     for self, method, of in the_story:
 
@@ -140,12 +154,11 @@ def run_the_story(obj, f, args, kwargs):
                 skipped = undefined
             continue
 
-        result = method(make_proxy(self, ctx))
-        if result is undefined:
-            continue
+        history.append("  " * indent_level + method.__name__)
+        result = method(make_proxy(self, ctx, history))
 
         restype = type(result)
-        assert restype in (Result, Success, Failure, Skip)
+        assert restype in (Result, Success, Failure, Skip, Undefined)
 
         if restype is Failure:
             return FailureSummary(ctx, method.__name__)
@@ -155,6 +168,17 @@ def run_the_story(obj, f, args, kwargs):
 
         if restype is Skip:
             skipped = of
+            continue
+
+        if restype is Undefined:
+            history.pop()
+            if result is valid_arguments:
+                # The beginning of substory.
+                history.append("  " * indent_level + method.method_name)
+                indent_level += 1
+            else:
+                # The end of substory.
+                indent_level -= 1
             continue
 
         assert not set(ctx.ns) & set(result.kwargs)
@@ -224,7 +248,7 @@ class Collector(object):
 
         if attribute is not undefined:
             if is_story(attribute):
-                collect_substory(attribute.f, self.obj, self.method_calls)
+                collect_substory(attribute.f, self.obj, self.method_calls, name)
                 return lambda: None
 
             self.method_calls.append((self.obj, attribute, self.of))
@@ -232,7 +256,15 @@ class Collector(object):
 
         attribute = getattr(self.obj, name)
         assert is_story(attribute)
-        collect_substory(attribute.f, attribute.obj, self.method_calls)
+        history_name = (
+            name
+            + " ("
+            + attribute.obj.__class__.__name__
+            + "."
+            + attribute.f.__name__
+            + ")"
+        )
+        collect_substory(attribute.f, attribute.obj, self.method_calls, history_name)
         return lambda: None
 
 
@@ -241,28 +273,32 @@ PY3 = sys.version_info[0] >= 3
 
 if PY3:
 
-    def make_proxy(obj, ctx):
-        return Proxy(obj, ctx)
+    def make_proxy(obj, ctx, history):
+        return Proxy(obj, ctx, history)
 
 
 else:
 
-    def make_proxy(obj, ctx):
+    def make_proxy(obj, ctx, history):
 
         class ObjectProxy(Proxy, obj.__class__):
             pass
 
-        return ObjectProxy(obj, ctx)
+        return ObjectProxy(obj, ctx, history)
 
 
 class Proxy(object):
 
-    def __init__(self, obj, ctx):
+    def __init__(self, obj, ctx, history):
         self.obj = obj
         self.ctx = ctx
+        self.history = history
 
     def __getattr__(self, name):
         return getattr(self.obj, name)
+
+    def __repr__(self):
+        return "\n".join(self.history)
 
 
 class FailureSummary(object):
@@ -296,13 +332,18 @@ def is_story(attribute):
     return callable(attribute) and type(attribute) is StoryWrapper
 
 
-def collect_substory(f, obj, method_calls):
+valid_arguments = Undefined()
+
+
+def collect_substory(f, obj, method_calls, history_name):
 
     arguments = getattr(f, "arguments", [])
 
     def validate_substory_arguments(self):
         assert set(arguments) <= set(self.ctx.ns)
-        return undefined
+        return valid_arguments
+
+    validate_substory_arguments.method_name = history_name
 
     method_calls.append((obj, validate_substory_arguments, f))
     f(Collector(obj, method_calls, f))

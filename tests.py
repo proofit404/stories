@@ -360,3 +360,60 @@ def test_context_dir():
         b = 2
 
     assert dir(Context({"a": 2, "b": 2})) == dir(Ctx())
+
+
+def test_proxy_representation():
+
+    expected = (
+        """
+Proxy(SimpleProxyRepr.x):
+  one
+  two
+  three
+  four
+        """.strip()
+    )
+
+    result = examples.SimpleProxyRepr().x()
+    assert result == expected
+
+    result = examples.SimpleProxyRepr().x.run()
+    assert result.value == expected
+
+    expected = (
+        """
+Proxy(SimpleSubstoryProxyRepr.y):
+  before
+  x
+    one
+    two
+    three
+    four
+  after
+        """.strip()
+    )
+
+    result = examples.SimpleSubstoryProxyRepr().y()
+    assert result == expected
+
+    result = examples.SimpleSubstoryProxyRepr().y.run()
+    assert result.value == expected
+
+    expected = (
+        """
+Proxy(SubstoryDIProxyRepr.y):
+  before
+  z (SimpleSubstoryProxyRepr.x)
+    one
+    two
+    three
+    four
+  after
+    """.strip()
+    )
+
+    result = examples.SubstoryDIProxyRepr(examples.SimpleSubstoryProxyRepr().x).y()
+    assert result == expected
+
+    result = examples.SubstoryDIProxyRepr(examples.SimpleSubstoryProxyRepr().x).y.run()
+    assert result.value == expected
