@@ -2,6 +2,7 @@ import examples
 import pytest
 from stories import Failure, Result, Skip, Success
 from stories._base import Context
+from stories.exceptions import FailureError
 
 
 def test_empty():
@@ -33,8 +34,8 @@ def test_empty():
 
 def test_failure():
 
-    result = examples.Simple().x(2, 2)
-    assert isinstance(result, Failure)
+    with pytest.raises(FailureError):
+        examples.Simple().x(2, 2)
 
     result = examples.Simple().x.run(2, 2)
     assert not result.is_success
@@ -45,8 +46,8 @@ def test_failure():
     with pytest.raises(AssertionError):
         result.value
 
-    result = examples.SimpleSubstory().y(3)
-    assert isinstance(result, Failure)
+    with pytest.raises(FailureError):
+        examples.SimpleSubstory().y(3)
 
     result = examples.SimpleSubstory().y.run(3)
     assert not result.is_success
@@ -57,8 +58,8 @@ def test_failure():
     with pytest.raises(AssertionError):
         result.value
 
-    result = examples.SubstoryDI(examples.Simple().x).y(3)
-    assert isinstance(result, Failure)
+    with pytest.raises(FailureError):
+        examples.SubstoryDI(examples.Simple().x).y(3)
 
     result = examples.SubstoryDI(examples.Simple().x).y.run(3)
     assert not result.is_success

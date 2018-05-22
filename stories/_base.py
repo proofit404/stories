@@ -1,5 +1,7 @@
 import sys
 
+from .exceptions import FailureError
+
 
 class story(object):
 
@@ -98,7 +100,7 @@ def tell_the_story(obj, f, args, kwargs):
         assert restype in (Result, Success, Failure, Skip, Undefined)
 
         if restype is Failure:
-            return result
+            raise FailureError
 
         if restype is Result:
             return result.value
