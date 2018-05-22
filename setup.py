@@ -1,5 +1,6 @@
 from setuptools import setup
 
+
 setup(
     name="stories",
     version="0.8.0",
@@ -8,5 +9,5 @@ setup(
     license="BSD",
     author="Artem Malyshev",
     author_email="proofit404@gmail.com",
-    py_modules=["stories"],
+    packages=["stories"],
 )

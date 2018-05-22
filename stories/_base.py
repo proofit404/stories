@@ -1,17 +1,3 @@
-"""
-stories
--------
-
-This module implements Business Transaction DSL.
-
-:copyright: (c) 2018 by Artem Malyshev.
-:license: BSD, see LICENSE for more details.
-"""
-
-
-__all__ = ["story", "argument", "Result", "Success", "Failure", "Skip"]
-
-
 import sys
 
 

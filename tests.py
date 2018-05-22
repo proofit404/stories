@@ -1,6 +1,7 @@
 import examples
 import pytest
-from stories import Context, Failure, Result, Skip, Success
+from stories import Failure, Result, Skip, Success
+from stories._base import Context
 
 
 def test_empty():
