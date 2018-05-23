@@ -9,5 +9,5 @@ setup(
     license="BSD",
     author="Artem Malyshev",
     author_email="proofit404@gmail.com",
-    packages=["stories"],
+    packages=["stories", "stories.contrib"],
 )
