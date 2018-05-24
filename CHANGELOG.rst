@@ -4,6 +4,13 @@
 Changelog
 ---------
 
+0.9.0 (2018-00-00)
+++++++++++++++++++
+
+- ``Proxy`` class ``repr()`` will show current execution path.
+- Py.test plugin with context and execution path reporter.
+- Raise exception on ``Failure`` when story was called directly.
+
 0.8.0 (2018-05-12)
 ++++++++++++++++++
 
