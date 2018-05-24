@@ -219,7 +219,7 @@ class Context(object):
 
     def __dir__(self):
         parent = set(dir(undefined))
-        current = set(self.__dict__) - {"ns", "lines"}
+        current = set(self.__dict__) - {"ns", "lines", "__position__"}
         scope = set(self.ns)
         attributes = sorted(parent | current | scope)
         return attributes

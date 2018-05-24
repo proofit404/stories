@@ -1,24 +1,57 @@
+import itertools
+
 import pytest
-from stories._base import Context
+import stories._base
 
 
-context_init = Context.__init__
+origin_make_proxy = stories._base.make_proxy
+origin_context_init = stories._base.Context.__init__
 
 
-def track_context(storage):
+def track_proxy(storage):
 
-    def wrapper(self, ns):
+    def wrapper(obj, ctx, history):
 
-        context_init(self, ns)
-        storage.append(self)
+        proxy = origin_make_proxy(obj, ctx, history)
+        storage[ctx.__position__][0] = proxy
+        return proxy
+
+    return wrapper
+
+
+def track_context(storage, sequence):
+
+    def wrapper(ctx, ns):
+
+        origin_context_init(ctx, ns)
+        position = next(sequence)
+        ctx.__position__ = position
+        storage[position] = [None, ctx]
 
     return wrapper
 
 
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_call(item):
-    contexts = []
-    Context.__init__ = track_context(contexts)
+    sequence = itertools.count()
+    storage = {}
+    stories._base.make_proxy = track_proxy(storage)
+    stories._base.Context.__init__ = track_context(storage, sequence)
     yield
-    Context.__init__ = context_init
-    item.add_report_section("call", "stories", "\n\n".join(map(repr, contexts)))
+    stories._base.make_proxy = origin_make_proxy
+    stories._base.Context.__init__ = origin_context_init
+    item.add_report_section(
+        "call",
+        "stories",
+        "\n\n".join(
+            map(
+                repr,
+                filter(
+                    None,
+                    itertools.chain.from_iterable(
+                        storage[i] for i in range(len(storage))
+                    ),
+                ),
+            )
+        ),
+    )
