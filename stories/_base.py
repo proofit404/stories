@@ -203,6 +203,8 @@ class Context(object):
         return self.ns == other
 
     def __repr__(self):
+        if not self.lines:
+            return self.__class__.__name__ + "()"
         assignments = [
             ("%s = %s" % (key, repr(self.ns[key])), line) for key, line in self.lines
         ]

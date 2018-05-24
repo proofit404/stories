@@ -303,6 +303,8 @@ def test_skip_representation():
 
 def test_context_representation():
 
+    assert repr(Context({})) == "Context()"
+
     expected = (
         """
 Context:
