@@ -10,4 +10,5 @@ setup(
     author="Artem Malyshev",
     author_email="proofit404@gmail.com",
     packages=["stories", "stories.contrib"],
+    entry_points={"pytest11": ["stories = stories.contrib.pytest"]},
 )
