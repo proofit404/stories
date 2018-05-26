@@ -1,5 +1,6 @@
 import examples
 import pytest
+from helpers import make_collector
 from stories import Failure, Result, Skip, Success
 from stories._base import Context
 from stories.exceptions import FailureError
@@ -157,7 +158,7 @@ def test_context_immutability():
         examples.ExistedKey().x.run(a=1)
 
 
-def test_result_type():
+def test_return_type():
 
     with pytest.raises(AssertionError):
         examples.WrongResult().x()
@@ -303,6 +304,8 @@ def test_skip_representation():
 
 def test_context_representation():
 
+    # TODO: Rewrite with collector.
+
     assert repr(Context({})) == "Context()"
 
     expected = (
@@ -368,56 +371,65 @@ def test_context_dir():
 
 def test_proxy_representation():
 
+    # TODO: Empty.
+    #
+    # TODO: Failure.
+    #
+    # Result.
+
     expected = (
         """
-Proxy(SimpleProxyRepr.x):
+Proxy(Simple.x):
   one
   two
   three
-  four
         """.strip()
     )
 
-    result = examples.SimpleProxyRepr().x()
-    assert result == expected
+    Collector, getter = make_collector(examples.Simple, "three")
+    Collector().x(1, 3)
+    assert repr(getter()) == expected
 
-    result = examples.SimpleProxyRepr().x.run()
-    assert result.value == expected
+    Collector, getter = make_collector(examples.Simple, "three")
+    Collector().x.run(1, 3)
+    assert repr(getter()) == expected
 
     expected = (
         """
-Proxy(SimpleSubstoryProxyRepr.y):
+Proxy(SimpleSubstory.y):
   before
   x
     one
     two
     three
-    four
-  after
         """.strip()
     )
 
-    result = examples.SimpleSubstoryProxyRepr().y()
-    assert result == expected
+    Collector, getter = make_collector(examples.SimpleSubstory, "three")
+    Collector().y(2)
+    assert repr(getter()) == expected
 
-    result = examples.SimpleSubstoryProxyRepr().y.run()
-    assert result.value == expected
+    Collector, getter = make_collector(examples.SimpleSubstory, "three")
+    Collector().y.run(2)
+    assert repr(getter()) == expected
 
     expected = (
         """
-Proxy(SubstoryDIProxyRepr.y):
+Proxy(SubstoryDI.y):
   before
-  z (SimpleSubstoryProxyRepr.x)
+  x (Simple.x)
     one
     two
     three
-    four
-  after
     """.strip()
     )
 
-    result = examples.SubstoryDIProxyRepr(examples.SimpleSubstoryProxyRepr().x).y()
-    assert result == expected
+    Collector, getter = make_collector(examples.Simple, "three")
+    examples.SubstoryDI(Collector().x).y(2)
+    assert repr(getter()) == expected
 
-    result = examples.SubstoryDIProxyRepr(examples.SimpleSubstoryProxyRepr().x).y.run()
-    assert result.value == expected
+    Collector, getter = make_collector(examples.Simple, "three")
+    examples.SubstoryDI(Collector().x).y.run(2)
+    assert repr(getter()) == expected
+
+    # TODO: Skip.
