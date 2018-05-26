@@ -373,8 +373,63 @@ def test_proxy_representation():
 
     # TODO: Empty.
     #
-    # TODO: Failure.
-    #
+    # Failure.
+
+    expected = (
+        """
+Proxy(Simple.x):
+  one
+  two
+        """.strip()
+    )
+
+    Collector, getter = make_collector(examples.Simple, "two")
+    with pytest.raises(FailureError):
+        Collector().x(2, 2)
+    assert repr(getter()) == expected
+
+    Collector, getter = make_collector(examples.Simple, "two")
+    Collector().x.run(2, 2)
+    assert repr(getter()) == expected
+
+    expected = (
+        """
+Proxy(SimpleSubstory.y):
+  before
+  x
+    one
+    two
+        """.strip()
+    )
+
+    Collector, getter = make_collector(examples.SimpleSubstory, "two")
+    with pytest.raises(FailureError):
+        Collector().y(3)
+    assert repr(getter()) == expected
+
+    Collector, getter = make_collector(examples.SimpleSubstory, "two")
+    Collector().y.run(3)
+    assert repr(getter()) == expected
+
+    expected = (
+        """
+Proxy(SubstoryDI.y):
+  before
+  x (Simple.x)
+    one
+    two
+        """.strip()
+    )
+
+    Collector, getter = make_collector(examples.Simple, "two")
+    with pytest.raises(FailureError):
+        examples.SubstoryDI(Collector().x).y(3)
+    assert repr(getter()) == expected
+
+    Collector, getter = make_collector(examples.Simple, "two")
+    examples.SubstoryDI(Collector().x).y.run(3)
+    assert repr(getter()) == expected
+
     # Result.
 
     expected = (
