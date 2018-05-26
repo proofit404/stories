@@ -107,6 +107,8 @@ def tell_the_story(obj, f, args, kwargs):
 
         if restype is Skip:
             skipped = of
+            # Substory will be skipped.
+            indent_level -= 1
             continue
 
         if restype is Undefined:
@@ -156,6 +158,8 @@ def run_the_story(obj, f, args, kwargs):
 
         if restype is Skip:
             skipped = of
+            # Substory will be skipped.
+            indent_level -= 1
             continue
 
         if restype is Undefined:

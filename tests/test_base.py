@@ -487,4 +487,76 @@ Proxy(SubstoryDI.y):
     examples.SubstoryDI(Collector().x).y.run(2)
     assert repr(getter()) == expected
 
-    # TODO: Skip.
+    # Skip.
+
+    expected = (
+        """
+Proxy(Simple.x):
+  one
+  two
+        """.strip()
+    )
+
+    Collector, getter = make_collector(examples.Simple, "two")
+    Collector().x(1, -1)
+    assert repr(getter()) == expected
+
+    Collector, getter = make_collector(examples.Simple, "two")
+    Collector().x.run(1, -1)
+    assert repr(getter()) == expected
+
+    expected = (
+        """
+Proxy(SimpleSubstory.y):
+  before
+  x
+    one
+    two
+  after
+        """.strip()
+    )
+
+    Collector, getter = make_collector(examples.SimpleSubstory, "after")
+    Collector().y(-2)
+    assert repr(getter()) == expected
+
+    Collector, getter = make_collector(examples.SimpleSubstory, "after")
+    Collector().y.run(-2)
+    assert repr(getter()) == expected
+
+    expected = (
+        """
+Proxy(SubstoryDI.y):
+  before
+  x (Simple.x)
+    one
+    two
+  after
+        """.strip()
+    )
+
+    Collector, getter = make_collector(examples.SubstoryDI, "after")
+    Collector(examples.Simple().x).y(-2)
+    assert repr(getter()) == expected
+
+    Collector, getter = make_collector(examples.SubstoryDI, "after")
+    Collector(examples.Simple().x).y.run(-2)
+    assert repr(getter()) == expected
+
+    expected = (
+        """
+Proxy(SubstoryDI.y):
+  before
+  x (SimpleSubstory.z)
+    first
+  after
+        """.strip()
+    )
+
+    Collector, getter = make_collector(examples.SubstoryDI, "after")
+    Collector(examples.SimpleSubstory().z).y(2)
+    assert repr(getter()) == expected
+
+    Collector, getter = make_collector(examples.SubstoryDI, "after")
+    Collector(examples.SimpleSubstory().z).y.run(2)
+    assert repr(getter()) == expected
