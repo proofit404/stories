@@ -372,7 +372,47 @@ def test_context_dir():
 def test_proxy_representation():
 
     # TODO: Empty.
+
+    expected = "Proxy(Empty.x)"
+
+    # Collector, getter = make_collector(examples.Empty, "two")
+    # Collector().x()
+    # assert repr(getter()) == expected
     #
+    # Collector, getter = make_collector(examples.Empty, "two")
+    # Collector().x.run()
+    # assert repr(getter()) == expected
+
+    expected = (
+        """
+Proxy(EmptySubstory.y):
+  x
+        """.strip()
+    )
+
+    # Collector, getter = make_collector(examples.EmptySubstory, "x")
+    # Collector().y()
+    # assert repr(getter()) == expected
+    #
+    # Collector, getter = make_collector(examples.EmptySubstory, "x")
+    # Collector().y.run()
+    # assert repr(getter()) == expected
+
+    expected = (
+        """
+Proxy(SubstoryDI.y):
+  x (Empty.x)
+        """.strip()
+    )
+
+    # Collector, getter = make_collector(examples.SubstoryDI, "x")
+    # Collector(examples.Empty().x).y(3)
+    # assert repr(getter()) == expected
+    #
+    # Collector, getter = make_collector(examples.SubstoryDI, "x")
+    # Collector(examples.Empty().x).y.run(3)
+    # assert repr(getter()) == expected
+
     # Failure.
 
     expected = (
