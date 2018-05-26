@@ -419,7 +419,7 @@ Proxy(SubstoryDI.y):
         """
 Proxy(Simple.x):
   one
-  two
+  two (failed)
         """.strip()
     )
 
@@ -438,7 +438,7 @@ Proxy(SimpleSubstory.y):
   before
   x
     one
-    two
+    two (failed)
         """.strip()
     )
 
@@ -457,7 +457,7 @@ Proxy(SubstoryDI.y):
   before
   x (Simple.x)
     one
-    two
+    two (failed)
         """.strip()
     )
 
@@ -477,7 +477,7 @@ Proxy(SubstoryDI.y):
 Proxy(Simple.x):
   one
   two
-  three
+  three (returned: -1)
         """.strip()
     )
 
@@ -496,7 +496,7 @@ Proxy(SimpleSubstory.y):
   x
     one
     two
-    three
+    three (returned: -1)
         """.strip()
     )
 
@@ -515,7 +515,7 @@ Proxy(SubstoryDI.y):
   x (Simple.x)
     one
     two
-    three
+    three (returned: -1)
     """.strip()
     )
 
@@ -533,7 +533,7 @@ Proxy(SubstoryDI.y):
         """
 Proxy(Simple.x):
   one
-  two
+  two (skipped)
         """.strip()
     )
 
@@ -551,8 +551,8 @@ Proxy(SimpleSubstory.y):
   before
   x
     one
-    two
-  after
+    two (skipped)
+  after (returned: -4)
         """.strip()
     )
 
@@ -570,8 +570,8 @@ Proxy(SubstoryDI.y):
   before
   x (Simple.x)
     one
-    two
-  after
+    two (skipped)
+  after (returned: -4)
         """.strip()
     )
 
@@ -588,8 +588,8 @@ Proxy(SubstoryDI.y):
 Proxy(SubstoryDI.y):
   before
   x (SimpleSubstory.z)
-    first
-  after
+    first (skipped)
+  after (returned: 4)
         """.strip()
     )
 

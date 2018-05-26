@@ -100,12 +100,15 @@ def tell_the_story(obj, f, args, kwargs):
         assert restype in (Result, Success, Failure, Skip, Undefined)
 
         if restype is Failure:
+            history[-1] = history[-1] + " (failed)"
             raise FailureError
 
         if restype is Result:
+            history[-1] = history[-1] + " (returned: " + repr(result.value) + ")"
             return result.value
 
         if restype is Skip:
+            history[-1] = history[-1] + " (skipped)"
             skipped = of
             # Substory will be skipped.
             indent_level -= 1
@@ -151,12 +154,15 @@ def run_the_story(obj, f, args, kwargs):
         assert restype in (Result, Success, Failure, Skip, Undefined)
 
         if restype is Failure:
+            history[-1] = history[-1] + " (failed)"
             return FailureSummary(ctx, method.__name__)
 
         if restype is Result:
+            history[-1] = history[-1] + " (returned: " + repr(result.value) + ")"
             return SuccessSummary(result.value)
 
         if restype is Skip:
+            history[-1] = history[-1] + " (skipped)"
             skipped = of
             # Substory will be skipped.
             indent_level -= 1
