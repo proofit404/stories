@@ -304,59 +304,60 @@ def test_skip_representation():
 
 def test_context_representation():
 
-    # TODO: Rewrite with collector.
-
     assert repr(Context({})) == "Context()"
 
     expected = (
         """
 Context:
-    aaaa = 0  # Story argument
-    bbb = 1   # Set by SimpleCtxRepr.one
-    c = 2     # Set by SimpleCtxRepr.two
-    dd = 3    # Set by SimpleCtxRepr.three
-    """.strip()
+    foo = 1  # Story argument
+    bar = 3  # Story argument
+    baz = 4  # Set by Simple.two
+        """.strip()
     )
 
-    result = examples.SimpleCtxRepr().x(0)
-    assert result == expected
+    Collector, getter = make_collector(examples.Simple, "three")
+    Collector().x(1, 3)
+    assert repr(getter().ctx) == expected
 
-    result = examples.SimpleCtxRepr().x.run(0)
-    assert result.value == expected
+    Collector, getter = make_collector(examples.Simple, "three")
+    Collector().x.run(1, 3)
+    assert repr(getter().ctx) == expected
 
     expected = (
         """
 Context:
-    e = 4     # Story argument
-    aaaa = 0  # Set by SimpleSubstoryCtxRepr.before
-    bbb = 1   # Set by SimpleSubstoryCtxRepr.one
-    c = 2     # Set by SimpleSubstoryCtxRepr.two
-    dd = 3    # Set by SimpleSubstoryCtxRepr.three
+    spam = 2  # Story argument
+    foo = 1   # Set by SimpleSubstory.before
+    bar = 3   # Set by SimpleSubstory.before
+    baz = 4   # Set by SimpleSubstory.two
     """.strip()
     )
 
-    result = examples.SimpleSubstoryCtxRepr().y(4)
-    assert result == expected
+    Collector, getter = make_collector(examples.SimpleSubstory, "three")
+    Collector().y(2)
+    assert repr(getter().ctx) == expected
 
-    result = examples.SimpleSubstoryCtxRepr().y.run(4)
-    assert result.value == expected
+    Collector, getter = make_collector(examples.SimpleSubstory, "three")
+    Collector().y.run(2)
+    assert repr(getter().ctx) == expected
 
     expected = (
         """
 Context:
-    e = 4     # Story argument
-    aaaa = 0  # Set by SubstoryDICtxRepr.before
-    bbb = 1   # Set by SimpleCtxRepr.one
-    c = 2     # Set by SimpleCtxRepr.two
-    dd = 3    # Set by SimpleCtxRepr.three
+    spam = 2  # Story argument
+    foo = 1   # Set by SubstoryDI.before
+    bar = 3   # Set by SubstoryDI.before
+    baz = 4   # Set by Simple.two
     """.strip()
     )
 
-    result = examples.SubstoryDICtxRepr(examples.SimpleCtxRepr().x).y(4)
-    assert result == expected
+    Collector, getter = make_collector(examples.Simple, "three")
+    examples.SubstoryDI(Collector().x).y(2)
+    assert repr(getter().ctx) == expected
 
-    result = examples.SubstoryDICtxRepr(examples.SimpleCtxRepr().x).y.run(4)
-    assert result.value == expected
+    Collector, getter = make_collector(examples.Simple, "three")
+    examples.SubstoryDI(Collector().x).y.run(2)
+    assert repr(getter().ctx) == expected
 
 
 def test_context_dir():
