@@ -27,8 +27,8 @@ class EmptySubstory(Empty):
 class Simple(object):
 
     @story
-    @argument("a")
-    @argument("b")
+    @argument("foo")
+    @argument("bar")
     def x(self):
         self.one()
         self.two()
@@ -38,16 +38,16 @@ class Simple(object):
         return Success()
 
     def two(self):
-        if self.ctx.a > 1:
+        if self.ctx.foo > 1:
             return Failure()
 
-        if self.ctx.b < 0:
+        if self.ctx.bar < 0:
             return Skip()
 
-        return Success(c=4)
+        return Success(baz=4)
 
     def three(self):
-        return Result(self.ctx.b - self.ctx.c)
+        return Result(self.ctx.bar - self.ctx.baz)
 
 
 # Substory in the same class.
@@ -56,21 +56,21 @@ class Simple(object):
 class SimpleSubstory(Simple):
 
     @story
-    @argument("d")
+    @argument("spam")
     def y(self):
         self.before()
         self.x()
         self.after()
 
     def before(self):
-        return Success(a=self.ctx.d - 1, b=self.ctx.d + 1)
+        return Success(foo=self.ctx.spam - 1, bar=self.ctx.spam + 1)
 
     def after(self):
-        return Result(self.ctx.d * 2)
+        return Result(self.ctx.spam * 2)
 
     @story
-    @argument("a")
-    @argument("b")
+    @argument("foo")
+    @argument("bar")
     def z(self):
         self.first()
         self.x()
@@ -88,17 +88,17 @@ class SubstoryDI(object):
         self.x = x
 
     @story
-    @argument("d")
+    @argument("spam")
     def y(self):
         self.before()
         self.x()
         self.after()
 
     def before(self):
-        return Success(a=self.ctx.d - 1, b=self.ctx.d + 1)
+        return Success(foo=self.ctx.spam - 1, bar=self.ctx.spam + 1)
 
     def after(self):
-        return Result(self.ctx.d * 2)
+        return Result(self.ctx.spam * 2)
 
 
 # Method tries to override existed context key.
@@ -107,12 +107,12 @@ class SubstoryDI(object):
 class ExistedKey(object):
 
     @story
-    @argument("a")
+    @argument("foo")
     def x(self):
         self.one()
 
     def one(self):
-        return Success(a=2)
+        return Success(foo=2)
 
 
 # Method tries to return wrong type.
@@ -151,12 +151,12 @@ class ImplementationDI(object):
         self.f = f
 
     @story
-    @argument("a")
+    @argument("foo")
     def x(self):
         self.one()
 
     def one(self):
-        return Result(self.f(self.ctx.a))
+        return Result(self.f(self.ctx.foo))
 
 
 # Context representation.
