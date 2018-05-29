@@ -38,6 +38,9 @@ class Simple(object):
         return Success()
 
     def two(self):
+        if self.ctx.foo > 2:
+            return Failure("'foo' is too big")
+
         if self.ctx.foo > 1:
             return Failure()
 

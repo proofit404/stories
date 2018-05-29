@@ -3,4 +3,7 @@ class StoryError(Exception):
 
 
 class FailureError(StoryError):
-    pass
+
+    def __init__(self, reason):
+        self.reason = reason
+        super(FailureError, self).__init__()

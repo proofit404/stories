@@ -35,37 +35,97 @@ def test_empty():
 
 def test_failure():
 
-    with pytest.raises(FailureError):
+    # Simple.
+
+    with pytest.raises(FailureError) as exc_info:
         examples.Simple().x(2, 2)
+    assert not exc_info.value.reason
 
     result = examples.Simple().x.run(2, 2)
     assert not result.is_success
     assert result.is_failure
+    assert not result.reason
     assert result.ctx == {"foo": 2, "bar": 2}
     assert result.failed_on("two")
     assert not result.failed_on("one")
     with pytest.raises(AssertionError):
         result.value
 
-    with pytest.raises(FailureError):
+    # Simple with reason.
+
+    with pytest.raises(FailureError) as exc_info:
+        examples.Simple().x(3, 2)
+    assert exc_info.value.reason == "'foo' is too big"
+
+    result = examples.Simple().x.run(3, 2)
+    assert not result.is_success
+    assert result.is_failure
+    assert result.reason == "'foo' is too big"
+    assert result.ctx == {"foo": 3, "bar": 2}
+    assert result.failed_on("two")
+    assert not result.failed_on("one")
+    with pytest.raises(AssertionError):
+        result.value
+
+    # Simple substory.
+
+    with pytest.raises(FailureError) as exc_info:
         examples.SimpleSubstory().y(3)
+    assert not exc_info.value.reason
 
     result = examples.SimpleSubstory().y.run(3)
     assert not result.is_success
     assert result.is_failure
+    assert not result.reason
     assert result.ctx == {"foo": 2, "bar": 4, "spam": 3}
     assert result.failed_on("two")
     assert not result.failed_on("one")
     with pytest.raises(AssertionError):
         result.value
 
-    with pytest.raises(FailureError):
+    # Simple substory with reason.
+
+    with pytest.raises(FailureError) as exc_info:
+        examples.SimpleSubstory().y(4)
+    assert exc_info.value.reason == "'foo' is too big"
+
+    result = examples.SimpleSubstory().y.run(4)
+    assert not result.is_success
+    assert result.is_failure
+    assert result.reason == "'foo' is too big"
+    assert result.ctx == {"foo": 3, "bar": 5, "spam": 4}
+    assert result.failed_on("two")
+    assert not result.failed_on("one")
+    with pytest.raises(AssertionError):
+        result.value
+
+    # Substory DI.
+
+    with pytest.raises(FailureError) as exc_info:
         examples.SubstoryDI(examples.Simple().x).y(3)
+    assert not exc_info.value.reason
 
     result = examples.SubstoryDI(examples.Simple().x).y.run(3)
     assert not result.is_success
     assert result.is_failure
+    assert not result.reason
     assert result.ctx == {"foo": 2, "bar": 4, "spam": 3}
+    assert result.failed_on("two")
+    assert not result.failed_on("one")
+    with pytest.raises(AssertionError):
+        result.value
+
+    # Substory DI with reason.
+
+    with pytest.raises(FailureError) as exc_info:
+        examples.SubstoryDI(examples.Simple().x).y(4)
+    assert exc_info.value.reason == "'foo' is too big"
+
+    result = examples.SubstoryDI(examples.Simple().x).y.run(4)
+    assert not result.is_success
+    assert result.is_failure
+    assert result.reason == "'foo' is too big"
+    assert result.ctx == {"foo": 3, "bar": 5, "spam": 4}
     assert result.failed_on("two")
     assert not result.failed_on("one")
     with pytest.raises(AssertionError):

@@ -43,6 +43,15 @@ class Success(object):
 
 class Failure(object):
 
+    def __init__(self, reason=None):
+        # TODO: Show reason in Failure repr.
+        #
+        # TODO: Show reason in Proxy repr.
+        #
+        # TODO: Add failed_because method to the FailureSummary and
+        # SuccessSummary.
+        self.reason = reason
+
     def __repr__(self):
         return self.__class__.__name__ + "()"
 
@@ -101,7 +110,7 @@ def tell_the_story(obj, f, args, kwargs):
 
         if restype is Failure:
             history[-1] = history[-1] + " (failed)"
-            raise FailureError
+            raise FailureError(result.reason)
 
         if restype is Result:
             history[-1] = history[-1] + " (returned: " + repr(result.value) + ")"
@@ -155,7 +164,7 @@ def run_the_story(obj, f, args, kwargs):
 
         if restype is Failure:
             history[-1] = history[-1] + " (failed)"
-            return FailureSummary(ctx, method.__name__)
+            return FailureSummary(ctx, method.__name__, result.reason)
 
         if restype is Result:
             history[-1] = history[-1] + " (returned: " + repr(result.value) + ")"
@@ -303,11 +312,12 @@ class Proxy(object):
 
 class FailureSummary(object):
 
-    def __init__(self, ctx, failed_method):
+    def __init__(self, ctx, failed_method, reason):
         self.is_success = False
         self.is_failure = True
         self.ctx = ctx
         self.failed_method = failed_method
+        self.reason = reason
 
     def failed_on(self, method_name):
         return method_name == self.failed_method
