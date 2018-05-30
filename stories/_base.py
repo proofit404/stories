@@ -322,6 +322,9 @@ class FailureSummary(object):
     def failed_on(self, method_name):
         return method_name == self.failed_method
 
+    def failed_because(self, reason):
+        return reason == self.reason
+
     @property
     def value(self):
         raise AssertionError
@@ -335,6 +338,9 @@ class SuccessSummary(object):
         self.value = value
 
     def failed_on(self, method_name):
+        return False
+
+    def failed_because(self, reason):
         return False
 
 

@@ -48,6 +48,8 @@ def test_failure():
     assert result.ctx == {"foo": 2, "bar": 2}
     assert result.failed_on("two")
     assert not result.failed_on("one")
+    assert result.failed_because(None)
+    assert not result.failed_because("'foo' is too big")
     with pytest.raises(AssertionError):
         result.value
 
@@ -64,6 +66,8 @@ def test_failure():
     assert result.ctx == {"foo": 3, "bar": 2}
     assert result.failed_on("two")
     assert not result.failed_on("one")
+    assert result.failed_because("'foo' is too big")
+    assert not result.failed_because(None)
     with pytest.raises(AssertionError):
         result.value
 
@@ -80,6 +84,8 @@ def test_failure():
     assert result.ctx == {"foo": 2, "bar": 4, "spam": 3}
     assert result.failed_on("two")
     assert not result.failed_on("one")
+    assert result.failed_because(None)
+    assert not result.failed_because("'foo' is too big")
     with pytest.raises(AssertionError):
         result.value
 
@@ -96,6 +102,8 @@ def test_failure():
     assert result.ctx == {"foo": 3, "bar": 5, "spam": 4}
     assert result.failed_on("two")
     assert not result.failed_on("one")
+    assert result.failed_because("'foo' is too big")
+    assert not result.failed_because(None)
     with pytest.raises(AssertionError):
         result.value
 
@@ -112,6 +120,8 @@ def test_failure():
     assert result.ctx == {"foo": 2, "bar": 4, "spam": 3}
     assert result.failed_on("two")
     assert not result.failed_on("one")
+    assert result.failed_because(None)
+    assert not result.failed_because("'foo' is too big")
     with pytest.raises(AssertionError):
         result.value
 
@@ -128,6 +138,8 @@ def test_failure():
     assert result.ctx == {"foo": 3, "bar": 5, "spam": 4}
     assert result.failed_on("two")
     assert not result.failed_on("one")
+    assert result.failed_because("'foo' is too big")
+    assert not result.failed_because(None)
     with pytest.raises(AssertionError):
         result.value
 
@@ -140,6 +152,8 @@ def test_result():
     result = examples.Simple().x.run(1, 3)
     assert result.is_success
     assert not result.is_failure
+    assert not result.failed_on("two")
+    assert not result.failed_because("'foo' is too big")
     assert result.value == -1
 
     result = examples.SimpleSubstory().y(2)
@@ -148,6 +162,8 @@ def test_result():
     result = examples.SimpleSubstory().y.run(2)
     assert result.is_success
     assert not result.is_failure
+    assert not result.failed_on("two")
+    assert not result.failed_because("'foo' is too big")
     assert result.value == -1
 
     result = examples.SubstoryDI(examples.Simple().x).y(2)
@@ -156,6 +172,8 @@ def test_result():
     result = examples.SubstoryDI(examples.Simple().x).y.run(2)
     assert result.is_success
     assert not result.is_failure
+    assert not result.failed_on("two")
+    assert not result.failed_because("'foo' is too big")
     assert result.value == -1
 
 
