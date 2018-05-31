@@ -109,7 +109,10 @@ def tell_the_story(obj, f, args, kwargs):
         assert restype in (Result, Success, Failure, Skip, Undefined)
 
         if restype is Failure:
-            history[-1] = history[-1] + " (failed)"
+            if result.reason:
+                history[-1] = history[-1] + " (failed: " + repr(result.reason) + ")"
+            else:
+                history[-1] = history[-1] + " (failed)"
             raise FailureError(result.reason)
 
         if restype is Result:
@@ -163,7 +166,10 @@ def run_the_story(obj, f, args, kwargs):
         assert restype in (Result, Success, Failure, Skip, Undefined)
 
         if restype is Failure:
-            history[-1] = history[-1] + " (failed)"
+            if result.reason:
+                history[-1] = history[-1] + " (failed: " + repr(result.reason) + ")"
+            else:
+                history[-1] = history[-1] + " (failed)"
             return FailureSummary(ctx, method.__name__, result.reason)
 
         if restype is Result:
