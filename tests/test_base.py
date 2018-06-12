@@ -736,3 +736,15 @@ Proxy(SubstoryDI.y):
     Collector, getter = make_collector(examples.SubstoryDI, "after")
     Collector(examples.SimpleSubstory().z).y.run(2)
     assert repr(getter()) == expected
+
+    # Error.
+
+    expected = """
+Proxy(StepError.x):
+  one (errored: Exception)
+    """.strip()
+
+    Collector, getter = make_collector(examples.StepError, "one")
+    with pytest.raises(Exception):
+        Collector().x()
+    assert repr(getter()) == expected

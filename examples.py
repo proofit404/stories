@@ -160,3 +160,16 @@ class ImplementationDI(object):
 
     def one(self):
         return Result(self.f(self.ctx.foo))
+
+
+# Step error.
+
+
+class StepError(object):
+
+    @story
+    def x(self):
+        self.one()
+
+    def one(self):
+        raise Exception()

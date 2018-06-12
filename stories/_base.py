@@ -47,9 +47,6 @@ class Failure(object):
         # TODO: Show reason in Failure repr.
         #
         # TODO: Show reason in Proxy repr.
-        #
-        # TODO: Add failed_because method to the FailureSummary and
-        # SuccessSummary.
         self.reason = reason
 
     def __repr__(self):
@@ -103,7 +100,11 @@ def tell_the_story(obj, f, args, kwargs):
             continue
 
         history.append("  " * indent_level + method.__name__)
-        result = method(make_proxy(self, ctx, history))
+        try:
+            result = method(make_proxy(self, ctx, history))
+        except Exception as error:
+            history[-1] = history[-1] + " (errored: " + error.__class__.__name__ + ")"
+            raise
 
         restype = type(result)
         assert restype in (Result, Success, Failure, Skip, Undefined)
