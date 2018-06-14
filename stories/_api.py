@@ -1,4 +1,5 @@
-from ._base import StoryWrapper, collect_story
+from ._collect import collect_story
+from ._wrapper import StoryWrapper
 
 
 class story(object):

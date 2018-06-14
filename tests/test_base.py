@@ -2,7 +2,7 @@ import examples
 import pytest
 from helpers import make_collector
 from stories import Failure, Result, Skip, Success
-from stories._base import Context
+from stories._context import Context
 from stories.exceptions import FailureError
 
 

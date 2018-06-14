@@ -1,15 +1,15 @@
 import itertools
 
 import pytest
-import stories._base
+import stories._context
+import stories._run
 
 
-origin_make_proxy = stories._base.make_proxy
-origin_context_init = stories._base.Context.__init__
+origin_make_proxy = stories._run.make_proxy
+origin_context_init = stories._context.Context.__init__
 
 
 def track_proxy(storage):
-
     def wrapper(obj, ctx, history):
 
         proxy = origin_make_proxy(obj, ctx, history)
@@ -20,7 +20,6 @@ def track_proxy(storage):
 
 
 def track_context(storage, sequence):
-
     def wrapper(ctx, ns):
 
         origin_context_init(ctx, ns)
@@ -35,11 +34,11 @@ def track_context(storage, sequence):
 def pytest_runtest_call(item):
     sequence = itertools.count()
     storage = {}
-    stories._base.make_proxy = track_proxy(storage)
-    stories._base.Context.__init__ = track_context(storage, sequence)
+    stories._run.make_proxy = track_proxy(storage)
+    stories._context.Context.__init__ = track_context(storage, sequence)
     yield
-    stories._base.make_proxy = origin_make_proxy
-    stories._base.Context.__init__ = origin_context_init
+    stories._run.make_proxy = origin_make_proxy
+    stories._context.Context.__init__ = origin_context_init
     item.add_report_section(
         "call",
         "stories",

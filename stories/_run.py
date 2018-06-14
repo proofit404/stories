@@ -1,75 +1,11 @@
 import sys
 
+from ._collect import end_of_story
 from ._context import Context
 from ._marker import Undefined, undefined, valid_arguments
-from ._repr import story_representation
 from ._return import Failure, Result, Skip, Success
 from ._summary import FailureSummary, SuccessSummary
 from .exceptions import FailureError
-
-
-def collect_story(f):
-
-    calls = []
-
-    class Collector(object):
-        def __getattr__(self, name):
-            calls.append(name)
-            return lambda: None
-
-    f(Collector())
-
-    return calls
-
-
-class StoryWrapper(object):
-    def __init__(self, cls, obj, name, arguments, collected):
-        self.cls = cls
-        self.obj = obj
-        self.cls_name = cls.__name__
-        self.name = name
-        self.arguments = arguments
-        self.collected = collected
-        self.of = of = object()  # FIXME: Remove!
-        self.methods = wrap_story(of, obj, collected)
-
-    def __call__(self, *args, **kwargs):
-        return tell_the_story(
-            self.cls_name, self.name, self.methods, self.arguments, args, kwargs
-        )
-
-    def run(self, *args, **kwargs):
-        return run_the_story(
-            self.cls_name, self.name, self.methods, self.arguments, args, kwargs
-        )
-
-    def __repr__(self):
-        return story_representation(
-            self.cls_name + "." + self.name, self.cls, self.obj, self.collected
-        )
-
-
-def wrap_story(of, obj, collected):
-
-    methods = []
-
-    for name in collected:
-        attr = getattr(obj, name)
-        if is_story(attr):
-            if attr.obj is obj:
-                method_name = name
-            else:
-                # FIXME: I don't like this duplication.
-                method_name = name + " (" + attr.cls_name + "." + attr.name + ")"
-            methods.append(
-                (attr.obj, make_validator(method_name, attr.arguments), attr.of)
-            )
-            methods.extend(attr.methods)
-            methods.append((attr.obj, end_of_story, attr.of))
-        else:
-            methods.append((obj, attr.__func__, of))
-
-    return methods
 
 
 def tell_the_story(cls_name, name, methods, arguments, args, kwargs):
@@ -229,21 +165,3 @@ class Proxy(object):
 
     def __repr__(self):
         return "\n".join(self.history)
-
-
-def is_story(attribute):
-    return callable(attribute) and type(attribute) is StoryWrapper
-
-
-def make_validator(name, arguments):
-    def validate_substory_arguments(self):
-        assert set(arguments) <= set(self.ctx.ns)
-        return valid_arguments
-
-    validate_substory_arguments.method_name = name
-
-    return validate_substory_arguments
-
-
-def end_of_story(self):
-    return undefined
