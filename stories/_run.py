@@ -82,7 +82,11 @@ def run_the_story(cls_name, name, methods, arguments, args, kwargs):
             continue
 
         history.append("  " * indent_level + method.__name__)
-        result = method(make_proxy(self, ctx, history))
+        try:
+            result = method(make_proxy(self, ctx, history))
+        except Exception as error:
+            history[-1] = history[-1] + " (errored: " + error.__class__.__name__ + ")"
+            raise
 
         restype = type(result)
         assert restype in (Result, Success, Failure, Skip, Undefined)

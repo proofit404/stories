@@ -748,3 +748,8 @@ Proxy(StepError.x):
     with pytest.raises(Exception):
         Collector().x()
     assert repr(getter()) == expected
+
+    Collector, getter = make_collector(examples.StepError, "one")
+    with pytest.raises(Exception):
+        Collector().x.run()
+    assert repr(getter()) == expected
