@@ -2,6 +2,7 @@ def make_collector(cls, methodname):
 
     storage = []
     method = getattr(cls, methodname)
+    method = getattr(method, "__func__", method)
 
     def collect(self):
         storage.append(self)
