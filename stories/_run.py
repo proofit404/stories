@@ -18,8 +18,15 @@ def tell_the_story(ctx, history, methods):
             continue
 
         history.append("  " * indent_level + method.__name__)
+
         try:
-            result = method(proxy)
+            try:
+                result = method(proxy)
+            except AttributeError as error:
+                if proxy.__class__.__name__ in error.args[0]:
+                    assert False
+                else:
+                    raise
         except Exception as error:
             history[-1] = history[-1] + " (errored: " + error.__class__.__name__ + ")"
             raise
@@ -75,8 +82,15 @@ def run_the_story(ctx, history, methods):
             continue
 
         history.append("  " * indent_level + method.__name__)
+
         try:
-            result = method(proxy)
+            try:
+                result = method(proxy)
+            except AttributeError as error:
+                if proxy.__class__.__name__ in error.args[0]:
+                    assert False
+                else:
+                    raise
         except Exception as error:
             history[-1] = history[-1] + " (errored: " + error.__class__.__name__ + ")"
             raise

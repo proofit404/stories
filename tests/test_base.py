@@ -247,10 +247,10 @@ def test_return_type():
 
 def test_attribute_access():
 
-    with pytest.raises(AttributeError):
+    with pytest.raises(AssertionError):
         examples.AttributeAccess().x()
 
-    with pytest.raises(AttributeError):
+    with pytest.raises(AssertionError):
         examples.AttributeAccess().x.run()
 
 
