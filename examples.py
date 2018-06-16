@@ -5,7 +5,6 @@ from stories import Failure, Result, Skip, Success, argument, story
 
 
 class Empty(object):
-
     @story
     def x(self):
         pass
@@ -15,7 +14,6 @@ class Empty(object):
 
 
 class EmptySubstory(Empty):
-
     @story
     def y(self):
         self.x()
@@ -25,7 +23,6 @@ class EmptySubstory(Empty):
 
 
 class Simple(object):
-
     @story
     @argument("foo")
     @argument("bar")
@@ -57,7 +54,6 @@ class Simple(object):
 
 
 class SimpleSubstory(Simple):
-
     @story
     @argument("spam")
     def y(self):
@@ -90,7 +86,6 @@ class SimpleSubstory(Simple):
 
 
 class SubstoryDI(object):
-
     def __init__(self, x):
         self.x = x
 
@@ -116,7 +111,6 @@ class SubstoryDI(object):
 
 
 class ExistedKey(object):
-
     @story
     @argument("foo")
     def x(self):
@@ -130,7 +124,6 @@ class ExistedKey(object):
 
 
 class WrongResult(object):
-
     @story
     def x(self):
         self.one()
@@ -157,7 +150,6 @@ class AttributeAccess(object):
 
 
 class ImplementationDI(object):
-
     def __init__(self, f):
         self.f = f
 
@@ -174,7 +166,6 @@ class ImplementationDI(object):
 
 
 class StepError(object):
-
     @story
     def x(self):
         self.one()

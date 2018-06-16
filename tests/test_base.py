@@ -268,27 +268,22 @@ def test_inject_implementation():
 def test_story_representation():
 
     story = repr(examples.Empty().x)
-    expected = (
-        """
+    expected = """
 Empty.x
   <empty>
 """.strip()
-    )
     assert story == expected
 
     story = repr(examples.EmptySubstory().y)
-    expected = (
-        """
+    expected = """
 EmptySubstory.y
   x
     <empty>
 """.strip()
-    )
     assert story == expected
 
     story = repr(examples.SubstoryDI(examples.Empty().x).y)
-    expected = (
-        """
+    expected = """
 SubstoryDI.y
   start
   before
@@ -296,23 +291,19 @@ SubstoryDI.y
     <empty>
   after
 """.strip()
-    )
     assert story == expected
 
     story = repr(examples.Simple().x)
-    expected = (
-        """
+    expected = """
 Simple.x
   one
   two
   three
 """.strip()
-    )
     assert story == expected
 
     story = repr(examples.SimpleSubstory().y)
-    expected = (
-        """
+    expected = """
 SimpleSubstory.y
   start
   before
@@ -322,12 +313,10 @@ SimpleSubstory.y
     three
   after
 """.strip()
-    )
     assert story == expected
 
     story = repr(examples.SubstoryDI(examples.Simple().x).y)
-    expected = (
-        """
+    expected = """
 SubstoryDI.y
   start
   before
@@ -337,12 +326,10 @@ SubstoryDI.y
     three
   after
 """.strip()
-    )
     assert story == expected
 
     story = repr(examples.SubstoryDI(examples.SimpleSubstory().z).y)
-    expected = (
-        """
+    expected = """
 SubstoryDI.y
   start
   before
@@ -354,7 +341,6 @@ SubstoryDI.y
       three
   after
 """.strip()
-    )
     assert story == expected
 
 
@@ -386,14 +372,12 @@ def test_context_representation():
 
     assert repr(Context({})) == "Context()"
 
-    expected = (
-        """
+    expected = """
 Context:
     foo = 1  # Story argument
     bar = 3  # Story argument
     baz = 4  # Set by Simple.two
         """.strip()
-    )
 
     Collector, getter = make_collector(examples.Simple, "three")
     Collector().x(1, 3)
@@ -403,15 +387,13 @@ Context:
     Collector().x.run(1, 3)
     assert repr(getter().ctx) == expected
 
-    expected = (
-        """
+    expected = """
 Context:
     spam = 2  # Story argument
     foo = 1   # Set by SimpleSubstory.start
     bar = 3   # Set by SimpleSubstory.before
     baz = 4   # Set by SimpleSubstory.two
     """.strip()
-    )
 
     Collector, getter = make_collector(examples.SimpleSubstory, "three")
     Collector().y(2)
@@ -421,15 +403,13 @@ Context:
     Collector().y.run(2)
     assert repr(getter().ctx) == expected
 
-    expected = (
-        """
+    expected = """
 Context:
     spam = 2  # Story argument
     foo = 1   # Set by SubstoryDI.start
     bar = 3   # Set by SubstoryDI.before
     baz = 4   # Set by Simple.two
     """.strip()
-    )
 
     Collector, getter = make_collector(examples.Simple, "three")
     examples.SubstoryDI(Collector().x).y(2)
@@ -464,12 +444,10 @@ def test_proxy_representation():
     # Collector().x.run()
     # assert repr(getter()) == expected
 
-    expected = (
-        """
+    expected = """
 Proxy(EmptySubstory.y):
   x
         """.strip()
-    )
 
     # Collector, getter = make_collector(examples.EmptySubstory, "x")
     # Collector().y()
@@ -479,12 +457,10 @@ Proxy(EmptySubstory.y):
     # Collector().y.run()
     # assert repr(getter()) == expected
 
-    expected = (
-        """
+    expected = """
 Proxy(SubstoryDI.y):
   x (Empty.x)
         """.strip()
-    )
 
     # Collector, getter = make_collector(examples.SubstoryDI, "x")
     # Collector(examples.Empty().x).y(3)
@@ -496,13 +472,11 @@ Proxy(SubstoryDI.y):
 
     # Failure.
 
-    expected = (
-        """
+    expected = """
 Proxy(Simple.x):
   one
   two (failed)
         """.strip()
-    )
 
     Collector, getter = make_collector(examples.Simple, "two")
     with pytest.raises(FailureError):
@@ -513,8 +487,7 @@ Proxy(Simple.x):
     Collector().x.run(2, 2)
     assert repr(getter()) == expected
 
-    expected = (
-        """
+    expected = """
 Proxy(SimpleSubstory.y):
   start
   before
@@ -522,7 +495,6 @@ Proxy(SimpleSubstory.y):
     one
     two (failed)
         """.strip()
-    )
 
     Collector, getter = make_collector(examples.SimpleSubstory, "two")
     with pytest.raises(FailureError):
@@ -533,8 +505,7 @@ Proxy(SimpleSubstory.y):
     Collector().y.run(3)
     assert repr(getter()) == expected
 
-    expected = (
-        """
+    expected = """
 Proxy(SubstoryDI.y):
   start
   before
@@ -542,7 +513,6 @@ Proxy(SubstoryDI.y):
     one
     two (failed)
         """.strip()
-    )
 
     Collector, getter = make_collector(examples.Simple, "two")
     with pytest.raises(FailureError):
@@ -555,13 +525,11 @@ Proxy(SubstoryDI.y):
 
     # Failure with reason.
 
-    expected = (
-        """
+    expected = """
 Proxy(Simple.x):
   one
   two (failed: "'foo' is too big")
         """.strip()
-    )
 
     Collector, getter = make_collector(examples.Simple, "two")
     with pytest.raises(FailureError):
@@ -572,8 +540,7 @@ Proxy(Simple.x):
     Collector().x.run(3, 2)
     assert repr(getter()) == expected
 
-    expected = (
-        """
+    expected = """
 Proxy(SimpleSubstory.y):
   start
   before
@@ -581,7 +548,6 @@ Proxy(SimpleSubstory.y):
     one
     two (failed: "'foo' is too big")
         """.strip()
-    )
 
     Collector, getter = make_collector(examples.SimpleSubstory, "two")
     with pytest.raises(FailureError):
@@ -592,8 +558,7 @@ Proxy(SimpleSubstory.y):
     Collector().y.run(4)
     assert repr(getter()) == expected
 
-    expected = (
-        """
+    expected = """
 Proxy(SubstoryDI.y):
   start
   before
@@ -601,7 +566,6 @@ Proxy(SubstoryDI.y):
     one
     two (failed: "'foo' is too big")
         """.strip()
-    )
 
     Collector, getter = make_collector(examples.Simple, "two")
     with pytest.raises(FailureError):
@@ -614,14 +578,12 @@ Proxy(SubstoryDI.y):
 
     # Result.
 
-    expected = (
-        """
+    expected = """
 Proxy(Simple.x):
   one
   two
   three (returned: -1)
         """.strip()
-    )
 
     Collector, getter = make_collector(examples.Simple, "three")
     Collector().x(1, 3)
@@ -631,8 +593,7 @@ Proxy(Simple.x):
     Collector().x.run(1, 3)
     assert repr(getter()) == expected
 
-    expected = (
-        """
+    expected = """
 Proxy(SimpleSubstory.y):
   start
   before
@@ -641,7 +602,6 @@ Proxy(SimpleSubstory.y):
     two
     three (returned: -1)
         """.strip()
-    )
 
     Collector, getter = make_collector(examples.SimpleSubstory, "three")
     Collector().y(2)
@@ -651,8 +611,7 @@ Proxy(SimpleSubstory.y):
     Collector().y.run(2)
     assert repr(getter()) == expected
 
-    expected = (
-        """
+    expected = """
 Proxy(SubstoryDI.y):
   start
   before
@@ -661,7 +620,6 @@ Proxy(SubstoryDI.y):
     two
     three (returned: -1)
     """.strip()
-    )
 
     Collector, getter = make_collector(examples.Simple, "three")
     examples.SubstoryDI(Collector().x).y(2)
@@ -673,13 +631,11 @@ Proxy(SubstoryDI.y):
 
     # Skip.
 
-    expected = (
-        """
+    expected = """
 Proxy(Simple.x):
   one
   two (skipped)
         """.strip()
-    )
 
     Collector, getter = make_collector(examples.Simple, "two")
     Collector().x(1, -1)
@@ -689,8 +645,7 @@ Proxy(Simple.x):
     Collector().x.run(1, -1)
     assert repr(getter()) == expected
 
-    expected = (
-        """
+    expected = """
 Proxy(SimpleSubstory.y):
   start
   before
@@ -699,7 +654,6 @@ Proxy(SimpleSubstory.y):
     two (skipped)
   after (returned: -4)
         """.strip()
-    )
 
     Collector, getter = make_collector(examples.SimpleSubstory, "after")
     Collector().y(-2)
@@ -709,8 +663,7 @@ Proxy(SimpleSubstory.y):
     Collector().y.run(-2)
     assert repr(getter()) == expected
 
-    expected = (
-        """
+    expected = """
 Proxy(SubstoryDI.y):
   start
   before
@@ -719,7 +672,6 @@ Proxy(SubstoryDI.y):
     two (skipped)
   after (returned: -4)
         """.strip()
-    )
 
     Collector, getter = make_collector(examples.SubstoryDI, "after")
     Collector(examples.Simple().x).y(-2)
@@ -729,8 +681,7 @@ Proxy(SubstoryDI.y):
     Collector(examples.Simple().x).y.run(-2)
     assert repr(getter()) == expected
 
-    expected = (
-        """
+    expected = """
 Proxy(SubstoryDI.y):
   start
   before
@@ -738,7 +689,6 @@ Proxy(SubstoryDI.y):
     first (skipped)
   after (returned: 4)
         """.strip()
-    )
 
     Collector, getter = make_collector(examples.SubstoryDI, "after")
     Collector(examples.SimpleSubstory().z).y(2)
