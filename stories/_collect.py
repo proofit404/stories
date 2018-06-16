@@ -1,4 +1,5 @@
 from ._marker import substory_end, substory_start
+from ._proxy import make_proxy
 
 
 def collect_story(f):
@@ -15,25 +16,30 @@ def collect_story(f):
     return calls
 
 
-def wrap_story(is_story, of, obj, collected):
+def wrap_story(is_story, collected, obj, ctx, history):
 
     methods = []
+    proxy = make_proxy(obj, ctx, history)
 
     for name in collected:
         attr = getattr(obj, name)
-        if is_story(attr):
-            if attr.obj is obj:
-                method_name = name
-            else:
-                # FIXME: I don't like this duplication.
-                method_name = name + " (" + attr.cls_name + "." + attr.name + ")"
-            methods.append(
-                (attr.obj, make_validator(method_name, attr.arguments), attr.of)
-            )
-            methods.extend(attr.methods)
-            methods.append((attr.obj, end_of_story, attr.of))
+        if not is_story(attr):
+            methods.append((proxy, attr.__func__))
+            continue
+
+        sub_methods = wrap_story(is_story, attr.collected, attr.obj, ctx, history)
+        if not sub_methods:
+            continue
+
+        if attr.obj is obj:
+            method_name = name
         else:
-            methods.append((obj, attr.__func__, of))
+            method_name = name + " (" + attr.cls_name + "." + attr.name + ")"
+
+        sub_proxy = sub_methods[0][0]
+        methods.append((sub_proxy, make_validator(method_name, attr.arguments)))
+        methods.extend(sub_methods)
+        methods.append((sub_proxy, end_of_story))
 
     return methods
 
