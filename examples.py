@@ -142,7 +142,7 @@ class AttributeAccess(object):
         self.one()
 
     def one(self):
-        return Result(self.clsattr == 1)
+        self.clsattr
 
 
 # Dependency injection of the implementation methods.

@@ -247,13 +247,11 @@ def test_return_type():
 
 def test_attribute_access():
 
-    result = examples.AttributeAccess().x()
-    assert result is True
+    with pytest.raises(AttributeError):
+        examples.AttributeAccess().x()
 
-    result = examples.AttributeAccess().x.run()
-    assert result.is_success
-    assert not result.is_failure
-    assert result.value is True
+    with pytest.raises(AttributeError):
+        examples.AttributeAccess().x.run()
 
 
 def test_inject_implementation():

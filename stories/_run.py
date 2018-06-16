@@ -1,5 +1,3 @@
-import sys
-
 from ._collect import end_of_story
 from ._context import Context
 from ._marker import Undefined, undefined, valid_arguments
@@ -11,7 +9,7 @@ from .exceptions import FailureError
 def tell_the_story(cls_name, name, methods, arguments, args, kwargs):
 
     ctx = Context(validate_arguments(arguments, args, kwargs))
-    skipped = undefined
+    proxy = current_self = skipped = undefined
     history = ["Proxy(" + cls_name + "." + name + "):"]
     indent_level = 1
 
@@ -22,9 +20,13 @@ def tell_the_story(cls_name, name, methods, arguments, args, kwargs):
                 skipped = undefined
             continue
 
+        if current_self is not self:
+            proxy = make_proxy(self, ctx, history)
+            current_self = self
+
         history.append("  " * indent_level + method.__name__)
         try:
-            result = method(make_proxy(self, ctx, history))
+            result = method(proxy)
         except Exception as error:
             history[-1] = history[-1] + " (errored: " + error.__class__.__name__ + ")"
             raise
@@ -70,7 +72,7 @@ def tell_the_story(cls_name, name, methods, arguments, args, kwargs):
 def run_the_story(cls_name, name, methods, arguments, args, kwargs):
 
     ctx = Context(validate_arguments(arguments, args, kwargs))
-    skipped = undefined
+    proxy = current_self = skipped = undefined
     history = ["Proxy(" + cls_name + "." + name + "):"]
     indent_level = 1
 
@@ -81,9 +83,13 @@ def run_the_story(cls_name, name, methods, arguments, args, kwargs):
                 skipped = undefined
             continue
 
+        if current_self is not self:
+            proxy = make_proxy(self, ctx, history)
+            current_self = self
+
         history.append("  " * indent_level + method.__name__)
         try:
-            result = method(make_proxy(self, ctx, history))
+            result = method(proxy)
         except Exception as error:
             history[-1] = history[-1] + " (errored: " + error.__class__.__name__ + ")"
             raise
@@ -140,32 +146,14 @@ def validate_arguments(arguments, args, kwargs):
     return kwargs
 
 
-PY3 = sys.version_info[0] >= 3
+def make_proxy(obj, ctx, history):
+    class Proxy:
+        def __repr__(self):
+            return "\n".join(history)
 
-
-if PY3:
-
-    def make_proxy(obj, ctx, history):
-        return Proxy(obj, ctx, history)
-
-
-else:
-
-    def make_proxy(obj, ctx, history):
-        class ObjectProxy(Proxy, obj.__class__):
-            pass
-
-        return ObjectProxy(obj, ctx, history)
-
-
-class Proxy(object):
-    def __init__(self, obj, ctx, history):
-        self.obj = obj
-        self.ctx = ctx
-        self.history = history
-
-    def __getattr__(self, name):
-        return getattr(self.obj, name)
-
-    def __repr__(self):
-        return "\n".join(self.history)
+    proxy = Proxy()
+    # TODO: Support slots.
+    for name, attr in obj.__dict__.items():
+        setattr(proxy, name, attr)
+    proxy.ctx = ctx
+    return proxy
