@@ -66,7 +66,7 @@ def tell_the_story(cls_name, name, methods, arguments, args, kwargs):
         assert not set(ctx.ns) & set(result.kwargs)
         ctx.ns.update(result.kwargs)
         line = "Set by %s.%s" % (self.__class__.__name__, method.__name__)
-        ctx.lines.extend([(key, line) for key in result.kwargs])
+        ctx.lines.extend([line] * len(result.kwargs))
 
 
 def run_the_story(cls_name, name, methods, arguments, args, kwargs):
@@ -129,7 +129,7 @@ def run_the_story(cls_name, name, methods, arguments, args, kwargs):
         assert not set(ctx.ns) & set(result.kwargs)
         ctx.ns.update(result.kwargs)
         line = "Set by %s.%s" % (self.__class__.__name__, method.__name__)
-        ctx.lines.extend([(key, line) for key in result.kwargs])
+        ctx.lines.extend([line] * len(result.kwargs))
 
     return SuccessSummary(None)
 
@@ -140,10 +140,10 @@ def validate_arguments(arguments, args, kwargs):
 
     if args:
         assert len(arguments) == len(args)
-        return {k: v for k, v in zip(arguments, args)}
+        return [(k, v) for k, v in zip(arguments, args)]
 
     assert set(arguments) == set(kwargs)
-    return kwargs
+    return [(k, kwargs[k]) for k in arguments]
 
 
 def make_proxy(obj, ctx, history):

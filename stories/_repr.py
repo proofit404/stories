@@ -2,6 +2,20 @@ def namespace_representation(ns):
     return "(" + ", ".join([k + "=" + repr(v) for k, v in ns.items()]) + ")"
 
 
+def context_representation(ctx):
+
+    name = ctx.__class__.__name__
+    if not ctx.lines:
+        return name + "()"
+    items = ["%s = %s" % (key, repr(value)) for (key, value) in ctx.ns.items()]
+    longest = max(map(len, items))
+    lines = [
+        "    %s  # %s" % (item.ljust(longest), line)
+        for item, line in zip(items, ctx.lines)
+    ]
+    return "\n".join([name + ":"] + lines)
+
+
 def story_representation(is_story, first_line, cls, obj, collected):
 
     result = [first_line]
