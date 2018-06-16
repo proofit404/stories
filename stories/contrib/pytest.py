@@ -2,10 +2,10 @@ import itertools
 
 import pytest
 import stories._context
-import stories._run
+import stories._proxy
 
 
-origin_make_proxy = stories._run.make_proxy
+origin_make_proxy = stories._proxy.make_proxy
 origin_context_init = stories._context.Context.__init__
 
 
