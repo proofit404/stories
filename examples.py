@@ -61,12 +61,16 @@ class SimpleSubstory(Simple):
     @story
     @argument("spam")
     def y(self):
+        self.start()
         self.before()
         self.x()
         self.after()
 
+    def start(self):
+        return Success(foo=self.ctx.spam - 1)
+
     def before(self):
-        return Success(foo=self.ctx.spam - 1, bar=self.ctx.spam + 1)
+        return Success(bar=self.ctx.spam + 1)
 
     def after(self):
         return Result(self.ctx.spam * 2)
@@ -93,12 +97,16 @@ class SubstoryDI(object):
     @story
     @argument("spam")
     def y(self):
+        self.start()
         self.before()
         self.x()
         self.after()
 
+    def start(self):
+        return Success(foo=self.ctx.spam - 1)
+
     def before(self):
-        return Success(foo=self.ctx.spam - 1, bar=self.ctx.spam + 1)
+        return Success(bar=self.ctx.spam + 1)
 
     def after(self):
         return Result(self.ctx.spam * 2)

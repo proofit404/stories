@@ -290,6 +290,7 @@ EmptySubstory.y
     expected = (
         """
 SubstoryDI.y
+  start
   before
   x (Empty.x)
     <empty>
@@ -313,6 +314,7 @@ Simple.x
     expected = (
         """
 SimpleSubstory.y
+  start
   before
   x
     one
@@ -327,6 +329,7 @@ SimpleSubstory.y
     expected = (
         """
 SubstoryDI.y
+  start
   before
   x (Simple.x)
     one
@@ -341,6 +344,7 @@ SubstoryDI.y
     expected = (
         """
 SubstoryDI.y
+  start
   before
   x (SimpleSubstory.z)
     first
@@ -403,7 +407,7 @@ Context:
         """
 Context:
     spam = 2  # Story argument
-    foo = 1   # Set by SimpleSubstory.before
+    foo = 1   # Set by SimpleSubstory.start
     bar = 3   # Set by SimpleSubstory.before
     baz = 4   # Set by SimpleSubstory.two
     """.strip()
@@ -421,7 +425,7 @@ Context:
         """
 Context:
     spam = 2  # Story argument
-    foo = 1   # Set by SubstoryDI.before
+    foo = 1   # Set by SubstoryDI.start
     bar = 3   # Set by SubstoryDI.before
     baz = 4   # Set by Simple.two
     """.strip()
@@ -512,6 +516,7 @@ Proxy(Simple.x):
     expected = (
         """
 Proxy(SimpleSubstory.y):
+  start
   before
   x
     one
@@ -531,6 +536,7 @@ Proxy(SimpleSubstory.y):
     expected = (
         """
 Proxy(SubstoryDI.y):
+  start
   before
   x (Simple.x)
     one
@@ -569,6 +575,7 @@ Proxy(Simple.x):
     expected = (
         """
 Proxy(SimpleSubstory.y):
+  start
   before
   x
     one
@@ -588,6 +595,7 @@ Proxy(SimpleSubstory.y):
     expected = (
         """
 Proxy(SubstoryDI.y):
+  start
   before
   x (Simple.x)
     one
@@ -626,6 +634,7 @@ Proxy(Simple.x):
     expected = (
         """
 Proxy(SimpleSubstory.y):
+  start
   before
   x
     one
@@ -645,6 +654,7 @@ Proxy(SimpleSubstory.y):
     expected = (
         """
 Proxy(SubstoryDI.y):
+  start
   before
   x (Simple.x)
     one
@@ -682,6 +692,7 @@ Proxy(Simple.x):
     expected = (
         """
 Proxy(SimpleSubstory.y):
+  start
   before
   x
     one
@@ -701,6 +712,7 @@ Proxy(SimpleSubstory.y):
     expected = (
         """
 Proxy(SubstoryDI.y):
+  start
   before
   x (Simple.x)
     one
@@ -720,6 +732,7 @@ Proxy(SubstoryDI.y):
     expected = (
         """
 Proxy(SubstoryDI.y):
+  start
   before
   x (SimpleSubstory.z)
     first (skipped)
