@@ -1,8 +1,7 @@
-class Undefined(object):  # TODO: Rename to Marker.
+class Marker(object):
     pass
 
 
-undefined = Undefined()
-
-
-valid_arguments = Undefined()
+undefined = Marker()
+substory_start = Marker()
+substory_end = Marker()

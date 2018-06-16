@@ -1,4 +1,4 @@
-from ._marker import undefined, valid_arguments
+from ._marker import substory_end, substory_start
 
 
 def collect_story(f):
@@ -41,7 +41,7 @@ def wrap_story(is_story, of, obj, collected):
 def make_validator(name, arguments):
     def validate_substory_arguments(self):
         assert set(arguments) <= set(self.ctx)
-        return valid_arguments
+        return substory_start
 
     validate_substory_arguments.method_name = name
 
@@ -49,4 +49,4 @@ def make_validator(name, arguments):
 
 
 def end_of_story(self):
-    return undefined
+    return substory_end

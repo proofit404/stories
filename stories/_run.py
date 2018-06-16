@@ -1,6 +1,6 @@
 from ._collect import end_of_story
 from ._context import Context
-from ._marker import Undefined, undefined, valid_arguments
+from ._marker import Marker, substory_end, substory_start, undefined
 from ._return import Failure, Result, Skip, Success
 from ._summary import FailureSummary, SuccessSummary
 from .exceptions import FailureError
@@ -32,7 +32,7 @@ def tell_the_story(cls_name, name, methods, arguments, args, kwargs):
             raise
 
         restype = type(result)
-        assert restype in (Result, Success, Failure, Skip, Undefined)
+        assert restype in (Result, Success, Failure, Skip, Marker)
 
         if restype is Failure:
             if result.reason:
@@ -52,15 +52,15 @@ def tell_the_story(cls_name, name, methods, arguments, args, kwargs):
             indent_level -= 1
             continue
 
-        if restype is Undefined:
+        if result is substory_start:
             history.pop()
-            if result is valid_arguments:
-                # The beginning of substory.
-                history.append("  " * indent_level + method.method_name)
-                indent_level += 1
-            else:
-                # The end of substory.
-                indent_level -= 1
+            history.append("  " * indent_level + method.method_name)
+            indent_level += 1
+            continue
+
+        if result is substory_end:
+            history.pop()
+            indent_level -= 1
             continue
 
         assert not set(ctx) & set(result.kwargs)
@@ -95,7 +95,7 @@ def run_the_story(cls_name, name, methods, arguments, args, kwargs):
             raise
 
         restype = type(result)
-        assert restype in (Result, Success, Failure, Skip, Undefined)
+        assert restype in (Result, Success, Failure, Skip, Marker)
 
         if restype is Failure:
             if result.reason:
@@ -115,15 +115,15 @@ def run_the_story(cls_name, name, methods, arguments, args, kwargs):
             indent_level -= 1
             continue
 
-        if restype is Undefined:
+        if result is substory_start:
             history.pop()
-            if result is valid_arguments:
-                # The beginning of substory.
-                history.append("  " * indent_level + method.method_name)
-                indent_level += 1
-            else:
-                # The end of substory.
-                indent_level -= 1
+            history.append("  " * indent_level + method.method_name)
+            indent_level += 1
+            continue
+
+        if result is substory_end:
+            history.pop()
+            indent_level -= 1
             continue
 
         assert not set(ctx) & set(result.kwargs)
