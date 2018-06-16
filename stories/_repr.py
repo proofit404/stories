@@ -27,7 +27,6 @@ def story_representation(is_story, first_line, cls, obj, collected):
                     first = name
                 else:
                     first = name + " (" + attr.cls_name + "." + attr.name + ")"
-                # FIXME: I don't like this recursion.
                 sub_result = story_representation(
                     is_story, first, attr.cls, attr.obj, attr.collected
                 )

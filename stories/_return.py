@@ -19,13 +19,11 @@ class Success(object):
 
 class Failure(object):
     def __init__(self, reason=None):
-        # TODO: Show reason in Failure repr.
-        #
-        # TODO: Show reason in Proxy repr.
         self.reason = reason
 
     def __repr__(self):
-        return self.__class__.__name__ + "()"
+        reason = repr(self.reason) if self.reason else ""
+        return self.__class__.__name__ + "(" + reason + ")"
 
 
 class Skip(object):

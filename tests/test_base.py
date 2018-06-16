@@ -361,6 +361,9 @@ def test_failure_representation():
     failure = Failure()
     assert repr(failure) == "Failure()"
 
+    failure = Failure("test")
+    assert repr(failure) == "Failure('test')"
+
 
 def test_skip_representation():
 
