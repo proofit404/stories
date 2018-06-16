@@ -1,8 +1,8 @@
 import itertools
 
-import pytest
 import stories._context
 import stories._proxy
+from _pytest.config import hookimpl
 
 
 origin_make_proxy = stories._proxy.make_proxy
@@ -30,7 +30,7 @@ def track_context(storage, sequence):
     return wrapper
 
 
-@pytest.hookimpl(hookwrapper=True)
+@hookimpl(hookwrapper=True)
 def pytest_runtest_call(item):
     sequence = itertools.count()
     storage = {}
