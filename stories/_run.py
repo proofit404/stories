@@ -63,7 +63,7 @@ def tell_the_story(cls_name, name, methods, arguments, args, kwargs):
                 indent_level -= 1
             continue
 
-        assert not set(ctx.ns) & set(result.kwargs)
+        assert not set(ctx) & set(result.kwargs)
         ctx.ns.update(result.kwargs)
         line = "Set by %s.%s" % (self.__class__.__name__, method.__name__)
         ctx.lines.extend([line] * len(result.kwargs))
@@ -126,7 +126,7 @@ def run_the_story(cls_name, name, methods, arguments, args, kwargs):
                 indent_level -= 1
             continue
 
-        assert not set(ctx.ns) & set(result.kwargs)
+        assert not set(ctx) & set(result.kwargs)
         ctx.ns.update(result.kwargs)
         line = "Set by %s.%s" % (self.__class__.__name__, method.__name__)
         ctx.lines.extend([line] * len(result.kwargs))
