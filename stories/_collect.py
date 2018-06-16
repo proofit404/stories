@@ -16,10 +16,10 @@ def collect_story(f):
     return calls
 
 
-def wrap_story(is_story, collected, obj, ctx, history):
+def wrap_story(is_story, collected, obj, ctx):
 
     methods = []
-    proxy = make_proxy(obj, ctx, history)
+    proxy = make_proxy(obj, ctx)
 
     for name in collected:
         attr = getattr(obj, name)
@@ -27,7 +27,7 @@ def wrap_story(is_story, collected, obj, ctx, history):
             methods.append((proxy, attr.__func__))
             continue
 
-        sub_methods = wrap_story(is_story, attr.collected, attr.obj, ctx, history)
+        sub_methods = wrap_story(is_story, attr.collected, attr.obj, ctx)
         if not sub_methods:
             continue
 

@@ -14,16 +14,16 @@ class StoryWrapper(object):
         self.collected = collected
 
     def __call__(self, *args, **kwargs):
-        ctx = Context(validate_arguments(self.arguments, args, kwargs))
         history = ["Proxy(" + self.cls_name + "." + self.name + "):"]
-        methods = wrap_story(is_story, self.collected, self.obj, ctx, history)
-        return tell_the_story(ctx, history, methods)
+        ctx = Context(validate_arguments(self.arguments, args, kwargs), history)
+        methods = wrap_story(is_story, self.collected, self.obj, ctx)
+        return tell_the_story(ctx, methods)
 
     def run(self, *args, **kwargs):
-        ctx = Context(validate_arguments(self.arguments, args, kwargs))
         history = ["Proxy(" + self.cls_name + "." + self.name + "):"]
-        methods = wrap_story(is_story, self.collected, self.obj, ctx, history)
-        return run_the_story(ctx, history, methods)
+        ctx = Context(validate_arguments(self.arguments, args, kwargs), history)
+        methods = wrap_story(is_story, self.collected, self.obj, ctx)
+        return run_the_story(ctx, methods)
 
     def __repr__(self):
         return story_representation(

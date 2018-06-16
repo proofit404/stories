@@ -5,8 +5,9 @@ from ._repr import context_representation
 
 
 class Context(object):
-    def __init__(self, ns):
+    def __init__(self, ns, history=None):
         self.ns = OrderedDict(ns)
+        self.history = history or []
         self.lines = ["Story argument"] * len(ns)
 
     def __getattr__(self, name):
@@ -23,7 +24,7 @@ class Context(object):
 
     def __dir__(self):
         parent = set(dir(undefined))
-        current = set(self.__dict__) - {"ns", "lines", "__position__"}
+        current = set(self.__dict__) - {"ns", "history", "lines"}
         scope = set(self.ns)
         attributes = sorted(parent | current | scope)
         return attributes
