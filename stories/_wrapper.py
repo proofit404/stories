@@ -1,5 +1,6 @@
 from ._collect import wrap_story
 from ._context import Context, validate_arguments
+from ._history import History
 from ._repr import story_representation
 from ._run import run_the_story, tell_the_story
 
@@ -14,13 +15,13 @@ class StoryWrapper(object):
         self.collected = collected
 
     def __call__(self, *args, **kwargs):
-        history = ["Proxy(" + self.cls_name + "." + self.name + "):"]
+        history = History(self.cls_name, self.name)
         ctx = Context(validate_arguments(self.arguments, args, kwargs), history)
         methods = wrap_story(is_story, self.collected, self.obj, ctx)
         return tell_the_story(ctx, methods)
 
     def run(self, *args, **kwargs):
-        history = ["Proxy(" + self.cls_name + "." + self.name + "):"]
+        history = History(self.cls_name, self.name)
         ctx = Context(validate_arguments(self.arguments, args, kwargs), history)
         methods = wrap_story(is_story, self.collected, self.obj, ctx)
         return run_the_story(ctx, methods)

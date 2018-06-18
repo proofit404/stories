@@ -27,9 +27,7 @@ def pytest_runtest_call(item):
         "stories",
         "\n\n".join(
             itertools.chain.from_iterable(
-                zip(
-                    map(lambda ctx: "\n".join(ctx.history), storage), map(repr, storage)
-                )
+                zip(map(lambda ctx: repr(ctx.history), storage), map(repr, storage))
             )
         ),
     )

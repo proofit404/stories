@@ -8,7 +8,6 @@ from .exceptions import FailureError
 def tell_the_story(ctx, methods):
 
     skipped = undefined
-    indent_level = 1
 
     for proxy, method in methods:
 
@@ -17,7 +16,7 @@ def tell_the_story(ctx, methods):
                 skipped = undefined
             continue
 
-        ctx.history.append("  " * indent_level + method.__name__)
+        ctx.history.before_call(method.__name__)
 
         try:
             try:
@@ -28,45 +27,31 @@ def tell_the_story(ctx, methods):
                 else:
                     raise
         except Exception as error:
-            ctx.history[-1] = (
-                ctx.history[-1] + " (errored: " + error.__class__.__name__ + ")"
-            )
+            ctx.history.on_error(error.__class__.__name__)
             raise
 
         restype = type(result)
         assert restype in (Result, Success, Failure, Skip, Marker)
 
         if restype is Failure:
-            if result.reason:
-                ctx.history[-1] = (
-                    ctx.history[-1] + " (failed: " + repr(result.reason) + ")"
-                )
-            else:
-                ctx.history[-1] = ctx.history[-1] + " (failed)"
+            ctx.history.on_failure(result.reason)
             raise FailureError(result.reason)
 
         if restype is Result:
-            ctx.history[-1] = (
-                ctx.history[-1] + " (returned: " + repr(result.value) + ")"
-            )
+            ctx.history.on_result(result.value)
             return result.value
 
         if restype is Skip:
-            ctx.history[-1] = ctx.history[-1] + " (skipped)"
+            ctx.history.on_skip()
             skipped = proxy
-            # Substory will be skipped.
-            indent_level -= 1
             continue
 
         if result is substory_start:
-            ctx.history.pop()
-            ctx.history.append("  " * indent_level + method.method_name)
-            indent_level += 1
+            ctx.history.on_substory_start(method.method_name)
             continue
 
         if result is substory_end:
-            ctx.history.pop()
-            indent_level -= 1
+            ctx.history.on_substory_end()
             continue
 
         assert not set(ctx) & set(result.kwargs)
@@ -78,7 +63,6 @@ def tell_the_story(ctx, methods):
 def run_the_story(ctx, methods):
 
     skipped = undefined
-    indent_level = 1
 
     for proxy, method in methods:
 
@@ -87,7 +71,7 @@ def run_the_story(ctx, methods):
                 skipped = undefined
             continue
 
-        ctx.history.append("  " * indent_level + method.__name__)
+        ctx.history.before_call(method.__name__)
 
         try:
             try:
@@ -98,44 +82,30 @@ def run_the_story(ctx, methods):
                 else:
                     raise
         except Exception as error:
-            ctx.history[-1] = (
-                ctx.history[-1] + " (errored: " + error.__class__.__name__ + ")"
-            )
+            ctx.history.on_error(error.__class__.__name__)
             raise
 
         restype = type(result)
         assert restype in (Result, Success, Failure, Skip, Marker)
         if restype is Failure:
-            if result.reason:
-                ctx.history[-1] = (
-                    ctx.history[-1] + " (failed: " + repr(result.reason) + ")"
-                )
-            else:
-                ctx.history[-1] = ctx.history[-1] + " (failed)"
+            ctx.history.on_failure(result.reason)
             return FailureSummary(ctx, method.__name__, result.reason)
 
         if restype is Result:
-            ctx.history[-1] = (
-                ctx.history[-1] + " (returned: " + repr(result.value) + ")"
-            )
+            ctx.history.on_result(result.value)
             return SuccessSummary(result.value)
 
         if restype is Skip:
-            ctx.history[-1] = ctx.history[-1] + " (skipped)"
+            ctx.history.on_skip()
             skipped = proxy
-            # Substory will be skipped.
-            indent_level -= 1
             continue
 
         if result is substory_start:
-            ctx.history.pop()
-            ctx.history.append("  " * indent_level + method.method_name)
-            indent_level += 1
+            ctx.history.on_substory_start(method.method_name)
             continue
 
         if result is substory_end:
-            ctx.history.pop()
-            indent_level -= 1
+            ctx.history.on_substory_end()
             continue
 
         assert not set(ctx) & set(result.kwargs)

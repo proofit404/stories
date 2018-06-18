@@ -1,7 +1,7 @@
 def make_proxy(obj, ctx):
     class Proxy:
         def __repr__(self):
-            return "\n".join(self.ctx.history)
+            return repr(self.ctx.history)
 
     Proxy.__name__ = obj.__class__.__name__
     proxy = Proxy()
