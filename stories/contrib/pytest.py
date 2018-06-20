@@ -1,4 +1,6 @@
-import itertools
+import linecache
+import sys
+import textwrap
 
 import stories._context
 import stories._proxy
@@ -11,9 +13,43 @@ origin_context_init = stories._context.Context.__init__
 def track_context(storage):
     def wrapper(ctx, ns, history=None):
         origin_context_init(ctx, ns, history=history)
-        storage.append(ctx)
+        storage.append((get_test_source(*get_test_call()), ctx))
 
     return wrapper
+
+
+def get_test_call():
+    f = sys._getframe()
+
+    while True:
+        if (
+            "@py_builtins" in f.f_globals
+            and "@pytest_ar" in f.f_globals
+            and f.f_code.co_name.startswith("test_")
+            and f.f_code.co_filename != __file__
+        ):
+            return f.f_code.co_filename, f.f_lineno
+        elif not f.f_back:
+            raise Exception("Can not find running test")
+        else:
+            f = f.f_back
+
+
+def get_test_source(filename, lineno):
+
+    start = max(1, lineno - 3)
+    end = lineno + 3
+
+    lines = [linecache.getline(filename, no) for no in range(start, end)]
+    text = textwrap.dedent("".join(lines))
+
+    src = []
+    for num, line in zip(range(start, end), text.splitlines()):
+        sep = "->" if num == lineno else "  "
+        src.append((" %d %s %s" % (num, sep, line)).rstrip())
+    src = "\n".join(src)
+
+    return src
 
 
 @hookimpl(hookwrapper=True)
@@ -22,12 +58,6 @@ def pytest_runtest_call(item):
     stories._context.Context.__init__ = track_context(storage)
     yield
     stories._context.Context.__init__ = origin_context_init
-    item.add_report_section(
-        "call",
-        "stories",
-        "\n\n".join(
-            itertools.chain.from_iterable(
-                zip(map(lambda ctx: repr(ctx.history), storage), map(repr, storage))
-            )
-        ),
-    )
+    for i, (src, ctx) in enumerate(storage, 1):
+        output = "\n\n".join([src, repr(ctx.history), repr(ctx)])
+        item.add_report_section("call", "story #%d" % (i,), output)
