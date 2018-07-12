@@ -1,2 +1,2 @@
-.. image:: https://raw.githubusercontent.com/dry-python/stories/master/docs/static/stories_logo.png
+.. image:: https://raw.githubusercontent.com/dry-python/brand/master/logo/stories.png
     :alt: Stories
