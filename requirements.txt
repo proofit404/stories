@@ -1,4 +1,4 @@
 ./tests/helpers/.
 pytest==3.6.3
 coverage==4.5.1
-codecov
+codecov==2.0.15
