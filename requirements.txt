@@ -1,3 +1,4 @@
 ./tests/helpers/.
 pytest
 coverage
+codecov
