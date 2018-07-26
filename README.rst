@@ -36,5 +36,45 @@ install this package with following command.
 
     pip install stories
 
+Usage
+-----
+
+``stories`` provide a simple way to define a complex business scenario
+that include many processing steps.
+
+.. code:: python
+
+    from stories import story, argument, Success
+
+    class PurchaseProduct:
+
+        @story
+        @argument('user')
+        @argument('product')
+        @argument('shipment_details')
+        def purchase(self):
+
+            self.create_order()
+            self.calculate_price()
+            self.request_payment()
+            self.notify_user()
+
+       def create_order(self):
+
+           return Success(
+               order=Order.objects.create(
+                   user=self.ctx.user,
+                   product=self.ctx.product,
+               )
+           )
+
+This code style allow you clearly separate actual business scenario
+from implementation details.
+
+License
+-------
+
+Dependencies library is offered under the two clause BSD license.
+
 .. _source code: https://github.com/dry-python/stories
 .. _issue tracker: https://github.com/dry-python/stories/issues
