@@ -14,9 +14,12 @@
 .. |pypi| image:: https://img.shields.io/pypi/v/stories.svg
     :target: https://pypi.python.org/pypi/stories/
 
+.. |docs| image:: https://readthedocs.org/projects/stories/badge/?version=latest
+    :target: https://stories.readthedocs.io/en/latest/?badge=latest
+
 .. image:: https://raw.githubusercontent.com/dry-python/brand/master/logo/stories.png
 
-|travis| |codecov| |pyup| |codacy| |pypi|
+|travis| |codecov| |pyup| |codacy| |pypi| |docs|
 
 ----
 
@@ -25,6 +28,7 @@ The business transaction DSL
 
 - `Source Code`_
 - `Issue Tracker`_
+- `Documentation`_
 
 Installation
 ------------
@@ -78,3 +82,4 @@ Dependencies library is offered under the two clause BSD license.
 
 .. _source code: https://github.com/dry-python/stories
 .. _issue tracker: https://github.com/dry-python/stories/issues
+.. _documentation: https://stories.readthedocs.io/en/latest/
