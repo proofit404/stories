@@ -63,14 +63,18 @@ that include many processing steps.
             self.request_payment()
             self.notify_user()
 
-       def create_order(self):
+        def create_order(self):
 
-           return Success(
-               order=Order.objects.create(
-                   user=self.ctx.user,
-                   product=self.ctx.product,
-               )
-           )
+            return Success(
+                order=Order.objects.create(
+                    user=self.ctx.user,
+                    product=self.ctx.product,
+                )
+            )
+
+        def create_order(self):
+
+            return Success(...
 
 This code style allow you clearly separate actual business scenario
 from implementation details.
