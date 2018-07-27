@@ -66,10 +66,7 @@ that include many processing steps.
         def create_order(self):
 
             return Success(
-                order=Order.objects.create(
-                    user=self.ctx.user,
-                    product=self.ctx.product,
-                )
+                order=Order.objects.create(user=self.ctx.user, product=self.ctx.product)
             )
 
         def create_order(self):
