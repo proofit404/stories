@@ -4,8 +4,8 @@
 Changelog
 ---------
 
-0.9.0 (2018-00-00)
-++++++++++++++++++
+0.9 (2018-00-00)
+++++++++++++++++
 
 - ``Proxy`` class ``repr()`` show execution path.
 - Py.test plugin with ``Context`` and ``Proxy`` reporters.
@@ -16,30 +16,30 @@ Changelog
 - Support iterable protocol in the ``Context`` class.
 - Add ``Failure`` reason.
 
-0.8.0 (2018-05-12)
-++++++++++++++++++
+0.8 (2018-05-12)
+++++++++++++++++
 
 - Add ``dir()`` and ``repr()`` support to the context class.
 - Failed result holds a link to the context.
 
-0.7.0 (2018-05-06)
-++++++++++++++++++
+0.7 (2018-05-06)
+++++++++++++++++
 
 - Add ``run`` interface to the story.
 
-0.6.0 (2018-04-19)
-++++++++++++++++++
+0.6 (2018-04-19)
+++++++++++++++++
 
 - Representation methods for story, context and point result classes.
 - Python 2 support.
 
-0.5.0 (2018-04-07)
-++++++++++++++++++
+0.5 (2018-04-07)
+++++++++++++++++
 
 - Do not execute nested stories of the skipped story.
 
-0.4.0 (2018-04-07)
-++++++++++++++++++
+0.4 (2018-04-07)
+++++++++++++++++
 
 - Package was rewritten with linearization algorithm.
 - ``Skip`` result was added to finish nested stories without finish
