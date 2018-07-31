@@ -26,6 +26,16 @@ html_theme = "alabaster"
 
 html_static_path = ["static"]
 
+html_sidebars = {
+    "**": [
+        "sidebarlogo.html",
+        "globaltoc.html",
+        "relations.html",
+        "links.html",
+        "searchbox.html",
+    ]
+}
+
 html_theme_options = {
     "show_related": True,
     "github_user": "dry-python",
