@@ -63,8 +63,13 @@ This code style allow you clearly separate actual business scenario
 from implementation details.
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+    :maxdepth: 2
+    :caption: Contents:
+
+    why
+    usage
+    debugging
+    contrib/index
 
 Indices and tables
 ==================
