@@ -26,6 +26,42 @@
 The business transaction DSL
 ============================
 
+Example
+=======
+
+``stories`` provide a simple way to define a complex business scenario
+that include many processing steps.
+
+.. code:: python
+
+    from stories import story, argument, Success
+
+    class PurchaseProduct:
+
+        @story
+        @argument('user')
+        @argument('product')
+        @argument('shipment_details')
+        def purchase(self):
+
+            self.create_order()
+            self.calculate_price()
+            self.request_payment()
+            self.notify_user()
+
+        def create_order(self):
+
+            return Success(
+                order=Order.objects.create(user=self.ctx.user, product=self.ctx.product)
+            )
+
+        def create_order(self):
+
+            return Success(...
+
+This code style allow you clearly separate actual business scenario
+from implementation details.
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
