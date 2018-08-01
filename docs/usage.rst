@@ -71,7 +71,7 @@ Result
 
 .. code:: python
 
-    >>> CreateUser().create('John', 'john@example.com', 19)
+    >>> CreateUser().create("John", "john@example.com", 19)
     <User: User object (1)>
 
 TODO: explaine...
@@ -81,7 +81,7 @@ Failure
 
 .. code:: python
 
-    >>> CreateUser().create('John', 'john@example.com', 17)
+    >>> CreateUser().create("John", "john@example.com", 17)
     Traceback (most recent call last):
       File "<stdin>", line 1, in <module>
       File "stories/_wrapper.py", line 23, in __call__
@@ -96,6 +96,37 @@ TODO: explaine...
 
 Running the story
 =================
+
+More powerful way to inspect result of the story is to use run instead
+of call.
+
+Result
+------
+
+.. code:: python
+
+    >>> result = CreateUser().create.run("John", "john@example.com", 19)
+    >>> result.is_success
+    True
+    >>> result.value
+    <User: User object (1)>
+
+
+TODO: explaine...
+
+Failure
+-------
+
+.. code:: python
+
+    >>> result = CreateUser().create.run("John", "john@example.com", 17)
+    >>> result.is_failure
+    True
+    >>> result.failed_on("validate")
+    True
+    >>> result.failed_because("person is too young")
+
+TODO: explaine...
 
 Execution rules
 ===============
