@@ -68,6 +68,8 @@ from implementation details.
 
     why
     usage
+    call
+    run
     debugging
     contrib/index
 
