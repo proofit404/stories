@@ -62,9 +62,11 @@ that include many processing steps.
 This code style allow you clearly separate actual business scenario
 from implementation details.
 
+Contents
+========
+
 .. toctree::
     :maxdepth: 2
-    :caption: Contents:
 
     why
     usage
