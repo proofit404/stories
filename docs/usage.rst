@@ -60,6 +60,43 @@ defined by rules explained here.
 
             return Result(self.ctx.user)
 
+Calling the story
+=================
+
+The most simple valiant to execute story, is to call it as regular
+method.
+
+Result
+------
+
+.. code:: python
+
+    >>> CreateUser().create('John', 'john@example.com', 19)
+    <User: User object (1)>
+
+TODO: explaine...
+
+Failure
+-------
+
+.. code:: python
+
+    >>> CreateUser().create('John', 'john@example.com', 17)
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+      File "stories/_wrapper.py", line 23, in __call__
+        return function.execute(runner, ctx, methods)
+      File "stories/_exec/function.py", line 36, in execute
+        return runner.got_failure(ctx, method.__name__, result.reason)
+      File "stories/_run.py", line 7, in got_failure
+        raise FailureError(reason)
+    stories.exceptions.FailureError
+
+TODO: explaine...
+
+Running the story
+=================
+
 Execution rules
 ===============
 

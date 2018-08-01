@@ -26,7 +26,7 @@
 The business transaction DSL
 ============================
 
-Write some docs...
+TODO: explaine...
 
 Example
 =======
