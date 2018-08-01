@@ -13,6 +13,53 @@ methods using its body.  Then it will call methods of this class
 according to this spec.  This happens outside of the story body.  Each
 method is called with special execution context.
 
+Basic definition
+================
+
+This is example will be used for simplicity to show basic rules of
+stories.  Real world examples will be way more complex, but still
+defined by rules explained here.
+
+.. code:: python
+
+    from stories import argument, story, Success, Result, Failure
+
+    class CreateUser:
+
+        @story
+        @argument("name")
+        @argument("email")
+        @argument("age")
+        def create(self):
+
+            self.validate()
+            self.persist()
+            self.send_confirmation_email()
+            self.show_user()
+
+        # Steps.
+
+        def validate(self):
+
+            if self.ctx.age < 18:
+                return Failure("person is too young")
+            return Success()
+
+        def persist(self):
+
+            user = User.objects.create(name=self.ctx.name)
+            return Success(user=user)
+
+        def send_confirmation_email(self):
+
+            body = welcome_text(self.ctx.user)
+            send_email(self.ctx.email, body)
+            return Success()
+
+        def show_user(self):
+
+            return Result(self.ctx.user)
+
 Execution rules
 ===============
 
