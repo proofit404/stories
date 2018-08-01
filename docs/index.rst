@@ -72,8 +72,6 @@ Contents
 
     why
     usage
-    call
-    run
     debugging
     contrib/index
 
