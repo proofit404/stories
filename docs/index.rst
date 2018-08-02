@@ -26,7 +26,33 @@
 The business transaction DSL
 ============================
 
-TODO: explaine...
+``stories`` is a business transaction DSL. It provides a simple way to
+define a complex business transaction that includes processing over
+many steps and by many different objects. It makes error handling a
+primary concern by taking a “`Railway Oriented Programming`_” approach to
+capturing and returning errors from any step in the transaction.
+
+``stories`` is based on the following ideas:
+
+* A business transaction is a series of operations where any can fail
+  and stop the processing.
+
+* A business transaction can describe its steps on an abstract level
+  without being coupled to any details about how individual operations
+  work.
+
+* A business transaction doesn’t have any state.
+
+* Each operation shouldn’t accumulate state, instead it should receive
+  an input and return an output without causing any side-effects.
+
+* The only interface of an operation is ``self.ctx``.
+
+* Each operation provides a meaningful piece of functionality and can
+  be reused.
+
+* Errors in any operation should be easily caught and handled as part
+  of the normal application flow.
 
 Example
 =======
@@ -53,9 +79,8 @@ that include many processing steps.
 
         def create_order(self):
 
-            return Success(
-                order=Order.objects.create(user=self.ctx.user, product=self.ctx.product)
-            )
+            order = Order.objects.create(**self.ctx("user", "product"))
+            return Success(order=order)
 
         def create_order(self):
 
@@ -63,6 +88,12 @@ that include many processing steps.
 
 This code style allow you clearly separate actual business scenario
 from implementation details.
+
+Note
+====
+
+``stories`` library was heavily inspired by dry-transaction_ ruby
+gem.
 
 Contents
 ========
@@ -81,3 +112,6 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+.. _railway oriented programming: http://fsharpforfunandprofit.com/rop/
+.. _dry-transaction: http://dry-rb.org/gems/dry-transaction/
