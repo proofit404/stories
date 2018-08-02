@@ -15,6 +15,7 @@ Changelog
 - Preserve execution order in the ``Context`` class ``repr()``.
 - Support iterable protocol in the ``Context`` class.
 - Add ``Failure`` reason.
+- Expand context to the function call arguments.
 
 0.8 (2018-05-12)
 ++++++++++++++++
