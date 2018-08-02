@@ -26,11 +26,11 @@
 The business transaction DSL
 ============================
 
-``stories`` is a business transaction DSL. It provides a simple way to
-define a complex business transaction that includes processing over
-many steps and by many different objects. It makes error handling a
-primary concern by taking a “`Railway Oriented Programming`_” approach to
-capturing and returning errors from any step in the transaction.
+``stories`` is a business transaction DSL.  It provides a simple way
+to define a complex business transaction that includes processing over
+many steps and by many different objects.  It makes error handling a
+primary concern by taking a “`Railway Oriented Programming`_” approach
+to capturing and returning errors from any step in the transaction.
 
 ``stories`` is based on the following ideas:
 
