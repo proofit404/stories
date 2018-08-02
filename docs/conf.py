@@ -29,6 +29,7 @@ html_static_path = ["static"]
 html_sidebars = {
     "**": [
         "sidebarlogo.html",
+        "stats.html",
         "globaltoc.html",
         "relations.html",
         "links.html",
@@ -41,5 +42,7 @@ html_theme_options = {
     "show_related": True,
     "github_user": "dry-python",
     "github_repo": "stories",
+    "github_type": "watch",
+    "github_count": True,
     "github_banner": True,
 }
