@@ -1,4 +1,4 @@
 ./tests/helpers/.
 pytest
 coverage
-codecov
+codecov==2.0.15
