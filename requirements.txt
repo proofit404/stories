@@ -1,4 +1,4 @@
 ./tests/helpers/.
-pytest
+pytest==3.7.4
 coverage
 codecov
