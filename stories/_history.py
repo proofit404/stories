@@ -1,7 +1,7 @@
 class History(object):
     def __init__(self, cls_name, name):
         self.indent = 1
-        self.lines = ["Proxy(" + cls_name + "." + name + "):"]
+        self.lines = [cls_name + "." + name + ":"]
 
     def __repr__(self):
         return "\n".join(self.lines)

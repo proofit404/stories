@@ -437,7 +437,7 @@ def test_proxy_representation():
 
     # TODO: Empty.
 
-    expected = "Proxy(Empty.x)"
+    expected = "Empty.x"
 
     # Collector, getter = make_collector(examples.Empty, "two")
     # Collector().x()
@@ -448,7 +448,7 @@ def test_proxy_representation():
     # assert repr(getter()) == expected
 
     expected = """
-Proxy(EmptySubstory.y):
+EmptySubstory.y:
   x
         """.strip()
 
@@ -461,7 +461,7 @@ Proxy(EmptySubstory.y):
     # assert repr(getter()) == expected
 
     expected = """
-Proxy(SubstoryDI.y):
+SubstoryDI.y:
   x (Empty.x)
         """.strip()
 
@@ -476,7 +476,7 @@ Proxy(SubstoryDI.y):
     # Failure.
 
     expected = """
-Proxy(Simple.x):
+Simple.x:
   one
   two (failed)
         """.strip()
@@ -491,7 +491,7 @@ Proxy(Simple.x):
     assert repr(getter()) == expected
 
     expected = """
-Proxy(SimpleSubstory.y):
+SimpleSubstory.y:
   start
   before
   x
@@ -509,7 +509,7 @@ Proxy(SimpleSubstory.y):
     assert repr(getter()) == expected
 
     expected = """
-Proxy(SubstoryDI.y):
+SubstoryDI.y:
   start
   before
   x (Simple.x)
@@ -529,7 +529,7 @@ Proxy(SubstoryDI.y):
     # Failure with reason.
 
     expected = """
-Proxy(Simple.x):
+Simple.x:
   one
   two (failed: "'foo' is too big")
         """.strip()
@@ -544,7 +544,7 @@ Proxy(Simple.x):
     assert repr(getter()) == expected
 
     expected = """
-Proxy(SimpleSubstory.y):
+SimpleSubstory.y:
   start
   before
   x
@@ -562,7 +562,7 @@ Proxy(SimpleSubstory.y):
     assert repr(getter()) == expected
 
     expected = """
-Proxy(SubstoryDI.y):
+SubstoryDI.y:
   start
   before
   x (Simple.x)
@@ -582,7 +582,7 @@ Proxy(SubstoryDI.y):
     # Result.
 
     expected = """
-Proxy(Simple.x):
+Simple.x:
   one
   two
   three (returned: -1)
@@ -597,7 +597,7 @@ Proxy(Simple.x):
     assert repr(getter()) == expected
 
     expected = """
-Proxy(SimpleSubstory.y):
+SimpleSubstory.y:
   start
   before
   x
@@ -615,7 +615,7 @@ Proxy(SimpleSubstory.y):
     assert repr(getter()) == expected
 
     expected = """
-Proxy(SubstoryDI.y):
+SubstoryDI.y:
   start
   before
   x (Simple.x)
@@ -635,7 +635,7 @@ Proxy(SubstoryDI.y):
     # Skip.
 
     expected = """
-Proxy(Simple.x):
+Simple.x:
   one
   two (skipped)
         """.strip()
@@ -649,7 +649,7 @@ Proxy(Simple.x):
     assert repr(getter()) == expected
 
     expected = """
-Proxy(SimpleSubstory.y):
+SimpleSubstory.y:
   start
   before
   x
@@ -667,7 +667,7 @@ Proxy(SimpleSubstory.y):
     assert repr(getter()) == expected
 
     expected = """
-Proxy(SubstoryDI.y):
+SubstoryDI.y:
   start
   before
   x (Simple.x)
@@ -685,7 +685,7 @@ Proxy(SubstoryDI.y):
     assert repr(getter()) == expected
 
     expected = """
-Proxy(SubstoryDI.y):
+SubstoryDI.y:
   start
   before
   x (SimpleSubstory.z)
@@ -704,7 +704,7 @@ Proxy(SubstoryDI.y):
     # Error.
 
     expected = """
-Proxy(StepError.x):
+StepError.x:
   one (errored: Exception)
     """.strip()
 
