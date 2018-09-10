@@ -21,11 +21,7 @@ setup(
         "stories.contrib.debug_toolbars.django",
     ],
     include_package_data=True,
-    package_data={
-        "stories": [
-            "contrib/debug_toolbars/django/templates/stories/debug_toolbar/*.html"
-        ]
-    },
+    zip_safe=False,
     entry_points={"pytest11": ["stories = stories.contrib.pytest"]},
     classifiers=[
         "Development Status :: 4 - Beta",
