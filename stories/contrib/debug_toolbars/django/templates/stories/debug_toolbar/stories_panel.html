@@ -1,19 +1,23 @@
 {% load i18n %}
-<table>
-    <thead>
-        <tr>
-            <th>&#160;</th>
-            <th>{% trans 'Story' %}</th>
-            <th>{% trans 'Context' %}</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for history, ctx in stories %}
+{% if stories %}
+    <table>
+        <thead>
             <tr>
-                <td>&#160;</td>
-                <td><pre><code>{{ history }}</code></pre></td>
-                <td><pre><code>{{ ctx }}</code></pre></td>
+                <th>&#160;</th>
+                <th>{% trans 'Story' %}</th>
+                <th>{% trans 'Context' %}</th>
             </tr>
-        {% endfor %}
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            {% for history, ctx in stories %}
+                <tr>
+                    <td>&#160;</td>
+                    <td><pre><code>{{ history }}</code></pre></td>
+                    <td><pre><code>{{ ctx }}</code></pre></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>{% trans 'No story calls were recorded during this request.' %}</p>
+{% endif %}
