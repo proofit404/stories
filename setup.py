@@ -13,7 +13,19 @@ setup(
     url="https://github.com/proofit404/stories",
     author="Artem Malyshev",
     author_email="proofit404@gmail.com",
-    packages=["stories", "stories._exec", "stories.contrib"],
+    packages=[
+        "stories",
+        "stories._exec",
+        "stories.contrib",
+        "stories.contrib.debug_toolbars",
+        "stories.contrib.debug_toolbars.django",
+    ],
+    include_package_data=True,
+    package_data={
+        "stories": [
+            "contrib/debug_toolbars/django/templates/stories/debug_toolbar/*.html"
+        ]
+    },
     entry_points={"pytest11": ["stories = stories.contrib.pytest"]},
     classifiers=[
         "Development Status :: 4 - Beta",
