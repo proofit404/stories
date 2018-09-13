@@ -19,6 +19,7 @@ setup(
         "stories.contrib",
         "stories.contrib.debug_toolbars",
         "stories.contrib.debug_toolbars.django",
+        "stories.contrib.sentry",
     ],
     include_package_data=True,
     zip_safe=False,
