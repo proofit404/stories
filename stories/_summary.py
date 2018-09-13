@@ -16,6 +16,9 @@ class FailureSummary(object):
     def value(self):
         raise AssertionError
 
+    def __repr__(self):
+        return "Failure()"
+
 
 class SuccessSummary(object):
     def __init__(self, value):
@@ -28,3 +31,6 @@ class SuccessSummary(object):
 
     def failed_because(self, reason):
         return False
+
+    def __repr__(self):
+        return "Success()"

@@ -717,3 +717,17 @@ StepError.x:
     with pytest.raises(Exception):
         Collector().x.run()
     assert repr(getter()) == expected
+
+
+def test_failure_summary_representation():
+
+    expected = "Failure()"
+    result = examples.Simple().x.run(2, 2)
+    assert repr(result) == expected
+
+
+def test_success_summary_representation():
+
+    expected = "Success()"
+    result = examples.Simple().x.run(1, 3)
+    assert repr(result) == expected
