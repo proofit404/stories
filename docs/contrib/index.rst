@@ -7,3 +7,4 @@
 
     pytest
     django_debug_toolbar
+    sentry
