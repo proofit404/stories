@@ -44,7 +44,7 @@ html_theme_options = {
     "description": "Business transaction DSL.  It provides a simple way to define a complex business transaction that includes processing by many different objects.",
     "github_user": "dry-python",
     "github_repo": "stories",
-    "github_type": "watch",
+    "github_type": "star",
     "github_count": True,
     "github_banner": True,
 }
