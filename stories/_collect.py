@@ -45,8 +45,8 @@ def wrap_story(is_story, collected, obj, ctx):
 
 
 def make_validator(name, arguments):
-    def validate_substory_arguments(self):
-        assert set(arguments) <= set(self.ctx)
+    def validate_substory_arguments(self, ctx):
+        assert set(arguments) <= set(ctx)
         return substory_start
 
     validate_substory_arguments.method_name = name

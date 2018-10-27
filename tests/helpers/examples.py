@@ -31,23 +31,23 @@ class Simple(object):
         self.two()
         self.three()
 
-    def one(self):
+    def one(self, ctx):
         return Success()
 
-    def two(self):
-        if self.ctx.foo > 2:
+    def two(self, ctx):
+        if ctx.foo > 2:
             return Failure("'foo' is too big")
 
-        if self.ctx.foo > 1:
+        if ctx.foo > 1:
             return Failure()
 
-        if self.ctx.bar < 0:
+        if ctx.bar < 0:
             return Skip()
 
         return Success(baz=4)
 
-    def three(self):
-        return Result(self.ctx.bar - self.ctx.baz)
+    def three(self, ctx):
+        return Result(ctx.bar - ctx.baz)
 
 
 # Substory in the same class.
@@ -62,14 +62,14 @@ class SimpleSubstory(Simple):
         self.x()
         self.after()
 
-    def start(self):
-        return Success(foo=self.ctx.spam - 1)
+    def start(self, ctx):
+        return Success(foo=ctx.spam - 1)
 
-    def before(self):
-        return Success(bar=self.ctx.spam + 1)
+    def before(self, ctx):
+        return Success(bar=ctx.spam + 1)
 
-    def after(self):
-        return Result(self.ctx.spam * 2)
+    def after(self, ctx):
+        return Result(ctx.spam * 2)
 
     @story
     @argument("foo")
@@ -78,7 +78,7 @@ class SimpleSubstory(Simple):
         self.first()
         self.x()
 
-    def first(self):
+    def first(self, ctx):
         return Skip()
 
 
@@ -97,14 +97,14 @@ class SubstoryDI(object):
         self.x()
         self.after()
 
-    def start(self):
-        return Success(foo=self.ctx.spam - 1)
+    def start(self, ctx):
+        return Success(foo=ctx.spam - 1)
 
-    def before(self):
-        return Success(bar=self.ctx.spam + 1)
+    def before(self, ctx):
+        return Success(bar=ctx.spam + 1)
 
-    def after(self):
-        return Result(self.ctx.spam * 2)
+    def after(self, ctx):
+        return Result(ctx.spam * 2)
 
 
 # Method tries to override existed context key.
@@ -116,7 +116,7 @@ class ExistedKey(object):
     def x(self):
         self.one()
 
-    def one(self):
+    def one(self, ctx):
         return Success(foo=2)
 
 
@@ -128,7 +128,7 @@ class WrongResult(object):
     def x(self):
         self.one()
 
-    def one(self):
+    def one(self, ctx):
         return 1
 
 
@@ -142,7 +142,7 @@ class AttributeAccess(object):
     def x(self):
         self.one()
 
-    def one(self):
+    def one(self, ctx):
         self.clsattr
 
 
@@ -158,8 +158,8 @@ class ImplementationDI(object):
     def x(self):
         self.one()
 
-    def one(self):
-        return Result(self.f(self.ctx.foo))
+    def one(self, ctx):
+        return Result(self.f(ctx.foo))
 
 
 # Step error.
@@ -170,5 +170,5 @@ class StepError(object):
     def x(self):
         self.one()
 
-    def one(self):
+    def one(self, ctx):
         raise Exception()

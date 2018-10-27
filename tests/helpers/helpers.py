@@ -4,9 +4,9 @@ def make_collector(cls, methodname):
     method = getattr(cls, methodname)
     method = getattr(method, "__func__", method)
 
-    def collect(self):
+    def collect(self, ctx):
         storage.append(self)
-        return method(self)
+        return method(self, ctx)
 
     class Collector(cls):
         pass

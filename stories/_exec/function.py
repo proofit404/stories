@@ -18,7 +18,12 @@ def execute(runner, ctx, methods):
 
         try:
             try:
-                result = method(proxy)
+                # FIXME:
+                #
+                # 1. We should get away from proxy system.
+                #
+                # 2. Context should show current execution path.
+                result = method(proxy, ctx)
             except AttributeError as error:
                 if proxy.__class__.__name__ in error.args[0]:
                     assert False
