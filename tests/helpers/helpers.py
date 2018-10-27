@@ -5,7 +5,7 @@ def make_collector(cls, methodname):
     method = getattr(method, "__func__", method)
 
     def collect(self, ctx):
-        storage.append(self)
+        storage.append(ctx)
         return method(self, ctx)
 
     class Collector(cls):
@@ -17,9 +17,9 @@ def make_collector(cls, methodname):
 
     def getter():
         length = len(storage)
-        assert length == 1, " ".join(
-            ["Method", "'" + methodname + "'", "was", "called", str(length), "times"]
-        )
+        error_template = "Method {methodname!r} was called {length} times"
+        error_message = error_template.format(methodname=methodname, length=length)
+        assert length == 1, error_message
         return storage[0]
 
     return Collector, getter
