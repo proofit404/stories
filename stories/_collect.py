@@ -1,5 +1,4 @@
 from ._marker import substory_end, substory_start
-from ._proxy import make_proxy
 
 
 def collect_story(f):
@@ -19,12 +18,11 @@ def collect_story(f):
 def wrap_story(is_story, collected, obj, ctx):
 
     methods = []
-    proxy = make_proxy(obj, ctx)
 
     for name in collected:
         attr = getattr(obj, name)
         if not is_story(attr):
-            methods.append((proxy, attr.__func__))
+            methods.append((obj, attr.__func__))
             continue
 
         sub_methods = wrap_story(is_story, attr.collected, attr.obj, ctx)
@@ -36,10 +34,10 @@ def wrap_story(is_story, collected, obj, ctx):
         else:
             method_name = name + " (" + attr.cls_name + "." + attr.name + ")"
 
-        sub_proxy = sub_methods[0][0]
-        methods.append((sub_proxy, make_validator(method_name, attr.arguments)))
+        sub_obj = sub_methods[0][0]
+        methods.append((sub_obj, make_validator(method_name, attr.arguments)))
         methods.extend(sub_methods)
-        methods.append((sub_proxy, end_of_story))
+        methods.append((sub_obj, end_of_story))
 
     return methods
 
@@ -54,5 +52,5 @@ def make_validator(name, arguments):
     return validate_substory_arguments
 
 
-def end_of_story(self):
+def end_of_story(self, ctx):
     return substory_end

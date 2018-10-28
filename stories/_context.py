@@ -5,9 +5,9 @@ from ._repr import context_representation
 
 
 class Context(object):
-    def __init__(self, ns, history=None):
+    def __init__(self, ns, history):
         self.ns = OrderedDict(ns)
-        self.history = history or []
+        self.history = history
         self.lines = ["Story argument"] * len(ns)
 
     def __getattr__(self, name):
@@ -20,7 +20,7 @@ class Context(object):
         return iter(self.ns)
 
     def __repr__(self):
-        return context_representation(self)
+        return "\n\n".join([repr(self.history), context_representation(self)])
 
     def __dir__(self):
         parent = set(dir(undefined))

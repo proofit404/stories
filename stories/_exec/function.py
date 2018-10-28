@@ -7,10 +7,10 @@ def execute(runner, ctx, methods):
 
     skipped = undefined
 
-    for proxy, method in methods:
+    for obj, method in methods:
 
         if skipped is not undefined:
-            if method is end_of_story and skipped is proxy:
+            if method is end_of_story and skipped is obj:
                 skipped = undefined
             continue
 
@@ -18,14 +18,9 @@ def execute(runner, ctx, methods):
 
         try:
             try:
-                # FIXME:
-                #
-                # 1. We should get away from proxy system.
-                #
-                # 2. Context should show current execution path.
-                result = method(proxy, ctx)
+                result = method(obj, ctx)
             except AttributeError as error:
-                if proxy.__class__.__name__ in error.args[0]:
+                if obj.__class__.__name__ in error.args[0]:
                     assert False
                 else:
                     raise
@@ -46,7 +41,7 @@ def execute(runner, ctx, methods):
 
         if restype is Skip:
             ctx.history.on_skip()
-            skipped = proxy
+            skipped = obj
             continue
 
         if result is substory_start:
@@ -59,7 +54,7 @@ def execute(runner, ctx, methods):
 
         assert not set(ctx) & set(result.kwargs)
         ctx.ns.update(result.kwargs)
-        line = "Set by %s.%s" % (proxy.__class__.__name__, method.__name__)
+        line = "Set by %s.%s" % (obj.__class__.__name__, method.__name__)
         ctx.lines.extend([line] * len(result.kwargs))
 
     return runner.finished()
