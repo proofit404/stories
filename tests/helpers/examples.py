@@ -50,6 +50,23 @@ class Simple(object):
         return Result(ctx.bar - ctx.baz)
 
 
+class Pipe(object):
+    @story
+    def x(self):
+        self.one()
+        self.two()
+        self.three()
+
+    def one(self, ctx):
+        return Success()
+
+    def two(self, ctx):
+        return Success()
+
+    def three(self, ctx):
+        return Success()
+
+
 # Substory in the same class.
 
 

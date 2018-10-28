@@ -19,8 +19,8 @@ class History(object):
             self.lines[-1] = self.lines[-1] + " (failed)"
 
     def on_skip(self):
-        self.indent -= 1
         self.lines[-1] = self.lines[-1] + " (skipped)"
+        self.indent -= 1
 
     def on_error(self, error_name):
         self.lines[-1] = self.lines[-1] + " (errored: " + error_name + ")"

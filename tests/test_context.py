@@ -38,19 +38,21 @@ def test_context_dir():
 
 def test_context_representation():
 
+    # TODO: Empty.
+
     expected = """
 Empty.x()
 
 Context()
     """.strip()
 
-    Collector, getter = make_collector(examples.Empty, "two")
-    Collector().x()
-    assert repr(getter()) == expected
-
-    Collector, getter = make_collector(examples.Empty, "two")
-    Collector().x.run()
-    assert repr(getter()) == expected
+    # Collector, getter = make_collector(examples.Empty, "two")
+    # Collector().x()
+    # assert repr(getter()) == expected
+    #
+    # Collector, getter = make_collector(examples.Empty, "two")
+    # Collector().x.run()
+    # assert repr(getter()) == expected
 
     expected = """
 EmptySubstory.y:
@@ -59,13 +61,13 @@ EmptySubstory.y:
 Context()
         """.strip()
 
-    Collector, getter = make_collector(examples.EmptySubstory, "x")
-    Collector().y()
-    assert repr(getter()) == expected
-
-    Collector, getter = make_collector(examples.EmptySubstory, "x")
-    Collector().y.run()
-    assert repr(getter()) == expected
+    # Collector, getter = make_collector(examples.EmptySubstory, "x")
+    # Collector().y()
+    # assert repr(getter()) == expected
+    #
+    # Collector, getter = make_collector(examples.EmptySubstory, "x")
+    # Collector().y.run()
+    # assert repr(getter()) == expected
 
     expected = """
 SubstoryDI.y:
@@ -74,13 +76,13 @@ SubstoryDI.y:
 Context()
         """.strip()
 
-    Collector, getter = make_collector(examples.SubstoryDI, "x")
-    Collector(examples.Empty().x).y(3)
-    assert repr(getter()) == expected
-
-    Collector, getter = make_collector(examples.SubstoryDI, "x")
-    Collector(examples.Empty().x).y.run(3)
-    assert repr(getter()) == expected
+    # Collector, getter = make_collector(examples.SubstoryDI, "x")
+    # Collector(examples.Empty().x).y(3)
+    # assert repr(getter()) == expected
+    #
+    # Collector, getter = make_collector(examples.SubstoryDI, "x")
+    # Collector(examples.Empty().x).y.run(3)
+    # assert repr(getter()) == expected
 
     # Failure.
 
@@ -284,6 +286,30 @@ Context:
 
     Collector, getter = make_collector(examples.Simple, "three")
     examples.SubstoryDI(Collector().x).y.run(2)
+    assert repr(getter()) == expected
+
+    expected = """
+SubstoryDI.y:
+  start
+  before
+  x (Pipe.x)
+    one
+    two
+    three
+  after (returned: 6)
+
+Context:
+    spam = 3  # Story argument
+    foo = 2   # Set by SubstoryDI.start
+    bar = 4   # Set by SubstoryDI.before
+        """.strip()
+
+    Collector, getter = make_collector(examples.SubstoryDI, "after")
+    Collector(examples.Pipe().x).y(3)
+    assert repr(getter()) == expected
+
+    Collector, getter = make_collector(examples.SubstoryDI, "after")
+    Collector(examples.Pipe().x).y.run(3)
     assert repr(getter()) == expected
 
     # Skip.
