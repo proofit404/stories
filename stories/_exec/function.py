@@ -1,17 +1,20 @@
 from .._collect import end_of_story
-from .._marker import Marker, substory_end, substory_start, undefined
+from .._marker import Marker, substory_end, substory_start
 from .._return import Failure, Result, Skip, Success
 
 
 def execute(runner, ctx, methods):
 
-    skipped = undefined
+    skipped = 0
 
     for obj, method in methods:
 
-        if skipped is not undefined:
-            if method is end_of_story and skipped is obj:
-                skipped = undefined
+        if skipped > 0:
+            if method is end_of_story:
+                skipped -= 1
+            elif method.__name__ == "validate_substory_arguments":
+                # FIXME: This is a really flaky comparison mechanism.
+                skipped += 1
             continue
 
         ctx.history.before_call(method.__name__)
@@ -41,7 +44,7 @@ def execute(runner, ctx, methods):
 
         if restype is Skip:
             ctx.history.on_skip()
-            skipped = obj
+            skipped = 1
             continue
 
         if result is substory_start:

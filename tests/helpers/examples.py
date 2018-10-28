@@ -57,6 +57,12 @@ class Pipe(object):
         self.two()
         self.three()
 
+    @story
+    def y(self):
+        self.before()
+        self.x()
+        self.after()
+
     def one(self, ctx):
         return Success()
 
@@ -65,6 +71,12 @@ class Pipe(object):
 
     def three(self, ctx):
         return Success()
+
+    def before(self, ctx):
+        return Skip()
+
+    def after(self, ctx):
+        raise Exception()
 
 
 # Substory in the same class.

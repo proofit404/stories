@@ -209,6 +209,14 @@ def test_skip():
     assert not result.is_failure
     assert result.value == 4
 
+    result = examples.SubstoryDI(examples.Pipe().y).y(-2)
+    assert result == -4
+
+    result = examples.SubstoryDI(examples.Pipe().y).y.run(-2)
+    assert result.is_success
+    assert not result.is_failure
+    assert result.value == -4
+
 
 def test_arguments_validation():
 
