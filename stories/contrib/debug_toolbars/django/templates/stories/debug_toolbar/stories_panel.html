@@ -4,15 +4,13 @@
         <thead>
             <tr>
                 <th>&#160;</th>
-                <th>{% trans 'Story' %}</th>
                 <th>{% trans 'Context' %}</th>
             </tr>
         </thead>
         <tbody>
-            {% for history, ctx in stories %}
+            {% for ctx in stories %}
                 <tr>
                     <td>&#160;</td>
-                    <td><pre><code>{{ history }}</code></pre></td>
                     <td><pre><code>{{ ctx }}</code></pre></td>
                 </tr>
             {% endfor %}

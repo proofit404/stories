@@ -8,8 +8,8 @@ origin_context_init = stories._context.Context.__init__
 
 
 def track_context(storage):
-    def wrapper(ctx, ns, history=None):
-        origin_context_init(ctx, ns, history=history)
+    def wrapper(ctx, ns, history):
+        origin_context_init(ctx, ns, history)
         storage.append(ctx)
 
     return wrapper
@@ -50,6 +50,4 @@ class StoriesPanel(Panel):
         stories._context.Context.__init__ = origin_context_init
 
     def generate_stats(self, request, response):
-        self.record_stats(
-            {"stories": [(repr(ctx.history), repr(ctx)) for ctx in self.storage]}
-        )
+        self.record_stats({"stories": self.storage})

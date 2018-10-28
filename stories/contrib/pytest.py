@@ -3,7 +3,6 @@ import sys
 import textwrap
 
 import stories._context
-import stories._proxy
 from _pytest.config import hookimpl
 
 
@@ -11,8 +10,8 @@ origin_context_init = stories._context.Context.__init__
 
 
 def track_context(storage):
-    def wrapper(ctx, ns, history=None):
-        origin_context_init(ctx, ns, history=history)
+    def wrapper(ctx, ns, history):
+        origin_context_init(ctx, ns, history)
         storage.append((get_test_source(*get_test_call()), ctx))
 
     return wrapper
@@ -59,5 +58,5 @@ def pytest_runtest_call(item):
     yield
     stories._context.Context.__init__ = origin_context_init
     for i, (src, ctx) in enumerate(storage, 1):
-        output = "\n\n".join([src, repr(ctx.history), repr(ctx)])
+        output = "\n\n".join([src, repr(ctx)])
         item.add_report_section("call", "story #%d" % (i,), output)
