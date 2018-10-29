@@ -56,20 +56,18 @@ that include many processing steps.
         @argument('user')
         @argument('product')
         @argument('shipment_details')
-        def purchase(self):
+        def purchase(I):
 
-            self.create_order()
-            self.calculate_price()
-            self.request_payment()
-            self.notify_user()
+            I.create_order()
+            I.calculate_price()
+            I.request_payment()
+            I.notify_user()
 
-        def create_order(self):
+        def create_order(self, ctx):
 
-            return Success(
-                order=Order.objects.create(user=self.ctx.user, product=self.ctx.product)
-            )
+            return Success(order=Order.objects.create(user=ctx.user, product=ctx.product))
 
-        def create_order(self):
+        def create_order(self, ctx):
 
             return Success(...
 

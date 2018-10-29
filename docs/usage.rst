@@ -30,35 +30,35 @@ defined by rules explained here.
         @argument("name")
         @argument("email")
         @argument("age")
-        def create(self):
+        def create(I):
 
-            self.validate()
-            self.persist()
-            self.send_confirmation_email()
-            self.show_user()
+            I.validate()
+            I.persist()
+            I.send_confirmation_email()
+            I.show_user()
 
         # Steps.
 
-        def validate(self):
+        def validate(self, ctx):
 
-            if self.ctx.age < 18:
+            if ctx.age < 18:
                 return Failure("person is too young")
             return Success()
 
-        def persist(self):
+        def persist(self, ctx):
 
-            user = User.objects.create(name=self.ctx.name)
+            user = User.objects.create(name=ctx.name)
             return Success(user=user)
 
-        def send_confirmation_email(self):
+        def send_confirmation_email(self, ctx):
 
-            body = welcome_text(self.ctx.user)
-            send_email(self.ctx.email, body)
+            body = welcome_text(ctx.user)
+            send_email(ctx.email, body)
             return Success()
 
-        def show_user(self):
+        def show_user(self, ctx):
 
-            return Result(self.ctx.user)
+            return Result(ctx.user)
 
 Calling the story
 =================
@@ -125,6 +125,17 @@ Failure
     >>> result.failed_on("validate")
     True
     >>> result.failed_because("person is too young")
+    True
+    >>> result.ctx
+    CreateUser.create:
+      validate (failed: 'person is too young')
+
+    Context:
+        name = 'John'               # Story argument
+        email = 'john@example.com'  # Story argument
+        age = 17                    # Story argument
+    >>> result.ctx.age
+    17
 
 TODO: explaine...
 
