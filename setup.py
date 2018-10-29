@@ -13,6 +13,7 @@ setup(
     url="https://github.com/proofit404/stories",
     author="Artem Malyshev",
     author_email="proofit404@gmail.com",
+    package_dir={"": "src"},
     packages=[
         "stories",
         "stories._exec",
