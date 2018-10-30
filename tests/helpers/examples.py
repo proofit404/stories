@@ -6,7 +6,7 @@ from stories import Failure, Result, Skip, Success, argument, story
 
 class Empty(object):
     @story
-    def x(self):
+    def x(I):
         pass
 
 
@@ -15,8 +15,8 @@ class Empty(object):
 
 class EmptySubstory(Empty):
     @story
-    def y(self):
-        self.x()
+    def y(I):
+        I.x
 
 
 # Simple story.
@@ -26,10 +26,10 @@ class Simple(object):
     @story
     @argument("foo")
     @argument("bar")
-    def x(self):
-        self.one()
-        self.two()
-        self.three()
+    def x(I):
+        I.one
+        I.two
+        I.three
 
     def one(self, ctx):
         return Success()
@@ -52,16 +52,16 @@ class Simple(object):
 
 class Pipe(object):
     @story
-    def x(self):
-        self.one()
-        self.two()
-        self.three()
+    def x(I):
+        I.one
+        I.two
+        I.three
 
     @story
-    def y(self):
-        self.before()
-        self.x()
-        self.after()
+    def y(I):
+        I.before
+        I.x
+        I.after
 
     def one(self, ctx):
         return Success()
@@ -85,11 +85,11 @@ class Pipe(object):
 class SimpleSubstory(Simple):
     @story
     @argument("spam")
-    def y(self):
-        self.start()
-        self.before()
-        self.x()
-        self.after()
+    def y(I):
+        I.start
+        I.before
+        I.x
+        I.after
 
     def start(self, ctx):
         return Success(foo=ctx.spam - 1)
@@ -103,9 +103,9 @@ class SimpleSubstory(Simple):
     @story
     @argument("foo")
     @argument("bar")
-    def z(self):
-        self.first()
-        self.x()
+    def z(I):
+        I.first
+        I.x
 
     def first(self, ctx):
         return Skip()
@@ -120,11 +120,11 @@ class SubstoryDI(object):
 
     @story
     @argument("spam")
-    def y(self):
-        self.start()
-        self.before()
-        self.x()
-        self.after()
+    def y(I):
+        I.start
+        I.before
+        I.x
+        I.after
 
     def start(self, ctx):
         return Success(foo=ctx.spam - 1)
@@ -142,8 +142,8 @@ class SubstoryDI(object):
 class ExistedKey(object):
     @story
     @argument("foo")
-    def x(self):
-        self.one()
+    def x(I):
+        I.one
 
     def one(self, ctx):
         return Success(foo=2)
@@ -154,8 +154,8 @@ class ExistedKey(object):
 
 class WrongResult(object):
     @story
-    def x(self):
-        self.one()
+    def x(I):
+        I.one
 
     def one(self, ctx):
         return 1
@@ -168,8 +168,8 @@ class AttributeAccess(object):
     clsattr = 1
 
     @story
-    def x(self):
-        self.one()
+    def x(I):
+        I.one
 
     def one(self, ctx):
         self.clsattr
@@ -184,8 +184,8 @@ class ImplementationDI(object):
 
     @story
     @argument("foo")
-    def x(self):
-        self.one()
+    def x(I):
+        I.one
 
     def one(self, ctx):
         return Result(self.f(ctx.foo))
@@ -196,8 +196,8 @@ class ImplementationDI(object):
 
 class StepError(object):
     @story
-    def x(self):
-        self.one()
+    def x(I):
+        I.one
 
     def one(self, ctx):
         raise Exception()

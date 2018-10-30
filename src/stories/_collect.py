@@ -8,7 +8,6 @@ def collect_story(f):
     class Collector(object):
         def __getattr__(self, name):
             calls.append(name)
-            return lambda: None
 
     f(Collector())
 
