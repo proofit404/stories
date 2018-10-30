@@ -20,13 +20,7 @@ def execute(runner, ctx, methods):
         ctx.history.before_call(method.__name__)
 
         try:
-            try:
-                result = method(obj, ctx)
-            except AttributeError as error:
-                if obj.__class__.__name__ in error.args[0]:
-                    assert False
-                else:
-                    raise
+            result = method(obj, ctx)
         except Exception as error:
             ctx.history.on_error(error.__class__.__name__)
             raise
