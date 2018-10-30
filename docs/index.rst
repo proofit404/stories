@@ -85,7 +85,7 @@ that include many processing steps.
             )
             return Success(order=order)
 
-        def create_order(self, ctx):
+        def calculate_price(self, ctx):
 
             return Success(...
 
