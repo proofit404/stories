@@ -108,6 +108,7 @@ Contents
     usage
     debugging
     contrib/index
+    faq
 
 Indices and tables
 ==================
