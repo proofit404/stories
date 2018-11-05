@@ -17,9 +17,12 @@
 .. |docs| image:: https://readthedocs.org/projects/stories/badge/?version=latest
     :target: https://stories.readthedocs.io/en/latest/?badge=latest
 
+.. |gitter| image:: https://badges.gitter.im/dry-python/stories.svg
+    :target: https://gitter.im/dry-python/stories
+
 .. image:: https://raw.githubusercontent.com/dry-python/brand/master/logo/stories.png
 
-|travis| |codecov| |pyup| |codacy| |pypi| |docs|
+|travis| |codecov| |pyup| |codacy| |pypi| |docs| |gitter|
 
 ----
 
