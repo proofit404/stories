@@ -32,10 +32,10 @@ defined by rules explained here.
         @argument("age")
         def create(I):
 
-            I.validate()
-            I.persist()
-            I.send_confirmation_email()
-            I.show_user()
+            I.validate
+            I.persist
+            I.send_confirmation_email
+            I.show_user
 
         # Steps.
 

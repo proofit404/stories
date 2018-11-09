@@ -49,7 +49,7 @@ to capturing and returning errors from any step in the transaction.
 * Each operation shouldn’t accumulate state, instead it should receive
   an input and return an output without causing any side-effects.
 
-* The only interface of an operation is ``self.ctx``.
+* The only interface of an operation is ``ctx``.
 
 * Each operation provides a meaningful piece of functionality and can
   be reused.
@@ -75,10 +75,10 @@ that include many processing steps.
         @argument('shipment_details')
         def purchase(I):
 
-            I.create_order()
-            I.calculate_price()
-            I.request_payment()
-            I.notify_user()
+            I.create_order
+            I.calculate_price
+            I.request_payment
+            I.notify_user
 
         def create_order(self, ctx):
 

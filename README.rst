@@ -61,10 +61,10 @@ that include many processing steps.
         @argument('shipment_details')
         def purchase(I):
 
-            I.create_order()
-            I.calculate_price()
-            I.request_payment()
-            I.notify_user()
+            I.create_order
+            I.calculate_price
+            I.request_payment
+            I.notify_user
 
         def create_order(self, ctx):
 
