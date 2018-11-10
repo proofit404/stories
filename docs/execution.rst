@@ -164,6 +164,58 @@ There are some rules on how stories are executed:
 
 * ``Failure`` of the sub-story will fail the whole story.
 
+.. code:: python
+
+    class Action:
+
+        @story
+        def do(I):
+
+            I.one
+            I.sub
+            I.four
+
+        @story
+        def sub(I):
+
+            I.two
+            I.three
+
+        def one(self, ctx):
+
+            print("one")
+            return Success()
+
+        def two(self, ctx):
+
+            print("two")
+            return Failure()
+
+        def three(self, ctx):
+
+            print("three")
+            return Success()
+
+        def four(self, ctx):
+
+            print("four")
+            return Success()
+
+.. code:: python
+
+    >>> Action().do()
+    one
+    two
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+      File "stories/_wrapper.py", line 23, in __call__
+        return function.execute(runner, ctx, methods)
+      File "stories/_exec/function.py", line 33, in execute
+        return runner.got_failure(ctx, method.__name__, result.reason)
+      File "stories/_run.py", line 7, in got_failure
+        raise FailureError(reason)
+    stories.exceptions.FailureError
+
 * If the story method return ``Result``, the whole story considered
   done.  The argument passed to the ``Result`` constructor will be the
   return value of the story call.
