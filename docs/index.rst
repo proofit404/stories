@@ -109,6 +109,7 @@ Contents
 
     why
     usage
+    execution
     debugging
     contrib/index
     faq
