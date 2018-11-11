@@ -329,4 +329,75 @@ Skip
 If sub-story method returns ``Skip`` result, execution will be
 continued form the next method of the caller story.
 
+.. code:: python
+
+    class Action:
+
+        @story
+        def do(I):
+
+            I.one
+            I.sub
+            I.four
+
+        @story
+        def sub(I):
+
+            I.two
+            I.three
+
+        def one(self, ctx):
+
+            print("one")
+            return Success()
+
+        def two(self, ctx):
+
+            print("two")
+            return Skip()
+
+        def three(self, ctx):
+
+            print("three")
+            return Success()
+
+        def four(self, ctx):
+
+            print("four")
+            return Success()
+
+.. code:: python
+
+    >>> Action().do()
+    one
+    two
+    four
+    >>> _
+
 If the topmost story returns ``Skip`` result, execution will end.
+
+.. code:: python
+
+    class Action:
+
+        @story
+        def do(I):
+
+            I.one
+            I.two
+
+        def one(self, ctx):
+
+            print("one")
+            return Skip()
+
+        def two(self, ctx):
+
+            print("two")
+            return Success()
+
+.. code:: python
+
+    >>> Action().do()
+    one
+    >>> _
