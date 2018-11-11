@@ -2,9 +2,26 @@
  Execution rules
 =================
 
-There are some rules on how stories are executed:
+``stories`` follows this executing rules to run:
 
-* Methods called in the order as they written in the story
+* Methods of the class will be called in the order as they was written
+  in the story
+
+* If the story calls another story in its body, methods of this
+  sub-story add to the caller in the order they occur in sub-story
+  body.
+
+* Each story method should return an instance of ``Success``,
+  ``Failure``, ``Result`` or ``Skip`` classes.
+
+* The execution of the story will change according to the type of
+  the return value.
+
+Success
+=======
+
+If story method returns ``Success`` execution of the whole story
+continues from the next step.
 
 .. code:: python
 
@@ -40,9 +57,8 @@ There are some rules on how stories are executed:
     three
     >>> _
 
-* If the story calls another story in its body, methods of this
-  sub-story add to the caller in the order they occur in sub-story
-  body.
+If sub-story last method returns ``Success``, the execution continue
+in the next method of the parent story.
 
 .. code:: python
 
@@ -90,14 +106,8 @@ There are some rules on how stories are executed:
     four
     >>> _
 
-* Each story method should return an instance of ``Success``,
-  ``Failure``, ``Result`` or ``Skip`` classes.
-
-* If story method return ``Success`` execution of the whole story
-  continues from the next step.
-
-* Story method can use ``Success`` keyword arguments to set some
-  context variables for future methods.
+Story method can use ``Success`` keyword arguments to set some context
+variables for future methods.
 
 .. code:: python
 
@@ -111,21 +121,26 @@ There are some rules on how stories are executed:
 
         def one(self, ctx):
 
-            return Success(var=1)
+            return Success(var_a=1, var_b=2)
 
         def two(self, ctx):
 
-            print(ctx.var)
+            print(ctx.var_a)
+            print(ctx.var_b)
             return Success()
 
 .. code:: python
 
     >>> Action().do()
     1
+    2
     >>> _
 
-* If story method return ``Failure``, the whole story considered
-  failed.  Execution stops at this point.
+Failure
+=======
+
+If story method returns ``Failure``, the whole story considered
+failed.  Execution stops at this point.
 
 .. code:: python
 
@@ -162,7 +177,7 @@ There are some rules on how stories are executed:
     stories.exceptions.FailureError
     >>> _
 
-* ``Failure`` of the sub-story will fail the whole story.
+``Failure`` of the sub-story will fail the whole story.
 
 .. code:: python
 
@@ -216,9 +231,12 @@ There are some rules on how stories are executed:
         raise FailureError(reason)
     stories.exceptions.FailureError
 
-* If the story method return ``Result``, the whole story considered
-  done.  The argument passed to the ``Result`` constructor will be the
-  return value of the story call.
+Result
+======
+
+If the story method return ``Result``, the whole story considered
+done.  An optional argument passed to the ``Result`` constructor will
+be the return value of the story call.
 
 .. code:: python
 
@@ -255,8 +273,8 @@ There are some rules on how stories are executed:
     1
     >>> _
 
-* The ``Result`` of the sub-story will be the result of the whole
-  story.
+The ``Result`` of the sub-story will be the result of the whole story.
+The execution stops after the method returned ``Result``.
 
 .. code:: python
 
@@ -305,7 +323,10 @@ There are some rules on how stories are executed:
     2
     >>> _
 
-* If sub-story method return ``Skip`` result, execution will be
-  continued form the next method of the caller story.
+Skip
+====
 
-* If the topmost story return ``Skip`` result, execution will end.
+If sub-story method returns ``Skip`` result, execution will be
+continued form the next method of the caller story.
+
+If the topmost story returns ``Skip`` result, execution will end.
