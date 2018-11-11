@@ -2,10 +2,10 @@
  Execution rules
 =================
 
-``stories`` follows this executing rules to run:
+``stories`` follow this executing rules to run:
 
-* Methods of the class will be called in the order as they was written
-  in the story
+* Methods of the class will be called in the order as they were
+  written in the story
 
 * If the story calls another story in its body, methods of this
   sub-story add to the caller in the order they occur in sub-story
@@ -20,7 +20,7 @@
 Success
 =======
 
-If story method returns ``Success`` execution of the whole story
+If the story method returns ``Success`` execution of the whole story
 continues from the next step.
 
 .. code:: python
@@ -57,7 +57,7 @@ continues from the next step.
     three
     >>> _
 
-If sub-story last method returns ``Success``, the execution continue
+If sub-story last method returns ``Success``, the execution continues
 in the next method of the parent story.
 
 .. code:: python
