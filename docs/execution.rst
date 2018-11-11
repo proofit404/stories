@@ -220,8 +220,90 @@ There are some rules on how stories are executed:
   done.  The argument passed to the ``Result`` constructor will be the
   return value of the story call.
 
+.. code:: python
+
+    class Action:
+
+        @story
+        def do(I):
+
+            I.one
+            I.two
+            I.three
+
+        def one(self, ctx):
+
+            print("one")
+            return Success()
+
+        def two(self, ctx):
+
+            print("two")
+            return Result(1)
+
+        def three(self, ctx):
+
+            print("three")
+            return Success()
+
+.. code:: python
+
+    >>> res = Action().do()
+    one
+    two
+    >>> res
+    1
+    >>> _
+
 * The ``Result`` of the sub-story will be the result of the whole
   story.
+
+.. code:: python
+
+    class Action:
+
+        @story
+        def do(I):
+
+            I.one
+            I.sub
+            I.four
+
+        @story
+        def sub(I):
+
+            I.two
+            I.three
+
+        def one(self, ctx):
+
+            print("one")
+            return Success()
+
+        def two(self, ctx):
+
+            print("two")
+            return Success()
+
+        def three(self, ctx):
+
+            print("three")
+            return Result(2)
+
+        def four(self, ctx):
+
+            print("four")
+            return Success()
+
+.. code:: python
+
+    >>> result = Action().do()
+    one
+    two
+    three
+    >>> result
+    2
+    >>> _
 
 * If sub-story method return ``Skip`` result, execution will be
   continued form the next method of the caller story.
