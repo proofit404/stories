@@ -32,6 +32,7 @@ The business transaction DSL
 - `Source Code`_
 - `Issue Tracker`_
 - `Documentation`_
+- `Discussion`_
 
 Installation
 ------------
@@ -85,3 +86,4 @@ Dependencies library is offered under the two clause BSD license.
 .. _source code: https://github.com/dry-python/stories
 .. _issue tracker: https://github.com/dry-python/stories/issues
 .. _documentation: https://stories.readthedocs.io/en/latest/
+.. _discussion: https://gitter.im/dry-python/stories
