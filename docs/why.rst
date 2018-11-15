@@ -2,13 +2,58 @@
  Why
 =====
 
-Good code is easy to understand and change.  We build ``stories`` to
-make your project both easier to understand and to change.
+Good code is easy to understand and change.  We build ``stories`` with
+this constrains in mind.
 
-Lets consider common situations during development.
+``stories`` force you to write structured, understandable code with
+right separation of concerns and responsibilities.
+
+Lets consider common troubles you meat in development.
 
 Micro framework
 ===============
+
+Micro frameworks doesn't offer too much structure on your project.
+The main goal is flexibility.
+
+Most of the times you will end up with two problems:
+
+1. Long view functions.
+2. Lots of ``if`` statements inside this functions.
+
+There is a lot of complexity in it.
+
+Let's consider following view function.
+
+.. code:: python
+
+     85 @app.route('/subscriptions/')
+     86 def buy_subscription(page):
+    ...
+    121     if props[-1].endswith('$'):
+    122 ->      props[-1] = props[-1][:-1]
+    123
+
+We does not have any information about this strange condition.  To
+complete our current task we should process this data in a different
+way.
+
+We decide to change this condition.  Of course we test all possible
+scenarios we can imagine.
+
+But after some times we will found this in the production:
+
+.. code:: python
+
+    Traceback (most recent call last):
+      File "views.py", line 1027, in buy_subscription
+    ZeroDivisionError: division by zero
+
+Turns out there were a lot more variants of income data we can
+imagine.  So our change failed in one business scenario.
+
+This happens because this code wasn't written to help us understand
+the business case of it.
 
 Macro framework
 ===============
