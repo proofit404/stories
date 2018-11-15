@@ -29,12 +29,6 @@ class Context(object):
         attributes = sorted(parent | current | scope)
         return attributes
 
-    def __call__(self, *args, **kwargs):
-        assert not (set(args) & set(kwargs))
-        keys = {arg: arg for arg in args}
-        keys.update(kwargs)
-        return {k: self.ns[v] for k, v in keys.items()}
-
 
 def validate_arguments(arguments, args, kwargs):
 
