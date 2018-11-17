@@ -8,14 +8,14 @@ this constrains in mind.
 ``stories`` force you to write structured, understandable code with
 right separation of concerns and responsibilities.
 
-Lets consider common troubles you meat in development.
+Let's consider common troubles you meat in development.
 
 Micro framework
 ===============
 
-Micro frameworks doesn't offer too much structure to your project.
-The main goal is flexibility.  And you're mostly on your own when it
-comes to organize your code.
+Micro frameworks don't offer too much structure to your project.  The
+main goal is flexibility.  And you're mostly on your own when it comes
+to organizing your code.
 
 Most of the times you will end up with two problems:
 
@@ -35,7 +35,7 @@ Let's consider following view function.
     122 ->      props[-1] = props[-1][:-1]
     123
 
-We does not have any information about this strange comparison
+We do not have any information about this strange comparison
 expression.
 
 Let's consider we should process this data in a different way to
@@ -43,7 +43,7 @@ complete our current task.
 
 We decide to change this expression.
 
-Of course we test all possible scenarios we can imagine.
+Of course, we test all possible scenarios we can imagine.
 
 But after some time this error would happen in the production:
 
@@ -61,16 +61,16 @@ This happens because our code wasn't written to help us understand it.
 Macro framework
 ===============
 
-On the other side there are a lot of technologies with strong opinions
-how to structure programs written with their help.
+On the other side, there are a lot of technologies with strong
+opinions on how to structure programs written with their help.
 
 This approach also has its own cost.
 
 1. You need method flowchart to understand data flow in your system.
 2. Zig-zag traceback problem.  It's hard to figure out the actual
-   execution path because your code always mixed with code of the
+   execution path because your code always mixed with the code of the
    framework.
-3. Framework internals leak in to your code base.
+3. Framework internals leak into your code base.
 
 Let's consider this view:
 
@@ -95,11 +95,11 @@ this out.
 
 .. image:: /static/method-flowchart.png
 
-After few hours of digging we will figure out there are about 17
+After a few hours of digging, we will figure out there are about 17
 different ways to interact with this view.
 
-When we goes to the ``SubscriptionSerializer`` class, we expect to see
-there a mapping of fields from database model to the json object.
+When we go to the ``SubscriptionSerializer`` class, we expect to see
+there a mapping of fields from the database model to the JSON object.
 
 And we actually do.  But in addition we see this method:
 
@@ -117,10 +117,10 @@ And we actually do.  But in addition we see this method:
 Once again we have no idea...
 
 1. What was the actual reason to put this method there?
-2. Which one of the 17 ways to interact with the view it affects?
-3. What framework state it expect to work with?
+2. Which one of the 17 ways to interact with the view does it affect?
+3. What framework state it expects to work with?
 
-It will take few hours more to answer this questions.
+It will take a few hours more to answer this questions.
 
 Conclusion
 ==========
@@ -138,7 +138,7 @@ Business logic
 ==============
 
 The main problem with both approaches - it is completely unclear what
-the application actually do.  What problems it is trying to solve?
+the application actually does.  What problems it is trying to solve?
 
 Most frameworks are busy with forms, serializers, transport layers,
 field mappings.  And all these implementation details are not the
