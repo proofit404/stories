@@ -3,3 +3,4 @@
 =================
 
 .. image:: /static/pytest.png
+    :class: with-popup

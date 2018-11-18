@@ -193,13 +193,16 @@ Wouldn't it be nice to know which business scenario was executed by
 every line in the tests?
 
 .. image:: /static/pytest.png
+    :class: with-popup
 
 Wouldn't it be nice to see the same details in the debug toolbar?
 
 .. image:: /static/debug-toolbar.png
+    :class: with-popup
 
 Wouldn't it be nice to it when production fails?
 
 .. image:: /static/sentry.png
+    :class: with-popup
 
 Interesting, isn't it?  Check out Usage guide to learn more.
