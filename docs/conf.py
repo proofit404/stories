@@ -43,6 +43,7 @@ html_sidebars = {
 html_theme_options = {
     "show_powered_by": False,
     "show_related": True,
+    "show_relbars": True,
     "description": "Business transaction DSL.  It provides a simple way to define a complex business transaction that includes processing by many different objects.",
     "github_user": "dry-python",
     "github_repo": "stories",
