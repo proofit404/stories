@@ -11,7 +11,7 @@ Careful programmers tend to avoid tools built on top of
 meta-programming.  But we still use tools like dataclasses_, attrs_
 and `django orm`_ because they improve developer experience a lot.
 
-This is what ``stories`` tries very hard:
+This is what ``stories`` try very hard:
 
     Bring the maximum value to your process, while keeping magic at
     the lowest possible minimum.
@@ -39,11 +39,11 @@ We receive a lot of complains and suggestions related to the DSL look
 and feel.  We are open to all ideas!  Please, experiment with DSL
 more!
 
-If you want try to build another DSL version with the same semantics,
-here are the most quickest way to prototype it:
+If you want to try to build another DSL version with the same
+semantics, here are the quickest way to prototype it:
 
 1. There is ``examples`` module in tests, which contains all possible
-   DSL expressions written down.
+   DSL expressions are written down.
 2. Rewrite each expression in your version of the DSL.
 3. Implement DSL inside ``stories`` module without touching a single
    line of tests.
