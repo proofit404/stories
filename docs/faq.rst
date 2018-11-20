@@ -32,6 +32,25 @@ classes.  We want you to be free at the decisions where to put story
 definition anywhere.  It is your right to place it inside Django
 Model.
 
+What is the best way to prototype my own DSL look and feel?
+===========================================================
+
+We receive a lot of complains and suggestions related to the DSL look
+and feel.  We are open to all ideas!  Please, experiment with DSL
+more!
+
+If you want try to build another DSL version with the same semantics,
+here are the most quickest way to prototype it:
+
+1. There is ``examples`` module in tests, which contains all possible
+   DSL expressions written down.
+2. Rewrite each expression in your version of the DSL.
+3. Implement DSL inside ``stories`` module without touching a single
+   line of tests.
+
+
+Let us know if you stuck!  We can do the redesign together!
+
 Why we need ``@argument`` decorator instead of function arguments?
 ==================================================================
 
