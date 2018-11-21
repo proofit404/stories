@@ -73,6 +73,7 @@ Result
 
     >>> CreateUser().create("John", "john@example.com", 19)
     <User: User object (1)>
+    >>> _
 
 TODO: explaine...
 
@@ -91,6 +92,7 @@ Failure
       File "stories/_run.py", line 7, in got_failure
         raise FailureError(reason)
     stories.exceptions.FailureError
+    >>> _
 
 TODO: explaine...
 
@@ -110,6 +112,7 @@ Result
     True
     >>> result.value
     <User: User object (1)>
+    >>> _
 
 
 TODO: explaine...
@@ -136,5 +139,6 @@ Failure
         age = 17                    # Story argument
     >>> result.ctx.age
     17
+    >>> _
 
 TODO: explaine...
