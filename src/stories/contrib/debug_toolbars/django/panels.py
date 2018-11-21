@@ -50,6 +50,4 @@ class StoriesPanel(Panel):
         stories._context.Context.__init__ = origin_context_init
 
     def generate_stats(self, request, response):
-        # Quote callable context.  Otherwise django template engine
-        # will try to introspect context object directly.
-        self.record_stats({"stories": [lambda: ctx for ctx in self.storage]})
+        self.record_stats({"stories": self.storage})
