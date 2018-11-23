@@ -63,7 +63,7 @@ defined by rules explained here.
 Calling the story
 =================
 
-The most simple valiant to execute story, is to call it as regular
+The most simple variant to execute story, is to call it as regular
 method.
 
 Result

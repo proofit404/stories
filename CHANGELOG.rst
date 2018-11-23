@@ -7,15 +7,18 @@ Changelog
 0.9 (2018-00-00)
 ++++++++++++++++
 
-- ``Proxy`` class ``repr()`` show execution path.
-- Py.test plugin with ``Context`` and ``Proxy`` reporters.
+- Enforce ``I`` noun with non callable attributes in the story
+  definition.
+- ``Context`` is passed as an argument into story step methods.
+- Pass real class instances into step method.
+- Show story execution path in the ``Context`` representation.
+- Add Sentry, Py.test and Django Debug Toolbar plugins with
+  ``Context`` reporter built in.
 - Raise an exception on ``Failure`` when the story was called
   directly.
-- Deny class attribute access in the ``Proxy``.
-- Preserve execution order in the ``Context`` class ``repr()``.
 - Support iterable protocol in the ``Context`` class.
 - Add ``Failure`` reason.
-- Expand context to the function call arguments.
+- Fix ``Skip`` result behavior in deeper sub-story hierarchy.
 
 0.8 (2018-05-12)
 ++++++++++++++++
