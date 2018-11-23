@@ -4,6 +4,19 @@
 
 Here we'll try to explain some reasons behind our decisions.
 
+Why do we need a DSL?
+=====================
+
+A DSL with lots of possibilities is hard to reason about and maintain.
+A real programming language will go the same way without much
+attention to the structure of your project.
+
+Instead, we want ``stories`` DSL so limited, it forces the user to
+explain his/her thoughts in a straightforward linear way.
+
+All complexity will go to the implementation steps.  There you'll have
+the whole power of the Python.
+
 Why it is too magic?
 ====================
 
