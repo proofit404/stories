@@ -1,4 +1,4 @@
 ./tests/helpers/.
-pytest~=4.0.0
+pytest~=4.0.1
 coverage~=4.5.2
 codecov~=2.0.15
