@@ -108,6 +108,7 @@ Contents
     :maxdepth: 2
 
     why
+    definition
     usage
     execution
     debugging
