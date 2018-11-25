@@ -112,6 +112,7 @@ Contents
     usage
     execution
     debugging
+    composition
     contrib/index
     faq
 
