@@ -116,12 +116,5 @@ Contents
     contrib/index
     faq
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
 .. _railway oriented programming: http://fsharpforfunandprofit.com/rop/
 .. _dry-transaction: http://dry-rb.org/gems/dry-transaction/
