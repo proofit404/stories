@@ -1,5 +1,5 @@
 <div class="modal">
-  <span class="close">&times;</span>
+  <span class="close-modal">&times;</span>
   <img class="modal-content">
 </div>
 
@@ -7,7 +7,7 @@
  (function(){
    var modal = document.getElementsByClassName('modal')[0];
    var modalContent = document.getElementsByClassName('modal-content')[0];
-   var span = document.getElementsByClassName('close')[0];
+   var span = document.getElementsByClassName('close-modal')[0];
 
    span.onclick = function() {
      modal.style.display = 'none';
@@ -63,7 +63,7 @@
    to {transform:scale(1)}
  }
 
- .close {
+ .close-modal {
    position: absolute;
    top: 15px;
    right: 35px;
@@ -73,8 +73,8 @@
    transition: 0.3s;
  }
 
- .close:hover,
- .close:focus {
+ .close-modal:hover,
+ .close-modal:focus {
    color: #bbb;
    text-decoration: none;
    cursor: pointer;
