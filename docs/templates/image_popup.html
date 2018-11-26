@@ -17,7 +17,7 @@
      document.getElementsByClassName('with-popup'),
      function(element) {
        element.onclick = function() {
-         modal.style.display = 'block';
+         modal.style.display = 'flex';
          modalContent.src = element.src;
        }
      });
@@ -37,9 +37,9 @@
 
  .modal {
    display: none;
+   align-items: center;
    position: fixed;
    z-index: 1;
-   padding-top: 100px;
    left: 0;
    top: 0;
    width: 100%;
