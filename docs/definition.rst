@@ -57,7 +57,7 @@ subscription to our service.
             if ctx.profile.balance > ctx.price.cost:
                 return Success()
             else:
-                return Failure()
+                return Failure("low_balance")
 
         def persist_payment(self, ctx):
 
