@@ -6,5 +6,5 @@
     :maxdepth: 2
 
     pytest
-    django_debug_toolbar
+    debug_toolbars
     sentry
