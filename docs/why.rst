@@ -205,6 +205,6 @@ Wouldn't it be nice to it when production fails?
 .. image:: /static/sentry.png
     :class: with-popup
 
-Interesting, isn't it?  Check out Usage guide to learn more.
+Interesting, isn't it?  Check out `Definition`_ guide to learn more.
 
-TODO: Refer "usage" to the next document.
+.. _definition: definition.html
