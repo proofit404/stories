@@ -152,8 +152,9 @@ complete story.
       show_category
     >>> _
 
-TODO: Sub-story with implementation DI.
+Delegate implementation
+=======================
 
-TODO: Refer to this paragraph in the Debugging -> Code "You can read more on this topic here."
+TODO: Sub-story with implementation DI.
 
 .. _constructor dependency injection: https://en.wikipedia.org/wiki/Dependency_injection#Constructor_injection

@@ -10,7 +10,8 @@ Here is the technique we use to debug our own code written with
 Code
 ====
 
-Our regular story looks like this.
+Our regular story looks like this.  `You can read more on this topic
+here`_.
 
 .. code:: python
 
@@ -177,3 +178,5 @@ And re-run our program.
     >>> _
 
 Hooray! It works.
+
+.. _you can read more on this topic here: composition.html#delegate-implementation
