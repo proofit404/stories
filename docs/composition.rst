@@ -155,6 +155,95 @@ complete story.
 Delegate implementation
 =======================
 
-TODO: Sub-story with implementation DI.
+We go even further in this approach.  We compose not only stories, but
+the actual things we call in our steps are comes from outside.
+
+    We never call methods of the ``Django`` model or ``requests``
+    package directly!
+
+We use simple rules to write our steps.
+
+1. The only thing you can access inside story step is an instance
+   method.
+2. Return value of this call goes to the context with ``Success``
+   marker.
+3. Decisions are made by comparison context variables to each other or
+   using methods of the context variable in the **next** story step.
+
+Here are some examples:
+
+.. code:: python
+
+    class Subscription:
+
+        @story
+        @argument("user")
+        @argument("price_id")
+        def buy(I):
+
+            I.find_profile
+            I.find_price
+            I.check_balance
+
+        def find_profile(self, ctx):
+
+            profile = self.load_profile(ctx.user)
+            return Success(profile=profile)
+
+        def find_price(self, ctx):
+
+            price = self.load_price(ctx.price_id)
+            return Success(price=price)
+
+        def check_balance(self, ctx):
+
+            if ctx.profile.has_enough_balance(ctx.price):
+                return Success()
+            else:
+                return Failure()
+
+        def __init__(self, load_profile, load_price):
+
+            self.load_profile = load_profile
+            self.load_price = load_price
+
+This way you decouple your business logic from relation mapper models
+or networking library!  There is no more vendor lock on certain
+framework or database!  Welcome to the good architecture utopia.
+
+.. code:: python
+
+    >>> def load_profile(user):
+    ...     return Profile.objects.get(user=user)
+    ...
+    >>> def load_price(price_id):
+    ...     return Price.objects.get(pk=price_id)
+    ...
+    >>> Subscription(load_profile, load_price).buy(user=John, price_id=7)
+    >>> _
+
+You can group delegates into single object to avoid complex
+constructors and names duplication.
+
+.. code:: python
+
+    def find_price(self, ctx):
+
+        price = self.impl.find_price(ctx.price_id)
+        return Success(price=price)
+
+    def __init__(self, impl):
+
+        self.impl = impl
+
+If you follow our mantra "decouple everything", you definitely should
+check following libraries:
+
+* `dependencies`_
+* `attrs`_
+* `dataclasses`_
 
 .. _constructor dependency injection: https://en.wikipedia.org/wiki/Dependency_injection#Constructor_injection
+.. _dependencies: https://dependencies.readthedocs.io/
+.. _attrs: https://www.attrs.org/
+.. _dataclasses: https://docs.python.org/3/library/dataclasses.html
