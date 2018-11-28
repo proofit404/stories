@@ -3,11 +3,11 @@
 =============
 
 Sometimes you want to split your business logic into several parts
-inside single story.  Obviously, you want to do so to be able to reuse
-this parts in different stories.  Or maybe your goal is grouping
+inside a single story.  Obviously, you want to do so to be able to
+reuse this parts in different stories.  Or maybe your goal is grouping
 several steps into a sub-story for readability.
 
-There are a several ways to do it.
+There are several ways to do it.
 
 Class methods
 =============
@@ -70,12 +70,12 @@ You can see final composition in the class result representation:
 Instance attributes
 ===================
 
-We prefer to define our business logic in a separate components with
-lose coupling.  The final thing will be built later using composition.
-We use well known technique called `Constructor dependency injection`_
-for it.  The key point here: you can add story steps directly to the
-instance with attribute assignment.  No matter where this steps come
-from, constructor or not.
+We prefer to define our business logic in separate components with
+loose coupling.  The final thing will be built later using
+composition.  We use a well-known technique called `Constructor
+dependency injection`_ for it.  The key point here: you can add story
+steps directly to the instance with attribute assignment.  No matter
+where these steps come from, constructor or not.
 
 .. code:: python
 
@@ -130,8 +130,8 @@ At this moment, story definition does not know what
       show_category
     >>> _
 
-And when we create instance of the class we will specify this
-explicitly.  Representation of the instance attribute will show us
+And when we create an instance of the class we will specify this
+explicitly.  Representation of the instance attribute will show us the
 complete story.
 
 .. code:: python
@@ -156,7 +156,7 @@ Delegate implementation
 =======================
 
 We go even further in this approach.  We compose not only stories, but
-the actual things we call in our steps are comes from outside.
+the actual things we call in our steps come from outside.
 
     We never call methods of the ``Django`` model or ``requests``
     package directly!
@@ -165,7 +165,7 @@ We use simple rules to write our steps.
 
 1. The only thing you can access inside story step is an instance
    method.
-2. Return value of this call goes to the context with ``Success``
+2. The return value of this call goes to the context with ``Success``
    marker.
 3. Decisions are made by comparison context variables to each other or
    using methods of the context variable in the **next** story step.
@@ -208,7 +208,7 @@ Here are some examples:
             self.load_price = load_price
 
 This way you decouple your business logic from relation mapper models
-or networking library!  There is no more vendor lock on certain
+or networking library!  There is no more vendor lock on a certain
 framework or database!  Welcome to the good architecture utopia.
 
 .. code:: python
@@ -222,7 +222,7 @@ framework or database!  Welcome to the good architecture utopia.
     >>> Subscription(load_profile, load_price).buy(user=John, price_id=7)
     >>> _
 
-You can group delegates into single object to avoid complex
+You can group delegates into a single object to avoid complex
 constructors and names duplication.
 
 .. code:: python
@@ -237,7 +237,7 @@ constructors and names duplication.
         self.impl = impl
 
 If you follow our mantra "decouple everything", you definitely should
-check following libraries:
+check the following libraries:
 
 * `dependencies`_
 * `attrs`_
