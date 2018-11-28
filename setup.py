@@ -6,7 +6,7 @@ readme = open("README.rst").read() + open("CHANGELOG.rst").read()
 
 setup(
     name="stories",
-    version="0.8",
+    version="0.9",
     description="Define a user story in the business transaction DSL",
     long_description=readme,
     license="BSD",

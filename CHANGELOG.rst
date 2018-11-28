@@ -4,7 +4,7 @@
 Changelog
 ---------
 
-0.9 (2018-00-00)
+0.9 (2018-11-28)
 ++++++++++++++++
 
 - Enforce ``I`` noun with non callable attributes in the story
