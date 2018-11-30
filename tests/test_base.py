@@ -41,7 +41,7 @@ def test_failure():
     result = examples.Simple().x.run(2, 2)
     assert not result.is_success
     assert result.is_failure
-    assert not result.reason
+    assert not result.failure_reason
     assert result.ctx == {"foo": 2, "bar": 2}
     assert result.failed_on("two")
     assert not result.failed_on("one")
@@ -59,7 +59,7 @@ def test_failure():
     result = examples.Simple().x.run(3, 2)
     assert not result.is_success
     assert result.is_failure
-    assert result.reason == "'foo' is too big"
+    assert result.failure_reason == "'foo' is too big"
     assert result.ctx == {"foo": 3, "bar": 2}
     assert result.failed_on("two")
     assert not result.failed_on("one")
@@ -77,7 +77,7 @@ def test_failure():
     result = examples.SimpleSubstory().y.run(3)
     assert not result.is_success
     assert result.is_failure
-    assert not result.reason
+    assert not result.failure_reason
     assert result.ctx == {"foo": 2, "bar": 4, "spam": 3}
     assert result.failed_on("two")
     assert not result.failed_on("one")
@@ -95,7 +95,7 @@ def test_failure():
     result = examples.SimpleSubstory().y.run(4)
     assert not result.is_success
     assert result.is_failure
-    assert result.reason == "'foo' is too big"
+    assert result.failure_reason == "'foo' is too big"
     assert result.ctx == {"foo": 3, "bar": 5, "spam": 4}
     assert result.failed_on("two")
     assert not result.failed_on("one")
@@ -113,7 +113,7 @@ def test_failure():
     result = examples.SubstoryDI(examples.Simple().x).y.run(3)
     assert not result.is_success
     assert result.is_failure
-    assert not result.reason
+    assert not result.failure_reason
     assert result.ctx == {"foo": 2, "bar": 4, "spam": 3}
     assert result.failed_on("two")
     assert not result.failed_on("one")
@@ -131,7 +131,7 @@ def test_failure():
     result = examples.SubstoryDI(examples.Simple().x).y.run(4)
     assert not result.is_success
     assert result.is_failure
-    assert result.reason == "'foo' is too big"
+    assert result.failure_reason == "'foo' is too big"
     assert result.ctx == {"foo": 3, "bar": 5, "spam": 4}
     assert result.failed_on("two")
     assert not result.failed_on("one")

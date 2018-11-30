@@ -4,13 +4,13 @@ class FailureSummary(object):
         self.is_failure = True
         self.ctx = ctx
         self.failed_method = failed_method
-        self.reason = reason
+        self.failure_reason = reason
 
     def failed_on(self, method_name):
         return method_name == self.failed_method
 
     def failed_because(self, reason):
-        return reason == self.reason
+        return reason == self.failure_reason
 
     @property
     def value(self):
