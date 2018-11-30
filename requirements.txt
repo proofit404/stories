@@ -2,5 +2,6 @@
 pytest~=4.0.1
 pytest-flake8~=1.0.2 ; python_version == "3.7"
 pytest-black~=0.3.2 ; python_version == "3.7"
+pytest-isort~=0.2.1 ; python_version == "3.7"
 coverage~=4.5.2
 enum34~=1.1.6 ; python_version == "2.7"
