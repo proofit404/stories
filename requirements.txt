@@ -1,5 +1,6 @@
 ./tests/helpers/.
 pytest~=4.0.1
+pytest-flake8~=1.0.2 ; python_version == "3.7"
 coverage~=4.5.2
 codecov~=2.0.15
 enum34 ; python_version == "2.7"
