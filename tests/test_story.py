@@ -3,14 +3,14 @@ import examples
 
 def test_story_representation():
 
-    story = repr(examples.Empty().x)
+    story = repr(examples.methods.Empty().x)
     expected = """
 Empty.x
   <empty>
 """.strip()
     assert story == expected
 
-    story = repr(examples.EmptySubstory().y)
+    story = repr(examples.methods.EmptySubstory().y)
     expected = """
 EmptySubstory.y
   x
@@ -18,7 +18,7 @@ EmptySubstory.y
 """.strip()
     assert story == expected
 
-    story = repr(examples.SubstoryDI(examples.Empty().x).y)
+    story = repr(examples.methods.SubstoryDI(examples.methods.Empty().x).y)
     expected = """
 SubstoryDI.y
   start
@@ -29,7 +29,7 @@ SubstoryDI.y
 """.strip()
     assert story == expected
 
-    story = repr(examples.Simple().x)
+    story = repr(examples.methods.Simple().x)
     expected = """
 Simple.x
   one
@@ -38,7 +38,7 @@ Simple.x
 """.strip()
     assert story == expected
 
-    story = repr(examples.SimpleSubstory().y)
+    story = repr(examples.methods.SimpleSubstory().y)
     expected = """
 SimpleSubstory.y
   start
@@ -51,7 +51,7 @@ SimpleSubstory.y
 """.strip()
     assert story == expected
 
-    story = repr(examples.SubstoryDI(examples.Simple().x).y)
+    story = repr(examples.methods.SubstoryDI(examples.methods.Simple().x).y)
     expected = """
 SubstoryDI.y
   start
@@ -64,7 +64,7 @@ SubstoryDI.y
 """.strip()
     assert story == expected
 
-    story = repr(examples.SubstoryDI(examples.SimpleSubstory().z).y)
+    story = repr(examples.methods.SubstoryDI(examples.methods.SimpleSubstory().z).y)
     expected = """
 SubstoryDI.y
   start
@@ -82,14 +82,14 @@ SubstoryDI.y
 
 def test_story_class_attribute_representation():
 
-    story = repr(examples.Empty.x)
+    story = repr(examples.methods.Empty.x)
     expected = """
 Empty.x
   <empty>
 """.strip()
     assert story == expected
 
-    story = repr(examples.EmptySubstory.y)
+    story = repr(examples.methods.EmptySubstory.y)
     expected = """
 EmptySubstory.y
   x
@@ -97,7 +97,7 @@ EmptySubstory.y
 """.strip()
     assert story == expected
 
-    story = repr(examples.Simple.x)
+    story = repr(examples.methods.Simple.x)
     expected = """
 Simple.x
   one
@@ -106,7 +106,7 @@ Simple.x
 """.strip()
     assert story == expected
 
-    story = repr(examples.SimpleSubstory.y)
+    story = repr(examples.methods.SimpleSubstory.y)
     expected = """
 SimpleSubstory.y
   start
@@ -119,7 +119,7 @@ SimpleSubstory.y
 """.strip()
     assert story == expected
 
-    story = repr(examples.SubstoryDI.y)
+    story = repr(examples.methods.SubstoryDI.y)
     expected = """
 SubstoryDI.y
   start
