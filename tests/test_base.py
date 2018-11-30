@@ -1,5 +1,6 @@
-import examples
 import pytest
+
+import examples
 from stories.exceptions import FailureError
 
 

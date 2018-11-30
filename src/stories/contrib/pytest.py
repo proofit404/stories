@@ -2,8 +2,9 @@ import linecache
 import sys
 import textwrap
 
-import stories._context
 from _pytest.config import hookimpl
+
+import stories._context
 
 
 origin_context_init = stories._context.Context.__init__
