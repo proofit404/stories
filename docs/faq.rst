@@ -7,6 +7,8 @@ Here we'll try to explain some reasons behind our decisions.
 Why do we need a DSL?
 =====================
 
+    You can ignore convention.  You can't ignore the tool.
+
 A DSL with lots of possibilities is hard to reason about and maintain.
 A real programming language will go the same way without much
 attention to the structure of your project.
@@ -68,6 +70,8 @@ Why we need ``@argument`` decorator instead of function arguments?
 ==================================================================
 
 For the simplicity of implementation inside ``@story`` decorator.
+Otherwise, we will need to use ``inspect`` library to call the
+function.
 
 Can I use ``self`` instead of ``I`` argument?
 =============================================
