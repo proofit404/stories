@@ -7,13 +7,14 @@ from ._run import Call, Run
 
 
 class StoryWrapper(object):
-    def __init__(self, cls, obj, name, arguments, collected):
+    def __init__(self, cls, obj, name, arguments, collected, failures):
         self.cls = cls
         self.obj = obj
         self.cls_name = cls.__name__
         self.name = name
         self.arguments = arguments
         self.collected = collected
+        self.failures = failures
 
     def __call__(self, *args, **kwargs):
         runner = Call()

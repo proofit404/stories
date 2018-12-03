@@ -3,13 +3,17 @@ from ._wrapper import StoryWrapper
 
 
 class story(object):
+    failures = None
+
     def __init__(self, f):
         self.name = f.__name__
         self.arguments = getattr(f, "arguments", [])
         self.collected = collect_story(f)
 
     def __get__(self, obj, cls):
-        return StoryWrapper(cls, obj, self.name, self.arguments, self.collected)
+        return StoryWrapper(
+            cls, obj, self.name, self.arguments, self.collected, self.failures
+        )
 
 
 def argument(name):
