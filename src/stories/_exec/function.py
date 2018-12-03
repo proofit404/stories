@@ -1,10 +1,9 @@
 from .._collect import end_of_story
-from .._failures import check_protocol
 from .._marker import Marker, substory_end, substory_start
 from .._return import Failure, Result, Skip, Success
 
 
-def execute(runner, ctx, methods, failures):
+def execute(runner, ctx, methods, protocol):
 
     skipped = 0
 
@@ -30,7 +29,7 @@ def execute(runner, ctx, methods, failures):
         assert restype in (Result, Success, Failure, Skip, Marker)
 
         if restype is Failure:
-            check_protocol(result.reason, failures)
+            protocol.check(method, result.reason)
             ctx.history.on_failure(result.reason)
             return runner.got_failure(ctx, method.__name__, result.reason)
 

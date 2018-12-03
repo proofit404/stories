@@ -1,6 +1,7 @@
 from ._collect import wrap_story
 from ._context import Context, validate_arguments
 from ._exec import function
+from ._failures import Protocol
 from ._history import History
 from ._repr import story_representation
 from ._run import Call, Run
@@ -21,14 +22,16 @@ class StoryWrapper(object):
         history = History(self.cls_name, self.name)
         ctx = Context(validate_arguments(self.arguments, args, kwargs), history)
         methods = wrap_story(is_story, self.collected, self.obj, ctx)
-        return function.execute(runner, ctx, methods, self.failures)
+        protocol = Protocol(self.cls, self.failures)
+        return function.execute(runner, ctx, methods, protocol)
 
     def run(self, *args, **kwargs):
         runner = Run()
         history = History(self.cls_name, self.name)
         ctx = Context(validate_arguments(self.arguments, args, kwargs), history)
         methods = wrap_story(is_story, self.collected, self.obj, ctx)
-        return function.execute(runner, ctx, methods, self.failures)
+        protocol = Protocol(self.cls, self.failures)
+        return function.execute(runner, ctx, methods, protocol)
 
     def __repr__(self):
         return story_representation(

@@ -44,13 +44,21 @@ def test_wrong_reason_with_list():
     strings as its failure protocol.
     """
 
+    expected = """
+"'foo' is too big" failure reason is not allowed by current protocol
+
+Available failures are: 'foo', 'bar', 'baz'
+
+Function returned value: SimpleWithList.two
+    """.strip()
+
     with pytest.raises(FailureProtocolError) as exc_info:
         examples.failure_reasons.SimpleWithList().y()
-    assert str(exc_info.value) == ""
+    assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
         examples.failure_reasons.SimpleWithList().y.run()
-    assert str(exc_info.value) == ""
+    assert str(exc_info.value) == expected
 
 
 def test_wrong_reason_with_enum():
@@ -59,13 +67,21 @@ def test_wrong_reason_with_enum():
     its failure protocol.
     """
 
+    expected = """
+"'foo' is too big" failure reason is not allowed by current protocol
+
+Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
+
+Function returned value: SimpleWithEnum.two
+    """.strip()
+
     with pytest.raises(FailureProtocolError) as exc_info:
         examples.failure_reasons.SimpleWithEnum().y()
-    assert str(exc_info.value) == ""
+    assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
         examples.failure_reasons.SimpleWithEnum().y.run()
-    assert str(exc_info.value) == ""
+    assert str(exc_info.value) == expected
 
 
 def test_null_reason_with_list():
@@ -74,13 +90,23 @@ def test_null_reason_with_list():
     as its failure protocol.
     """
 
+    expected = """
+Failure() can not be used in a story with failure protocol.
+
+Available failures are: 'foo', 'bar', 'baz'
+
+Function returned value: SimpleWithList.three
+
+Use one of them as Failure() argument.
+    """.strip()
+
     with pytest.raises(FailureProtocolError) as exc_info:
         examples.failure_reasons.SimpleWithList().z()
-    assert str(exc_info.value) == ""
+    assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
         examples.failure_reasons.SimpleWithList().z.run()
-    assert str(exc_info.value) == ""
+    assert str(exc_info.value) == expected
 
 
 def test_null_reason_with_enum():
@@ -89,10 +115,20 @@ def test_null_reason_with_enum():
     failure protocol.
     """
 
+    expected = """
+Failure() can not be used in a story with failure protocol.
+
+Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
+
+Function returned value: SimpleWithEnum.three
+
+Use one of them as Failure() argument.
+    """.strip()
+
     with pytest.raises(FailureProtocolError) as exc_info:
         examples.failure_reasons.SimpleWithEnum().z()
-    assert str(exc_info.value) == ""
+    assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
         examples.failure_reasons.SimpleWithEnum().z.run()
-    assert str(exc_info.value) == ""
+    assert str(exc_info.value) == expected
