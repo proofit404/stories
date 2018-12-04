@@ -1,6 +1,8 @@
 # TODO:
 #
-# [ ]: Check incoming reasons type.
+# [ ]: Check incoming reasons type in the StoryFactory.
+#
+# [ ]: Story and substory protocol mismatch.
 from enum import Enum, unique
 
 from stories import Failure, StoryFactory
@@ -17,6 +19,9 @@ class Common(object):
 
     def three(self, ctx):
         return Failure()
+
+
+# Simple.
 
 
 story = StoryFactory(failures=["foo", "bar", "baz"])
