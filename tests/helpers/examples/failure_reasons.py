@@ -1,8 +1,11 @@
 # TODO:
 #
-# [ ]: Check incoming reasons type in the StoryFactory.
+# [ ] Check incoming reasons type in the StoryFactory.
 #
-# [ ]: Story and substory protocol mismatch.
+# [ ] Story and substory protocol mismatch.
+#
+# [ ] Substory can not use failures from the protocol superset of the
+#     parent story.
 from enum import Enum
 
 from stories import Failure, StoryFactory, Success
