@@ -1,3 +1,7 @@
+# TODO:
+#
+# [ ] Check what would happen if we define story with @argument('foo')
+#     and call it with Cls().x(a=1)?
 from stories import Failure, Result, Skip, Success, argument, story
 
 
