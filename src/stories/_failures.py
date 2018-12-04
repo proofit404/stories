@@ -56,7 +56,7 @@ class Protocol(object):
 
 
 wrong_reason_template = """
-{reason!r} failure reason is not allowed by current protocol
+Failure({reason!r}) failure reason is not allowed by current protocol.
 
 Available failures are: {available}
 

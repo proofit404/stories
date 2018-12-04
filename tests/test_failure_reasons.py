@@ -105,7 +105,7 @@ def test_wrong_reason_with_list():
     """
 
     expected = """
-"'foo' is too big" failure reason is not allowed by current protocol
+Failure("'foo' is too big") failure reason is not allowed by current protocol.
 
 Available failures are: 'foo', 'bar', 'baz'
 
@@ -121,7 +121,7 @@ Function returned value: SimpleWithList.two
     assert str(exc_info.value) == expected
 
     expected = """
-"'foo' is too big" failure reason is not allowed by current protocol
+Failure("'foo' is too big") failure reason is not allowed by current protocol.
 
 Available failures are: 'foo', 'bar', 'baz'
 
@@ -137,7 +137,7 @@ Function returned value: SimpleSubstoryWithList.two
     assert str(exc_info.value) == expected
 
     expected = """
-"'foo' is too big" failure reason is not allowed by current protocol
+Failure("'foo' is too big") failure reason is not allowed by current protocol.
 
 Available failures are: 'foo', 'bar', 'baz'
 
@@ -160,7 +160,7 @@ def test_wrong_reason_with_enum():
     """
 
     expected = """
-"'foo' is too big" failure reason is not allowed by current protocol
+Failure("'foo' is too big") failure reason is not allowed by current protocol.
 
 Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
 
@@ -176,7 +176,7 @@ Function returned value: SimpleWithEnum.two
     assert str(exc_info.value) == expected
 
     expected = """
-"'foo' is too big" failure reason is not allowed by current protocol
+Failure("'foo' is too big") failure reason is not allowed by current protocol.
 
 Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
 
@@ -192,7 +192,7 @@ Function returned value: SimpleSubstoryWithEnum.two
     assert str(exc_info.value) == expected
 
     expected = """
-"'foo' is too big" failure reason is not allowed by current protocol
+Failure("'foo' is too big") failure reason is not allowed by current protocol.
 
 Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
 
