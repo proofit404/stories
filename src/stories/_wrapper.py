@@ -2,21 +2,21 @@ from ._collect import wrap_story
 from ._context import Context, validate_arguments
 from ._contract import Contract
 from ._exec import function
-from ._failures import Protocol
 from ._history import History
 from ._repr import story_representation
 from ._run import Call, Run
 
 
 class StoryWrapper(object):
-    def __init__(self, cls, obj, name, arguments, collected, failures):
+    def __init__(self, cls, obj, name, arguments, collected, protocol):
         self.cls = cls
         self.obj = obj
         self.cls_name = cls.__name__
         self.name = name
         self.arguments = arguments
         self.collected = collected
-        self.failures = failures
+        self.protocol = protocol
+        self.failures = protocol.failures
 
     def __call__(self, *args, **kwargs):
         runner = Call()
@@ -24,8 +24,7 @@ class StoryWrapper(object):
         ctx = Context(validate_arguments(self.arguments, args, kwargs), history)
         methods = wrap_story(is_story, self.collected, self.obj, ctx)
         contract = Contract()
-        protocol = Protocol(self.failures)
-        return function.execute(runner, ctx, methods, contract, protocol)
+        return function.execute(runner, ctx, methods, contract, self.protocol)
 
     def run(self, *args, **kwargs):
         runner = Run()
@@ -33,8 +32,7 @@ class StoryWrapper(object):
         ctx = Context(validate_arguments(self.arguments, args, kwargs), history)
         methods = wrap_story(is_story, self.collected, self.obj, ctx)
         contract = Contract()
-        protocol = Protocol(self.failures)
-        return function.execute(runner, ctx, methods, contract, protocol)
+        return function.execute(runner, ctx, methods, contract, self.protocol)
 
     def __repr__(self):
         return story_representation(

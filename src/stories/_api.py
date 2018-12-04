@@ -1,4 +1,5 @@
 from ._collect import collect_story
+from ._failures import Protocol
 from ._wrapper import StoryWrapper
 
 
@@ -9,10 +10,11 @@ class story(object):
         self.name = f.__name__
         self.arguments = getattr(f, "arguments", [])
         self.collected = collect_story(f)
+        self.protocol = Protocol(self.failures)
 
     def __get__(self, obj, cls):
         return StoryWrapper(
-            cls, obj, self.name, self.arguments, self.collected, self.failures
+            cls, obj, self.name, self.arguments, self.collected, self.protocol
         )
 
 
