@@ -8,7 +8,7 @@
 #     parent story.
 from enum import Enum
 
-from stories import Failure, StoryFactory, Success
+from stories import Failure, StoryFactory, Success, story
 
 
 story_with_list = StoryFactory(failures=["foo", "bar", "baz"])
@@ -169,4 +169,32 @@ class SubstoryDIWithEnum(CommonSubstory):
     def c(I):
         I.before
         I.z
+        I.after
+
+
+# Reason used without protocol definition.
+
+
+class ReasonWithSimple(CommonSimple):
+    @story
+    def x(I):
+        I.two
+
+
+class ReasonWithSimpleSubstory(CommonSubstory, ReasonWithSimple):
+    @story
+    def a(I):
+        I.before
+        I.x
+        I.after
+
+
+class ReasonWithSubstoryDI(CommonSubstory):
+    def __init__(self):
+        self.x = ReasonWithSimple().x
+
+    @story
+    def a(I):
+        I.before
+        I.x
         I.after

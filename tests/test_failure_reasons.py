@@ -328,3 +328,58 @@ Use one of them as Failure() argument.
     with pytest.raises(FailureProtocolError) as exc_info:
         examples.failure_reasons.SubstoryDIWithEnum().c.run()
     assert str(exc_info.value) == expected
+
+
+def test_reason_without_protocol():
+    """
+    We deny to use Failure('reason') in stories defined without
+    failure protocol.
+    """
+
+    expected = """
+Failure("'foo' is too big") can not be used in a story without failure protocol.
+
+Function returned value: ReasonWithSimple.two
+
+Use StoryFactory to define failure protocol.
+""".strip()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        examples.failure_reasons.ReasonWithSimple().x()
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        examples.failure_reasons.ReasonWithSimple().x.run()
+    assert str(exc_info.value) == expected
+
+    expected = """
+Failure("'foo' is too big") can not be used in a story without failure protocol.
+
+Function returned value: ReasonWithSimpleSubstory.two
+
+Use StoryFactory to define failure protocol.
+""".strip()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        examples.failure_reasons.ReasonWithSimpleSubstory().a()
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        examples.failure_reasons.ReasonWithSimpleSubstory().a.run()
+    assert str(exc_info.value) == expected
+
+    expected = """
+Failure("'foo' is too big") can not be used in a story without failure protocol.
+
+Function returned value: ReasonWithSimple.two
+
+Use StoryFactory to define failure protocol.
+""".strip()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        examples.failure_reasons.ReasonWithSubstoryDI().a()
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        examples.failure_reasons.ReasonWithSubstoryDI().a.run()
+    assert str(exc_info.value) == expected

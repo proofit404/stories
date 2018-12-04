@@ -42,7 +42,11 @@ class Protocol(object):
                 method=method.__name__,
             )
             raise FailureProtocolError(message)
-        # TODO: Deny to specify failure reason without protocol.
+        if reason and not self.failures:
+            message = null_protocol_template.format(
+                reason=reason, cls=obj.__class__.__name__, method=method.__name__
+            )
+            raise FailureProtocolError(message)
 
     def check_collection(self, reason):
         return reason in self.failures
@@ -68,4 +72,13 @@ Available failures are: {available}
 Function returned value: {cls}.{method}
 
 Use one of them as Failure() argument.
+""".strip()
+
+
+null_protocol_template = """
+Failure({reason!r}) can not be used in a story without failure protocol.
+
+Function returned value: {cls}.{method}
+
+Use StoryFactory to define failure protocol.
 """.strip()
