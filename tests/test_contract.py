@@ -21,9 +21,9 @@ Use different names as Success() arguments.
 """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        examples.methods.ExistedKey().x(1, 2)
+        examples.contract.ExistedKey().x(1, 2)
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        examples.methods.ExistedKey().x.run(1, 2)
+        examples.contract.ExistedKey().x.run(1, 2)
     assert str(exc_info.value) == expected
