@@ -29,6 +29,17 @@ def test_reasons_defined_with_list():
     assert result.failure_reason == "foo"
     assert result.failed_because("foo")
 
+    with pytest.raises(FailureError) as exc_info:
+        examples.failure_reasons.SubstoryDIWithList().a()
+    assert exc_info.value.reason == "foo"
+    assert repr(exc_info.value) == "FailureError('foo')"
+
+    result = examples.failure_reasons.SubstoryDIWithList().a.run()
+    assert not result.is_success
+    assert result.is_failure
+    assert result.failure_reason == "foo"
+    assert result.failed_because("foo")
+
 
 def test_reasons_defined_with_enum():
     """We can use enum class to define story failure protocol."""
@@ -65,6 +76,25 @@ def test_reasons_defined_with_enum():
     )
     assert result.failed_because(
         examples.failure_reasons.SimpleSubstoryWithEnum.a.failures.foo
+    )
+
+    with pytest.raises(FailureError) as exc_info:
+        examples.failure_reasons.SubstoryDIWithEnum().a()
+    assert (
+        exc_info.value.reason
+        is examples.failure_reasons.SubstoryDIWithEnum.a.failures.foo
+    )
+    assert repr(exc_info.value) == "FailureError(<Errors.foo: 1>)"
+
+    result = examples.failure_reasons.SubstoryDIWithEnum().a.run()
+    assert not result.is_success
+    assert result.is_failure
+    assert (
+        result.failure_reason
+        is examples.failure_reasons.SubstoryDIWithEnum.a.failures.foo
+    )
+    assert result.failed_because(
+        examples.failure_reasons.SubstoryDIWithEnum.a.failures.foo
     )
 
 
@@ -106,6 +136,22 @@ Function returned value: SimpleSubstoryWithList.two
         examples.failure_reasons.SimpleSubstoryWithList().b.run()
     assert str(exc_info.value) == expected
 
+    expected = """
+"'foo' is too big" failure reason is not allowed by current protocol
+
+Available failures are: 'foo', 'bar', 'baz'
+
+Function returned value: SimpleWithList.two
+    """.strip()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        examples.failure_reasons.SubstoryDIWithList().b()
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        examples.failure_reasons.SubstoryDIWithList().b.run()
+    assert str(exc_info.value) == expected
+
 
 def test_wrong_reason_with_enum():
     """
@@ -143,6 +189,22 @@ Function returned value: SimpleSubstoryWithEnum.two
 
     with pytest.raises(FailureProtocolError) as exc_info:
         examples.failure_reasons.SimpleSubstoryWithEnum().b.run()
+    assert str(exc_info.value) == expected
+
+    expected = """
+"'foo' is too big" failure reason is not allowed by current protocol
+
+Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
+
+Function returned value: SimpleWithEnum.two
+    """.strip()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        examples.failure_reasons.SubstoryDIWithEnum().b()
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        examples.failure_reasons.SubstoryDIWithEnum().b.run()
     assert str(exc_info.value) == expected
 
 
@@ -188,6 +250,24 @@ Use one of them as Failure() argument.
         examples.failure_reasons.SimpleSubstoryWithList().c.run()
     assert str(exc_info.value) == expected
 
+    expected = """
+Failure() can not be used in a story with failure protocol.
+
+Available failures are: 'foo', 'bar', 'baz'
+
+Function returned value: SimpleWithList.three
+
+Use one of them as Failure() argument.
+    """.strip()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        examples.failure_reasons.SubstoryDIWithList().c()
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        examples.failure_reasons.SubstoryDIWithList().c.run()
+    assert str(exc_info.value) == expected
+
 
 def test_null_reason_with_enum():
     """
@@ -229,4 +309,22 @@ Use one of them as Failure() argument.
 
     with pytest.raises(FailureProtocolError) as exc_info:
         examples.failure_reasons.SimpleSubstoryWithEnum().c.run()
+    assert str(exc_info.value) == expected
+
+    expected = """
+Failure() can not be used in a story with failure protocol.
+
+Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
+
+Function returned value: SimpleWithEnum.three
+
+Use one of them as Failure() argument.
+    """.strip()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        examples.failure_reasons.SubstoryDIWithEnum().c()
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        examples.failure_reasons.SubstoryDIWithEnum().c.run()
     assert str(exc_info.value) == expected

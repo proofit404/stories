@@ -24,7 +24,7 @@ class StoryWrapper(object):
         ctx = Context(validate_arguments(self.arguments, args, kwargs), history)
         methods = wrap_story(is_story, self.collected, self.obj, ctx)
         contract = Contract()
-        protocol = Protocol(self.cls, self.failures)
+        protocol = Protocol(self.failures)
         return function.execute(runner, ctx, methods, contract, protocol)
 
     def run(self, *args, **kwargs):
@@ -33,7 +33,7 @@ class StoryWrapper(object):
         ctx = Context(validate_arguments(self.arguments, args, kwargs), history)
         methods = wrap_story(is_story, self.collected, self.obj, ctx)
         contract = Contract()
-        protocol = Protocol(self.cls, self.failures)
+        protocol = Protocol(self.failures)
         return function.execute(runner, ctx, methods, contract, protocol)
 
     def __repr__(self):

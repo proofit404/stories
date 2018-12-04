@@ -114,3 +114,56 @@ class SimpleSubstoryWithEnum(CommonSubstory, SimpleWithEnum):
         I.before
         I.z
         I.after
+
+
+# Dependency injection of the substory.
+
+
+class SubstoryDIWithList(CommonSubstory):
+    def __init__(self):
+        self.x = SimpleWithList().x
+        self.y = SimpleWithList().y
+        self.z = SimpleWithList().z
+
+    @story_with_list
+    def a(I):
+        I.before
+        I.x
+        I.after
+
+    @story_with_list
+    def b(I):
+        I.before
+        I.y
+        I.after
+
+    @story_with_list
+    def c(I):
+        I.before
+        I.z
+        I.after
+
+
+class SubstoryDIWithEnum(CommonSubstory):
+    def __init__(self):
+        self.x = SimpleWithEnum().x
+        self.y = SimpleWithEnum().y
+        self.z = SimpleWithEnum().z
+
+    @story_with_enum
+    def a(I):
+        I.before
+        I.x
+        I.after
+
+    @story_with_enum
+    def b(I):
+        I.before
+        I.y
+        I.after
+
+    @story_with_enum
+    def c(I):
+        I.before
+        I.z
+        I.after

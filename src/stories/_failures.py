@@ -13,9 +13,7 @@ from .exceptions import FailureProtocolError
 
 
 class Protocol(object):
-    def __init__(self, cls, failures):
-        # FIXME: Support inheritance substory and substory DI types.
-        self.cls = cls
+    def __init__(self, failures):
         self.failures = failures
         if isinstance(failures, EnumMeta):
             available = failures.__members__.values()
@@ -25,7 +23,7 @@ class Protocol(object):
             return
         self.available = ", ".join(map(repr, available))
 
-    def check(self, method, reason):
+    def check(self, obj, method, reason):
         if reason and self.failures:
             if isinstance(self.failures, EnumMeta) and not isinstance(reason, Enum):
                 # TODO: This comparison should happens only if users
@@ -36,7 +34,7 @@ class Protocol(object):
                 message = wrong_reason_template.format(
                     reason=reason,
                     available=self.available,
-                    cls=self.cls.__name__,
+                    cls=obj.__class__.__name__,
                     method=method.__name__,
                 )
                 raise FailureProtocolError(message)
@@ -44,13 +42,15 @@ class Protocol(object):
                 message = wrong_reason_template.format(
                     reason=reason,
                     available=self.available,
-                    cls=self.cls.__name__,
+                    cls=obj.__class__.__name__,
                     method=method.__name__,
                 )
                 raise FailureProtocolError(message)
         if not reason and self.failures:
             message = null_reason_template.format(
-                available=self.available, cls=self.cls.__name__, method=method.__name__
+                available=self.available,
+                cls=obj.__class__.__name__,
+                method=method.__name__,
             )
             raise FailureProtocolError(message)
 
