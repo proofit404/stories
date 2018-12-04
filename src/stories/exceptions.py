@@ -14,3 +14,7 @@ class FailureError(StoryError):
 
 class FailureProtocolError(StoryError):
     pass
+
+
+class ContextContractError(StoryError):
+    pass

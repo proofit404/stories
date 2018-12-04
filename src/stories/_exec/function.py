@@ -3,7 +3,7 @@ from .._marker import Marker, substory_end, substory_start
 from .._return import Failure, Result, Skip, Success
 
 
-def execute(runner, ctx, methods, protocol):
+def execute(runner, ctx, methods, contract, protocol):
 
     skipped = 0
 
@@ -50,7 +50,7 @@ def execute(runner, ctx, methods, protocol):
             ctx.history.on_substory_end()
             continue
 
-        assert not set(ctx) & set(result.kwargs)
+        contract.check(obj, method, ctx, result.kwargs)
         ctx.ns.update(result.kwargs)
         line = "Set by %s.%s" % (obj.__class__.__name__, method.__name__)
         ctx.lines.extend([line] * len(result.kwargs))

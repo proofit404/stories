@@ -233,15 +233,6 @@ def test_arguments_validation():
         examples.methods.Simple().x.run(1, b=2)
 
 
-def test_context_immutability():
-
-    with pytest.raises(AssertionError):
-        examples.methods.ExistedKey().x(a=1)
-
-    with pytest.raises(AssertionError):
-        examples.methods.ExistedKey().x.run(a=1)
-
-
 def test_return_type():
 
     with pytest.raises(AssertionError):
