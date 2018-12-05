@@ -345,11 +345,11 @@ Use StoryFactory to define failure protocol.
 """.strip()
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        examples.failure_reasons.ReasonWithSimple().x()
+        examples.failure_reasons.ReasonWithSimple().y()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        examples.failure_reasons.ReasonWithSimple().x.run()
+        examples.failure_reasons.ReasonWithSimple().y.run()
     assert str(exc_info.value) == expected
 
     expected = """
@@ -361,11 +361,11 @@ Use StoryFactory to define failure protocol.
 """.strip()
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        examples.failure_reasons.ReasonWithSimpleSubstory().a()
+        examples.failure_reasons.ReasonWithSimpleSubstory().b()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        examples.failure_reasons.ReasonWithSimpleSubstory().a.run()
+        examples.failure_reasons.ReasonWithSimpleSubstory().b.run()
     assert str(exc_info.value) == expected
 
     expected = """
@@ -377,9 +377,9 @@ Use StoryFactory to define failure protocol.
 """.strip()
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        examples.failure_reasons.ReasonWithSubstoryDI().a()
+        examples.failure_reasons.ReasonWithSubstoryDI().b()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        examples.failure_reasons.ReasonWithSubstoryDI().a.run()
+        examples.failure_reasons.ReasonWithSubstoryDI().b.run()
     assert str(exc_info.value) == expected

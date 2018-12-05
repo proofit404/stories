@@ -177,24 +177,24 @@ class SubstoryDIWithEnum(CommonSubstory):
 
 class ReasonWithSimple(CommonSimple):
     @story
-    def x(I):
+    def y(I):
         I.two
 
 
 class ReasonWithSimpleSubstory(CommonSubstory, ReasonWithSimple):
     @story
-    def a(I):
+    def b(I):
         I.before
-        I.x
+        I.y
         I.after
 
 
 class ReasonWithSubstoryDI(CommonSubstory):
     def __init__(self):
-        self.x = ReasonWithSimple().x
+        self.y = ReasonWithSimple().y
 
     @story
-    def a(I):
+    def b(I):
         I.before
-        I.x
+        I.y
         I.after
