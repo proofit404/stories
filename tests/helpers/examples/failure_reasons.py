@@ -198,3 +198,31 @@ class ReasonWithSubstoryDI(CommonSubstory):
         I.before
         I.y
         I.after
+
+
+# Summary classes.
+
+
+class SummaryWithSimple(CommonSimple):
+    @story
+    def z(I):
+        I.three
+
+
+class SummaryWithSimpleSubstory(CommonSubstory, SummaryWithSimple):
+    @story
+    def c(I):
+        I.before
+        I.z
+        I.after
+
+
+class SummaryWithSubstoryDI(CommonSubstory):
+    def __init__(self):
+        self.z = SummaryWithSimple().z
+
+    @story
+    def c(I):
+        I.before
+        I.z
+        I.after

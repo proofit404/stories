@@ -54,6 +54,13 @@ class Protocol(object):
     def check_enum(self, reason):
         return isinstance(reason, Enum) and reason in self.failures
 
+    def summarize(self, cls_name, method_name, reason):
+        if reason and not self.failures:
+            message = null_summary_template.format(
+                reason=reason, cls=cls_name, method=method_name
+            )
+            raise FailureProtocolError(message)
+
 
 wrong_reason_template = """
 Failure({reason!r}) failure reason is not allowed by current protocol.
@@ -79,6 +86,15 @@ null_protocol_template = """
 Failure({reason!r}) can not be used in a story without failure protocol.
 
 Function returned value: {cls}.{method}
+
+Use StoryFactory to define failure protocol.
+""".strip()
+
+
+null_summary_template = """
+'failed_because' method can not be used to check result of a story defined without failure protocol.
+
+Story returned result: {cls}.{method}
 
 Use StoryFactory to define failure protocol.
 """.strip()

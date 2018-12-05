@@ -383,3 +383,63 @@ Use StoryFactory to define failure protocol.
     with pytest.raises(FailureProtocolError) as exc_info:
         examples.failure_reasons.ReasonWithSubstoryDI().b.run()
     assert str(exc_info.value) == expected
+
+
+def test_summary_wrong_reason():
+    """
+    Summary classes should verify failure reason passed to the
+    `failed_because` method.
+    """
+
+    # TODO: Check success summary the same way.
+
+
+def test_summary_reason_without_protocol():
+    """
+    Summary classes should deny to use `failed_because` method on
+    stories defined without failure protocol.
+    """
+
+    # TODO: Check success summary the same way.
+
+    expected = """
+'failed_because' method can not be used to check result of a story defined without failure protocol.
+
+Story returned result: SummaryWithSimple.z
+
+Use StoryFactory to define failure protocol.
+""".strip()
+
+    result = examples.failure_reasons.SummaryWithSimple().z.run()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        result.failed_because("'foo' is too big")
+    assert str(exc_info.value) == expected
+
+    expected = """
+'failed_because' method can not be used to check result of a story defined without failure protocol.
+
+Story returned result: SummaryWithSimpleSubstory.c
+
+Use StoryFactory to define failure protocol.
+""".strip()
+
+    result = examples.failure_reasons.SummaryWithSimpleSubstory().c.run()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        result.failed_because("'foo' is too big")
+    assert str(exc_info.value) == expected
+
+    expected = """
+'failed_because' method can not be used to check result of a story defined without failure protocol.
+
+Story returned result: SummaryWithSubstoryDI.c
+
+Use StoryFactory to define failure protocol.
+""".strip()
+
+    result = examples.failure_reasons.SummaryWithSubstoryDI().c.run()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        result.failed_because("'foo' is too big")
+    assert str(exc_info.value) == expected
