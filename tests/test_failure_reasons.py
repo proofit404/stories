@@ -385,13 +385,106 @@ Use StoryFactory to define failure protocol.
     assert str(exc_info.value) == expected
 
 
-def test_summary_wrong_reason():
+def test_summary_wrong_reason_with_list():
     """
     Summary classes should verify failure reason passed to the
     `failed_because` method.
     """
 
     # TODO: Check success summary the same way.
+
+    expected = """
+'failed_because' method got argument mismatching failure protocol: "'foo' is too big"
+
+Available failures are: 'foo', 'bar', 'baz'
+
+Story returned result: SimpleWithList.x
+""".strip()
+
+    result = examples.failure_reasons.SimpleWithList().x.run()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        result.failed_because("'foo' is too big")
+    assert str(exc_info.value) == expected
+
+    expected = """
+'failed_because' method got argument mismatching failure protocol: "'foo' is too big"
+
+Available failures are: 'foo', 'bar', 'baz'
+
+Story returned result: SimpleSubstoryWithList.a
+""".strip()
+
+    result = examples.failure_reasons.SimpleSubstoryWithList().a.run()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        result.failed_because("'foo' is too big")
+    assert str(exc_info.value) == expected
+
+    expected = """
+'failed_because' method got argument mismatching failure protocol: "'foo' is too big"
+
+Available failures are: 'foo', 'bar', 'baz'
+
+Story returned result: SubstoryDIWithList.a
+""".strip()
+
+    result = examples.failure_reasons.SubstoryDIWithList().a.run()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        result.failed_because("'foo' is too big")
+    assert str(exc_info.value) == expected
+
+
+def test_summary_wrong_reason_with_enum():
+    """
+    Summary classes should verify failure reason passed to the
+    `failed_because` method.
+    """
+
+    # TODO: Check success summary the same way.
+
+    expected = """
+'failed_because' method got argument mismatching failure protocol: "'foo' is too big"
+
+Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
+
+Story returned result: SimpleWithEnum.x
+""".strip()
+
+    result = examples.failure_reasons.SimpleWithEnum().x.run()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        result.failed_because("'foo' is too big")
+    assert str(exc_info.value) == expected
+
+    expected = """
+'failed_because' method got argument mismatching failure protocol: "'foo' is too big"
+
+Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
+
+Story returned result: SimpleSubstoryWithEnum.a
+""".strip()
+
+    result = examples.failure_reasons.SimpleSubstoryWithEnum().a.run()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        result.failed_because("'foo' is too big")
+    assert str(exc_info.value) == expected
+
+    expected = """
+'failed_because' method got argument mismatching failure protocol: "'foo' is too big"
+
+Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
+
+Story returned result: SubstoryDIWithEnum.a
+""".strip()
+
+    result = examples.failure_reasons.SubstoryDIWithEnum().a.run()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        result.failed_because("'foo' is too big")
+    assert str(exc_info.value) == expected
 
 
 def test_summary_reason_without_protocol():

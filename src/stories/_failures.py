@@ -55,10 +55,17 @@ class Protocol(object):
         return isinstance(reason, Enum) and reason in self.failures
 
     def summarize(self, cls_name, method_name, reason):
-        if reason and not self.failures:
-            message = null_summary_template.format(
-                reason=reason, cls=cls_name, method=method_name
+        # TODO: Deny to use `failed_because(None)`.
+        if self.failures and not self.check_reason(reason):
+            message = wrong_summary_template.format(
+                reason=reason,
+                available=self.available,
+                cls=cls_name,
+                method=method_name,
             )
+            raise FailureProtocolError(message)
+        if not self.failures:
+            message = null_summary_template.format(cls=cls_name, method=method_name)
             raise FailureProtocolError(message)
 
 
@@ -88,6 +95,15 @@ Failure({reason!r}) can not be used in a story without failure protocol.
 Function returned value: {cls}.{method}
 
 Use StoryFactory to define failure protocol.
+""".strip()
+
+
+wrong_summary_template = """
+'failed_because' method got argument mismatching failure protocol: {reason!r}
+
+Available failures are: {available}
+
+Story returned result: {cls}.{method}
 """.strip()
 
 
