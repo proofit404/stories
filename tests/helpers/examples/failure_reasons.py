@@ -2,10 +2,10 @@
 #
 # [ ] Check incoming reasons type in the StoryFactory.
 #
-# [ ] Story and substory protocol mismatch.
-#
 # [ ] Substory can not use failures from the protocol superset of the
 #     parent story.
+#
+# [ ] Test protocol mismatch between @story and StoryFactory composition.
 from enum import Enum
 
 from stories import Failure, StoryFactory, Success, story
@@ -275,5 +275,50 @@ class SubstoryDIMatchWithEnum(object):
         self.x = SimpleMatchWithEnum().x
 
     @StoryFactory(failures=Enum("Errors", "foo, bar, baz, quiz"))
+    def a(I):
+        I.x
+
+
+# Substory protocol mismatch.
+
+
+class SimpleMismatchWithList(object):
+    @story_with_list
+    def x(I):
+        pass
+
+
+class SimpleMismatchWithEnum(object):
+    @story_with_enum
+    def x(I):
+        pass
+
+
+class SimpleSubstoryMismatchWithList(SimpleMismatchWithList):
+    @StoryFactory(failures=["foo", "quiz"])
+    def a(I):
+        I.x
+
+
+class SimpleSubstoryMismatchWithEnum(SimpleMismatchWithEnum):
+    @StoryFactory(failures=Enum("Errors", "foo, quiz"))
+    def a(I):
+        I.x
+
+
+class SubstoryDIMismatchWithList(object):
+    def __init__(self):
+        self.x = SimpleMismatchWithList().x
+
+    @StoryFactory(failures=["foo", "quiz"])
+    def a(I):
+        I.x
+
+
+class SubstoryDIMismatchWithEnum(object):
+    def __init__(self):
+        self.x = SimpleMismatchWithEnum().x
+
+    @StoryFactory(failures=Enum("Errors", "foo, quiz"))
     def a(I):
         I.x

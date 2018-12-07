@@ -588,3 +588,65 @@ def test_substory_protocol_match_with_enum():
     assert result.failed_because(
         examples.failure_reasons.SubstoryDIMatchWithEnum().a.failures.foo
     )
+
+
+def test_substory_protocol_mismatch_with_list():
+    """
+    We should deny to use stories composition, if parent story
+    protocol isn't a superset of the substory protocol.
+    """
+
+    expected = """
+Failure protocol mismatch.
+
+SimpleSubstoryMismatchWithList.a: 'foo', 'quiz'
+
+SimpleSubstoryMismatchWithList.x: 'foo', 'bar', 'baz'
+""".strip()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        examples.failure_reasons.SimpleSubstoryMismatchWithList().a()
+    assert str(exc_info.value) == expected
+
+    expected = """
+Failure protocol mismatch.
+
+SubstoryDIMismatchWithList.a: 'foo', 'quiz'
+
+SimpleMismatchWithList.x: 'foo', 'bar', 'baz'
+""".strip()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        examples.failure_reasons.SubstoryDIMismatchWithList().a()
+    assert str(exc_info.value) == expected
+
+
+def test_substory_protocol_mismatch_with_enum():
+    """
+    We should deny to use stories composition, if parent story
+    protocol isn't a superset of the substory protocol.
+    """
+
+    expected = """
+Failure protocol mismatch.
+
+SimpleSubstoryMismatchWithEnum.a: <Errors.foo: 1>, <Errors.quiz: 2>
+
+SimpleSubstoryMismatchWithEnum.x: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
+""".strip()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        examples.failure_reasons.SimpleSubstoryMismatchWithEnum().a()
+    assert str(exc_info.value) == expected
+
+    expected = """
+Failure protocol mismatch.
+
+SubstoryDIMismatchWithEnum.a: <Errors.foo: 1>, <Errors.quiz: 2>
+
+SimpleMismatchWithEnum.x: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
+""".strip()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        examples.failure_reasons.SubstoryDIMismatchWithEnum().a()
+    assert str(exc_info.value) == expected

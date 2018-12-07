@@ -14,8 +14,10 @@ def collect_story(f):
     return calls
 
 
-def wrap_story(is_story, collected, obj, ctx):
+def wrap_story(is_story, collected, obj, protocol, cls_name, method_name, ctx):
 
+    # FIXME: `cls_name` and `name` should be encapsulated somewhere.
+    # This arguments list is insane.
     methods = []
 
     for name in collected:
@@ -24,7 +26,13 @@ def wrap_story(is_story, collected, obj, ctx):
             methods.append((obj, attr.__func__))
             continue
 
-        sub_methods = wrap_story(is_story, attr.collected, attr.obj, ctx)
+        protocol.compare(attr, cls_name, method_name)
+        # TODO: Test deeper composition.  Protocol mismatch in:
+        #
+        # story -> normal substory -> mismatched substory
+        sub_methods = wrap_story(
+            is_story, attr.collected, attr.obj, protocol, cls_name, method_name, ctx
+        )
         if not sub_methods:
             continue
 

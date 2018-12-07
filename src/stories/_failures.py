@@ -23,16 +23,19 @@ class Protocol(object):
             available = failures.__members__.values()
             check = self.check_enum
             cast = self.cast_enum
+            compare = self.compare_enum
         elif failures is not None:
             available = failures
             check = self.check_collection
             cast = self.cast_collection
+            compare = self.compare_collection
         else:
             self.cast_reason = self.cast_collection
             return
         self.available = ", ".join(map(repr, available))
         self.check_reason = check
         self.cast_reason = cast
+        self.compare_other = compare
 
     def check(self, obj, method, reason):
         if reason and self.failures and not self.check_reason(reason):
@@ -82,6 +85,26 @@ class Protocol(object):
     def cast_enum(self, reason):
         return self.failures.__members__[reason.name]
 
+    def compare(self, story, cls_name, method_name):
+        if not self.compare_other(story.protocol):
+            message = mismatch_template.format(
+                cls=cls_name,
+                method=method_name,
+                available=self.available,
+                other_cls=story.cls_name,
+                other_method=story.name,
+                other_available=story.protocol.available,
+            )
+            raise FailureProtocolError(message)
+
+    def compare_collection(self, other):
+        return set(self.failures) >= set(other.failures)
+
+    def compare_enum(self, other):
+        return isinstance(other.failures, EnumMeta) and set(
+            self.failures.__members__
+        ) >= set(other.failures.__members__)
+
 
 wrong_reason_template = """
 Failure({reason!r}) failure reason is not allowed by current protocol.
@@ -127,4 +150,13 @@ null_summary_template = """
 Story returned result: {cls}.{method}
 
 Use StoryFactory to define failure protocol.
+""".strip()
+
+
+mismatch_template = """
+Failure protocol mismatch.
+
+{cls}.{method}: {available}
+
+{other_cls}.{other_method}: {other_available}
 """.strip()
