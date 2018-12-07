@@ -159,9 +159,13 @@ Use StoryFactory to define failure protocol.
 
 
 mismatch_template = """
-Failure protocol mismatch.
+Story and substory failure protocol mismatch.
 
-{cls}.{method}: {available}
+Story: {cls}.{method}
 
-{other_cls}.{other_method}: {other_available}
+Available failures are: {available}
+
+Substory: {other_cls}.{other_method}
+
+Available failures are: {other_available}
 """.strip()

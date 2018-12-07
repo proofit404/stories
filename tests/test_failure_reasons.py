@@ -618,11 +618,15 @@ def test_substory_protocol_mismatch_with_empty():
     """
 
     expected = """
-Failure protocol mismatch.
+Story and substory failure protocol mismatch.
 
-EmptySubstoryMismatch.a: 'foo', 'quiz'
+Story: EmptySubstoryMismatch.a
 
-EmptySubstoryMismatch.x: None
+Available failures are: 'foo', 'quiz'
+
+Substory: EmptySubstoryMismatch.x
+
+Available failures are: None
 """.strip()
 
     with pytest.raises(FailureProtocolError) as exc_info:
@@ -630,11 +634,15 @@ EmptySubstoryMismatch.x: None
     assert str(exc_info.value) == expected
 
     expected = """
-Failure protocol mismatch.
+Story and substory failure protocol mismatch.
 
-EmptyParentMismatch.a: None
+Story: EmptyParentMismatch.a
 
-EmptyParentMismatch.x: 'foo', 'quiz'
+Available failures are: None
+
+Substory: EmptyParentMismatch.x
+
+Available failures are: 'foo', 'quiz'
 """.strip()
 
     with pytest.raises(FailureProtocolError) as exc_info:
@@ -642,11 +650,15 @@ EmptyParentMismatch.x: 'foo', 'quiz'
     assert str(exc_info.value) == expected
 
     expected = """
-Failure protocol mismatch.
+Story and substory failure protocol mismatch.
 
-EmptyDIMismatch.a: 'foo', 'quiz'
+Story: EmptyDIMismatch.a
 
-EmptyMismatch.x: None
+Available failures are: 'foo', 'quiz'
+
+Substory: EmptyMismatch.x
+
+Available failures are: None
 """.strip()
 
     with pytest.raises(FailureProtocolError) as exc_info:
@@ -654,11 +666,15 @@ EmptyMismatch.x: None
     assert str(exc_info.value) == expected
 
     expected = """
-Failure protocol mismatch.
+Story and substory failure protocol mismatch.
 
-ParentDIMismatch.a: None
+Story: ParentDIMismatch.a
 
-ParentMismatch.x: 'foo', 'quiz'
+Available failures are: None
+
+Substory: ParentMismatch.x
+
+Available failures are: 'foo', 'quiz'
 """.strip()
 
     with pytest.raises(FailureProtocolError) as exc_info:
@@ -673,11 +689,15 @@ def test_substory_protocol_mismatch_with_list():
     """
 
     expected = """
-Failure protocol mismatch.
+Story and substory failure protocol mismatch.
 
-SimpleSubstoryMismatchWithList.a: 'foo', 'quiz'
+Story: SimpleSubstoryMismatchWithList.a
 
-SimpleSubstoryMismatchWithList.x: 'foo', 'bar', 'baz'
+Available failures are: 'foo', 'quiz'
+
+Substory: SimpleSubstoryMismatchWithList.x
+
+Available failures are: 'foo', 'bar', 'baz'
 """.strip()
 
     with pytest.raises(FailureProtocolError) as exc_info:
@@ -685,11 +705,15 @@ SimpleSubstoryMismatchWithList.x: 'foo', 'bar', 'baz'
     assert str(exc_info.value) == expected
 
     expected = """
-Failure protocol mismatch.
+Story and substory failure protocol mismatch.
 
-SubstoryDIMismatchWithList.a: 'foo', 'quiz'
+Story: SubstoryDIMismatchWithList.a
 
-SimpleMismatchWithList.x: 'foo', 'bar', 'baz'
+Available failures are: 'foo', 'quiz'
+
+Substory: SimpleMismatchWithList.x
+
+Available failures are: 'foo', 'bar', 'baz'
 """.strip()
 
     with pytest.raises(FailureProtocolError) as exc_info:
@@ -704,11 +728,15 @@ def test_substory_protocol_mismatch_with_enum():
     """
 
     expected = """
-Failure protocol mismatch.
+Story and substory failure protocol mismatch.
 
-SimpleSubstoryMismatchWithEnum.a: <Errors.foo: 1>, <Errors.quiz: 2>
+Story: SimpleSubstoryMismatchWithEnum.a
 
-SimpleSubstoryMismatchWithEnum.x: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
+Available failures are: <Errors.foo: 1>, <Errors.quiz: 2>
+
+Substory: SimpleSubstoryMismatchWithEnum.x
+
+Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
 """.strip()
 
     with pytest.raises(FailureProtocolError) as exc_info:
@@ -716,11 +744,15 @@ SimpleSubstoryMismatchWithEnum.x: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz:
     assert str(exc_info.value) == expected
 
     expected = """
-Failure protocol mismatch.
+Story and substory failure protocol mismatch.
 
-SubstoryDIMismatchWithEnum.a: <Errors.foo: 1>, <Errors.quiz: 2>
+Story: SubstoryDIMismatchWithEnum.a
 
-SimpleMismatchWithEnum.x: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
+Available failures are: <Errors.foo: 1>, <Errors.quiz: 2>
+
+Substory: SimpleMismatchWithEnum.x
+
+Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
 """.strip()
 
     with pytest.raises(FailureProtocolError) as exc_info:
