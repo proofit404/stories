@@ -4,8 +4,6 @@
 #
 # [ ] Substory can not use failures from the protocol superset of the
 #     parent story.
-#
-# [ ] Test protocol mismatch between @story and StoryFactory composition.
 from enum import Enum
 
 from stories import Failure, StoryFactory, Success, story
@@ -231,6 +229,15 @@ class SummaryWithSubstoryDI(CommonSubstory):
 # Substory protocol match.
 
 
+class EmptyMatch(object):
+    @story
+    def x(I):
+        I.one
+
+    def one(self, ctx):
+        return Failure()
+
+
 class SimpleMatchWithList(object):
     @story_with_list
     def x(I):
@@ -249,6 +256,12 @@ class SimpleMatchWithEnum(object):
         return Failure(Errors.foo)
 
 
+class EmptySubstoryMatch(EmptyMatch):
+    @story
+    def a(I):
+        I.x
+
+
 class SimpleSubstoryMatchWithList(SimpleMatchWithList):
     @StoryFactory(failures=["foo", "bar", "baz", "quiz"])
     def a(I):
@@ -257,6 +270,15 @@ class SimpleSubstoryMatchWithList(SimpleMatchWithList):
 
 class SimpleSubstoryMatchWithEnum(SimpleMatchWithEnum):
     @StoryFactory(failures=Enum("Errors", "foo, bar, baz, quiz"))
+    def a(I):
+        I.x
+
+
+class EmptyDIMatch(object):
+    def __init__(self):
+        self.x = EmptyMatch().x
+
+    @story
     def a(I):
         I.x
 

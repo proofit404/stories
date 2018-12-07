@@ -31,6 +31,7 @@ class Protocol(object):
             compare = self.compare_collection
         else:
             self.cast_reason = self.cast_collection
+            self.compare_other = self.compare_null
             return
         self.available = ", ".join(map(repr, available))
         self.check_reason = check
@@ -96,6 +97,9 @@ class Protocol(object):
                 other_available=story.protocol.available,
             )
             raise FailureProtocolError(message)
+
+    def compare_null(self, other):
+        return not other.failures
 
     def compare_collection(self, other):
         return set(self.failures) >= set(other.failures)

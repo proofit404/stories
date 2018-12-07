@@ -538,6 +538,27 @@ Use StoryFactory to define failure protocol.
     assert str(exc_info.value) == expected
 
 
+def test_substory_protocol_match_with_empty():
+    """
+    We should allow to use stories composition, if parent story and
+    substory does not define failure protocols.
+    """
+
+    with pytest.raises(FailureError) as exc_info:
+        examples.failure_reasons.EmptySubstoryMatch().a()
+    assert exc_info.value.reason is None
+
+    result = examples.failure_reasons.EmptySubstoryMatch().a.run()
+    assert result.failure_reason is None
+
+    with pytest.raises(FailureError) as exc_info:
+        examples.failure_reasons.EmptyDIMatch().a()
+    assert exc_info.value.reason is None
+
+    result = examples.failure_reasons.EmptyDIMatch().a.run()
+    assert result.failure_reason is None
+
+
 def test_substory_protocol_match_with_list():
     """
     We should allow to use stories composition, if parent story
