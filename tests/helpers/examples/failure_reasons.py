@@ -226,3 +226,54 @@ class SummaryWithSubstoryDI(CommonSubstory):
         I.before
         I.z
         I.after
+
+
+# Substory protocol match.
+
+
+class SimpleMatchWithList(object):
+    @story_with_list
+    def x(I):
+        I.one
+
+    def one(self, ctx):
+        return Failure("foo")
+
+
+class SimpleMatchWithEnum(object):
+    @story_with_enum
+    def x(I):
+        I.one
+
+    def one(self, ctx):
+        return Failure(Errors.foo)
+
+
+class SimpleSubstoryMatchWithList(SimpleMatchWithList):
+    @StoryFactory(failures=["foo", "bar", "baz", "quiz"])
+    def a(I):
+        I.x
+
+
+class SimpleSubstoryMatchWithEnum(SimpleMatchWithEnum):
+    @StoryFactory(failures=Enum("Errors", "foo, bar, baz, quiz"))
+    def a(I):
+        I.x
+
+
+class SubstoryDIMatchWithList(object):
+    def __init__(self):
+        self.x = SimpleMatchWithList().x
+
+    @StoryFactory(failures=["foo", "bar", "baz", "quiz"])
+    def a(I):
+        I.x
+
+
+class SubstoryDIMatchWithEnum(object):
+    def __init__(self):
+        self.x = SimpleMatchWithEnum().x
+
+    @StoryFactory(failures=Enum("Errors", "foo, bar, baz, quiz"))
+    def a(I):
+        I.x

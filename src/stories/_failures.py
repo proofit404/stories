@@ -13,18 +13,26 @@ from .exceptions import FailureProtocolError
 
 
 class Protocol(object):
+
+    # TODO: Split into Interface and two classes.  Rewrite without
+    # self-monkey-patching initializer.
+
     def __init__(self, failures):
         self.failures = failures
         if isinstance(failures, EnumMeta):
             available = failures.__members__.values()
             check = self.check_enum
+            cast = self.cast_enum
         elif failures is not None:
             available = failures
             check = self.check_collection
+            cast = self.cast_collection
         else:
+            self.cast_reason = self.cast_collection
             return
         self.available = ", ".join(map(repr, available))
         self.check_reason = check
+        self.cast_reason = cast
 
     def check(self, obj, method, reason):
         if reason and self.failures and not self.check_reason(reason):
@@ -52,7 +60,7 @@ class Protocol(object):
         return reason in self.failures
 
     def check_enum(self, reason):
-        return isinstance(reason, Enum) and reason in self.failures
+        return isinstance(reason, Enum) and reason.name in self.failures.__members__
 
     def summarize(self, cls_name, method_name, reason):
         # TODO: Deny to use `failed_because(None)`.
@@ -67,6 +75,12 @@ class Protocol(object):
         if not self.failures:
             message = null_summary_template.format(cls=cls_name, method=method_name)
             raise FailureProtocolError(message)
+
+    def cast_collection(self, reason):
+        return reason
+
+    def cast_enum(self, reason):
+        return self.failures.__members__[reason.name]
 
 
 wrong_reason_template = """

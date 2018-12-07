@@ -536,3 +536,55 @@ Use StoryFactory to define failure protocol.
     with pytest.raises(FailureProtocolError) as exc_info:
         result.failed_because("'foo' is too big")
     assert str(exc_info.value) == expected
+
+
+def test_substory_protocol_match_with_list():
+    """
+    We should allow to use stories composition, if parent story
+    protocol is a superset of the substory protocol.
+    """
+
+    with pytest.raises(FailureError) as exc_info:
+        examples.failure_reasons.SimpleSubstoryMatchWithList().a()
+    assert exc_info.value.reason == "foo"
+
+    result = examples.failure_reasons.SimpleSubstoryMatchWithList().a.run()
+    assert result.failed_because("foo")
+
+    with pytest.raises(FailureError) as exc_info:
+        examples.failure_reasons.SubstoryDIMatchWithList().a()
+    assert exc_info.value.reason == "foo"
+
+    result = examples.failure_reasons.SubstoryDIMatchWithList().a.run()
+    assert result.failed_because("foo")
+
+
+def test_substory_protocol_match_with_enum():
+    """
+    We should allow to use stories composition, if parent story
+    protocol is a superset of the substory protocol.
+    """
+
+    with pytest.raises(FailureError) as exc_info:
+        examples.failure_reasons.SimpleSubstoryMatchWithEnum().a()
+    assert (
+        exc_info.value.reason
+        is examples.failure_reasons.SimpleSubstoryMatchWithEnum().a.failures.foo
+    )
+
+    result = examples.failure_reasons.SimpleSubstoryMatchWithEnum().a.run()
+    assert result.failed_because(
+        examples.failure_reasons.SimpleSubstoryMatchWithEnum().a.failures.foo
+    )
+
+    with pytest.raises(FailureError) as exc_info:
+        examples.failure_reasons.SubstoryDIMatchWithEnum().a()
+    assert (
+        exc_info.value.reason
+        is examples.failure_reasons.SubstoryDIMatchWithEnum().a.failures.foo
+    )
+
+    result = examples.failure_reasons.SubstoryDIMatchWithEnum().a.run()
+    assert result.failed_because(
+        examples.failure_reasons.SubstoryDIMatchWithEnum().a.failures.foo
+    )

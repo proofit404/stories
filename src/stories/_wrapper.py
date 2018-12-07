@@ -19,7 +19,7 @@ class StoryWrapper(object):
         self.failures = protocol.failures
 
     def __call__(self, *args, **kwargs):
-        runner = Call()
+        runner = Call(self.protocol)
         history = History(self.cls_name, self.name)
         ctx = Context(validate_arguments(self.arguments, args, kwargs), history)
         methods = wrap_story(is_story, self.collected, self.obj, ctx)
