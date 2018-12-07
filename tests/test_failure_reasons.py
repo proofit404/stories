@@ -611,6 +611,61 @@ def test_substory_protocol_match_with_enum():
     )
 
 
+def test_substory_protocol_mismatch_with_empty():
+    """
+    We should deny to use stories composition, if parent story define failure
+    protocol and substory doesn't.
+    """
+
+    expected = """
+Failure protocol mismatch.
+
+EmptySubstoryMismatch.a: 'foo', 'quiz'
+
+EmptySubstoryMismatch.x: None
+""".strip()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        examples.failure_reasons.EmptySubstoryMismatch().a()
+    assert str(exc_info.value) == expected
+
+    expected = """
+Failure protocol mismatch.
+
+EmptyParentMismatch.a: None
+
+EmptyParentMismatch.x: 'foo', 'quiz'
+""".strip()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        examples.failure_reasons.EmptyParentMismatch().a()
+    assert str(exc_info.value) == expected
+
+    expected = """
+Failure protocol mismatch.
+
+EmptyDIMismatch.a: 'foo', 'quiz'
+
+EmptyMismatch.x: None
+""".strip()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        examples.failure_reasons.EmptyDIMismatch().a()
+    assert str(exc_info.value) == expected
+
+    expected = """
+Failure protocol mismatch.
+
+ParentDIMismatch.a: None
+
+ParentMismatch.x: 'foo', 'quiz'
+""".strip()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        examples.failure_reasons.ParentDIMismatch().a()
+    assert str(exc_info.value) == expected
+
+
 def test_substory_protocol_mismatch_with_list():
     """
     We should deny to use stories composition, if parent story

@@ -30,6 +30,7 @@ class Protocol(object):
             cast = self.cast_collection
             compare = self.compare_collection
         else:
+            self.available = "None"
             self.cast_reason = self.cast_collection
             self.compare_other = self.compare_null
             return
@@ -99,10 +100,10 @@ class Protocol(object):
             raise FailureProtocolError(message)
 
     def compare_null(self, other):
-        return not other.failures
+        return other.failures is None
 
     def compare_collection(self, other):
-        return set(self.failures) >= set(other.failures)
+        return other.failures is not None and set(self.failures) >= set(other.failures)
 
     def compare_enum(self, other):
         return isinstance(other.failures, EnumMeta) and set(

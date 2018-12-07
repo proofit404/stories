@@ -304,6 +304,18 @@ class SubstoryDIMatchWithEnum(object):
 # Substory protocol mismatch.
 
 
+class EmptyMismatch(object):
+    @story
+    def x(I):
+        pass
+
+
+class ParentMismatch(object):
+    @StoryFactory(failures=["foo", "quiz"])
+    def x(I):
+        pass
+
+
 class SimpleMismatchWithList(object):
     @story_with_list
     def x(I):
@@ -316,6 +328,18 @@ class SimpleMismatchWithEnum(object):
         pass
 
 
+class EmptySubstoryMismatch(EmptyMismatch):
+    @StoryFactory(failures=["foo", "quiz"])
+    def a(I):
+        I.x
+
+
+class EmptyParentMismatch(ParentMismatch):
+    @story
+    def a(I):
+        I.x
+
+
 class SimpleSubstoryMismatchWithList(SimpleMismatchWithList):
     @StoryFactory(failures=["foo", "quiz"])
     def a(I):
@@ -324,6 +348,24 @@ class SimpleSubstoryMismatchWithList(SimpleMismatchWithList):
 
 class SimpleSubstoryMismatchWithEnum(SimpleMismatchWithEnum):
     @StoryFactory(failures=Enum("Errors", "foo, quiz"))
+    def a(I):
+        I.x
+
+
+class EmptyDIMismatch(object):
+    def __init__(self):
+        self.x = EmptyMismatch().x
+
+    @StoryFactory(failures=["foo", "quiz"])
+    def a(I):
+        I.x
+
+
+class ParentDIMismatch(object):
+    def __init__(self):
+        self.x = ParentMismatch().x
+
+    @story
     def a(I):
         I.x
 
