@@ -23,8 +23,15 @@ def make_protocol(failures):
 
 
 class Protocol(object):
-    def check(self, obj, method, reason):
-        if reason and self.failures and not self.check_reason(reason):
+    def check_return_statement(self, obj, method, reason):
+        if not reason:
+            message = null_reason_template.format(
+                available=self.available,
+                cls=obj.__class__.__name__,
+                method=method.__name__,
+            )
+            raise FailureProtocolError(message)
+        if not self.check_reason(reason):
             message = wrong_reason_template.format(
                 reason=reason,
                 available=self.available,
@@ -32,22 +39,14 @@ class Protocol(object):
                 method=method.__name__,
             )
             raise FailureProtocolError(message)
-        if not reason and self.failures:
-            message = null_reason_template.format(
-                available=self.available,
-                cls=obj.__class__.__name__,
-                method=method.__name__,
-            )
-            raise FailureProtocolError(message)
-        if reason and not self.failures:
-            message = null_protocol_template.format(
-                reason=reason, cls=obj.__class__.__name__, method=method.__name__
-            )
-            raise FailureProtocolError(message)
+
+    def check_reason(self, reason):
+
+        raise NotImplementedError
 
     def summarize(self, cls_name, method_name, reason):
         # TODO: Deny to use `failed_because(None)`.
-        if self.failures and not self.check_reason(reason):
+        if not self.check_reason(reason):
             message = wrong_summary_template.format(
                 reason=reason,
                 available=self.available,
@@ -55,9 +54,10 @@ class Protocol(object):
                 method=method_name,
             )
             raise FailureProtocolError(message)
-        if not self.failures:
-            message = null_summary_template.format(cls=cls_name, method=method_name)
-            raise FailureProtocolError(message)
+
+    def cast_reason(self, reason):
+
+        raise NotImplementedError
 
     def compare(self, story, cls_name, method_name):
         if not self.compare_other(story.protocol):
@@ -71,14 +71,6 @@ class Protocol(object):
             )
             raise FailureProtocolError(message)
 
-    def check_reason(self, reason):
-
-        raise NotImplementedError
-
-    def cast_reason(self, reason):
-
-        raise NotImplementedError
-
     def compare_other(self, other):
 
         raise NotImplementedError
@@ -89,8 +81,19 @@ class NullProtocol(Protocol):
         self.failures = None
         self.available = "None"
 
+    def check_return_statement(self, obj, method, reason):
+        if reason:
+            message = null_protocol_template.format(
+                reason=reason, cls=obj.__class__.__name__, method=method.__name__
+            )
+            raise FailureProtocolError(message)
+
+    def summarize(self, cls_name, method_name, reason):
+        message = null_summary_template.format(cls=cls_name, method=method_name)
+        raise FailureProtocolError(message)
+
     def cast_reason(self, reason):
-        return reason
+        return None
 
     def compare_other(self, other):
         return other.failures is None
