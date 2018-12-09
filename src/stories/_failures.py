@@ -12,33 +12,17 @@ except ImportError:
 from .exceptions import FailureProtocolError
 
 
+def make_protocol(failures):
+    if isinstance(failures, EnumMeta):
+        protocol_class = EnumProtocol
+    elif failures is not None:
+        protocol_class = CollectionProtocol
+    else:
+        protocol_class = NullProtocol
+    return protocol_class(failures)
+
+
 class Protocol(object):
-
-    # TODO: Split into Interface and two classes.  Rewrite without
-    # self-monkey-patching initializer.
-
-    def __init__(self, failures):
-        self.failures = failures
-        if isinstance(failures, EnumMeta):
-            available = failures.__members__.values()
-            check = self.check_enum
-            cast = self.cast_enum
-            compare = self.compare_enum
-        elif failures is not None:
-            available = failures
-            check = self.check_collection
-            cast = self.cast_collection
-            compare = self.compare_collection
-        else:
-            self.available = "None"
-            self.cast_reason = self.cast_collection
-            self.compare_other = self.compare_null
-            return
-        self.available = ", ".join(map(repr, available))
-        self.check_reason = check
-        self.cast_reason = cast
-        self.compare_other = compare
-
     def check(self, obj, method, reason):
         if reason and self.failures and not self.check_reason(reason):
             message = wrong_reason_template.format(
@@ -61,12 +45,6 @@ class Protocol(object):
             )
             raise FailureProtocolError(message)
 
-    def check_collection(self, reason):
-        return reason in self.failures
-
-    def check_enum(self, reason):
-        return isinstance(reason, Enum) and reason.name in self.failures.__members__
-
     def summarize(self, cls_name, method_name, reason):
         # TODO: Deny to use `failed_because(None)`.
         if self.failures and not self.check_reason(reason):
@@ -81,12 +59,6 @@ class Protocol(object):
             message = null_summary_template.format(cls=cls_name, method=method_name)
             raise FailureProtocolError(message)
 
-    def cast_collection(self, reason):
-        return reason
-
-    def cast_enum(self, reason):
-        return self.failures.__members__[reason.name]
-
     def compare(self, story, cls_name, method_name):
         if not self.compare_other(story.protocol):
             message = mismatch_template.format(
@@ -99,13 +71,58 @@ class Protocol(object):
             )
             raise FailureProtocolError(message)
 
-    def compare_null(self, other):
+    def check_reason(self, reason):
+
+        raise NotImplementedError
+
+    def cast_reason(self, reason):
+
+        raise NotImplementedError
+
+    def compare_other(self, other):
+
+        raise NotImplementedError
+
+
+class NullProtocol(Protocol):
+    def __init__(self, failures):
+        self.failures = None
+        self.available = "None"
+
+    def cast_reason(self, reason):
+        return reason
+
+    def compare_other(self, other):
         return other.failures is None
 
-    def compare_collection(self, other):
+
+class CollectionProtocol(Protocol):
+    def __init__(self, failures):
+        self.failures = failures
+        self.available = ", ".join(map(repr, failures))
+
+    def check_reason(self, reason):
+        return reason in self.failures
+
+    def cast_reason(self, reason):
+        return reason
+
+    def compare_other(self, other):
         return other.failures is not None and set(self.failures) >= set(other.failures)
 
-    def compare_enum(self, other):
+
+class EnumProtocol(Protocol):
+    def __init__(self, failures):
+        self.failures = failures
+        self.available = ", ".join(map(repr, failures.__members__.values()))
+
+    def check_reason(self, reason):
+        return isinstance(reason, Enum) and reason.name in self.failures.__members__
+
+    def cast_reason(self, reason):
+        return self.failures.__members__[reason.name]
+
+    def compare_other(self, other):
         return isinstance(other.failures, EnumMeta) and set(
             self.failures.__members__
         ) >= set(other.failures.__members__)
