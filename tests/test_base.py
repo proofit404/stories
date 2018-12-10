@@ -46,7 +46,6 @@ def test_failure():
     assert result.ctx == {"foo": 2, "bar": 2}
     assert result.failed_on("two")
     assert not result.failed_on("one")
-    assert result.failed_because(None)
     assert not result.failed_because("'foo' is too big")
     with pytest.raises(AssertionError):
         result.value
@@ -65,7 +64,6 @@ def test_failure():
     assert result.failed_on("two")
     assert not result.failed_on("one")
     assert result.failed_because("'foo' is too big")
-    assert not result.failed_because(None)
     with pytest.raises(AssertionError):
         result.value
 
@@ -82,7 +80,6 @@ def test_failure():
     assert result.ctx == {"foo": 2, "bar": 4, "spam": 3}
     assert result.failed_on("two")
     assert not result.failed_on("one")
-    assert result.failed_because(None)
     assert not result.failed_because("'foo' is too big")
     with pytest.raises(AssertionError):
         result.value
@@ -101,7 +98,6 @@ def test_failure():
     assert result.failed_on("two")
     assert not result.failed_on("one")
     assert result.failed_because("'foo' is too big")
-    assert not result.failed_because(None)
     with pytest.raises(AssertionError):
         result.value
 
@@ -118,7 +114,6 @@ def test_failure():
     assert result.ctx == {"foo": 2, "bar": 4, "spam": 3}
     assert result.failed_on("two")
     assert not result.failed_on("one")
-    assert result.failed_because(None)
     assert not result.failed_because("'foo' is too big")
     with pytest.raises(AssertionError):
         result.value
@@ -137,7 +132,6 @@ def test_failure():
     assert result.failed_on("two")
     assert not result.failed_on("one")
     assert result.failed_because("'foo' is too big")
-    assert not result.failed_because(None)
     with pytest.raises(AssertionError):
         result.value
 

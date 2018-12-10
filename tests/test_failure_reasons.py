@@ -47,7 +47,8 @@ def test_reasons_defined_with_enum():
     with pytest.raises(FailureError) as exc_info:
         examples.failure_reasons.SimpleWithEnum().x()
     assert (
-        exc_info.value.reason is examples.failure_reasons.SimpleWithEnum.x.failures.foo
+        exc_info.value.reason
+        is examples.failure_reasons.SimpleWithEnum().x.failures.foo
     )
     assert repr(exc_info.value) == "FailureError(<Errors.foo: 1>)"
 
@@ -55,15 +56,18 @@ def test_reasons_defined_with_enum():
     assert not result.is_success
     assert result.is_failure
     assert (
-        result.failure_reason is examples.failure_reasons.SimpleWithEnum.x.failures.foo
+        result.failure_reason
+        is examples.failure_reasons.SimpleWithEnum().x.failures.foo
     )
-    assert result.failed_because(examples.failure_reasons.SimpleWithEnum.x.failures.foo)
+    assert result.failed_because(
+        examples.failure_reasons.SimpleWithEnum().x.failures.foo
+    )
 
     with pytest.raises(FailureError) as exc_info:
         examples.failure_reasons.SimpleSubstoryWithEnum().a()
     assert (
         exc_info.value.reason
-        is examples.failure_reasons.SimpleSubstoryWithEnum.a.failures.foo
+        is examples.failure_reasons.SimpleSubstoryWithEnum().a.failures.foo
     )
     assert repr(exc_info.value) == "FailureError(<Errors.foo: 1>)"
 
@@ -72,17 +76,17 @@ def test_reasons_defined_with_enum():
     assert result.is_failure
     assert (
         result.failure_reason
-        is examples.failure_reasons.SimpleSubstoryWithEnum.a.failures.foo
+        is examples.failure_reasons.SimpleSubstoryWithEnum().a.failures.foo
     )
     assert result.failed_because(
-        examples.failure_reasons.SimpleSubstoryWithEnum.a.failures.foo
+        examples.failure_reasons.SimpleSubstoryWithEnum().a.failures.foo
     )
 
     with pytest.raises(FailureError) as exc_info:
         examples.failure_reasons.SubstoryDIWithEnum().a()
     assert (
         exc_info.value.reason
-        is examples.failure_reasons.SubstoryDIWithEnum.a.failures.foo
+        is examples.failure_reasons.SubstoryDIWithEnum().a.failures.foo
     )
     assert repr(exc_info.value) == "FailureError(<Errors.foo: 1>)"
 
@@ -91,10 +95,10 @@ def test_reasons_defined_with_enum():
     assert result.is_failure
     assert (
         result.failure_reason
-        is examples.failure_reasons.SubstoryDIWithEnum.a.failures.foo
+        is examples.failure_reasons.SubstoryDIWithEnum().a.failures.foo
     )
     assert result.failed_because(
-        examples.failure_reasons.SubstoryDIWithEnum.a.failures.foo
+        examples.failure_reasons.SubstoryDIWithEnum().a.failures.foo
     )
 
 

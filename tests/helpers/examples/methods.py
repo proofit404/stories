@@ -54,6 +54,9 @@ class Simple(object):
         return Result(ctx.bar - ctx.baz)
 
 
+Simple.x.failures(["'foo' is too big"])
+
+
 class Pipe(object):
     @story
     def x(I):

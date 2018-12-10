@@ -11,12 +11,13 @@ class Story(object):
         self.protocol = make_protocol(None)
 
     def __get__(self, obj, cls):
-        return MountedStory(
-            cls, obj, self.name, self.arguments, self.collected, self.protocol
-        )
+        if obj is None:
+            return self
+        else:
+            return MountedStory(
+                cls, obj, self.name, self.arguments, self.collected, self.protocol
+            )
 
     def failures(self, failures):
-        # TODO: Allow to set failures from the global scope
-        # (@Class.story.failures).
         self.protocol = make_protocol(failures)
         return failures
