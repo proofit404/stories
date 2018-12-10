@@ -7,7 +7,7 @@ from ._repr import story_representation
 from ._run import Call, Run
 
 
-class StoryWrapper(object):
+class MountedStory(object):
     def __init__(self, cls, obj, name, arguments, collected, protocol):
         self.cls = cls
         self.obj = obj
@@ -61,4 +61,4 @@ class StoryWrapper(object):
 
 
 def is_story(attribute):
-    return callable(attribute) and type(attribute) is StoryWrapper
+    return callable(attribute) and type(attribute) is MountedStory

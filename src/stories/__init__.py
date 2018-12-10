@@ -8,8 +8,9 @@ This module implements Business Transaction DSL.
 :license: BSD, see LICENSE for more details.
 """
 
-from ._api import argument, story
+from ._argument import argument
 from ._return import Failure, Result, Skip, Success
+from ._story import Story as story
 
 
 __all__ = ["story", "argument", "Result", "Success", "Failure", "Skip"]

@@ -1,9 +1,9 @@
 from ._collect import collect_story
 from ._failures import make_protocol
-from ._wrapper import StoryWrapper
+from ._mounted import MountedStory
 
 
-class story(object):
+class Story(object):
     def __init__(self, f):
         self.name = f.__name__
         self.arguments = getattr(f, "arguments", [])
@@ -11,7 +11,7 @@ class story(object):
         self.protocol = make_protocol(None)
 
     def __get__(self, obj, cls):
-        return StoryWrapper(
+        return MountedStory(
             cls, obj, self.name, self.arguments, self.collected, self.protocol
         )
 
@@ -20,13 +20,3 @@ class story(object):
         # (@Class.story.failures).
         self.protocol = make_protocol(failures)
         return failures
-
-
-def argument(name):
-    def decorator(f):
-        if not hasattr(f, "arguments"):
-            f.arguments = []
-        f.arguments.insert(0, name)
-        return f
-
-    return decorator
