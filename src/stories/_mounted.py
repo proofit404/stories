@@ -16,7 +16,6 @@ class MountedStory(object):
         self.arguments = arguments
         self.collected = collected
         self.protocol = protocol
-        self.failures = protocol.failures
 
     def __call__(self, *args, **kwargs):
         runner = Call(self.protocol)
@@ -58,6 +57,10 @@ class MountedStory(object):
             self.obj,
             self.collected,
         )
+
+    @property
+    def failures(self):
+        return self.protocol.failures
 
 
 def is_story(attribute):
