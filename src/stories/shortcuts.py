@@ -8,5 +8,6 @@ def failures_in(cls):
             attribute = getattr(cls, attrname)
             if isinstance(attribute, Story):
                 attribute.failures(failures)
+        return failures
 
     return setter
