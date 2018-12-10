@@ -496,7 +496,7 @@ def test_summary_reason_without_protocol():
     # TODO: Check success summary the same way.
 
     expected = """
-'failed_because' method can not be used to check result of a story defined without failure protocol.
+'failed_because' method can not be used with story defined without failure protocol.
 
 Story returned result: SummaryWithSimple.z
 
@@ -510,7 +510,7 @@ Use StoryFactory to define failure protocol.
     assert str(exc_info.value) == expected
 
     expected = """
-'failed_because' method can not be used to check result of a story defined without failure protocol.
+'failed_because' method can not be used with story defined without failure protocol.
 
 Story returned result: SummaryWithSimpleSubstory.c
 
@@ -524,7 +524,7 @@ Use StoryFactory to define failure protocol.
     assert str(exc_info.value) == expected
 
     expected = """
-'failed_because' method can not be used to check result of a story defined without failure protocol.
+'failed_because' method can not be used with story defined without failure protocol.
 
 Story returned result: SummaryWithSubstoryDI.c
 

@@ -170,7 +170,7 @@ Story returned result: {cls}.{method}
 
 
 null_summary_template = """
-'failed_because' method can not be used to check result of a story defined without failure protocol.
+'failed_because' method can not be used with story defined without failure protocol.
 
 Story returned result: {cls}.{method}
 
