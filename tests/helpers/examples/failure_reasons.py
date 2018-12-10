@@ -6,14 +6,7 @@
 #     parent story.
 from enum import Enum
 
-from stories import Failure, StoryFactory, Success, story
-
-
-story_with_list = StoryFactory(failures=["foo", "bar", "baz"])
-
-
-Errors = Enum("Errors", "foo bar baz")
-story_with_enum = StoryFactory(failures=Errors)
+from stories import Failure, Success, story
 
 
 # Simple story.
@@ -33,37 +26,47 @@ class CommonSimple(object):
 
 
 class SimpleWithList(CommonSimple):
-    @story_with_list
+    @story
     def x(I):
         I.one
 
-    @story_with_list
+    @story
     def y(I):
         I.two
 
-    @story_with_list
+    @story
     def z(I):
         I.three
 
     def one(self, ctx):
         return Failure("foo")
 
+    errors = z.failures(y.failures(x.failures(["foo", "bar", "baz"])))
+
 
 class SimpleWithEnum(CommonSimple):
-    @story_with_enum
+    @story
     def x(I):
         I.one
 
-    @story_with_enum
+    @story
     def y(I):
         I.two
 
-    @story_with_enum
+    @story
     def z(I):
         I.three
 
     def one(self, ctx):
-        return Failure(Errors.foo)
+        return Failure(self.Errors.foo)
+
+    @x.failures
+    @y.failures
+    @z.failures
+    class Errors(Enum):
+        foo = 1
+        bar = 2
+        baz = 3
 
 
 # Substory in the same class.
@@ -78,43 +81,53 @@ class CommonSubstory(object):
 
 
 class SimpleSubstoryWithList(CommonSubstory, SimpleWithList):
-    @story_with_list
+    @story
     def a(I):
         I.before
         I.x
         I.after
 
-    @story_with_list
+    @story
     def b(I):
         I.before
         I.y
         I.after
 
-    @story_with_list
+    @story
     def c(I):
         I.before
         I.z
         I.after
+
+    errors = c.failures(b.failures(a.failures(["foo", "bar", "baz"])))
 
 
 class SimpleSubstoryWithEnum(CommonSubstory, SimpleWithEnum):
-    @story_with_enum
+    @story
     def a(I):
         I.before
         I.x
         I.after
 
-    @story_with_enum
+    @story
     def b(I):
         I.before
         I.y
         I.after
 
-    @story_with_enum
+    @story
     def c(I):
         I.before
         I.z
         I.after
+
+    @a.failures
+    @b.failures
+    @c.failures
+    class Errors(Enum):
+        foo = 1
+        bar = 2
+        baz = 3
 
 
 # Dependency injection of the substory.
@@ -126,23 +139,25 @@ class SubstoryDIWithList(CommonSubstory):
         self.y = SimpleWithList().y
         self.z = SimpleWithList().z
 
-    @story_with_list
+    @story
     def a(I):
         I.before
         I.x
         I.after
 
-    @story_with_list
+    @story
     def b(I):
         I.before
         I.y
         I.after
 
-    @story_with_list
+    @story
     def c(I):
         I.before
         I.z
         I.after
+
+    errors = c.failures(b.failures(a.failures(["foo", "bar", "baz"])))
 
 
 class SubstoryDIWithEnum(CommonSubstory):
@@ -151,23 +166,31 @@ class SubstoryDIWithEnum(CommonSubstory):
         self.y = SimpleWithEnum().y
         self.z = SimpleWithEnum().z
 
-    @story_with_enum
+    @story
     def a(I):
         I.before
         I.x
         I.after
 
-    @story_with_enum
+    @story
     def b(I):
         I.before
         I.y
         I.after
 
-    @story_with_enum
+    @story
     def c(I):
         I.before
         I.z
         I.after
+
+    @a.failures
+    @b.failures
+    @c.failures
+    class Errors(Enum):
+        foo = 1
+        bar = 2
+        baz = 3
 
 
 # Reason used without protocol definition.
@@ -239,21 +262,29 @@ class EmptyMatch(object):
 
 
 class SimpleMatchWithList(object):
-    @story_with_list
+    @story
     def x(I):
         I.one
 
     def one(self, ctx):
         return Failure("foo")
 
+    errors = x.failures(["foo", "bar", "baz"])
+
 
 class SimpleMatchWithEnum(object):
-    @story_with_enum
+    @story
     def x(I):
         I.one
 
     def one(self, ctx):
-        return Failure(Errors.foo)
+        return Failure(self.Errors.foo)
+
+    @x.failures
+    class Errors(Enum):
+        foo = 1
+        bar = 2
+        baz = 3
 
 
 class EmptySubstoryMatch(EmptyMatch):
@@ -263,15 +294,24 @@ class EmptySubstoryMatch(EmptyMatch):
 
 
 class SimpleSubstoryMatchWithList(SimpleMatchWithList):
-    @StoryFactory(failures=["foo", "bar", "baz", "quiz"])
+    @story
     def a(I):
         I.x
+
+    errors = a.failures(["foo", "bar", "baz", "quiz"])
 
 
 class SimpleSubstoryMatchWithEnum(SimpleMatchWithEnum):
-    @StoryFactory(failures=Enum("Errors", "foo, bar, baz, quiz"))
+    @story
     def a(I):
         I.x
+
+    @a.failures
+    class Errors(Enum):
+        foo = 1
+        bar = 2
+        baz = 3
+        quiz = 4
 
 
 class EmptyDIMatch(object):
@@ -287,18 +327,27 @@ class SubstoryDIMatchWithList(object):
     def __init__(self):
         self.x = SimpleMatchWithList().x
 
-    @StoryFactory(failures=["foo", "bar", "baz", "quiz"])
+    @story
     def a(I):
         I.x
+
+    errors = a.failures(["foo", "bar", "baz", "quiz"])
 
 
 class SubstoryDIMatchWithEnum(object):
     def __init__(self):
         self.x = SimpleMatchWithEnum().x
 
-    @StoryFactory(failures=Enum("Errors", "foo, bar, baz, quiz"))
+    @story
     def a(I):
         I.x
+
+    @a.failures
+    class Errors(Enum):
+        foo = 1
+        bar = 2
+        baz = 3
+        quiz = 4
 
 
 # Substory protocol mismatch.
@@ -311,27 +360,39 @@ class EmptyMismatch(object):
 
 
 class ParentMismatch(object):
-    @StoryFactory(failures=["foo", "quiz"])
+    @story
     def x(I):
         pass
+
+    errors = x.failures(["foo", "quiz"])
 
 
 class SimpleMismatchWithList(object):
-    @story_with_list
+    @story
     def x(I):
         pass
+
+    errors = x.failures(["foo", "bar", "baz"])
 
 
 class SimpleMismatchWithEnum(object):
-    @story_with_enum
+    @story
     def x(I):
         pass
 
+    @x.failures
+    class Errors(Enum):
+        foo = 1
+        bar = 2
+        baz = 3
+
 
 class EmptySubstoryMismatch(EmptyMismatch):
-    @StoryFactory(failures=["foo", "quiz"])
+    @story
     def a(I):
         I.x
+
+    errors = a.failures(["foo", "quiz"])
 
 
 class EmptyParentMismatch(ParentMismatch):
@@ -341,24 +402,33 @@ class EmptyParentMismatch(ParentMismatch):
 
 
 class SimpleSubstoryMismatchWithList(SimpleMismatchWithList):
-    @StoryFactory(failures=["foo", "quiz"])
+    @story
     def a(I):
         I.x
+
+    errors = a.failures(["foo", "quiz"])
 
 
 class SimpleSubstoryMismatchWithEnum(SimpleMismatchWithEnum):
-    @StoryFactory(failures=Enum("Errors", "foo, quiz"))
+    @story
     def a(I):
         I.x
+
+    @a.failures
+    class Errors(Enum):
+        foo = 1
+        quiz = 2
 
 
 class EmptyDIMismatch(object):
     def __init__(self):
         self.x = EmptyMismatch().x
 
-    @StoryFactory(failures=["foo", "quiz"])
+    @story
     def a(I):
         I.x
+
+    errors = a.failures(["foo", "quiz"])
 
 
 class ParentDIMismatch(object):
@@ -374,15 +444,22 @@ class SubstoryDIMismatchWithList(object):
     def __init__(self):
         self.x = SimpleMismatchWithList().x
 
-    @StoryFactory(failures=["foo", "quiz"])
+    @story
     def a(I):
         I.x
+
+    errors = a.failures(["foo", "quiz"])
 
 
 class SubstoryDIMismatchWithEnum(object):
     def __init__(self):
         self.x = SimpleMismatchWithEnum().x
 
-    @StoryFactory(failures=Enum("Errors", "foo, quiz"))
+    @story
     def a(I):
         I.x
+
+    @a.failures
+    class Errors(Enum):
+        foo = 1
+        quiz = 2
