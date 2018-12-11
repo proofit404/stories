@@ -155,21 +155,6 @@ def test_skip():
     assert result.value == -4
 
 
-def test_arguments_validation():
-
-    with pytest.raises(AssertionError):
-        examples.methods.Simple().x(1)
-
-    with pytest.raises(AssertionError):
-        examples.methods.Simple().x.run(1)
-
-    with pytest.raises(AssertionError):
-        examples.methods.Simple().x(1, b=2)
-
-    with pytest.raises(AssertionError):
-        examples.methods.Simple().x.run(1, b=2)
-
-
 def test_return_type():
 
     with pytest.raises(AssertionError):

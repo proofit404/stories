@@ -4,6 +4,21 @@ import examples
 from stories.exceptions import ContextContractError
 
 
+def test_arguments_validation():
+
+    with pytest.raises(AssertionError):
+        examples.methods.Simple().x(1)
+
+    with pytest.raises(AssertionError):
+        examples.methods.Simple().x.run(1)
+
+    with pytest.raises(AssertionError):
+        examples.methods.Simple().x(1, b=2)
+
+    with pytest.raises(AssertionError):
+        examples.methods.Simple().x.run(1, b=2)
+
+
 def test_context_immutability():
 
     # TODO: Check the same method with
