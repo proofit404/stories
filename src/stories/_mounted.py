@@ -10,6 +10,7 @@ from ._run import Call, Run
 class ClassMountedStory(object):
     def __init__(self, cls, name, collected, failures):
         self.cls = cls
+        self.obj = None
         self.cls_name = cls.__name__
         self.name = name
         self.collected = collected
@@ -17,7 +18,11 @@ class ClassMountedStory(object):
 
     def __repr__(self):
         return story_representation(
-            is_story, self.cls_name + "." + self.name, self.cls, None, self.collected
+            is_story,
+            self.cls_name + "." + self.name,
+            self.cls,
+            self.obj,
+            self.collected,
         )
 
 
