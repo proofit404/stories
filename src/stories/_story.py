@@ -1,6 +1,6 @@
 from ._collect import collect_story
 from ._failures import make_protocol
-from ._mounted import MountedStory
+from ._mounted import ClassMountedStory, MountedStory
 
 
 class Story(object):
@@ -20,7 +20,7 @@ class Story(object):
             #     bar = 2
             #
             # ClassName.story_method.failures(["foo", "bar"])
-            return self
+            return ClassMountedStory(cls, self.name, self.collected, self.failures)
         else:
             return MountedStory(
                 cls, obj, self.name, self.arguments, self.collected, self.protocol

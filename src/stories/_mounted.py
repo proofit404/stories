@@ -7,6 +7,20 @@ from ._repr import story_representation
 from ._run import Call, Run
 
 
+class ClassMountedStory(object):
+    def __init__(self, cls, name, collected, failures):
+        self.cls = cls
+        self.cls_name = cls.__name__
+        self.name = name
+        self.collected = collected
+        self.failures = failures
+
+    def __repr__(self):
+        return story_representation(
+            is_story, self.cls_name + "." + self.name, self.cls, None, self.collected
+        )
+
+
 class MountedStory(object):
     def __init__(self, cls, obj, name, arguments, collected, protocol):
         self.cls = cls
