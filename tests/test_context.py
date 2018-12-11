@@ -19,7 +19,7 @@ def test_context_dir():
 
 def test_context_representation():
 
-    # TODO: Empty.
+    # Empty.
 
     expected = """
 Empty.x()
@@ -27,43 +27,47 @@ Empty.x()
 Context()
     """.strip()
 
-    # Collector, getter = make_collector(examples.methods.Empty, "two")
-    # Collector().x()
-    # assert repr(getter()) == expected
-    #
-    # Collector, getter = make_collector(examples.methods.Empty, "two")
-    # Collector().x.run()
-    # assert repr(getter()) == expected
+    getter = make_collector()
+    examples.methods.Empty().x()
+    assert repr(getter()) == expected
+
+    getter = make_collector()
+    examples.methods.Empty().x.run()
+    assert repr(getter()) == expected
 
     expected = """
-EmptySubstory.y:
-  x
+EmptySubstory.y()
 
 Context()
         """.strip()
 
-    # Collector, getter = make_collector(examples.methods.EmptySubstory, "x")
-    # Collector().y()
-    # assert repr(getter()) == expected
-    #
-    # Collector, getter = make_collector(examples.methods.EmptySubstory, "x")
-    # Collector().y.run()
-    # assert repr(getter()) == expected
+    getter = make_collector()
+    examples.methods.EmptySubstory().y()
+    assert repr(getter()) == expected
+
+    getter = make_collector()
+    examples.methods.EmptySubstory().y.run()
+    assert repr(getter()) == expected
 
     expected = """
 SubstoryDI.y:
-  x (Empty.x)
+  start
+  before
+  after (returned: 6)
 
-Context()
+Context:
+    spam = 3  # Story argument
+    foo = 2   # Set by SubstoryDI.start
+    bar = 4   # Set by SubstoryDI.before
         """.strip()
 
-    # Collector, getter = make_collector(examples.methods.SubstoryDI, "x")
-    # Collector(examples.methods.Empty().x).y(3)
-    # assert repr(getter()) == expected
-    #
-    # Collector, getter = make_collector(examples.methods.SubstoryDI, "x")
-    # Collector(examples.methods.Empty().x).y.run(3)
-    # assert repr(getter()) == expected
+    getter = make_collector()
+    examples.methods.SubstoryDI(examples.methods.Empty().x).y(3)
+    assert repr(getter()) == expected
+
+    getter = make_collector()
+    examples.methods.SubstoryDI(examples.methods.Empty().x).y.run(3)
+    assert repr(getter()) == expected
 
     # Failure.
 
@@ -77,13 +81,13 @@ Context:
     bar = 2  # Story argument
         """.strip()
 
-    Collector, getter = make_collector(examples.methods.Simple, "two")
+    getter = make_collector()
     with pytest.raises(FailureError):
-        Collector().x(2, 2)
+        examples.methods.Simple().x(2, 2)
     assert repr(getter()) == expected
 
-    Collector, getter = make_collector(examples.methods.Simple, "two")
-    Collector().x.run(2, 2)
+    getter = make_collector()
+    examples.methods.Simple().x.run(2, 2)
     assert repr(getter()) == expected
 
     expected = """
@@ -100,13 +104,13 @@ Context:
     bar = 4   # Set by SimpleSubstory.before
         """.strip()
 
-    Collector, getter = make_collector(examples.methods.SimpleSubstory, "two")
+    getter = make_collector()
     with pytest.raises(FailureError):
-        Collector().y(3)
+        examples.methods.SimpleSubstory().y(3)
     assert repr(getter()) == expected
 
-    Collector, getter = make_collector(examples.methods.SimpleSubstory, "two")
-    Collector().y.run(3)
+    getter = make_collector()
+    examples.methods.SimpleSubstory().y.run(3)
     assert repr(getter()) == expected
 
     expected = """
@@ -123,13 +127,13 @@ Context:
     bar = 4   # Set by SubstoryDI.before
         """.strip()
 
-    Collector, getter = make_collector(examples.methods.Simple, "two")
+    getter = make_collector()
     with pytest.raises(FailureError):
-        examples.methods.SubstoryDI(Collector().x).y(3)
+        examples.methods.SubstoryDI(examples.methods.Simple().x).y(3)
     assert repr(getter()) == expected
 
-    Collector, getter = make_collector(examples.methods.Simple, "two")
-    examples.methods.SubstoryDI(Collector().x).y.run(3)
+    getter = make_collector()
+    examples.methods.SubstoryDI(examples.methods.Simple().x).y.run(3)
     assert repr(getter()) == expected
 
     # FIXME: Failure with reason.
@@ -213,12 +217,12 @@ Context:
     baz = 4  # Set by Simple.two
         """.strip()
 
-    Collector, getter = make_collector(examples.methods.Simple, "three")
-    Collector().x(1, 3)
+    getter = make_collector()
+    examples.methods.Simple().x(1, 3)
     assert repr(getter()) == expected
 
-    Collector, getter = make_collector(examples.methods.Simple, "three")
-    Collector().x.run(1, 3)
+    getter = make_collector()
+    examples.methods.Simple().x.run(1, 3)
     assert repr(getter()) == expected
 
     expected = """
@@ -237,12 +241,12 @@ Context:
     baz = 4   # Set by SimpleSubstory.two
         """.strip()
 
-    Collector, getter = make_collector(examples.methods.SimpleSubstory, "three")
-    Collector().y(2)
+    getter = make_collector()
+    examples.methods.SimpleSubstory().y(2)
     assert repr(getter()) == expected
 
-    Collector, getter = make_collector(examples.methods.SimpleSubstory, "three")
-    Collector().y.run(2)
+    getter = make_collector()
+    examples.methods.SimpleSubstory().y.run(2)
     assert repr(getter()) == expected
 
     expected = """
@@ -261,12 +265,12 @@ Context:
     baz = 4   # Set by Simple.two
     """.strip()
 
-    Collector, getter = make_collector(examples.methods.Simple, "three")
-    examples.methods.SubstoryDI(Collector().x).y(2)
+    getter = make_collector()
+    examples.methods.SubstoryDI(examples.methods.Simple().x).y(2)
     assert repr(getter()) == expected
 
-    Collector, getter = make_collector(examples.methods.Simple, "three")
-    examples.methods.SubstoryDI(Collector().x).y.run(2)
+    getter = make_collector()
+    examples.methods.SubstoryDI(examples.methods.Simple().x).y.run(2)
     assert repr(getter()) == expected
 
     expected = """
@@ -285,12 +289,12 @@ Context:
     bar = 4   # Set by SubstoryDI.before
         """.strip()
 
-    Collector, getter = make_collector(examples.methods.SubstoryDI, "after")
-    Collector(examples.methods.Pipe().x).y(3)
+    getter = make_collector()
+    examples.methods.SubstoryDI(examples.methods.Pipe().x).y(3)
     assert repr(getter()) == expected
 
-    Collector, getter = make_collector(examples.methods.SubstoryDI, "after")
-    Collector(examples.methods.Pipe().x).y.run(3)
+    getter = make_collector()
+    examples.methods.SubstoryDI(examples.methods.Pipe().x).y.run(3)
     assert repr(getter()) == expected
 
     # Skip.
@@ -305,12 +309,12 @@ Context:
     bar = -1  # Story argument
         """.strip()
 
-    Collector, getter = make_collector(examples.methods.Simple, "two")
-    Collector().x(1, -1)
+    getter = make_collector()
+    examples.methods.Simple().x(1, -1)
     assert repr(getter()) == expected
 
-    Collector, getter = make_collector(examples.methods.Simple, "two")
-    Collector().x.run(1, -1)
+    getter = make_collector()
+    examples.methods.Simple().x.run(1, -1)
     assert repr(getter()) == expected
 
     expected = """
@@ -328,12 +332,12 @@ Context:
     bar = -1   # Set by SimpleSubstory.before
         """.strip()
 
-    Collector, getter = make_collector(examples.methods.SimpleSubstory, "after")
-    Collector().y(-2)
+    getter = make_collector()
+    examples.methods.SimpleSubstory().y(-2)
     assert repr(getter()) == expected
 
-    Collector, getter = make_collector(examples.methods.SimpleSubstory, "after")
-    Collector().y.run(-2)
+    getter = make_collector()
+    examples.methods.SimpleSubstory().y.run(-2)
     assert repr(getter()) == expected
 
     expected = """
@@ -351,12 +355,12 @@ Context:
     bar = -1   # Set by SubstoryDI.before
         """.strip()
 
-    Collector, getter = make_collector(examples.methods.SubstoryDI, "after")
-    Collector(examples.methods.Simple().x).y(-2)
+    getter = make_collector()
+    examples.methods.SubstoryDI(examples.methods.Simple().x).y(-2)
     assert repr(getter()) == expected
 
-    Collector, getter = make_collector(examples.methods.SubstoryDI, "after")
-    Collector(examples.methods.Simple().x).y.run(-2)
+    getter = make_collector()
+    examples.methods.SubstoryDI(examples.methods.Simple().x).y.run(-2)
     assert repr(getter()) == expected
 
     expected = """
@@ -373,12 +377,12 @@ Context:
     bar = 3   # Set by SubstoryDI.before
         """.strip()
 
-    Collector, getter = make_collector(examples.methods.SubstoryDI, "after")
-    Collector(examples.methods.SimpleSubstory().z).y(2)
+    getter = make_collector()
+    examples.methods.SubstoryDI(examples.methods.SimpleSubstory().z).y(2)
     assert repr(getter()) == expected
 
-    Collector, getter = make_collector(examples.methods.SubstoryDI, "after")
-    Collector(examples.methods.SimpleSubstory().z).y.run(2)
+    getter = make_collector()
+    examples.methods.SubstoryDI(examples.methods.SimpleSubstory().z).y.run(2)
     assert repr(getter()) == expected
 
     # Error.
@@ -390,12 +394,12 @@ StepError.x:
 Context()
     """.strip()
 
-    Collector, getter = make_collector(examples.methods.StepError, "one")
+    getter = make_collector()
     with pytest.raises(Exception):
-        Collector().x()
+        examples.methods.StepError().x()
     assert repr(getter()) == expected
 
-    Collector, getter = make_collector(examples.methods.StepError, "one")
+    getter = make_collector()
     with pytest.raises(Exception):
-        Collector().x.run()
+        examples.methods.StepError().x.run()
     assert repr(getter()) == expected

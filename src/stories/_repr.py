@@ -2,6 +2,13 @@ def namespace_representation(ns):
     return ", ".join([k + "=" + repr(v) for k, v in ns.items()])
 
 
+def history_representation(history):
+    result = "\n".join(history.lines)
+    if result.endswith(":"):
+        result = result[:-1] + "()"
+    return result
+
+
 def context_representation(ctx):
 
     name = ctx.__class__.__name__

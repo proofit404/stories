@@ -1,10 +1,13 @@
+from ._repr import history_representation
+
+
 class History(object):
     def __init__(self, cls_name, name):
         self.indent = 1
         self.lines = [cls_name + "." + name + ":"]
 
     def __repr__(self):
-        return "\n".join(self.lines)
+        return history_representation(self)
 
     def before_call(self, method_name):
         self.lines.append("  " * self.indent + method_name)
