@@ -2,6 +2,8 @@
 #
 # [ ] Check what would happen if we define story with @argument('foo')
 #     and call it with Cls().x(a=1)?
+from enum import Enum
+
 from stories import Failure, Result, Skip, Success, argument, story
 
 
@@ -189,3 +191,80 @@ class StepError(object):
 
     def one(self, ctx):
         raise Exception()
+
+
+# Failure reasons.
+
+
+class ReasonWithList(object):
+    @story
+    @argument("foo")
+    @argument("bar")
+    def x(I):
+        I.one
+        I.two
+
+    def one(self, ctx):
+        return Success()
+
+    def two(self, ctx):
+        return Failure("foo")
+
+
+ReasonWithList.x.failures(["foo"])
+
+
+class ReasonWithEnum(object):
+    @story
+    @argument("foo")
+    @argument("bar")
+    def x(I):
+        I.one
+        I.two
+
+    def one(self, ctx):
+        return Success()
+
+    def two(self, ctx):
+        return Failure(Errors.foo)
+
+
+@ReasonWithEnum.x.failures
+class Errors(Enum):
+    foo = 1
+
+
+class SubstoryReasonWithList(ReasonWithList):
+    @story
+    @argument("spam")
+    def y(I):
+        I.start
+        I.before
+        I.x
+
+    def start(self, ctx):
+        return Success(foo=3)
+
+    def before(self, ctx):
+        return Success(bar=5)
+
+
+SubstoryReasonWithList.y.failures(["foo"])
+
+
+class SubstoryReasonWithEnum(ReasonWithEnum):
+    @story
+    @argument("spam")
+    def y(I):
+        I.start
+        I.before
+        I.x
+
+    def start(self, ctx):
+        return Success(foo=3)
+
+    def before(self, ctx):
+        return Success(bar=5)
+
+
+SubstoryReasonWithEnum.y.failures(Errors)

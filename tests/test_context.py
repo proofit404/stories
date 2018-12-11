@@ -136,49 +136,93 @@ Context:
     examples.methods.SubstoryDI(examples.methods.Simple().x).y.run(3)
     assert repr(getter()) == expected
 
-    # FIXME: Failure with reason.
-    #
-    #     expected = """
-    # Simple.x:
-    #   one
-    #   two (failed: "'foo' is too big")
-    #
-    # Context:
-    #     foo = 3  # Story argument
-    #     bar = 2  # Story argument
-    #         """.strip()
-    #
-    #     Collector, getter = make_collector(examples.methods.Simple, "two")
-    #     with pytest.raises(FailureError):
-    #         Collector().x(3, 2)
-    #     assert repr(getter()) == expected
-    #
-    #     Collector, getter = make_collector(examples.methods.Simple, "two")
-    #     Collector().x.run(3, 2)
-    #     assert repr(getter()) == expected
-    #
-    #     expected = """
-    # SimpleSubstory.y:
-    #   start
-    #   before
-    #   x
-    #     one
-    #     two (failed: "'foo' is too big")
-    #
-    # Context:
-    #     spam = 4  # Story argument
-    #     foo = 3   # Set by SimpleSubstory.start
-    #     bar = 5   # Set by SimpleSubstory.before
-    #         """.strip()
-    #
-    #     Collector, getter = make_collector(examples.methods.SimpleSubstory, "two")
-    #     with pytest.raises(FailureError):
-    #         Collector().y(4)
-    #     assert repr(getter()) == expected
-    #
-    #     Collector, getter = make_collector(examples.methods.SimpleSubstory, "two")
-    #     Collector().y.run(4)
-    #     assert repr(getter()) == expected
+    # Failure with reason.
+
+    expected = """
+ReasonWithList.x:
+  one
+  two (failed: 'foo')
+
+Context:
+    foo = 3  # Story argument
+    bar = 2  # Story argument
+    """.strip()
+
+    getter = make_collector()
+    with pytest.raises(FailureError):
+        examples.methods.ReasonWithList().x(3, 2)
+    assert repr(getter()) == expected
+
+    getter = make_collector()
+    examples.methods.ReasonWithList().x.run(3, 2)
+    assert repr(getter()) == expected
+
+    expected = """
+ReasonWithEnum.x:
+  one
+  two (failed: <Errors.foo: 1>)
+
+Context:
+    foo = 3  # Story argument
+    bar = 2  # Story argument
+    """.strip()
+
+    getter = make_collector()
+    with pytest.raises(FailureError):
+        examples.methods.ReasonWithEnum().x(3, 2)
+    assert repr(getter()) == expected
+
+    getter = make_collector()
+    examples.methods.ReasonWithEnum().x.run(3, 2)
+    assert repr(getter()) == expected
+
+    expected = """
+SubstoryReasonWithList.y:
+  start
+  before
+  x
+    one
+    two (failed: 'foo')
+
+Context:
+    spam = 4  # Story argument
+    foo = 3   # Set by SubstoryReasonWithList.start
+    bar = 5   # Set by SubstoryReasonWithList.before
+    """.strip()
+
+    getter = make_collector()
+    with pytest.raises(FailureError):
+        examples.methods.SubstoryReasonWithList().y(4)
+    assert repr(getter()) == expected
+
+    getter = make_collector()
+    examples.methods.SubstoryReasonWithList().y.run(4)
+    assert repr(getter()) == expected
+
+    expected = """
+SubstoryReasonWithEnum.y:
+  start
+  before
+  x
+    one
+    two (failed: <Errors.foo: 1>)
+
+Context:
+    spam = 4  # Story argument
+    foo = 3   # Set by SubstoryReasonWithEnum.start
+    bar = 5   # Set by SubstoryReasonWithEnum.before
+    """.strip()
+
+    getter = make_collector()
+    with pytest.raises(FailureError):
+        examples.methods.SubstoryReasonWithEnum().y(4)
+    assert repr(getter()) == expected
+
+    getter = make_collector()
+    examples.methods.SubstoryReasonWithEnum().y.run(4)
+    assert repr(getter()) == expected
+
+    # TODO:
     #
     #     expected = """
     # SubstoryDI.y:
@@ -194,13 +238,13 @@ Context:
     #     bar = 5   # Set by SubstoryDI.before
     #         """.strip()
     #
-    #     Collector, getter = make_collector(examples.methods.Simple, "two")
+    #     getter = make_collector()
     #     with pytest.raises(FailureError):
-    #         examples.methods.SubstoryDI(Collector().x).y(4)
+    #         examples.methods.SubstoryDI(examples.methods.Simple().x).y(4)
     #     assert repr(getter()) == expected
     #
-    #     Collector, getter = make_collector(examples.methods.Simple, "two")
-    #     examples.methods.SubstoryDI(Collector().x).y.run(4)
+    #     getter = make_collector()
+    #     examples.methods.SubstoryDI(examples.methods.Simple().x).y.run(4)
     #     assert repr(getter()) == expected
 
     # Result.
