@@ -14,7 +14,7 @@ def collect_story(f):
     return calls
 
 
-def wrap_story(is_story, collected, obj, protocol, cls_name, method_name, ctx):
+def wrap_story(is_story, collected, obj, protocol, cls_name, method_name):
 
     # FIXME: `cls_name` and `name` should be encapsulated somewhere.
     # This arguments list is insane.
@@ -31,7 +31,7 @@ def wrap_story(is_story, collected, obj, protocol, cls_name, method_name, ctx):
         #
         # story -> normal substory -> mismatched substory
         sub_methods = wrap_story(
-            is_story, attr.collected, attr.obj, protocol, cls_name, method_name, ctx
+            is_story, attr.collected, attr.obj, protocol, cls_name, method_name
         )
         if not sub_methods:
             continue
