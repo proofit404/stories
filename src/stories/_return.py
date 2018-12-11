@@ -14,7 +14,9 @@ class Success(object):
         self.kwargs = kwargs
 
     def __repr__(self):
-        return self.__class__.__name__ + namespace_representation(self.kwargs)
+        return (
+            self.__class__.__name__ + "(" + namespace_representation(self.kwargs) + ")"
+        )
 
 
 class Failure(object):
