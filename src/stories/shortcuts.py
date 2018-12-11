@@ -1,12 +1,11 @@
-from ._story import Story
+from ._mounted import is_story
 
 
 def failures_in(cls):
-    # FIXME: Test me with Enum decorator and list argument.
     def setter(failures):
         for attrname in dir(cls):
             attribute = getattr(cls, attrname)
-            if isinstance(attribute, Story):
+            if is_story(attribute):
                 attribute.failures(failures)
         return failures
 

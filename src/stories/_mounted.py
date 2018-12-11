@@ -78,4 +78,4 @@ class MountedStory(object):
 
 
 def is_story(attribute):
-    return callable(attribute) and type(attribute) is MountedStory
+    return type(attribute) in {ClassMountedStory, MountedStory}
