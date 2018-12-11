@@ -12,6 +12,14 @@ class Story(object):
 
     def __get__(self, obj, cls):
         if obj is None:
+            # FIXME: Test we can set failures from global namespace.
+            #
+            # @ClassName.story_method.failures
+            # class Errors(Enum):
+            #     foo = 1
+            #     bar = 2
+            #
+            # ClassName.story_method.failures(["foo", "bar"])
             return self
         else:
             return MountedStory(

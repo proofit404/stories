@@ -39,9 +39,6 @@ class Simple(object):
         return Success()
 
     def two(self, ctx):
-        if ctx.foo > 2:
-            return Failure("'foo' is too big")
-
         if ctx.foo > 1:
             return Failure()
 
@@ -52,9 +49,6 @@ class Simple(object):
 
     def three(self, ctx):
         return Result(ctx.bar - ctx.baz)
-
-
-Simple.x.failures(["'foo' is too big"])
 
 
 class Pipe(object):
