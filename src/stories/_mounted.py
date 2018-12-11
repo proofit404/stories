@@ -1,6 +1,6 @@
 from ._collect import wrap_story
-from ._context import Context, validate_arguments
-from ._contract import Contract
+from ._context import Context
+from ._contract import Contract, validate_arguments
 from ._exec import function
 from ._history import History
 from ._repr import story_representation

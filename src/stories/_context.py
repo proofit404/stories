@@ -28,15 +28,3 @@ class Context(object):
         scope = set(self.ns)
         attributes = sorted(parent | current | scope)
         return attributes
-
-
-def validate_arguments(arguments, args, kwargs):
-
-    assert not (args and kwargs)
-
-    if args:
-        assert len(arguments) == len(args)
-        return [(k, v) for k, v in zip(arguments, args)]
-
-    assert set(arguments) == set(kwargs)
-    return [(k, kwargs[k]) for k in arguments]
