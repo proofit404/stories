@@ -1,9 +1,11 @@
 # TODO:
 #
-# [ ] Check incoming reasons type in the StoryFactory.
+# [ ] Check incoming reasons type in the 'failures' story method.
 #
 # [ ] Substory can not use failures from the protocol superset of the
 #     parent story.
+#
+# [ ] Protocol errors should be visible in the context representation.
 from enum import Enum
 
 from stories import Failure, Success, story

@@ -345,7 +345,7 @@ Failure("'foo' is too big") can not be used in a story without failure protocol.
 
 Function returned value: ReasonWithSimple.two
 
-Use StoryFactory to define failure protocol.
+Use 'failures' story method to define failure protocol.
 """.strip()
 
     with pytest.raises(FailureProtocolError) as exc_info:
@@ -361,7 +361,7 @@ Failure("'foo' is too big") can not be used in a story without failure protocol.
 
 Function returned value: ReasonWithSimpleSubstory.two
 
-Use StoryFactory to define failure protocol.
+Use 'failures' story method to define failure protocol.
 """.strip()
 
     with pytest.raises(FailureProtocolError) as exc_info:
@@ -377,7 +377,7 @@ Failure("'foo' is too big") can not be used in a story without failure protocol.
 
 Function returned value: ReasonWithSimple.two
 
-Use StoryFactory to define failure protocol.
+Use 'failures' story method to define failure protocol.
 """.strip()
 
     with pytest.raises(FailureProtocolError) as exc_info:
@@ -504,7 +504,7 @@ def test_summary_reason_without_protocol():
 
 Story returned result: SummaryWithSimple.z
 
-Use StoryFactory to define failure protocol.
+Use 'failures' story method to define failure protocol.
 """.strip()
 
     result = examples.failure_reasons.SummaryWithSimple().z.run()
@@ -518,7 +518,7 @@ Use StoryFactory to define failure protocol.
 
 Story returned result: SummaryWithSimpleSubstory.c
 
-Use StoryFactory to define failure protocol.
+Use 'failures' story method to define failure protocol.
 """.strip()
 
     result = examples.failure_reasons.SummaryWithSimpleSubstory().c.run()
@@ -532,7 +532,7 @@ Use StoryFactory to define failure protocol.
 
 Story returned result: SummaryWithSubstoryDI.c
 
-Use StoryFactory to define failure protocol.
+Use 'failures' story method to define failure protocol.
 """.strip()
 
     result = examples.failure_reasons.SummaryWithSubstoryDI().c.run()

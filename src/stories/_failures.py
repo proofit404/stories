@@ -156,7 +156,7 @@ Failure({reason!r}) can not be used in a story without failure protocol.
 
 Function returned value: {cls}.{method}
 
-Use StoryFactory to define failure protocol.
+Use 'failures' story method to define failure protocol.
 """.strip()
 
 
@@ -174,7 +174,7 @@ null_summary_template = """
 
 Story returned result: {cls}.{method}
 
-Use StoryFactory to define failure protocol.
+Use 'failures' story method to define failure protocol.
 """.strip()
 
 
