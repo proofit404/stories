@@ -1,7 +1,7 @@
 from collections import OrderedDict
 
 from ._marker import undefined
-from ._repr import context_representation
+from ._repr import context_representation, history_representation
 
 
 class Context(object):
@@ -20,7 +20,9 @@ class Context(object):
         return iter(self.ns)
 
     def __repr__(self):
-        return "\n\n".join([repr(self.history), context_representation(self)])
+        return (
+            history_representation(self.history) + "\n\n" + context_representation(self)
+        )
 
     def __dir__(self):
         parent = set(dir(undefined))
