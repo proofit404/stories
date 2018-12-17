@@ -1,4 +1,4 @@
-from stories import Success, argument, story
+from stories import Success, arguments, story
 
 
 # Method tries to override existed context key.
@@ -6,8 +6,7 @@ from stories import Success, argument, story
 
 class ExistedKey(object):
     @story
-    @argument("foo")
-    @argument("bar")
+    @arguments("foo", "bar")
     def x(I):
         I.one
 

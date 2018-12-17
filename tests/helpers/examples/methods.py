@@ -1,10 +1,10 @@
 # TODO:
 #
-# [ ] Check what would happen if we define story with @argument('foo')
+# [ ] Check what would happen if we define story with @arguments('foo')
 #     and call it with Cls().x(a=1)?
 from enum import Enum
 
-from stories import Failure, Result, Skip, Success, argument, story
+from stories import Failure, Result, Skip, Success, arguments, story
 
 
 # Empty story.
@@ -30,8 +30,7 @@ class EmptySubstory(Empty):
 
 class Simple(object):
     @story
-    @argument("foo")
-    @argument("bar")
+    @arguments("foo", "bar")
     def x(I):
         I.one
         I.two
@@ -87,7 +86,7 @@ class Pipe(object):
 
 class SimpleSubstory(Simple):
     @story
-    @argument("spam")
+    @arguments("spam")
     def y(I):
         I.start
         I.before
@@ -104,8 +103,7 @@ class SimpleSubstory(Simple):
         return Result(ctx.spam * 2)
 
     @story
-    @argument("foo")
-    @argument("bar")
+    @arguments("foo", "bar")
     def z(I):
         I.first
         I.x
@@ -122,7 +120,7 @@ class SubstoryDI(object):
         self.x = x
 
     @story
-    @argument("spam")
+    @arguments("spam")
     def y(I):
         I.start
         I.before
@@ -173,7 +171,7 @@ class ImplementationDI(object):
         self.f = f
 
     @story
-    @argument("foo")
+    @arguments("foo")
     def x(I):
         I.one
 
@@ -198,8 +196,7 @@ class StepError(object):
 
 class ReasonWithList(object):
     @story
-    @argument("foo")
-    @argument("bar")
+    @arguments("foo", "bar")
     def x(I):
         I.one
         I.two
@@ -216,8 +213,7 @@ ReasonWithList.x.failures(["foo"])
 
 class ReasonWithEnum(object):
     @story
-    @argument("foo")
-    @argument("bar")
+    @arguments("foo", "bar")
     def x(I):
         I.one
         I.two
@@ -236,7 +232,7 @@ class Errors(Enum):
 
 class SubstoryReasonWithList(ReasonWithList):
     @story
-    @argument("spam")
+    @arguments("spam")
     def y(I):
         I.start
         I.before
@@ -254,7 +250,7 @@ SubstoryReasonWithList.y.failures(["foo"])
 
 class SubstoryReasonWithEnum(ReasonWithEnum):
     @story
-    @argument("spam")
+    @arguments("spam")
     def y(I):
         I.start
         I.before

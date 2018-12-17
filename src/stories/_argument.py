@@ -1,8 +1,6 @@
-def argument(*name):
+def arguments(*names):
     def decorator(f):
-        if not hasattr(f, "arguments"):
-            f.arguments = []
-        f.arguments = list(reversed(name)) + f.arguments
+        f.arguments = list(names)
         return f
 
     return decorator
