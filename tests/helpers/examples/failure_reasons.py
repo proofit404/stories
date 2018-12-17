@@ -25,6 +25,30 @@ from stories import Failure, Success, story
 # Mixins.
 
 
+class ParentWithList(object):
+    @story
+    def a(I):
+        I.before
+        I.x
+        I.after
+
+    a.failures(["foo", "bar", "baz"])
+
+
+class ParentWithEnum(object):
+    @story
+    def a(I):
+        I.before
+        I.x
+        I.after
+
+    @a.failures
+    class Errors(Enum):
+        foo = 1
+        bar = 2
+        baz = 3
+
+
 class CommonSimple(object):
 
     # Wrong reason.
@@ -68,13 +92,7 @@ class SimpleWithList(CommonSimple):
     errors = z.failures(y.failures(x.failures(["foo", "bar", "baz"])))
 
 
-class SimpleSubstoryWithList(CommonSubstory, SimpleWithList):
-    @story
-    def a(I):
-        I.before
-        I.x
-        I.after
-
+class SimpleSubstoryWithList(ParentWithList, CommonSubstory, SimpleWithList):
     @story
     def b(I):
         I.before
@@ -87,22 +105,16 @@ class SimpleSubstoryWithList(CommonSubstory, SimpleWithList):
         I.z
         I.after
 
-    errors = c.failures(b.failures(a.failures(["foo", "bar", "baz"])))
+    errors = c.failures(b.failures(["foo", "bar", "baz"]))
 
 
-class SubstoryDIWithList(CommonSubstory):
+class SubstoryDIWithList(ParentWithList, CommonSubstory):
     def __init__(self):
         self.x = SimpleWithList().x
         self.y = SimpleWithList().y
         self.z = SimpleWithList().z
 
     @story
-    def a(I):
-        I.before
-        I.x
-        I.after
-
-    @story
     def b(I):
         I.before
         I.y
@@ -114,7 +126,7 @@ class SubstoryDIWithList(CommonSubstory):
         I.z
         I.after
 
-    errors = c.failures(b.failures(a.failures(["foo", "bar", "baz"])))
+    errors = c.failures(b.failures(["foo", "bar", "baz"]))
 
 
 class SimpleWithEnum(CommonSimple):
@@ -142,13 +154,7 @@ class SimpleWithEnum(CommonSimple):
         baz = 3
 
 
-class SimpleSubstoryWithEnum(CommonSubstory, SimpleWithEnum):
-    @story
-    def a(I):
-        I.before
-        I.x
-        I.after
-
+class SimpleSubstoryWithEnum(ParentWithEnum, CommonSubstory, SimpleWithEnum):
     @story
     def b(I):
         I.before
@@ -161,7 +167,6 @@ class SimpleSubstoryWithEnum(CommonSubstory, SimpleWithEnum):
         I.z
         I.after
 
-    @a.failures
     @b.failures
     @c.failures
     class Errors(Enum):
@@ -170,17 +175,11 @@ class SimpleSubstoryWithEnum(CommonSubstory, SimpleWithEnum):
         baz = 3
 
 
-class SubstoryDIWithEnum(CommonSubstory):
+class SubstoryDIWithEnum(ParentWithEnum, CommonSubstory):
     def __init__(self):
         self.x = SimpleWithEnum().x
         self.y = SimpleWithEnum().y
         self.z = SimpleWithEnum().z
-
-    @story
-    def a(I):
-        I.before
-        I.x
-        I.after
 
     @story
     def b(I):
@@ -194,7 +193,6 @@ class SubstoryDIWithEnum(CommonSubstory):
         I.z
         I.after
 
-    @a.failures
     @b.failures
     @c.failures
     class Errors(Enum):
@@ -366,55 +364,19 @@ class ExpandSimple(object):
         return Success()
 
 
-class ExpandSimpleSubstoryWithList(CommonSubstory, ExpandSimple):
-    @story
-    def a(I):
-        I.before
-        I.x
-        I.after
-
-    errors = a.failures(["foo", "bar", "baz"])
+class ExpandSimpleSubstoryWithList(ParentWithList, CommonSubstory, ExpandSimple):
+    pass
 
 
-class ExpandSubstoryDIWithList(CommonSubstory):
+class ExpandSubstoryDIWithList(ParentWithList, CommonSubstory):
     def __init__(self):
         self.x = ExpandSimple().x
 
-    @story
-    def a(I):
-        I.before
-        I.x
-        I.after
 
-    errors = a.failures(["foo", "bar", "baz"])
+class ExpandSimpleSubstoryWithEnum(ParentWithEnum, CommonSubstory, ExpandSimple):
+    pass
 
 
-class ExpandSimpleSubstoryWithEnum(CommonSubstory, ExpandSimple):
-    @story
-    def a(I):
-        I.before
-        I.x
-        I.after
-
-    @a.failures
-    class Errors(Enum):
-        foo = 1
-        bar = 2
-        baz = 3
-
-
-class ExpandSubstoryDIWithEnum(CommonSubstory):
+class ExpandSubstoryDIWithEnum(ParentWithEnum, CommonSubstory):
     def __init__(self):
         self.x = ExpandSimple().x
-
-    @story
-    def a(I):
-        I.before
-        I.x
-        I.after
-
-    @a.failures
-    class Errors(Enum):
-        foo = 1
-        bar = 2
-        baz = 3
