@@ -2,7 +2,7 @@ import enum
 
 import pytest
 
-import examples
+import examples.failure_reasons as f
 from stories.exceptions import FailureError, FailureProtocolError
 
 
@@ -14,12 +14,15 @@ def test_reasons_defined_with_list():
 
     # Simple.
 
+    class T(f.ChildWithList, f.StringMethod):
+        pass
+
     with pytest.raises(FailureError) as exc_info:
-        examples.failure_reasons.SimpleWithList().x()
+        T().x()
     assert exc_info.value.reason == "foo"
     assert repr(exc_info.value) == "FailureError('foo')"
 
-    result = examples.failure_reasons.SimpleWithList().x.run()
+    result = T().x.run()
     assert not result.is_success
     assert result.is_failure
     assert result.failure_reason == "foo"
@@ -27,12 +30,15 @@ def test_reasons_defined_with_list():
 
     # Substory inheritance.
 
+    class Q(f.ParentWithList, f.ParentMethod, T):
+        pass
+
     with pytest.raises(FailureError) as exc_info:
-        examples.failure_reasons.SimpleSubstoryWithList().a()
+        Q().a()
     assert exc_info.value.reason == "foo"
     assert repr(exc_info.value) == "FailureError('foo')"
 
-    result = examples.failure_reasons.SimpleSubstoryWithList().a.run()
+    result = Q().a.run()
     assert not result.is_success
     assert result.is_failure
     assert result.failure_reason == "foo"
@@ -40,12 +46,16 @@ def test_reasons_defined_with_list():
 
     # Substory DI.
 
+    class J(f.ParentWithList, f.ParentMethod):
+        def __init__(self):
+            self.x = T().x
+
     with pytest.raises(FailureError) as exc_info:
-        examples.failure_reasons.SubstoryDIWithList().a()
+        J().a()
     assert exc_info.value.reason == "foo"
     assert repr(exc_info.value) == "FailureError('foo')"
 
-    result = examples.failure_reasons.SubstoryDIWithList().a.run()
+    result = J().a.run()
     assert not result.is_success
     assert result.is_failure
     assert result.failure_reason == "foo"
@@ -57,66 +67,52 @@ def test_reasons_defined_with_enum():
 
     # Simple.
 
+    class T(f.ChildWithEnum, f.EnumMethod):
+        pass
+
     with pytest.raises(FailureError) as exc_info:
-        examples.failure_reasons.SimpleWithEnum().x()
-    assert (
-        exc_info.value.reason
-        is examples.failure_reasons.SimpleWithEnum().x.failures.foo
-    )
+        T().x()
+    assert exc_info.value.reason is T().x.failures.foo
     assert repr(exc_info.value) == "FailureError(<Errors.foo: 1>)"
 
-    result = examples.failure_reasons.SimpleWithEnum().x.run()
+    result = T().x.run()
     assert not result.is_success
     assert result.is_failure
-    assert (
-        result.failure_reason
-        is examples.failure_reasons.SimpleWithEnum().x.failures.foo
-    )
-    assert result.failed_because(
-        examples.failure_reasons.SimpleWithEnum().x.failures.foo
-    )
+    assert result.failure_reason is T().x.failures.foo
+    assert result.failed_because(T().x.failures.foo)
 
     # Substory inheritance.
 
+    class Q(f.ParentWithEnum, f.ParentMethod, T):
+        pass
+
     with pytest.raises(FailureError) as exc_info:
-        examples.failure_reasons.SimpleSubstoryWithEnum().a()
-    assert (
-        exc_info.value.reason
-        is examples.failure_reasons.SimpleSubstoryWithEnum().a.failures.foo
-    )
+        Q().a()
+    assert exc_info.value.reason is Q().a.failures.foo
     assert repr(exc_info.value) == "FailureError(<Errors.foo: 1>)"
 
-    result = examples.failure_reasons.SimpleSubstoryWithEnum().a.run()
+    result = Q().a.run()
     assert not result.is_success
     assert result.is_failure
-    assert (
-        result.failure_reason
-        is examples.failure_reasons.SimpleSubstoryWithEnum().a.failures.foo
-    )
-    assert result.failed_because(
-        examples.failure_reasons.SimpleSubstoryWithEnum().a.failures.foo
-    )
+    assert result.failure_reason is Q().a.failures.foo
+    assert result.failed_because(Q().a.failures.foo)
 
     # Substory DI.
 
+    class J(f.ParentWithEnum, f.ParentMethod):
+        def __init__(self):
+            self.x = T().x
+
     with pytest.raises(FailureError) as exc_info:
-        examples.failure_reasons.SubstoryDIWithEnum().a()
-    assert (
-        exc_info.value.reason
-        is examples.failure_reasons.SubstoryDIWithEnum().a.failures.foo
-    )
+        J().a()
+    assert exc_info.value.reason is J().a.failures.foo
     assert repr(exc_info.value) == "FailureError(<Errors.foo: 1>)"
 
-    result = examples.failure_reasons.SubstoryDIWithEnum().a.run()
+    result = J().a.run()
     assert not result.is_success
     assert result.is_failure
-    assert (
-        result.failure_reason
-        is examples.failure_reasons.SubstoryDIWithEnum().a.failures.foo
-    )
-    assert result.failed_because(
-        examples.failure_reasons.SubstoryDIWithEnum().a.failures.foo
-    )
+    assert result.failure_reason is J().a.failures.foo
+    assert result.failed_because(J().a.failures.foo)
 
 
 def test_wrong_reason_with_list():
@@ -132,15 +128,18 @@ Failure("'foo' is too big") failure reason is not allowed by current protocol.
 
 Available failures are: 'foo', 'bar', 'baz'
 
-Function returned value: SimpleWithList.two
+Function returned value: T.one
     """.strip()
 
+    class T(f.ChildWithList, f.WrongMethod):
+        pass
+
     with pytest.raises(FailureProtocolError) as exc_info:
-        examples.failure_reasons.SimpleWithList().y()
+        T().x()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        examples.failure_reasons.SimpleWithList().y.run()
+        T().x.run()
     assert str(exc_info.value) == expected
 
     # Substory inheritance.
@@ -150,15 +149,18 @@ Failure("'foo' is too big") failure reason is not allowed by current protocol.
 
 Available failures are: 'foo', 'bar', 'baz'
 
-Function returned value: SimpleSubstoryWithList.two
+Function returned value: Q.one
     """.strip()
 
+    class Q(f.ParentWithList, f.ParentMethod, T):
+        pass
+
     with pytest.raises(FailureProtocolError) as exc_info:
-        examples.failure_reasons.SimpleSubstoryWithList().b()
+        Q().a()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        examples.failure_reasons.SimpleSubstoryWithList().b.run()
+        Q().a.run()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -168,15 +170,19 @@ Failure("'foo' is too big") failure reason is not allowed by current protocol.
 
 Available failures are: 'foo', 'bar', 'baz'
 
-Function returned value: SimpleWithList.two
+Function returned value: T.one
     """.strip()
 
+    class J(f.ParentWithList, f.ParentMethod):
+        def __init__(self):
+            self.x = T().x
+
     with pytest.raises(FailureProtocolError) as exc_info:
-        examples.failure_reasons.SubstoryDIWithList().b()
+        J().a()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        examples.failure_reasons.SubstoryDIWithList().b.run()
+        J().a.run()
     assert str(exc_info.value) == expected
 
 
@@ -193,15 +199,18 @@ Failure("'foo' is too big") failure reason is not allowed by current protocol.
 
 Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
 
-Function returned value: SimpleWithEnum.two
+Function returned value: T.one
     """.strip()
 
+    class T(f.ChildWithEnum, f.WrongMethod):
+        pass
+
     with pytest.raises(FailureProtocolError) as exc_info:
-        examples.failure_reasons.SimpleWithEnum().y()
+        T().x()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        examples.failure_reasons.SimpleWithEnum().y.run()
+        T().x.run()
     assert str(exc_info.value) == expected
 
     # Substory inheritance.
@@ -211,15 +220,18 @@ Failure("'foo' is too big") failure reason is not allowed by current protocol.
 
 Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
 
-Function returned value: SimpleSubstoryWithEnum.two
+Function returned value: Q.one
     """.strip()
 
+    class Q(f.ParentWithEnum, f.ParentMethod, T):
+        pass
+
     with pytest.raises(FailureProtocolError) as exc_info:
-        examples.failure_reasons.SimpleSubstoryWithEnum().b()
+        Q().a()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        examples.failure_reasons.SimpleSubstoryWithEnum().b.run()
+        Q().a.run()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -229,15 +241,19 @@ Failure("'foo' is too big") failure reason is not allowed by current protocol.
 
 Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
 
-Function returned value: SimpleWithEnum.two
+Function returned value: T.one
     """.strip()
 
+    class J(f.ParentWithEnum, f.ParentMethod):
+        def __init__(self):
+            self.x = T().x
+
     with pytest.raises(FailureProtocolError) as exc_info:
-        examples.failure_reasons.SubstoryDIWithEnum().b()
+        J().a()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        examples.failure_reasons.SubstoryDIWithEnum().b.run()
+        J().a.run()
     assert str(exc_info.value) == expected
 
 
@@ -254,17 +270,20 @@ Failure() can not be used in a story with failure protocol.
 
 Available failures are: 'foo', 'bar', 'baz'
 
-Function returned value: SimpleWithList.three
+Function returned value: T.one
 
 Use one of them as Failure() argument.
     """.strip()
 
+    class T(f.ChildWithList, f.NullMethod):
+        pass
+
     with pytest.raises(FailureProtocolError) as exc_info:
-        examples.failure_reasons.SimpleWithList().z()
+        T().x()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        examples.failure_reasons.SimpleWithList().z.run()
+        T().x.run()
     assert str(exc_info.value) == expected
 
     # Substory inheritance.
@@ -274,17 +293,20 @@ Failure() can not be used in a story with failure protocol.
 
 Available failures are: 'foo', 'bar', 'baz'
 
-Function returned value: SimpleSubstoryWithList.three
+Function returned value: Q.one
 
 Use one of them as Failure() argument.
     """.strip()
 
+    class Q(f.ParentWithList, f.ParentMethod, T):
+        pass
+
     with pytest.raises(FailureProtocolError) as exc_info:
-        examples.failure_reasons.SimpleSubstoryWithList().c()
+        Q().a()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        examples.failure_reasons.SimpleSubstoryWithList().c.run()
+        Q().a.run()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -294,17 +316,21 @@ Failure() can not be used in a story with failure protocol.
 
 Available failures are: 'foo', 'bar', 'baz'
 
-Function returned value: SimpleWithList.three
+Function returned value: T.one
 
 Use one of them as Failure() argument.
     """.strip()
 
+    class J(f.ParentWithList, f.ParentMethod):
+        def __init__(self):
+            self.x = T().x
+
     with pytest.raises(FailureProtocolError) as exc_info:
-        examples.failure_reasons.SubstoryDIWithList().c()
+        J().a()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        examples.failure_reasons.SubstoryDIWithList().c.run()
+        J().a.run()
     assert str(exc_info.value) == expected
 
 
@@ -321,17 +347,20 @@ Failure() can not be used in a story with failure protocol.
 
 Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
 
-Function returned value: SimpleWithEnum.three
+Function returned value: T.one
 
 Use one of them as Failure() argument.
     """.strip()
 
+    class T(f.ChildWithEnum, f.NullMethod):
+        pass
+
     with pytest.raises(FailureProtocolError) as exc_info:
-        examples.failure_reasons.SimpleWithEnum().z()
+        T().x()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        examples.failure_reasons.SimpleWithEnum().z.run()
+        T().x.run()
     assert str(exc_info.value) == expected
 
     # Substory inheritance.
@@ -341,17 +370,20 @@ Failure() can not be used in a story with failure protocol.
 
 Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
 
-Function returned value: SimpleSubstoryWithEnum.three
+Function returned value: Q.one
 
 Use one of them as Failure() argument.
     """.strip()
 
+    class Q(f.ParentWithEnum, f.ParentMethod, T):
+        pass
+
     with pytest.raises(FailureProtocolError) as exc_info:
-        examples.failure_reasons.SimpleSubstoryWithEnum().c()
+        Q().a()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        examples.failure_reasons.SimpleSubstoryWithEnum().c.run()
+        Q().a.run()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -361,17 +393,21 @@ Failure() can not be used in a story with failure protocol.
 
 Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
 
-Function returned value: SimpleWithEnum.three
+Function returned value: T.one
 
 Use one of them as Failure() argument.
     """.strip()
 
+    class J(f.ParentWithEnum, f.ParentMethod):
+        def __init__(self):
+            self.x = T().x
+
     with pytest.raises(FailureProtocolError) as exc_info:
-        examples.failure_reasons.SubstoryDIWithEnum().c()
+        J().a()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        examples.failure_reasons.SubstoryDIWithEnum().c.run()
+        J().a.run()
     assert str(exc_info.value) == expected
 
 
@@ -386,17 +422,20 @@ def test_reason_without_protocol():
     expected = """
 Failure("'foo' is too big") can not be used in a story without failure protocol.
 
-Function returned value: ReasonWithSimple.two
+Function returned value: T.one
 
 Use 'failures' story method to define failure protocol.
 """.strip()
 
+    class T(f.ChildWithNull, f.WrongMethod):
+        pass
+
     with pytest.raises(FailureProtocolError) as exc_info:
-        examples.failure_reasons.ReasonWithSimple().y()
+        T().x()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        examples.failure_reasons.ReasonWithSimple().y.run()
+        T().x.run()
     assert str(exc_info.value) == expected
 
     # Substory inheritance.
@@ -404,17 +443,20 @@ Use 'failures' story method to define failure protocol.
     expected = """
 Failure("'foo' is too big") can not be used in a story without failure protocol.
 
-Function returned value: ReasonWithSimpleSubstory.two
+Function returned value: Q.one
 
 Use 'failures' story method to define failure protocol.
 """.strip()
 
+    class Q(f.ParentWithNull, f.ParentMethod, T):
+        pass
+
     with pytest.raises(FailureProtocolError) as exc_info:
-        examples.failure_reasons.ReasonWithSimpleSubstory().b()
+        Q().a()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        examples.failure_reasons.ReasonWithSimpleSubstory().b.run()
+        Q().a.run()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -422,17 +464,21 @@ Use 'failures' story method to define failure protocol.
     expected = """
 Failure("'foo' is too big") can not be used in a story without failure protocol.
 
-Function returned value: ReasonWithSimple.two
+Function returned value: T.one
 
 Use 'failures' story method to define failure protocol.
 """.strip()
 
+    class J(f.ParentWithNull, f.ParentMethod):
+        def __init__(self):
+            self.x = T().x
+
     with pytest.raises(FailureProtocolError) as exc_info:
-        examples.failure_reasons.ReasonWithSubstoryDI().b()
+        J().a()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        examples.failure_reasons.ReasonWithSubstoryDI().b.run()
+        J().a.run()
     assert str(exc_info.value) == expected
 
 
@@ -454,10 +500,13 @@ def test_summary_wrong_reason_with_list():
 
 Available failures are: 'foo', 'bar', 'baz'
 
-Story returned result: SimpleWithList.x
+Story returned result: T.x
 """.strip()
 
-    result = examples.failure_reasons.SimpleWithList().x.run()
+    class T(f.ChildWithList, f.StringMethod):
+        pass
+
+    result = T().x.run()
 
     with pytest.raises(FailureProtocolError) as exc_info:
         result.failed_because("'foo' is too big")
@@ -470,10 +519,13 @@ Story returned result: SimpleWithList.x
 
 Available failures are: 'foo', 'bar', 'baz'
 
-Story returned result: SimpleSubstoryWithList.a
+Story returned result: Q.a
 """.strip()
 
-    result = examples.failure_reasons.SimpleSubstoryWithList().a.run()
+    class Q(f.ParentWithList, f.ParentMethod, T):
+        pass
+
+    result = Q().a.run()
 
     with pytest.raises(FailureProtocolError) as exc_info:
         result.failed_because("'foo' is too big")
@@ -486,10 +538,14 @@ Story returned result: SimpleSubstoryWithList.a
 
 Available failures are: 'foo', 'bar', 'baz'
 
-Story returned result: SubstoryDIWithList.a
+Story returned result: J.a
 """.strip()
 
-    result = examples.failure_reasons.SubstoryDIWithList().a.run()
+    class J(f.ParentWithList, f.ParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    result = J().a.run()
 
     with pytest.raises(FailureProtocolError) as exc_info:
         result.failed_because("'foo' is too big")
@@ -511,10 +567,13 @@ def test_summary_wrong_reason_with_enum():
 
 Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
 
-Story returned result: SimpleWithEnum.x
+Story returned result: T.x
 """.strip()
 
-    result = examples.failure_reasons.SimpleWithEnum().x.run()
+    class T(f.ChildWithEnum, f.EnumMethod):
+        pass
+
+    result = T().x.run()
 
     with pytest.raises(FailureProtocolError) as exc_info:
         result.failed_because("'foo' is too big")
@@ -527,10 +586,13 @@ Story returned result: SimpleWithEnum.x
 
 Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
 
-Story returned result: SimpleSubstoryWithEnum.a
+Story returned result: Q.a
 """.strip()
 
-    result = examples.failure_reasons.SimpleSubstoryWithEnum().a.run()
+    class Q(f.ParentWithEnum, f.ParentMethod, T):
+        pass
+
+    result = Q().a.run()
 
     with pytest.raises(FailureProtocolError) as exc_info:
         result.failed_because("'foo' is too big")
@@ -543,10 +605,14 @@ Story returned result: SimpleSubstoryWithEnum.a
 
 Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
 
-Story returned result: SubstoryDIWithEnum.a
+Story returned result: J.a
 """.strip()
 
-    result = examples.failure_reasons.SubstoryDIWithEnum().a.run()
+    class J(f.ParentWithEnum, f.ParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    result = J().a.run()
 
     with pytest.raises(FailureProtocolError) as exc_info:
         result.failed_because("'foo' is too big")
@@ -566,12 +632,15 @@ def test_summary_reason_without_protocol():
     expected = """
 'failed_because' method can not be used with story defined without failure protocol.
 
-Story returned result: SummaryWithSimple.z
+Story returned result: T.x
 
 Use 'failures' story method to define failure protocol.
 """.strip()
 
-    result = examples.failure_reasons.SummaryWithSimple().z.run()
+    class T(f.ChildWithNull, f.NullMethod):
+        pass
+
+    result = T().x.run()
 
     with pytest.raises(FailureProtocolError) as exc_info:
         result.failed_because("'foo' is too big")
@@ -582,12 +651,15 @@ Use 'failures' story method to define failure protocol.
     expected = """
 'failed_because' method can not be used with story defined without failure protocol.
 
-Story returned result: SummaryWithSimpleSubstory.c
+Story returned result: Q.a
 
 Use 'failures' story method to define failure protocol.
 """.strip()
 
-    result = examples.failure_reasons.SummaryWithSimpleSubstory().c.run()
+    class Q(f.ParentWithNull, f.ParentMethod, T):
+        pass
+
+    result = Q().a.run()
 
     with pytest.raises(FailureProtocolError) as exc_info:
         result.failed_because("'foo' is too big")
@@ -598,12 +670,16 @@ Use 'failures' story method to define failure protocol.
     expected = """
 'failed_because' method can not be used with story defined without failure protocol.
 
-Story returned result: SummaryWithSubstoryDI.c
+Story returned result: J.a
 
 Use 'failures' story method to define failure protocol.
 """.strip()
 
-    result = examples.failure_reasons.SummaryWithSubstoryDI().c.run()
+    class J(f.ParentWithNull, f.ParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    result = J().a.run()
 
     with pytest.raises(FailureProtocolError) as exc_info:
         result.failed_because("'foo' is too big")
@@ -619,18 +695,28 @@ def test_substory_protocol_match_with_empty():
     substory does not define failure protocols.
     """
 
+    class T(f.ChildWithNull, f.NullMethod):
+        pass
+
+    class Q(f.ParentWithNull, f.ParentMethod, T):
+        pass
+
+    class J(f.ParentWithNull, f.ParentMethod):
+        def __init__(self):
+            self.x = T().x
+
     with pytest.raises(FailureError) as exc_info:
-        examples.failure_reasons.EmptySubstoryMatch().a()
+        Q().a()
     assert exc_info.value.reason is None
 
-    result = examples.failure_reasons.EmptySubstoryMatch().a.run()
+    result = Q().a.run()
     assert result.failure_reason is None
 
     with pytest.raises(FailureError) as exc_info:
-        examples.failure_reasons.EmptyDIMatch().a()
+        J().a()
     assert exc_info.value.reason is None
 
-    result = examples.failure_reasons.EmptyDIMatch().a.run()
+    result = J().a.run()
     assert result.failure_reason is None
 
 
@@ -640,18 +726,28 @@ def test_substory_protocol_match_with_list():
     protocol is a superset of the substory protocol.
     """
 
+    class T(f.ChildWithList, f.StringMethod):
+        pass
+
+    class Q(f.WideParentWithList, f.ParentMethod, T):
+        pass
+
+    class J(f.WideParentWithList, f.ParentMethod):
+        def __init__(self):
+            self.x = T().x
+
     with pytest.raises(FailureError) as exc_info:
-        examples.failure_reasons.SimpleSubstoryMatchWithList().a()
+        Q().a()
     assert exc_info.value.reason == "foo"
 
-    result = examples.failure_reasons.SimpleSubstoryMatchWithList().a.run()
+    result = Q().a.run()
     assert result.failed_because("foo")
 
     with pytest.raises(FailureError) as exc_info:
-        examples.failure_reasons.SubstoryDIMatchWithList().a()
+        J().a()
     assert exc_info.value.reason == "foo"
 
-    result = examples.failure_reasons.SubstoryDIMatchWithList().a.run()
+    result = J().a.run()
     assert result.failed_because("foo")
 
 
@@ -661,29 +757,29 @@ def test_substory_protocol_match_with_enum():
     protocol is a superset of the substory protocol.
     """
 
-    with pytest.raises(FailureError) as exc_info:
-        examples.failure_reasons.SimpleSubstoryMatchWithEnum().a()
-    assert (
-        exc_info.value.reason
-        is examples.failure_reasons.SimpleSubstoryMatchWithEnum().a.failures.foo
-    )
+    class T(f.ChildWithEnum, f.EnumMethod):
+        pass
 
-    result = examples.failure_reasons.SimpleSubstoryMatchWithEnum().a.run()
-    assert result.failed_because(
-        examples.failure_reasons.SimpleSubstoryMatchWithEnum().a.failures.foo
-    )
+    class Q(f.WideParentWithEnum, f.ParentMethod, T):
+        pass
+
+    class J(f.WideParentWithEnum, f.ParentMethod):
+        def __init__(self):
+            self.x = T().x
 
     with pytest.raises(FailureError) as exc_info:
-        examples.failure_reasons.SubstoryDIMatchWithEnum().a()
-    assert (
-        exc_info.value.reason
-        is examples.failure_reasons.SubstoryDIMatchWithEnum().a.failures.foo
-    )
+        Q().a()
+    assert exc_info.value.reason is Q().a.failures.foo
 
-    result = examples.failure_reasons.SubstoryDIMatchWithEnum().a.run()
-    assert result.failed_because(
-        examples.failure_reasons.SubstoryDIMatchWithEnum().a.failures.foo
-    )
+    result = Q().a.run()
+    assert result.failed_because(Q().a.failures.foo)
+
+    with pytest.raises(FailureError) as exc_info:
+        J().a()
+    assert exc_info.value.reason is J().a.failures.foo
+
+    result = J().a.run()
+    assert result.failed_because(J().a.failures.foo)
 
 
 def test_expand_substory_protocol_empty():
@@ -699,33 +795,35 @@ def test_expand_substory_protocol_list():
     with list of strings.
     """
 
+    class T(f.ChildWithNull, f.NormalMethod):
+        pass
+
+    class Q(f.ParentWithList, f.ParentMethod, T):
+        pass
+
+    class J(f.ParentWithList, f.ParentMethod):
+        def __init__(self):
+            self.x = T().x
+
     # Substory inheritance.
 
-    examples.failure_reasons.ExpandSimpleSubstoryWithList().a.failures == [
-        "foo",
-        "bar",
-        "baz",
-    ]
+    Q().a.failures == ["foo", "bar", "baz"]
 
-    result = examples.failure_reasons.ExpandSimpleSubstoryWithList().a()
+    result = Q().a()
     assert result is None
 
-    result = examples.failure_reasons.ExpandSimpleSubstoryWithList().a.run()
+    result = Q().a.run()
     assert result.is_success
     assert result.value is None
 
     # Substory DI.
 
-    examples.failure_reasons.ExpandSubstoryDIWithList().a.failures == [
-        "foo",
-        "bar",
-        "baz",
-    ]
+    J().a.failures == ["foo", "bar", "baz"]
 
-    result = examples.failure_reasons.ExpandSubstoryDIWithList().a()
+    result = J().a()
     assert result is None
 
-    result = examples.failure_reasons.ExpandSubstoryDIWithList().a.run()
+    result = J().a.run()
     assert result.is_success
     assert result.value is None
 
@@ -736,35 +834,36 @@ def test_expand_substory_protocol_enum():
     with enum class.
     """
 
+    class T(f.ChildWithNull, f.NormalMethod):
+        pass
+
+    class Q(f.ParentWithEnum, f.ParentMethod, T):
+        pass
+
+    class J(f.ParentWithEnum, f.ParentMethod):
+        def __init__(self):
+            self.x = T().x
+
     # Substory inheritance.
 
-    assert isinstance(
-        examples.failure_reasons.ExpandSimpleSubstoryWithEnum().a.failures,
-        enum.EnumMeta,
-    )
-    assert set(
-        examples.failure_reasons.ExpandSimpleSubstoryWithEnum().a.failures.__members__.keys()
-    ) == {"foo", "bar", "baz"}
+    assert isinstance(Q().a.failures, enum.EnumMeta)
+    assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
-    result = examples.failure_reasons.ExpandSimpleSubstoryWithEnum().a()
+    result = Q().a()
     assert result is None
 
-    result = examples.failure_reasons.ExpandSimpleSubstoryWithEnum().a.run()
+    result = Q().a.run()
     assert result.is_success
     assert result.value is None
 
     # Substory DI.
 
-    assert isinstance(
-        examples.failure_reasons.ExpandSubstoryDIWithEnum().a.failures, enum.EnumMeta
-    )
-    assert set(
-        examples.failure_reasons.ExpandSubstoryDIWithEnum().a.failures.__members__.keys()
-    ) == {"foo", "bar", "baz"}
+    assert isinstance(J().a.failures, enum.EnumMeta)
+    assert set(J().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
-    result = examples.failure_reasons.ExpandSubstoryDIWithEnum().a()
+    result = J().a()
     assert result is None
 
-    result = examples.failure_reasons.ExpandSubstoryDIWithEnum().a.run()
+    result = J().a.run()
     assert result.is_success
     assert result.value is None
