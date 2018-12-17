@@ -39,6 +39,7 @@ def get_test_source(filename, lineno):
 
     start = max(1, lineno - 3)
     end = lineno + 3
+    adjust_to = len(str(end))
 
     lines = [linecache.getline(filename, no) for no in range(start, end)]
     text = textwrap.dedent("".join(lines))
@@ -46,7 +47,7 @@ def get_test_source(filename, lineno):
     src = []
     for num, line in zip(range(start, end), text.splitlines()):
         sep = "->" if num == lineno else "  "
-        src.append((" %d %s %s" % (num, sep, line)).rstrip())
+        src.append((" %s %s %s" % (str(num).rjust(adjust_to), sep, line)).rstrip())
     src = "\n".join(src)
 
     return src
