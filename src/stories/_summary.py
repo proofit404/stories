@@ -30,15 +30,22 @@ class FailureSummary(object):
 
 
 class SuccessSummary(object):
-    def __init__(self, value):
+    def __init__(self, protocol, story_cls_name, story_method_name, value):
         self.is_success = True
         self.is_failure = False
         self.value = value
+        # FIXME: This three attributes assignments are bad.  We expose
+        # very internal stuff to the user facing API.  Rewrite before
+        # release!
+        self.protocol = protocol
+        self.story_cls_name = story_cls_name
+        self.story_method_name = story_method_name
 
     def failed_on(self, method_name):
         return False
 
     def failed_because(self, reason):
+        self.protocol.summarize(self.story_cls_name, self.story_method_name, reason)
         return False
 
     def __repr__(self):

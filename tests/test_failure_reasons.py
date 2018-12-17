@@ -485,13 +485,12 @@ Use 'failures' story method to define failure protocol.
 # Arguments of the result class methods.
 
 
-def test_summary_wrong_reason_with_list():
+@pytest.mark.parametrize("method", [f.NormalMethod, f.StringMethod])
+def test_summary_wrong_reason_with_list(method):
     """
     Summary classes should verify failure reason passed to the
     `failed_because` method.
     """
-
-    # TODO: Check success summary the same way.
 
     # Simple.
 
@@ -503,7 +502,7 @@ Available failures are: 'foo', 'bar', 'baz'
 Story returned result: T.x
 """.strip()
 
-    class T(f.ChildWithList, f.StringMethod):
+    class T(f.ChildWithList, method):
         pass
 
     result = T().x.run()
@@ -552,13 +551,12 @@ Story returned result: J.a
     assert str(exc_info.value) == expected
 
 
-def test_summary_wrong_reason_with_enum():
+@pytest.mark.parametrize("method", [f.NormalMethod, f.EnumMethod])
+def test_summary_wrong_reason_with_enum(method):
     """
     Summary classes should verify failure reason passed to the
     `failed_because` method.
     """
-
-    # TODO: Check success summary the same way.
 
     # Simple.
 
@@ -570,7 +568,7 @@ Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
 Story returned result: T.x
 """.strip()
 
-    class T(f.ChildWithEnum, f.EnumMethod):
+    class T(f.ChildWithEnum, method):
         pass
 
     result = T().x.run()
@@ -619,13 +617,12 @@ Story returned result: J.a
     assert str(exc_info.value) == expected
 
 
-def test_summary_reason_without_protocol():
+@pytest.mark.parametrize("method", [f.NormalMethod, f.NullMethod])
+def test_summary_reason_without_protocol(method):
     """
     Summary classes should deny to use `failed_because` method on
     stories defined without failure protocol.
     """
-
-    # TODO: Check success summary the same way.
 
     # Simple.
 
@@ -637,7 +634,7 @@ Story returned result: T.x
 Use 'failures' story method to define failure protocol.
 """.strip()
 
-    class T(f.ChildWithNull, f.NullMethod):
+    class T(f.ChildWithNull, method):
         pass
 
     result = T().x.run()

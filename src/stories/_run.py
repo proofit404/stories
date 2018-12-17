@@ -33,7 +33,11 @@ class Run(object):
         )
 
     def got_result(self, value):
-        return SuccessSummary(value)
+        return SuccessSummary(
+            self.protocol, self.story_cls_name, self.story_method_name, value
+        )
 
     def finished(self):
-        return SuccessSummary(None)
+        return SuccessSummary(
+            self.protocol, self.story_cls_name, self.story_method_name, None
+        )
