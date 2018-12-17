@@ -6,6 +6,12 @@
 #     parent story.
 #
 # [ ] Protocol errors should be visible in the context representation.
+#
+# [ ] Expand parent and substory expand:
+#
+#     - Substory with empty result can not return failure if parent
+#       story defines errors protocol
+
 from enum import Enum
 
 from stories import Failure, Success, story
@@ -352,7 +358,7 @@ class SubstoryDIMatchWithEnum(object):
         quiz = 4
 
 
-# Substory protocol mismatch.
+# Substory protocol expand.
 
 
 class EmptyMismatch(object):
