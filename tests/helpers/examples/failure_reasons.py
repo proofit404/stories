@@ -17,7 +17,7 @@ from enum import Enum
 from stories import Failure, Success, story
 
 
-# Simple story.
+# Mixins.
 
 
 class CommonSimple(object):
@@ -31,6 +31,17 @@ class CommonSimple(object):
 
     def three(self, ctx):
         return Failure()
+
+
+class CommonSubstory(object):
+    def before(self, ctx):
+        return Success()
+
+    def after(self, ctx):
+        return Success()
+
+
+# Arguments of the Failure class.
 
 
 class SimpleWithList(CommonSimple):
@@ -75,17 +86,6 @@ class SimpleWithEnum(CommonSimple):
         foo = 1
         bar = 2
         baz = 3
-
-
-# Substory in the same class.
-
-
-class CommonSubstory(object):
-    def before(self, ctx):
-        return Success()
-
-    def after(self, ctx):
-        return Success()
 
 
 class SimpleSubstoryWithList(CommonSubstory, SimpleWithList):
@@ -136,9 +136,6 @@ class SimpleSubstoryWithEnum(CommonSubstory, SimpleWithEnum):
         foo = 1
         bar = 2
         baz = 3
-
-
-# Dependency injection of the substory.
 
 
 class SubstoryDIWithList(CommonSubstory):
@@ -201,9 +198,6 @@ class SubstoryDIWithEnum(CommonSubstory):
         baz = 3
 
 
-# Reason used without protocol definition.
-
-
 class ReasonWithSimple(CommonSimple):
     @story
     def y(I):
@@ -229,7 +223,7 @@ class ReasonWithSubstoryDI(CommonSubstory):
         I.after
 
 
-# Summary classes.
+# Arguments of the result class methods.
 
 
 class SummaryWithSimple(CommonSimple):
@@ -257,7 +251,7 @@ class SummaryWithSubstoryDI(CommonSubstory):
         I.after
 
 
-# Substory protocol match.
+# Composition of the stories.
 
 
 class EmptyMatch(object):
@@ -356,9 +350,6 @@ class SubstoryDIMatchWithEnum(object):
         bar = 2
         baz = 3
         quiz = 4
-
-
-# Substory protocol expand.
 
 
 class EmptyMismatch(object):
