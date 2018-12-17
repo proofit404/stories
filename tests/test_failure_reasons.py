@@ -4,6 +4,9 @@ import examples
 from stories.exceptions import FailureError, FailureProtocolError
 
 
+# Arguments of the Failure class.
+
+
 def test_reasons_defined_with_list():
     """We can use list of strings to define story failure protocol."""
 
@@ -431,6 +434,9 @@ Use 'failures' story method to define failure protocol.
     assert str(exc_info.value) == expected
 
 
+# Arguments of the result class methods.
+
+
 def test_summary_wrong_reason_with_list():
     """
     Summary classes should verify failure reason passed to the
@@ -438,6 +444,8 @@ def test_summary_wrong_reason_with_list():
     """
 
     # TODO: Check success summary the same way.
+
+    # Simple.
 
     expected = """
 'failed_because' method got argument mismatching failure protocol: "'foo' is too big"
@@ -453,6 +461,8 @@ Story returned result: SimpleWithList.x
         result.failed_because("'foo' is too big")
     assert str(exc_info.value) == expected
 
+    # Substory inheritance.
+
     expected = """
 'failed_because' method got argument mismatching failure protocol: "'foo' is too big"
 
@@ -466,6 +476,8 @@ Story returned result: SimpleSubstoryWithList.a
     with pytest.raises(FailureProtocolError) as exc_info:
         result.failed_because("'foo' is too big")
     assert str(exc_info.value) == expected
+
+    # Substory DI.
 
     expected = """
 'failed_because' method got argument mismatching failure protocol: "'foo' is too big"
@@ -490,6 +502,8 @@ def test_summary_wrong_reason_with_enum():
 
     # TODO: Check success summary the same way.
 
+    # Simple.
+
     expected = """
 'failed_because' method got argument mismatching failure protocol: "'foo' is too big"
 
@@ -504,6 +518,8 @@ Story returned result: SimpleWithEnum.x
         result.failed_because("'foo' is too big")
     assert str(exc_info.value) == expected
 
+    # Substory inheritance.
+
     expected = """
 'failed_because' method got argument mismatching failure protocol: "'foo' is too big"
 
@@ -517,6 +533,8 @@ Story returned result: SimpleSubstoryWithEnum.a
     with pytest.raises(FailureProtocolError) as exc_info:
         result.failed_because("'foo' is too big")
     assert str(exc_info.value) == expected
+
+    # Substory DI.
 
     expected = """
 'failed_because' method got argument mismatching failure protocol: "'foo' is too big"
@@ -541,6 +559,8 @@ def test_summary_reason_without_protocol():
 
     # TODO: Check success summary the same way.
 
+    # Simple.
+
     expected = """
 'failed_because' method can not be used with story defined without failure protocol.
 
@@ -554,6 +574,8 @@ Use 'failures' story method to define failure protocol.
     with pytest.raises(FailureProtocolError) as exc_info:
         result.failed_because("'foo' is too big")
     assert str(exc_info.value) == expected
+
+    # Substory inheritance.
 
     expected = """
 'failed_because' method can not be used with story defined without failure protocol.
@@ -569,6 +591,8 @@ Use 'failures' story method to define failure protocol.
         result.failed_because("'foo' is too big")
     assert str(exc_info.value) == expected
 
+    # Substory DI.
+
     expected = """
 'failed_because' method can not be used with story defined without failure protocol.
 
@@ -582,6 +606,9 @@ Use 'failures' story method to define failure protocol.
     with pytest.raises(FailureProtocolError) as exc_info:
         result.failed_because("'foo' is too big")
     assert str(exc_info.value) == expected
+
+
+# Composition of the stories.
 
 
 def test_substory_protocol_match_with_empty():
