@@ -63,6 +63,55 @@ class SimpleWithList(CommonSimple):
     errors = z.failures(y.failures(x.failures(["foo", "bar", "baz"])))
 
 
+class SimpleSubstoryWithList(CommonSubstory, SimpleWithList):
+    @story
+    def a(I):
+        I.before
+        I.x
+        I.after
+
+    @story
+    def b(I):
+        I.before
+        I.y
+        I.after
+
+    @story
+    def c(I):
+        I.before
+        I.z
+        I.after
+
+    errors = c.failures(b.failures(a.failures(["foo", "bar", "baz"])))
+
+
+class SubstoryDIWithList(CommonSubstory):
+    def __init__(self):
+        self.x = SimpleWithList().x
+        self.y = SimpleWithList().y
+        self.z = SimpleWithList().z
+
+    @story
+    def a(I):
+        I.before
+        I.x
+        I.after
+
+    @story
+    def b(I):
+        I.before
+        I.y
+        I.after
+
+    @story
+    def c(I):
+        I.before
+        I.z
+        I.after
+
+    errors = c.failures(b.failures(a.failures(["foo", "bar", "baz"])))
+
+
 class SimpleWithEnum(CommonSimple):
     @story
     def x(I):
@@ -86,28 +135,6 @@ class SimpleWithEnum(CommonSimple):
         foo = 1
         bar = 2
         baz = 3
-
-
-class SimpleSubstoryWithList(CommonSubstory, SimpleWithList):
-    @story
-    def a(I):
-        I.before
-        I.x
-        I.after
-
-    @story
-    def b(I):
-        I.before
-        I.y
-        I.after
-
-    @story
-    def c(I):
-        I.before
-        I.z
-        I.after
-
-    errors = c.failures(b.failures(a.failures(["foo", "bar", "baz"])))
 
 
 class SimpleSubstoryWithEnum(CommonSubstory, SimpleWithEnum):
@@ -136,33 +163,6 @@ class SimpleSubstoryWithEnum(CommonSubstory, SimpleWithEnum):
         foo = 1
         bar = 2
         baz = 3
-
-
-class SubstoryDIWithList(CommonSubstory):
-    def __init__(self):
-        self.x = SimpleWithList().x
-        self.y = SimpleWithList().y
-        self.z = SimpleWithList().z
-
-    @story
-    def a(I):
-        I.before
-        I.x
-        I.after
-
-    @story
-    def b(I):
-        I.before
-        I.y
-        I.after
-
-    @story
-    def c(I):
-        I.before
-        I.z
-        I.after
-
-    errors = c.failures(b.failures(a.failures(["foo", "bar", "baz"])))
 
 
 class SubstoryDIWithEnum(CommonSubstory):
@@ -263,6 +263,21 @@ class EmptyMatch(object):
         return Failure()
 
 
+class EmptySubstoryMatch(EmptyMatch):
+    @story
+    def a(I):
+        I.x
+
+
+class EmptyDIMatch(object):
+    def __init__(self):
+        self.x = EmptyMatch().x
+
+    @story
+    def a(I):
+        I.x
+
+
 class SimpleMatchWithList(object):
     @story
     def x(I):
@@ -272,6 +287,25 @@ class SimpleMatchWithList(object):
         return Failure("foo")
 
     errors = x.failures(["foo", "bar", "baz"])
+
+
+class SimpleSubstoryMatchWithList(SimpleMatchWithList):
+    @story
+    def a(I):
+        I.x
+
+    errors = a.failures(["foo", "bar", "baz", "quiz"])
+
+
+class SubstoryDIMatchWithList(object):
+    def __init__(self):
+        self.x = SimpleMatchWithList().x
+
+    @story
+    def a(I):
+        I.x
+
+    errors = a.failures(["foo", "bar", "baz", "quiz"])
 
 
 class SimpleMatchWithEnum(object):
@@ -289,20 +323,6 @@ class SimpleMatchWithEnum(object):
         baz = 3
 
 
-class EmptySubstoryMatch(EmptyMatch):
-    @story
-    def a(I):
-        I.x
-
-
-class SimpleSubstoryMatchWithList(SimpleMatchWithList):
-    @story
-    def a(I):
-        I.x
-
-    errors = a.failures(["foo", "bar", "baz", "quiz"])
-
-
 class SimpleSubstoryMatchWithEnum(SimpleMatchWithEnum):
     @story
     def a(I):
@@ -314,26 +334,6 @@ class SimpleSubstoryMatchWithEnum(SimpleMatchWithEnum):
         bar = 2
         baz = 3
         quiz = 4
-
-
-class EmptyDIMatch(object):
-    def __init__(self):
-        self.x = EmptyMatch().x
-
-    @story
-    def a(I):
-        I.x
-
-
-class SubstoryDIMatchWithList(object):
-    def __init__(self):
-        self.x = SimpleMatchWithList().x
-
-    @story
-    def a(I):
-        I.x
-
-    errors = a.failures(["foo", "bar", "baz", "quiz"])
 
 
 class SubstoryDIMatchWithEnum(object):
@@ -350,115 +350,3 @@ class SubstoryDIMatchWithEnum(object):
         bar = 2
         baz = 3
         quiz = 4
-
-
-class EmptyMismatch(object):
-    @story
-    def x(I):
-        pass
-
-
-class ParentMismatch(object):
-    @story
-    def x(I):
-        pass
-
-    errors = x.failures(["foo", "quiz"])
-
-
-class SimpleMismatchWithList(object):
-    @story
-    def x(I):
-        pass
-
-    errors = x.failures(["foo", "bar", "baz"])
-
-
-class SimpleMismatchWithEnum(object):
-    @story
-    def x(I):
-        pass
-
-    @x.failures
-    class Errors(Enum):
-        foo = 1
-        bar = 2
-        baz = 3
-
-
-class EmptySubstoryMismatch(EmptyMismatch):
-    @story
-    def a(I):
-        I.x
-
-    errors = a.failures(["foo", "quiz"])
-
-
-class EmptyParentMismatch(ParentMismatch):
-    @story
-    def a(I):
-        I.x
-
-
-class SimpleSubstoryMismatchWithList(SimpleMismatchWithList):
-    @story
-    def a(I):
-        I.x
-
-    errors = a.failures(["foo", "quiz"])
-
-
-class SimpleSubstoryMismatchWithEnum(SimpleMismatchWithEnum):
-    @story
-    def a(I):
-        I.x
-
-    @a.failures
-    class Errors(Enum):
-        foo = 1
-        quiz = 2
-
-
-class EmptyDIMismatch(object):
-    def __init__(self):
-        self.x = EmptyMismatch().x
-
-    @story
-    def a(I):
-        I.x
-
-    errors = a.failures(["foo", "quiz"])
-
-
-class ParentDIMismatch(object):
-    def __init__(self):
-        self.x = ParentMismatch().x
-
-    @story
-    def a(I):
-        I.x
-
-
-class SubstoryDIMismatchWithList(object):
-    def __init__(self):
-        self.x = SimpleMismatchWithList().x
-
-    @story
-    def a(I):
-        I.x
-
-    errors = a.failures(["foo", "quiz"])
-
-
-class SubstoryDIMismatchWithEnum(object):
-    def __init__(self):
-        self.x = SimpleMismatchWithEnum().x
-
-    @story
-    def a(I):
-        I.x
-
-    @a.failures
-    class Errors(Enum):
-        foo = 1
-        quiz = 2
