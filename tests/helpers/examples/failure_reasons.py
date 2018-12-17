@@ -10,7 +10,12 @@
 # [ ] Expand parent and substory expand:
 #
 #     - Substory with empty result can not return failure if parent
-#       story defines errors protocol
+#       story defines errors protocol.
+#
+#     - Story with empty result can not return failure if child story
+#       defines errors protocol.
+#
+#     - Type mismatch of the story and substory protocols.
 
 from enum import Enum
 
@@ -350,3 +355,66 @@ class SubstoryDIMatchWithEnum(object):
         bar = 2
         baz = 3
         quiz = 4
+
+
+class ExpandSimple(object):
+    @story
+    def x(I):
+        I.one
+
+    def one(self, ctx):
+        return Success()
+
+
+class ExpandSimpleSubstoryWithList(CommonSubstory, ExpandSimple):
+    @story
+    def a(I):
+        I.before
+        I.x
+        I.after
+
+    errors = a.failures(["foo", "bar", "baz"])
+
+
+class ExpandSubstoryDIWithList(CommonSubstory):
+    def __init__(self):
+        self.x = ExpandSimple().x
+
+    @story
+    def a(I):
+        I.before
+        I.x
+        I.after
+
+    errors = a.failures(["foo", "bar", "baz"])
+
+
+class ExpandSimpleSubstoryWithEnum(CommonSubstory, ExpandSimple):
+    @story
+    def a(I):
+        I.before
+        I.x
+        I.after
+
+    @a.failures
+    class Errors(Enum):
+        foo = 1
+        bar = 2
+        baz = 3
+
+
+class ExpandSubstoryDIWithEnum(CommonSubstory):
+    def __init__(self):
+        self.x = ExpandSimple().x
+
+    @story
+    def a(I):
+        I.before
+        I.x
+        I.after
+
+    @a.failures
+    class Errors(Enum):
+        foo = 1
+        bar = 2
+        baz = 3

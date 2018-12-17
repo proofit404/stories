@@ -40,9 +40,7 @@ class MountedStory(object):
         runner = Call(self.protocol)
         history = History(self.cls_name, self.name)
         ctx = Context(validate_arguments(self.arguments, args, kwargs), history)
-        methods = wrap_story(
-            is_story, self.collected, self.obj, self.protocol, self.cls_name, self.name
-        )
+        methods = wrap_story(is_story, self.collected, self.obj)
         contract = Contract()
         return function.execute(runner, ctx, methods, contract, self.protocol)
 
@@ -50,9 +48,7 @@ class MountedStory(object):
         runner = Run(self.protocol, self.cls_name, self.name)
         history = History(self.cls_name, self.name)
         ctx = Context(validate_arguments(self.arguments, args, kwargs), history)
-        methods = wrap_story(
-            is_story, self.collected, self.obj, self.protocol, self.cls_name, self.name
-        )
+        methods = wrap_story(is_story, self.collected, self.obj)
         contract = Contract()
         return function.execute(runner, ctx, methods, contract, self.protocol)
 

@@ -1,3 +1,5 @@
+import enum
+
 import pytest
 
 import examples
@@ -682,3 +684,87 @@ def test_substory_protocol_match_with_enum():
     assert result.failed_because(
         examples.failure_reasons.SubstoryDIMatchWithEnum().a.failures.foo
     )
+
+
+def test_expand_substory_protocol_empty():
+    """
+    We expand protocol of composed story if substory does not define
+    any protocol.
+    """
+
+
+def test_expand_substory_protocol_list():
+    """
+    We expand protocol of composed story if substory define protocol
+    with list of strings.
+    """
+
+    # Substory inheritance.
+
+    examples.failure_reasons.ExpandSimpleSubstoryWithList().a.failures == [
+        "foo",
+        "bar",
+        "baz",
+    ]
+
+    result = examples.failure_reasons.ExpandSimpleSubstoryWithList().a()
+    assert result is None
+
+    result = examples.failure_reasons.ExpandSimpleSubstoryWithList().a.run()
+    assert result.is_success
+    assert result.value is None
+
+    # Substory DI.
+
+    examples.failure_reasons.ExpandSubstoryDIWithList().a.failures == [
+        "foo",
+        "bar",
+        "baz",
+    ]
+
+    result = examples.failure_reasons.ExpandSubstoryDIWithList().a()
+    assert result is None
+
+    result = examples.failure_reasons.ExpandSubstoryDIWithList().a.run()
+    assert result.is_success
+    assert result.value is None
+
+
+def test_expand_substory_protocol_enum():
+    """
+    We expand protocol of composed story if substory define protocol
+    with enum class.
+    """
+
+    # Substory inheritance.
+
+    assert isinstance(
+        examples.failure_reasons.ExpandSimpleSubstoryWithEnum().a.failures,
+        enum.EnumMeta,
+    )
+    assert set(
+        examples.failure_reasons.ExpandSimpleSubstoryWithEnum().a.failures.__members__.keys()
+    ) == {"foo", "bar", "baz"}
+
+    result = examples.failure_reasons.ExpandSimpleSubstoryWithEnum().a()
+    assert result is None
+
+    result = examples.failure_reasons.ExpandSimpleSubstoryWithEnum().a.run()
+    assert result.is_success
+    assert result.value is None
+
+    # Substory DI.
+
+    assert isinstance(
+        examples.failure_reasons.ExpandSubstoryDIWithEnum().a.failures, enum.EnumMeta
+    )
+    assert set(
+        examples.failure_reasons.ExpandSubstoryDIWithEnum().a.failures.__members__.keys()
+    ) == {"foo", "bar", "baz"}
+
+    result = examples.failure_reasons.ExpandSubstoryDIWithEnum().a()
+    assert result is None
+
+    result = examples.failure_reasons.ExpandSubstoryDIWithEnum().a.run()
+    assert result.is_success
+    assert result.value is None
