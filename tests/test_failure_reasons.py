@@ -7,6 +7,8 @@ from stories.exceptions import FailureError, FailureProtocolError
 def test_reasons_defined_with_list():
     """We can use list of strings to define story failure protocol."""
 
+    # Simple.
+
     with pytest.raises(FailureError) as exc_info:
         examples.failure_reasons.SimpleWithList().x()
     assert exc_info.value.reason == "foo"
@@ -18,6 +20,8 @@ def test_reasons_defined_with_list():
     assert result.failure_reason == "foo"
     assert result.failed_because("foo")
 
+    # Substory inheritance.
+
     with pytest.raises(FailureError) as exc_info:
         examples.failure_reasons.SimpleSubstoryWithList().a()
     assert exc_info.value.reason == "foo"
@@ -28,6 +32,8 @@ def test_reasons_defined_with_list():
     assert result.is_failure
     assert result.failure_reason == "foo"
     assert result.failed_because("foo")
+
+    # Substory DI.
 
     with pytest.raises(FailureError) as exc_info:
         examples.failure_reasons.SubstoryDIWithList().a()
@@ -43,6 +49,8 @@ def test_reasons_defined_with_list():
 
 def test_reasons_defined_with_enum():
     """We can use enum class to define story failure protocol."""
+
+    # Simple.
 
     with pytest.raises(FailureError) as exc_info:
         examples.failure_reasons.SimpleWithEnum().x()
@@ -63,6 +71,8 @@ def test_reasons_defined_with_enum():
         examples.failure_reasons.SimpleWithEnum().x.failures.foo
     )
 
+    # Substory inheritance.
+
     with pytest.raises(FailureError) as exc_info:
         examples.failure_reasons.SimpleSubstoryWithEnum().a()
     assert (
@@ -81,6 +91,8 @@ def test_reasons_defined_with_enum():
     assert result.failed_because(
         examples.failure_reasons.SimpleSubstoryWithEnum().a.failures.foo
     )
+
+    # Substory DI.
 
     with pytest.raises(FailureError) as exc_info:
         examples.failure_reasons.SubstoryDIWithEnum().a()
@@ -108,6 +120,8 @@ def test_wrong_reason_with_list():
     strings as its failure protocol.
     """
 
+    # Simple.
+
     expected = """
 Failure("'foo' is too big") failure reason is not allowed by current protocol.
 
@@ -124,6 +138,8 @@ Function returned value: SimpleWithList.two
         examples.failure_reasons.SimpleWithList().y.run()
     assert str(exc_info.value) == expected
 
+    # Substory inheritance.
+
     expected = """
 Failure("'foo' is too big") failure reason is not allowed by current protocol.
 
@@ -139,6 +155,8 @@ Function returned value: SimpleSubstoryWithList.two
     with pytest.raises(FailureProtocolError) as exc_info:
         examples.failure_reasons.SimpleSubstoryWithList().b.run()
     assert str(exc_info.value) == expected
+
+    # Substory DI.
 
     expected = """
 Failure("'foo' is too big") failure reason is not allowed by current protocol.
@@ -163,6 +181,8 @@ def test_wrong_reason_with_enum():
     its failure protocol.
     """
 
+    # Simple.
+
     expected = """
 Failure("'foo' is too big") failure reason is not allowed by current protocol.
 
@@ -179,6 +199,8 @@ Function returned value: SimpleWithEnum.two
         examples.failure_reasons.SimpleWithEnum().y.run()
     assert str(exc_info.value) == expected
 
+    # Substory inheritance.
+
     expected = """
 Failure("'foo' is too big") failure reason is not allowed by current protocol.
 
@@ -194,6 +216,8 @@ Function returned value: SimpleSubstoryWithEnum.two
     with pytest.raises(FailureProtocolError) as exc_info:
         examples.failure_reasons.SimpleSubstoryWithEnum().b.run()
     assert str(exc_info.value) == expected
+
+    # Substory DI.
 
     expected = """
 Failure("'foo' is too big") failure reason is not allowed by current protocol.
@@ -218,6 +242,8 @@ def test_null_reason_with_list():
     as its failure protocol.
     """
 
+    # Simple.
+
     expected = """
 Failure() can not be used in a story with failure protocol.
 
@@ -236,6 +262,8 @@ Use one of them as Failure() argument.
         examples.failure_reasons.SimpleWithList().z.run()
     assert str(exc_info.value) == expected
 
+    # Substory inheritance.
+
     expected = """
 Failure() can not be used in a story with failure protocol.
 
@@ -253,6 +281,8 @@ Use one of them as Failure() argument.
     with pytest.raises(FailureProtocolError) as exc_info:
         examples.failure_reasons.SimpleSubstoryWithList().c.run()
     assert str(exc_info.value) == expected
+
+    # Substory DI.
 
     expected = """
 Failure() can not be used in a story with failure protocol.
@@ -279,6 +309,8 @@ def test_null_reason_with_enum():
     failure protocol.
     """
 
+    # Simple.
+
     expected = """
 Failure() can not be used in a story with failure protocol.
 
@@ -297,6 +329,8 @@ Use one of them as Failure() argument.
         examples.failure_reasons.SimpleWithEnum().z.run()
     assert str(exc_info.value) == expected
 
+    # Substory inheritance.
+
     expected = """
 Failure() can not be used in a story with failure protocol.
 
@@ -314,6 +348,8 @@ Use one of them as Failure() argument.
     with pytest.raises(FailureProtocolError) as exc_info:
         examples.failure_reasons.SimpleSubstoryWithEnum().c.run()
     assert str(exc_info.value) == expected
+
+    # Substory DI.
 
     expected = """
 Failure() can not be used in a story with failure protocol.
@@ -340,6 +376,8 @@ def test_reason_without_protocol():
     failure protocol.
     """
 
+    # Simple.
+
     expected = """
 Failure("'foo' is too big") can not be used in a story without failure protocol.
 
@@ -356,6 +394,8 @@ Use 'failures' story method to define failure protocol.
         examples.failure_reasons.ReasonWithSimple().y.run()
     assert str(exc_info.value) == expected
 
+    # Substory inheritance.
+
     expected = """
 Failure("'foo' is too big") can not be used in a story without failure protocol.
 
@@ -371,6 +411,8 @@ Use 'failures' story method to define failure protocol.
     with pytest.raises(FailureProtocolError) as exc_info:
         examples.failure_reasons.ReasonWithSimpleSubstory().b.run()
     assert str(exc_info.value) == expected
+
+    # Substory DI.
 
     expected = """
 Failure("'foo' is too big") can not be used in a story without failure protocol.
