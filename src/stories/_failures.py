@@ -1,4 +1,5 @@
 from ._compat import Enum, EnumMeta
+from ._repr import failures_representation
 from .exceptions import FailureProtocolError
 
 
@@ -16,6 +17,10 @@ def make_protocol(failures):
 
 
 class Protocol(object):
+    def __init__(self, failures):
+        self.failures = failures
+        self.available = failures_representation(failures)
+
     def check_return_statement(self, obj, method, reason):
         if not reason:
             message = null_reason_template.format(
@@ -64,10 +69,6 @@ class Protocol(object):
 
 
 class NullProtocol(Protocol):
-    def __init__(self, failures):
-        self.failures = None
-        self.available = "None"
-
     def check_return_statement(self, obj, method, reason):
         if reason:
             message = null_protocol_template.format(
@@ -94,10 +95,6 @@ class NullProtocol(Protocol):
 
 
 class CollectionProtocol(Protocol):
-    def __init__(self, failures):
-        self.failures = failures
-        self.available = ", ".join(map(repr, failures))
-
     def check_reason(self, reason):
         return reason in self.failures
 
