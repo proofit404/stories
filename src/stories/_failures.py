@@ -59,6 +59,14 @@ class Protocol(object):
 
         raise NotImplementedError
 
+    def combine(self, protocol):
+
+        raise NotImplementedError
+
+    def compare(self, a, b):
+
+        raise NotImplementedError
+
 
 class NullProtocol(Protocol):
     def __init__(self, failures):
@@ -79,6 +87,12 @@ class NullProtocol(Protocol):
     def cast_reason(self, reason):
         return None
 
+    def combine(self, other):
+        if other.failures is None:
+            return self
+        else:
+            return other.combine(self)
+
 
 class CollectionProtocol(Protocol):
     def __init__(self, failures):
@@ -91,6 +105,23 @@ class CollectionProtocol(Protocol):
     def cast_reason(self, reason):
         return reason
 
+    def combine(self, other):
+        if other.failures is None:
+            return self
+        else:
+            return CollectionProtocol(
+                self.failures
+                + [
+                    failure
+                    for failure in other.failures
+                    if failure not in self.failures
+                ]
+            )
+
+    def compare(self, a, b):
+
+        return a == b
+
 
 class EnumProtocol(Protocol):
     def __init__(self, failures):
@@ -102,6 +133,28 @@ class EnumProtocol(Protocol):
 
     def cast_reason(self, reason):
         return self.failures.__members__[reason.name]
+
+    def combine(self, other):
+        if other.failures is None:
+            return self
+        else:
+            return EnumProtocol(
+                Enum(
+                    self.failures.__name__,
+                    ",".join(
+                        list(self.failures.__members__.keys())
+                        + [
+                            failure
+                            for failure in other.failures.__members__.keys()
+                            if failure not in self.failures.__members__.keys()
+                        ]
+                    ),
+                )
+            )
+
+    def compare(self, a, b):
+
+        return a.name == b.name
 
 
 wrong_reason_template = """

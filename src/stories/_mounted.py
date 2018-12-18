@@ -33,24 +33,24 @@ class MountedStory(object):
         self.cls_name = cls.__name__
         self.name = name
         self.arguments = arguments
-        self.collected = collected
+        self.collected = collected  # TODO: Remove.
+        methods, protocol = wrap_story(is_story, collected, obj, protocol)
+        self.methods = methods
         self.protocol = protocol
 
     def __call__(self, *args, **kwargs):
-        runner = Call(self.protocol)
         history = History(self.cls_name, self.name)
         ctx = Context(validate_arguments(self.arguments, args, kwargs), history)
-        methods = wrap_story(is_story, self.collected, self.obj)
         contract = Contract()
-        return function.execute(runner, ctx, methods, contract, self.protocol)
+        runner = Call(self.protocol)
+        return function.execute(runner, ctx, self.methods, contract, self.protocol)
 
     def run(self, *args, **kwargs):
-        runner = Run(self.protocol, self.cls_name, self.name)
         history = History(self.cls_name, self.name)
         ctx = Context(validate_arguments(self.arguments, args, kwargs), history)
-        methods = wrap_story(is_story, self.collected, self.obj)
         contract = Contract()
-        return function.execute(runner, ctx, methods, contract, self.protocol)
+        runner = Run(self.protocol, self.cls_name, self.name)
+        return function.execute(runner, ctx, self.methods, contract, self.protocol)
 
     def __repr__(self):
         return story_representation(

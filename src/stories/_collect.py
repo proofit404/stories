@@ -14,7 +14,7 @@ def collect_story(f):
     return calls
 
 
-def wrap_story(is_story, collected, obj):
+def wrap_story(is_story, collected, obj, protocol):
 
     methods = []
 
@@ -25,7 +25,10 @@ def wrap_story(is_story, collected, obj):
             methods.append((obj, attr.__func__))
             continue
 
-        sub_methods = wrap_story(is_story, attr.collected, attr.obj)
+        sub_methods, sub_protocol = wrap_story(
+            is_story, attr.collected, attr.obj, attr.protocol
+        )
+        protocol = protocol.combine(sub_protocol)
         if not sub_methods:
             continue
 
@@ -39,7 +42,7 @@ def wrap_story(is_story, collected, obj):
         methods.extend(sub_methods)
         methods.append((sub_obj, end_of_story))
 
-    return methods
+    return methods, protocol
 
 
 def make_validator(name, arguments):

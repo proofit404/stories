@@ -19,7 +19,7 @@ class FailureSummary(object):
 
     def failed_because(self, reason):
         self.protocol.summarize(self.story_cls_name, self.story_method_name, reason)
-        return reason == self.failure_reason
+        return self.protocol.compare(reason, self.failure_reason)
 
     @property
     def value(self):
