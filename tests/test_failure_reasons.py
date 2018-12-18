@@ -43,10 +43,10 @@ def test_reasons_defined_with_list():
     class T(f.ChildWithList, f.StringMethod):
         pass
 
-    class Q(f.ParentWithList, f.ParentMethod, T):
+    class Q(f.ParentWithList, f.NormalParentMethod, T):
         pass
 
-    class J(f.ParentWithList, f.ParentMethod):
+    class J(f.ParentWithList, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
 
@@ -96,10 +96,10 @@ def test_reasons_defined_with_enum():
     class T(f.ChildWithEnum, f.EnumMethod):
         pass
 
-    class Q(f.ParentWithEnum, f.ParentMethod, T):
+    class Q(f.ParentWithEnum, f.NormalParentMethod, T):
         pass
 
-    class J(f.ParentWithEnum, f.ParentMethod):
+    class J(f.ParentWithEnum, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
 
@@ -152,10 +152,10 @@ def test_wrong_reason_with_list():
     class T(f.ChildWithList, f.WrongMethod):
         pass
 
-    class Q(f.ParentWithList, f.ParentMethod, T):
+    class Q(f.ParentWithList, f.NormalParentMethod, T):
         pass
 
-    class J(f.ParentWithList, f.ParentMethod):
+    class J(f.ParentWithList, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
 
@@ -223,10 +223,10 @@ def test_wrong_reason_with_enum():
     class T(f.ChildWithEnum, f.WrongMethod):
         pass
 
-    class Q(f.ParentWithEnum, f.ParentMethod, T):
+    class Q(f.ParentWithEnum, f.NormalParentMethod, T):
         pass
 
-    class J(f.ParentWithEnum, f.ParentMethod):
+    class J(f.ParentWithEnum, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
 
@@ -294,10 +294,10 @@ def test_null_reason_with_list():
     class T(f.ChildWithList, f.NullMethod):
         pass
 
-    class Q(f.ParentWithList, f.ParentMethod, T):
+    class Q(f.ParentWithList, f.NormalParentMethod, T):
         pass
 
-    class J(f.ParentWithList, f.ParentMethod):
+    class J(f.ParentWithList, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
 
@@ -371,10 +371,10 @@ def test_null_reason_with_enum():
     class T(f.ChildWithEnum, f.NullMethod):
         pass
 
-    class Q(f.ParentWithEnum, f.ParentMethod, T):
+    class Q(f.ParentWithEnum, f.NormalParentMethod, T):
         pass
 
-    class J(f.ParentWithEnum, f.ParentMethod):
+    class J(f.ParentWithEnum, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
 
@@ -448,10 +448,10 @@ def test_reason_without_protocol():
     class T(f.ChildWithNull, f.WrongMethod):
         pass
 
-    class Q(f.ParentWithNull, f.ParentMethod, T):
+    class Q(f.ParentWithNull, f.NormalParentMethod, T):
         pass
 
-    class J(f.ParentWithNull, f.ParentMethod):
+    class J(f.ParentWithNull, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
 
@@ -523,10 +523,10 @@ def test_summary_wrong_reason_with_list(method):
     class T(f.ChildWithList, method):
         pass
 
-    class Q(f.ParentWithList, f.ParentMethod, T):
+    class Q(f.ParentWithList, f.NormalParentMethod, T):
         pass
 
-    class J(f.ParentWithList, f.ParentMethod):
+    class J(f.ParentWithList, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
 
@@ -589,10 +589,10 @@ def test_summary_wrong_reason_with_enum(method):
     class T(f.ChildWithEnum, method):
         pass
 
-    class Q(f.ParentWithEnum, f.ParentMethod, T):
+    class Q(f.ParentWithEnum, f.NormalParentMethod, T):
         pass
 
-    class J(f.ParentWithEnum, f.ParentMethod):
+    class J(f.ParentWithEnum, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
 
@@ -655,10 +655,10 @@ def test_summary_reason_without_protocol(method):
     class T(f.ChildWithNull, method):
         pass
 
-    class Q(f.ParentWithNull, f.ParentMethod, T):
+    class Q(f.ParentWithNull, f.NormalParentMethod, T):
         pass
 
-    class J(f.ParentWithNull, f.ParentMethod):
+    class J(f.ParentWithNull, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
 
@@ -723,10 +723,10 @@ def test_substory_protocol_match_with_empty():
     class T(f.ChildWithNull, f.NullMethod):
         pass
 
-    class Q(f.ParentWithNull, f.ParentMethod, T):
+    class Q(f.ParentWithNull, f.NormalParentMethod, T):
         pass
 
-    class J(f.ParentWithNull, f.ParentMethod):
+    class J(f.ParentWithNull, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
 
@@ -762,10 +762,10 @@ def test_substory_protocol_match_with_list():
     class T(f.ChildWithList, f.StringMethod):
         pass
 
-    class Q(f.WideParentWithList, f.ParentMethod, T):
+    class Q(f.WideParentWithList, f.NormalParentMethod, T):
         pass
 
-    class J(f.WideParentWithList, f.ParentMethod):
+    class J(f.WideParentWithList, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
 
@@ -801,10 +801,10 @@ def test_substory_protocol_match_with_enum():
     class T(f.ChildWithEnum, f.EnumMethod):
         pass
 
-    class Q(f.WideParentWithEnum, f.ParentMethod, T):
+    class Q(f.WideParentWithEnum, f.NormalParentMethod, T):
         pass
 
-    class J(f.WideParentWithEnum, f.ParentMethod):
+    class J(f.WideParentWithEnum, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
 
@@ -843,10 +843,10 @@ def test_expand_substory_protocol_null_with_list():
     class T(f.ChildWithNull, f.NormalMethod):
         pass
 
-    class Q(f.ParentWithList, f.ParentMethod, T):
+    class Q(f.ParentWithList, f.NormalParentMethod, T):
         pass
 
-    class J(f.ParentWithList, f.ParentMethod):
+    class J(f.ParentWithList, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
 
@@ -882,10 +882,10 @@ def test_expand_substory_protocol_null_with_enum():
     class T(f.ChildWithNull, f.NormalMethod):
         pass
 
-    class Q(f.ParentWithEnum, f.ParentMethod, T):
+    class Q(f.ParentWithEnum, f.NormalParentMethod, T):
         pass
 
-    class J(f.ParentWithEnum, f.ParentMethod):
+    class J(f.ParentWithEnum, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
 
@@ -924,10 +924,10 @@ def test_deny_failure_substory_without_protocol_story_protocol_with_list():
     class T(f.ChildWithNull, f.NullMethod):
         pass
 
-    class Q(f.ParentWithList, f.ParentMethod, T):
+    class Q(f.ParentWithList, f.NormalParentMethod, T):
         pass
 
-    class J(f.ParentWithList, f.ParentMethod):
+    class J(f.ParentWithList, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
 
@@ -978,10 +978,10 @@ def test_deny_failure_substory_without_protocol_story_protocol_with_enum():
     class T(f.ChildWithNull, f.NullMethod):
         pass
 
-    class Q(f.ParentWithEnum, f.ParentMethod, T):
+    class Q(f.ParentWithEnum, f.NormalParentMethod, T):
         pass
 
-    class J(f.ParentWithEnum, f.ParentMethod):
+    class J(f.ParentWithEnum, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
 
@@ -1143,10 +1143,10 @@ def test_expand_substory_protocol_list_with_null():
     class T(f.ChildWithList, f.NormalMethod):
         pass
 
-    class Q(f.ParentWithNull, f.ParentMethod, T):
+    class Q(f.ParentWithNull, f.NormalParentMethod, T):
         pass
 
-    class J(f.ParentWithNull, f.ParentMethod):
+    class J(f.ParentWithNull, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
 
@@ -1182,10 +1182,10 @@ def test_expand_substory_protocol_enum_with_null():
     class T(f.ChildWithEnum, f.NormalMethod):
         pass
 
-    class Q(f.ParentWithNull, f.ParentMethod, T):
+    class Q(f.ParentWithNull, f.NormalParentMethod, T):
         pass
 
-    class J(f.ParentWithNull, f.ParentMethod):
+    class J(f.ParentWithNull, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
 
@@ -1223,10 +1223,10 @@ def test_expand_substory_protocol_list_with_list():
     class T(f.ChildWithList, f.StringMethod):
         pass
 
-    class Q(f.ShrinkParentWithList, f.ParentMethod, T):
+    class Q(f.ShrinkParentWithList, f.NormalParentMethod, T):
         pass
 
-    class J(f.ShrinkParentWithList, f.ParentMethod):
+    class J(f.ShrinkParentWithList, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
 
@@ -1262,10 +1262,10 @@ def test_expand_substory_protocol_enum_with_enum():
     class T(f.ChildWithEnum, f.EnumMethod):
         pass
 
-    class Q(f.ShrinkParentWithEnum, f.ParentMethod, T):
+    class Q(f.ShrinkParentWithEnum, f.NormalParentMethod, T):
         pass
 
-    class J(f.ShrinkParentWithEnum, f.ParentMethod):
+    class J(f.ShrinkParentWithEnum, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
 
@@ -1300,10 +1300,10 @@ def test_composition_type_error_list_with_enum():
     class T(f.ChildWithList, f.StringMethod):
         pass
 
-    class Q(f.ParentWithEnum, f.ParentMethod, T):
+    class Q(f.ParentWithEnum, f.NormalParentMethod, T):
         pass
 
-    class J(f.ParentWithEnum, f.ParentMethod):
+    class J(f.ParentWithEnum, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
 
@@ -1350,10 +1350,10 @@ def test_composition_type_error_enum_with_list():
     class T(f.ChildWithEnum, f.EnumMethod):
         pass
 
-    class Q(f.ParentWithList, f.ParentMethod, T):
+    class Q(f.ParentWithList, f.NormalParentMethod, T):
         pass
 
-    class J(f.ParentWithList, f.ParentMethod):
+    class J(f.ParentWithList, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
 

@@ -39,7 +39,7 @@ class NullMethod(object):
         return Failure()
 
 
-class ParentMethod(object):
+class NormalParentMethod(object):
     def before(self, ctx):
         return Success()
 
