@@ -39,6 +39,25 @@ class NullMethod(object):
         return Failure()
 
 
+# Parent mixins.
+
+
+class StringParentMethod(object):
+    def before(self, ctx):
+        return Failure("foo")
+
+    def after(self, ctx):
+        return Success()
+
+
+class EnumParentMethod(object):
+    def before(self, ctx):
+        return Failure(self.Errors.foo)
+
+    def after(self, ctx):
+        return Success()
+
+
 class NormalParentMethod(object):
     def before(self, ctx):
         return Success()
@@ -53,6 +72,9 @@ class NullParentMethod(object):
 
     def after(self, ctx):
         return Success()
+
+
+# Base classes.
 
 
 class ChildWithNull(object):

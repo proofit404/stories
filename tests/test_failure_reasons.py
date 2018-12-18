@@ -1392,3 +1392,183 @@ Substory failure protocol: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
     with pytest.raises(FailureProtocolError) as exc_info:
         J().a
     assert str(exc_info.value) == expected
+
+
+def test_deny_substory_reason_parent_story_protocol_with_list():
+    """
+    We deny to use Failure reason from the parent story protocol in
+    the substory method.
+    """
+
+    class T(f.ChildWithNull, f.StringMethod):
+        pass
+
+    class Q(f.ParentWithList, f.NormalParentMethod, T):
+        pass
+
+    class J(f.ParentWithList, f.NormalParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    # Substory inheritance.
+
+    expected = """
+Failure('foo') can not be used in a story without failure protocol.
+
+Function returned value: Q.one
+
+Use 'failures' story method to define failure protocol.
+    """.strip()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        Q().a
+    assert str(exc_info.value) == expected
+
+    # Substory DI.
+
+    expected = """
+Failure('foo') can not be used in a story without failure protocol.
+
+Function returned value: T.one
+
+Use 'failures' story method to define failure protocol.
+    """.strip()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        J().a
+    assert str(exc_info.value) == expected
+
+
+def test_deny_substory_reason_parent_story_protocol_with_enum():
+    """
+    We deny to use Failure reason from the parent story protocol in
+    the substory method.
+    """
+
+    class T(f.ChildWithNull, f.EnumMethod):
+        pass
+
+    class Q(f.ParentWithEnum, f.NormalParentMethod, T):
+        pass
+
+    class J(f.ParentWithEnum, f.NormalParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    # Substory inheritance.
+
+    expected = """
+Failure(<Errors.foo: 1>) can not be used in a story without failure protocol.
+
+Function returned value: Q.one
+
+Use 'failures' story method to define failure protocol.
+    """.strip()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        Q().a
+    assert str(exc_info.value) == expected
+
+    # Substory DI.
+
+    expected = """
+Failure(<Errors.foo: 1>) can not be used in a story without failure protocol.
+
+Function returned value: T.one
+
+Use 'failures' story method to define failure protocol.
+    """.strip()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        J().a
+    assert str(exc_info.value) == expected
+
+
+def test_deny_story_reason_substory_protocol_with_list():
+    """
+    We deny to use Failure reason from the substory protocol in the
+    parent story method.
+    """
+
+    class T(f.ChildWithList, f.NormalMethod):
+        pass
+
+    class Q(f.ParentWithNull, f.StringParentMethod, T):
+        pass
+
+    class J(f.ParentWithNull, f.StringParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    # Substory inheritance.
+
+    expected = """
+Failure('foo') can not be used in a story without failure protocol.
+
+Function returned value: Q.before
+
+Use 'failures' story method to define failure protocol.
+    """.strip()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        Q().a
+    assert str(exc_info.value) == expected
+
+    # Substory DI.
+
+    expected = """
+Failure('foo') can not be used in a story without failure protocol.
+
+Function returned value: J.before
+
+Use 'failures' story method to define failure protocol.
+    """.strip()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        J().a
+    assert str(exc_info.value) == expected
+
+
+def test_deny_story_reason_substory_protocol_with_enum():
+    """
+    We deny to use Failure reason from the substory protocol in the
+    parent story method.
+    """
+
+    class T(f.ChildWithEnum, f.NormalMethod):
+        pass
+
+    class Q(f.ParentWithNull, f.EnumParentMethod, T):
+        pass
+
+    class J(f.ParentWithNull, f.EnumParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    # Substory inheritance.
+
+    expected = """
+Failure(<Errors.foo: 1>) can not be used in a story without failure protocol.
+
+Function returned value: Q.before
+
+Use 'failures' story method to define failure protocol.
+    """.strip()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        Q().a
+    assert str(exc_info.value) == expected
+
+    # Substory DI.
+
+    expected = """
+Failure(<Errors.foo: 1>) can not be used in a story without failure protocol.
+
+Function returned value: J.before
+
+Use 'failures' story method to define failure protocol.
+    """.strip()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        J().a
+    assert str(exc_info.value) == expected
