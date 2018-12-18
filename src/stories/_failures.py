@@ -38,10 +38,6 @@ class Protocol(object):
             )
             raise FailureProtocolError(message)
 
-    def check_reason(self, reason):
-
-        raise NotImplementedError
-
     def summarize(self, cls_name, method_name, reason):
         # TODO: Deny to use `failed_because(None)`.
         if not self.check_reason(reason):
@@ -53,13 +49,11 @@ class Protocol(object):
             )
             raise FailureProtocolError(message)
 
-    def cast_reason(self, reason):
+    def check_reason(self, reason):
 
         raise NotImplementedError
 
-    def combine(
-        self, other, cls_name, method_name, other_cls, other_method, other_available
-    ):
+    def cast_reason(self, reason):
 
         raise NotImplementedError
 
@@ -83,16 +77,6 @@ class NullProtocol(Protocol):
     def cast_reason(self, reason):
         return None
 
-    def combine(
-        self, other, cls_name, method_name, other_cls, other_method, other_available
-    ):
-        if other.failures is None:
-            return self
-        else:
-            return other.combine(
-                self, other_cls, other_method, cls_name, method_name, self.available
-            )
-
 
 class CollectionProtocol(Protocol):
     def check_reason(self, reason):
@@ -101,80 +85,63 @@ class CollectionProtocol(Protocol):
     def cast_reason(self, reason):
         return reason
 
-    def combine(
-        self, other, cls_name, method_name, other_cls, other_method, other_available
-    ):
-        if other.failures is None:
-            return self
-        elif isinstance(other.failures, EnumMeta):
-            message = type_error_template.format(
-                cls=cls_name,
-                method=method_name,
-                available=self.available,
-                other_cls=other_cls,
-                other_method=other_method,
-                other_available=other_available,
-            )
-            raise FailureProtocolError(message)
-        else:
-            return CollectionProtocol(
-                self.failures
-                + [
-                    failure
-                    for failure in other.failures
-                    if failure not in self.failures
-                ]
-            )
-
     def compare(self, a, b):
 
         return a == b
 
 
 class EnumProtocol(Protocol):
-    def __init__(self, failures):
-        self.failures = failures
-        self.available = ", ".join(map(repr, failures.__members__.values()))
-
     def check_reason(self, reason):
         return isinstance(reason, Enum) and reason.name in self.failures.__members__
 
     def cast_reason(self, reason):
         return self.failures.__members__[reason.name]
 
-    def combine(
-        self, other, cls_name, method_name, other_cls, other_method, other_available
-    ):
-        if other.failures is None:
-            return self
-        elif isinstance(other.failures, (list, tuple, set, frozenset)):
-            message = type_error_template.format(
-                cls=cls_name,
-                method=method_name,
-                available=self.available,
-                other_cls=other_cls,
-                other_method=other_method,
-                other_available=other_available,
-            )
-            raise FailureProtocolError(message)
-        else:
-            return EnumProtocol(
-                Enum(
-                    self.failures.__name__,
-                    ",".join(
-                        list(self.failures.__members__.keys())
-                        + [
-                            failure
-                            for failure in other.failures.__members__.keys()
-                            if failure not in self.failures.__members__.keys()
-                        ]
-                    ),
-                )
-            )
-
     def compare(self, a, b):
 
         return a.name == b.name
+
+
+def combine_failures(
+    first_failures,
+    first_cls_name,
+    first_method_name,
+    second_failures,
+    second_cls_name,
+    second_method_name,
+):
+    if first_failures is None:
+        return second_failures
+    elif second_failures is None:
+        return first_failures
+    elif isinstance(first_failures, EnumMeta) and isinstance(second_failures, EnumMeta):
+        return Enum(
+            first_failures.__name__,
+            ",".join(
+                list(first_failures.__members__.keys())
+                + [
+                    failure
+                    for failure in second_failures.__members__.keys()
+                    if failure not in first_failures.__members__.keys()
+                ]
+            ),
+        )
+    elif isinstance(first_failures, (list, tuple, set, frozenset)) and isinstance(
+        second_failures, (list, tuple, set, frozenset)
+    ):
+        return first_failures + [
+            failure for failure in second_failures if failure not in first_failures
+        ]
+    else:
+        message = type_error_template.format(
+            cls=first_cls_name,
+            method=first_method_name,
+            available=failures_representation(first_failures),
+            other_cls=second_cls_name,
+            other_method=second_method_name,
+            other_available=failures_representation(second_failures),
+        )
+        raise FailureProtocolError(message)
 
 
 wrong_type_template = """

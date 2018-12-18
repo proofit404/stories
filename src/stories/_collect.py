@@ -1,3 +1,4 @@
+from ._failures import combine_failures
 from ._marker import substory_end, substory_start
 
 
@@ -14,7 +15,7 @@ def collect_story(f):
     return calls
 
 
-def wrap_story(is_story, collected, cls_name, method_name, obj, protocol):
+def wrap_story(is_story, collected, cls_name, method_name, obj, failures):
 
     methods = []
 
@@ -25,16 +26,16 @@ def wrap_story(is_story, collected, cls_name, method_name, obj, protocol):
             methods.append((obj, attr.__func__))
             continue
 
-        sub_methods, sub_protocol = wrap_story(
-            is_story, attr.collected, attr.cls_name, attr.name, attr.obj, attr.protocol
-        )
-        protocol = protocol.combine(
-            sub_protocol,
-            cls_name,
-            method_name,
+        sub_methods, sub_failures = wrap_story(
+            is_story,
+            attr.collected,
             attr.cls_name,
             attr.name,
-            attr.protocol.available,
+            attr.obj,
+            attr.protocol.failures,
+        )
+        failures = combine_failures(
+            failures, cls_name, method_name, sub_failures, attr.cls_name, attr.name
         )
         if not sub_methods:
             continue
@@ -49,7 +50,7 @@ def wrap_story(is_story, collected, cls_name, method_name, obj, protocol):
         methods.extend(sub_methods)
         methods.append((sub_obj, end_of_story))
 
-    return methods, protocol
+    return methods, failures
 
 
 def make_validator(name, arguments):

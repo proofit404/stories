@@ -34,11 +34,10 @@ class MountedStory(object):
         self.name = name
         self.arguments = arguments
         self.collected = collected  # TODO: Remove.
-        methods, protocol = wrap_story(
-            is_story, collected, cls.__name__, name, obj, protocol
-        )
-        self.methods = methods
         self.protocol = protocol
+        self.methods, self.failures = wrap_story(
+            is_story, collected, cls.__name__, name, obj, protocol.failures
+        )
 
     def __call__(self, *args, **kwargs):
         history = History(self.cls_name, self.name)
@@ -62,10 +61,6 @@ class MountedStory(object):
             self.obj,
             self.collected,
         )
-
-    @property
-    def failures(self):
-        return self.protocol.failures
 
 
 def is_story(attribute):
