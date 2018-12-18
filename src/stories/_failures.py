@@ -62,7 +62,9 @@ class Protocol(object):
 
         raise NotImplementedError
 
-    def combine(self, protocol):
+    def combine(
+        self, other, cls_name, method_name, other_cls, other_method, other_available
+    ):
 
         raise NotImplementedError
 
@@ -90,11 +92,15 @@ class NullProtocol(Protocol):
     def cast_reason(self, reason):
         return None
 
-    def combine(self, other):
+    def combine(
+        self, other, cls_name, method_name, other_cls, other_method, other_available
+    ):
         if other.failures is None:
             return self
         else:
-            return other.combine(self)
+            return other.combine(
+                self, other_cls, other_method, cls_name, method_name, self.available
+            )
 
 
 class CollectionProtocol(Protocol):
@@ -108,9 +114,21 @@ class CollectionProtocol(Protocol):
     def cast_reason(self, reason):
         return reason
 
-    def combine(self, other):
+    def combine(
+        self, other, cls_name, method_name, other_cls, other_method, other_available
+    ):
         if other.failures is None:
             return self
+        elif isinstance(other.failures, EnumMeta):
+            message = type_error_template.format(
+                cls=cls_name,
+                method=method_name,
+                available=self.available,
+                other_cls=other_cls,
+                other_method=other_method,
+                other_available=other_available,
+            )
+            raise FailureProtocolError(message)
         else:
             return CollectionProtocol(
                 self.failures
@@ -137,9 +155,21 @@ class EnumProtocol(Protocol):
     def cast_reason(self, reason):
         return self.failures.__members__[reason.name]
 
-    def combine(self, other):
+    def combine(
+        self, other, cls_name, method_name, other_cls, other_method, other_available
+    ):
         if other.failures is None:
             return self
+        elif isinstance(other.failures, (list, tuple, set, frozenset)):
+            message = type_error_template.format(
+                cls=cls_name,
+                method=method_name,
+                available=self.available,
+                other_cls=other_cls,
+                other_method=other_method,
+                other_available=other_available,
+            )
+            raise FailureProtocolError(message)
         else:
             return EnumProtocol(
                 Enum(
@@ -209,4 +239,17 @@ null_summary_template = """
 Story returned result: {cls}.{method}
 
 Use 'failures' story method to define failure protocol.
+""".strip()
+
+
+type_error_template = """
+Story and substory failure protocols has incompatible types:
+
+Story method: {cls}.{method}
+
+Story failure protocol: {available}
+
+Substory method: {other_cls}.{other_method}
+
+Substory failure protocol: {other_available}
 """.strip()

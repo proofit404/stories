@@ -14,7 +14,7 @@ def collect_story(f):
     return calls
 
 
-def wrap_story(is_story, collected, obj, protocol):
+def wrap_story(is_story, collected, cls_name, method_name, obj, protocol):
 
     methods = []
 
@@ -26,9 +26,16 @@ def wrap_story(is_story, collected, obj, protocol):
             continue
 
         sub_methods, sub_protocol = wrap_story(
-            is_story, attr.collected, attr.obj, attr.protocol
+            is_story, attr.collected, attr.cls_name, attr.name, attr.obj, attr.protocol
         )
-        protocol = protocol.combine(sub_protocol)
+        protocol = protocol.combine(
+            sub_protocol,
+            cls_name,
+            method_name,
+            attr.cls_name,
+            attr.name,
+            attr.protocol.available,
+        )
         if not sub_methods:
             continue
 

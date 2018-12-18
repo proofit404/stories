@@ -1072,3 +1072,103 @@ def test_expand_substory_protocol_enum_with_enum():
 
     result = J().a.run()
     assert result.failed_because(J().a.failures.foo)
+
+
+def test_composition_type_error_list_with_enum():
+    """We can't combine different types of stories and substories."""
+
+    class T(f.ChildWithList, f.StringMethod):
+        pass
+
+    class Q(f.ParentWithEnum, f.ParentMethod, T):
+        pass
+
+    class J(f.ParentWithEnum, f.ParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    # Substory inheritance.
+
+    expected = """
+Story and substory failure protocols has incompatible types:
+
+Story method: Q.a
+
+Story failure protocol: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
+
+Substory method: Q.x
+
+Substory failure protocol: 'foo', 'bar', 'baz'
+""".strip()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        Q().a
+    assert str(exc_info.value) == expected
+
+    # Substory DI.
+
+    expected = """
+Story and substory failure protocols has incompatible types:
+
+Story method: J.a
+
+Story failure protocol: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
+
+Substory method: T.x
+
+Substory failure protocol: 'foo', 'bar', 'baz'
+""".strip()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        J().a
+    assert str(exc_info.value) == expected
+
+
+def test_composition_type_error_enum_with_list():
+    """We can't combine different types of stories and substories."""
+
+    class T(f.ChildWithEnum, f.EnumMethod):
+        pass
+
+    class Q(f.ParentWithList, f.ParentMethod, T):
+        pass
+
+    class J(f.ParentWithList, f.ParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    # Substory inheritance.
+
+    expected = """
+Story and substory failure protocols has incompatible types:
+
+Story method: Q.a
+
+Story failure protocol: 'foo', 'bar', 'baz'
+
+Substory method: Q.x
+
+Substory failure protocol: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
+""".strip()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        Q().a
+    assert str(exc_info.value) == expected
+
+    # Substory DI.
+
+    expected = """
+Story and substory failure protocols has incompatible types:
+
+Story method: J.a
+
+Story failure protocol: 'foo', 'bar', 'baz'
+
+Substory method: T.x
+
+Substory failure protocol: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
+""".strip()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        J().a
+    assert str(exc_info.value) == expected

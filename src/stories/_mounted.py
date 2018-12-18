@@ -34,7 +34,9 @@ class MountedStory(object):
         self.name = name
         self.arguments = arguments
         self.collected = collected  # TODO: Remove.
-        methods, protocol = wrap_story(is_story, collected, obj, protocol)
+        methods, protocol = wrap_story(
+            is_story, collected, cls.__name__, name, obj, protocol
+        )
         self.methods = methods
         self.protocol = protocol
 
