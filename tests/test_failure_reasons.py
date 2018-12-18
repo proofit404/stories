@@ -1024,6 +1024,116 @@ Use one of them as Failure() argument.
     assert str(exc_info.value) == expected
 
 
+def test_deny_failure_story_without_protocol_substory_protocol_with_list():
+    """
+    Story defined without failure protocol can not return Failure, if
+    this story was composed with substory defined with list of strings
+    as failure protocol.
+    """
+
+    class T(f.ChildWithList, f.NormalMethod):
+        pass
+
+    class Q(f.ParentWithNull, f.NullParentMethod, T):
+        pass
+
+    class J(f.ParentWithNull, f.NullParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    # Substory inheritance.
+
+    Q().a.failures == ["foo", "bar", "baz"]
+
+    expected = """
+Failure() can not be used in a story with failure protocol.
+
+Available failures are: 'foo', 'bar', 'baz'
+
+Function returned value: Q.before
+
+Use one of them as Failure() argument.
+    """.strip()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        Q().a()
+    assert str(exc_info.value) == expected
+
+    # Substory DI.
+
+    J().a.failures == ["foo", "bar", "baz"]
+
+    expected = """
+Failure() can not be used in a story with failure protocol.
+
+Available failures are: 'foo', 'bar', 'baz'
+
+Function returned value: J.before
+
+Use one of them as Failure() argument.
+    """.strip()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        J().a()
+    assert str(exc_info.value) == expected
+
+
+def test_deny_failure_story_without_protocol_substory_protocol_with_enum():
+    """
+    Story defined without failure protocol can not return Failure, if
+    this story was composed with substory defined with enum as failure
+    protocol.
+    """
+
+    class T(f.ChildWithEnum, f.NormalMethod):
+        pass
+
+    class Q(f.ParentWithNull, f.NullParentMethod, T):
+        pass
+
+    class J(f.ParentWithNull, f.NullParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    # Substory inheritance.
+
+    assert isinstance(Q().a.failures, enum.EnumMeta)
+    assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
+
+    expected = """
+Failure() can not be used in a story with failure protocol.
+
+Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
+
+Function returned value: Q.before
+
+Use one of them as Failure() argument.
+    """.strip()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        Q().a()
+    assert str(exc_info.value) == expected
+
+    # Substory DI.
+
+    assert isinstance(J().a.failures, enum.EnumMeta)
+    assert set(J().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
+
+    expected = """
+Failure() can not be used in a story with failure protocol.
+
+Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
+
+Function returned value: J.before
+
+Use one of them as Failure() argument.
+    """.strip()
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        J().a()
+    assert str(exc_info.value) == expected
+
+
 def test_expand_substory_protocol_list_with_null():
     """
     We expand protocol of composed story, if substory define protocol

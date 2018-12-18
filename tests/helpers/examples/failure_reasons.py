@@ -4,14 +4,6 @@
 #     parent story.
 #
 # [ ] Protocol errors should be visible in the context representation.
-#
-# [ ] Expand parent and substory expand:
-#
-#     - Substory with empty result can not return failure if parent
-#       story defines errors protocol.
-#
-#     - Story with empty result can not return failure if child story
-#       defines errors protocol.
 
 
 from enum import Enum
@@ -50,6 +42,14 @@ class NullMethod(object):
 class ParentMethod(object):
     def before(self, ctx):
         return Success()
+
+    def after(self, ctx):
+        return Success()
+
+
+class NullParentMethod(object):
+    def before(self, ctx):
+        return Failure()
 
     def after(self, ctx):
         return Success()
