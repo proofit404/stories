@@ -711,12 +711,20 @@ def test_substory_protocol_match_with_empty():
         def __init__(self):
             self.x = T().x
 
+    # Substory inheritance.
+
+    Q().a.failures is None
+
     with pytest.raises(FailureError) as exc_info:
         Q().a()
     assert exc_info.value.reason is None
 
     result = Q().a.run()
     assert result.failure_reason is None
+
+    # Substory DI.
+
+    J().a.failures is None
 
     with pytest.raises(FailureError) as exc_info:
         J().a()
@@ -742,12 +750,20 @@ def test_substory_protocol_match_with_list():
         def __init__(self):
             self.x = T().x
 
+    # Substory inheritance.
+
+    Q().a.failures == ["foo", "bar", "baz", "quiz"]
+
     with pytest.raises(FailureError) as exc_info:
         Q().a()
     assert exc_info.value.reason == "foo"
 
     result = Q().a.run()
     assert result.failed_because("foo")
+
+    # Substory DI.
+
+    J().a.failures == ["foo", "bar", "baz", "quiz"]
 
     with pytest.raises(FailureError) as exc_info:
         J().a()
@@ -773,12 +789,22 @@ def test_substory_protocol_match_with_enum():
         def __init__(self):
             self.x = T().x
 
+    # Substory inheritance.
+
+    assert isinstance(Q().a.failures, enum.EnumMeta)
+    assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz", "quiz"}
+
     with pytest.raises(FailureError):
         Q().a()
     # assert exc_info.value.reason is Q().a.failures.foo
 
     result = Q().a.run()
     assert result.failed_because(Q().a.failures.foo)
+
+    # Substory DI.
+
+    assert isinstance(J().a.failures, enum.EnumMeta)
+    assert set(J().a.failures.__members__.keys()) == {"foo", "bar", "baz", "quiz"}
 
     with pytest.raises(FailureError):
         J().a()
