@@ -40,10 +40,17 @@ def test_wrong_definition():
 def test_reasons_defined_with_list():
     """We can use list of strings to define story failure protocol."""
 
-    # Simple.
-
     class T(f.ChildWithList, f.StringMethod):
         pass
+
+    class Q(f.ParentWithList, f.ParentMethod, T):
+        pass
+
+    class J(f.ParentWithList, f.ParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    # Simple.
 
     with pytest.raises(FailureError) as exc_info:
         T().x()
@@ -58,9 +65,6 @@ def test_reasons_defined_with_list():
 
     # Substory inheritance.
 
-    class Q(f.ParentWithList, f.ParentMethod, T):
-        pass
-
     with pytest.raises(FailureError) as exc_info:
         Q().a()
     assert exc_info.value.reason == "foo"
@@ -73,10 +77,6 @@ def test_reasons_defined_with_list():
     assert result.failed_because("foo")
 
     # Substory DI.
-
-    class J(f.ParentWithList, f.ParentMethod):
-        def __init__(self):
-            self.x = T().x
 
     with pytest.raises(FailureError) as exc_info:
         J().a()
@@ -93,10 +93,17 @@ def test_reasons_defined_with_list():
 def test_reasons_defined_with_enum():
     """We can use enum class to define story failure protocol."""
 
-    # Simple.
-
     class T(f.ChildWithEnum, f.EnumMethod):
         pass
+
+    class Q(f.ParentWithEnum, f.ParentMethod, T):
+        pass
+
+    class J(f.ParentWithEnum, f.ParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    # Simple.
 
     with pytest.raises(FailureError) as exc_info:
         T().x()
@@ -111,9 +118,6 @@ def test_reasons_defined_with_enum():
 
     # Substory inheritance.
 
-    class Q(f.ParentWithEnum, f.ParentMethod, T):
-        pass
-
     with pytest.raises(FailureError) as exc_info:
         Q().a()
     # assert exc_info.value.reason is Q().a.failures.foo
@@ -126,10 +130,6 @@ def test_reasons_defined_with_enum():
     assert result.failed_because(Q().a.failures.foo)
 
     # Substory DI.
-
-    class J(f.ParentWithEnum, f.ParentMethod):
-        def __init__(self):
-            self.x = T().x
 
     with pytest.raises(FailureError) as exc_info:
         J().a()
@@ -149,6 +149,16 @@ def test_wrong_reason_with_list():
     strings as its failure protocol.
     """
 
+    class T(f.ChildWithList, f.WrongMethod):
+        pass
+
+    class Q(f.ParentWithList, f.ParentMethod, T):
+        pass
+
+    class J(f.ParentWithList, f.ParentMethod):
+        def __init__(self):
+            self.x = T().x
+
     # Simple.
 
     expected = """
@@ -158,9 +168,6 @@ Available failures are: 'foo', 'bar', 'baz'
 
 Function returned value: T.one
     """.strip()
-
-    class T(f.ChildWithList, f.WrongMethod):
-        pass
 
     with pytest.raises(FailureProtocolError) as exc_info:
         T().x()
@@ -180,9 +187,6 @@ Available failures are: 'foo', 'bar', 'baz'
 Function returned value: Q.one
     """.strip()
 
-    class Q(f.ParentWithList, f.ParentMethod, T):
-        pass
-
     with pytest.raises(FailureProtocolError) as exc_info:
         Q().a()
     assert str(exc_info.value) == expected
@@ -200,10 +204,6 @@ Available failures are: 'foo', 'bar', 'baz'
 
 Function returned value: T.one
     """.strip()
-
-    class J(f.ParentWithList, f.ParentMethod):
-        def __init__(self):
-            self.x = T().x
 
     with pytest.raises(FailureProtocolError) as exc_info:
         J().a()
@@ -220,6 +220,16 @@ def test_wrong_reason_with_enum():
     its failure protocol.
     """
 
+    class T(f.ChildWithEnum, f.WrongMethod):
+        pass
+
+    class Q(f.ParentWithEnum, f.ParentMethod, T):
+        pass
+
+    class J(f.ParentWithEnum, f.ParentMethod):
+        def __init__(self):
+            self.x = T().x
+
     # Simple.
 
     expected = """
@@ -229,9 +239,6 @@ Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
 
 Function returned value: T.one
     """.strip()
-
-    class T(f.ChildWithEnum, f.WrongMethod):
-        pass
 
     with pytest.raises(FailureProtocolError) as exc_info:
         T().x()
@@ -251,9 +258,6 @@ Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
 Function returned value: Q.one
     """.strip()
 
-    class Q(f.ParentWithEnum, f.ParentMethod, T):
-        pass
-
     with pytest.raises(FailureProtocolError) as exc_info:
         Q().a()
     assert str(exc_info.value) == expected
@@ -271,10 +275,6 @@ Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
 
 Function returned value: T.one
     """.strip()
-
-    class J(f.ParentWithEnum, f.ParentMethod):
-        def __init__(self):
-            self.x = T().x
 
     with pytest.raises(FailureProtocolError) as exc_info:
         J().a()
@@ -291,6 +291,16 @@ def test_null_reason_with_list():
     as its failure protocol.
     """
 
+    class T(f.ChildWithList, f.NullMethod):
+        pass
+
+    class Q(f.ParentWithList, f.ParentMethod, T):
+        pass
+
+    class J(f.ParentWithList, f.ParentMethod):
+        def __init__(self):
+            self.x = T().x
+
     # Simple.
 
     expected = """
@@ -302,9 +312,6 @@ Function returned value: T.one
 
 Use one of them as Failure() argument.
     """.strip()
-
-    class T(f.ChildWithList, f.NullMethod):
-        pass
 
     with pytest.raises(FailureProtocolError) as exc_info:
         T().x()
@@ -326,9 +333,6 @@ Function returned value: Q.one
 Use one of them as Failure() argument.
     """.strip()
 
-    class Q(f.ParentWithList, f.ParentMethod, T):
-        pass
-
     with pytest.raises(FailureProtocolError) as exc_info:
         Q().a()
     assert str(exc_info.value) == expected
@@ -348,10 +352,6 @@ Function returned value: T.one
 
 Use one of them as Failure() argument.
     """.strip()
-
-    class J(f.ParentWithList, f.ParentMethod):
-        def __init__(self):
-            self.x = T().x
 
     with pytest.raises(FailureProtocolError) as exc_info:
         J().a()
@@ -368,6 +368,16 @@ def test_null_reason_with_enum():
     failure protocol.
     """
 
+    class T(f.ChildWithEnum, f.NullMethod):
+        pass
+
+    class Q(f.ParentWithEnum, f.ParentMethod, T):
+        pass
+
+    class J(f.ParentWithEnum, f.ParentMethod):
+        def __init__(self):
+            self.x = T().x
+
     # Simple.
 
     expected = """
@@ -379,9 +389,6 @@ Function returned value: T.one
 
 Use one of them as Failure() argument.
     """.strip()
-
-    class T(f.ChildWithEnum, f.NullMethod):
-        pass
 
     with pytest.raises(FailureProtocolError) as exc_info:
         T().x()
@@ -403,9 +410,6 @@ Function returned value: Q.one
 Use one of them as Failure() argument.
     """.strip()
 
-    class Q(f.ParentWithEnum, f.ParentMethod, T):
-        pass
-
     with pytest.raises(FailureProtocolError) as exc_info:
         Q().a()
     assert str(exc_info.value) == expected
@@ -425,10 +429,6 @@ Function returned value: T.one
 
 Use one of them as Failure() argument.
     """.strip()
-
-    class J(f.ParentWithEnum, f.ParentMethod):
-        def __init__(self):
-            self.x = T().x
 
     with pytest.raises(FailureProtocolError) as exc_info:
         J().a()
@@ -445,6 +445,16 @@ def test_reason_without_protocol():
     failure protocol.
     """
 
+    class T(f.ChildWithNull, f.WrongMethod):
+        pass
+
+    class Q(f.ParentWithNull, f.ParentMethod, T):
+        pass
+
+    class J(f.ParentWithNull, f.ParentMethod):
+        def __init__(self):
+            self.x = T().x
+
     # Simple.
 
     expected = """
@@ -454,9 +464,6 @@ Function returned value: T.one
 
 Use 'failures' story method to define failure protocol.
 """.strip()
-
-    class T(f.ChildWithNull, f.WrongMethod):
-        pass
 
     with pytest.raises(FailureProtocolError) as exc_info:
         T().x()
@@ -476,9 +483,6 @@ Function returned value: Q.one
 Use 'failures' story method to define failure protocol.
 """.strip()
 
-    class Q(f.ParentWithNull, f.ParentMethod, T):
-        pass
-
     with pytest.raises(FailureProtocolError) as exc_info:
         Q().a()
     assert str(exc_info.value) == expected
@@ -496,10 +500,6 @@ Function returned value: T.one
 
 Use 'failures' story method to define failure protocol.
 """.strip()
-
-    class J(f.ParentWithNull, f.ParentMethod):
-        def __init__(self):
-            self.x = T().x
 
     with pytest.raises(FailureProtocolError) as exc_info:
         J().a()
@@ -520,6 +520,16 @@ def test_summary_wrong_reason_with_list(method):
     `failed_because` method.
     """
 
+    class T(f.ChildWithList, method):
+        pass
+
+    class Q(f.ParentWithList, f.ParentMethod, T):
+        pass
+
+    class J(f.ParentWithList, f.ParentMethod):
+        def __init__(self):
+            self.x = T().x
+
     # Simple.
 
     expected = """
@@ -529,9 +539,6 @@ Available failures are: 'foo', 'bar', 'baz'
 
 Story returned result: T.x
 """.strip()
-
-    class T(f.ChildWithList, method):
-        pass
 
     result = T().x.run()
 
@@ -549,9 +556,6 @@ Available failures are: 'foo', 'bar', 'baz'
 Story returned result: Q.a
 """.strip()
 
-    class Q(f.ParentWithList, f.ParentMethod, T):
-        pass
-
     result = Q().a.run()
 
     with pytest.raises(FailureProtocolError) as exc_info:
@@ -567,10 +571,6 @@ Available failures are: 'foo', 'bar', 'baz'
 
 Story returned result: J.a
 """.strip()
-
-    class J(f.ParentWithList, f.ParentMethod):
-        def __init__(self):
-            self.x = T().x
 
     result = J().a.run()
 
@@ -586,6 +586,16 @@ def test_summary_wrong_reason_with_enum(method):
     `failed_because` method.
     """
 
+    class T(f.ChildWithEnum, method):
+        pass
+
+    class Q(f.ParentWithEnum, f.ParentMethod, T):
+        pass
+
+    class J(f.ParentWithEnum, f.ParentMethod):
+        def __init__(self):
+            self.x = T().x
+
     # Simple.
 
     expected = """
@@ -595,9 +605,6 @@ Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
 
 Story returned result: T.x
 """.strip()
-
-    class T(f.ChildWithEnum, method):
-        pass
 
     result = T().x.run()
 
@@ -615,9 +622,6 @@ Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
 Story returned result: Q.a
 """.strip()
 
-    class Q(f.ParentWithEnum, f.ParentMethod, T):
-        pass
-
     result = Q().a.run()
 
     with pytest.raises(FailureProtocolError) as exc_info:
@@ -633,10 +637,6 @@ Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
 
 Story returned result: J.a
 """.strip()
-
-    class J(f.ParentWithEnum, f.ParentMethod):
-        def __init__(self):
-            self.x = T().x
 
     result = J().a.run()
 
@@ -652,6 +652,16 @@ def test_summary_reason_without_protocol(method):
     stories defined without failure protocol.
     """
 
+    class T(f.ChildWithNull, method):
+        pass
+
+    class Q(f.ParentWithNull, f.ParentMethod, T):
+        pass
+
+    class J(f.ParentWithNull, f.ParentMethod):
+        def __init__(self):
+            self.x = T().x
+
     # Simple.
 
     expected = """
@@ -661,9 +671,6 @@ Story returned result: T.x
 
 Use 'failures' story method to define failure protocol.
 """.strip()
-
-    class T(f.ChildWithNull, method):
-        pass
 
     result = T().x.run()
 
@@ -681,9 +688,6 @@ Story returned result: Q.a
 Use 'failures' story method to define failure protocol.
 """.strip()
 
-    class Q(f.ParentWithNull, f.ParentMethod, T):
-        pass
-
     result = Q().a.run()
 
     with pytest.raises(FailureProtocolError) as exc_info:
@@ -699,10 +703,6 @@ Story returned result: J.a
 
 Use 'failures' story method to define failure protocol.
 """.strip()
-
-    class J(f.ParentWithNull, f.ParentMethod):
-        def __init__(self):
-            self.x = T().x
 
     result = J().a.run()
 

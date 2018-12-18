@@ -12,8 +12,7 @@
 #
 #     - Story with empty result can not return failure if child story
 #       defines errors protocol.
-#
-#     - Type mismatch of the story and substory protocols.
+
 
 from enum import Enum
 
