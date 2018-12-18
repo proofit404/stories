@@ -13,6 +13,9 @@ from .exceptions import FailureProtocolError
 
 
 def make_protocol(failures):
+    if type(failures) not in {type(None), list, tuple, set, frozenset, EnumMeta}:
+        message = wrong_type_template.format(failures=failures)
+        raise FailureProtocolError(message)
     if isinstance(failures, EnumMeta):
         protocol_class = EnumProtocol
     elif failures is not None:
@@ -155,6 +158,11 @@ class EnumProtocol(Protocol):
     def compare(self, a, b):
 
         return a.name == b.name
+
+
+wrong_type_template = """
+Unexpected type for story failure protocol: {failures!r}
+""".strip()
 
 
 wrong_reason_template = """

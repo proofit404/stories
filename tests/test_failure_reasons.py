@@ -3,6 +3,7 @@ import enum
 import pytest
 
 import examples.failure_reasons as f
+from stories import story
 from stories.exceptions import FailureError, FailureProtocolError
 
 
@@ -13,6 +14,24 @@ from stories.exceptions import FailureError, FailureProtocolError
 # T().a.failures.foo is T().a.run().failure_reason
 #
 # Story collected twice here.
+
+
+# Story definition.
+
+
+def test_wrong_definition():
+    """We check types used in failures definition."""
+
+    expected = "Unexpected type for story failure protocol: 'boom'"
+
+    class T(object):
+        @story
+        def x(I):
+            I.one
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        T.x.failures("boom")
+    assert str(exc_info.value) == expected
 
 
 # Arguments of the Failure class.

@@ -1,7 +1,5 @@
 # TODO:
 #
-# [ ] Check incoming reasons type in the 'failures' story method.
-#
 # [ ] Substory can not use failures from the protocol superset of the
 #     parent story.
 #
