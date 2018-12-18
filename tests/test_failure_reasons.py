@@ -973,3 +973,83 @@ def test_expand_substory_protocol_enum_with_null():
     result = J().a.run()
     assert result.is_success
     assert result.value is None
+
+
+def test_expand_substory_protocol_list_with_list():
+    """
+    We expand protocol of composed story, if substory and parent story
+    define protocol with list of strings.
+    """
+
+    class T(f.ChildWithList, f.StringMethod):
+        pass
+
+    class Q(f.ShrinkParentWithList, f.ParentMethod, T):
+        pass
+
+    class J(f.ShrinkParentWithList, f.ParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    # Substory inheritance.
+
+    Q().a.failures == ["foo", "bar", "baz", "quiz"]
+
+    with pytest.raises(FailureError) as exc_info:
+        Q().a()
+    assert exc_info.value.reason == "foo"
+
+    result = Q().a.run()
+    assert result.failed_because("foo")
+
+    # Substory DI.
+
+    J().a.failures == ["foo", "bar", "baz", "quiz"]
+
+    with pytest.raises(FailureError) as exc_info:
+        J().a()
+    assert exc_info.value.reason == "foo"
+
+    result = J().a.run()
+    assert result.failed_because("foo")
+
+
+def test_expand_substory_protocol_enum_with_enum():
+    """
+    We expand protocol of composed story, if substory and parent story
+    define protocol with enum class.
+    """
+
+    class T(f.ChildWithEnum, f.EnumMethod):
+        pass
+
+    class Q(f.ShrinkParentWithEnum, f.ParentMethod, T):
+        pass
+
+    class J(f.ShrinkParentWithEnum, f.ParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    # Substory inheritance.
+
+    assert isinstance(Q().a.failures, enum.EnumMeta)
+    assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz", "quiz"}
+
+    with pytest.raises(FailureError):
+        Q().a()
+    # assert exc_info.value.reason is Q().a.failures.foo
+
+    result = Q().a.run()
+    assert result.failed_because(Q().a.failures.foo)
+
+    # Substory DI.
+
+    assert isinstance(J().a.failures, enum.EnumMeta)
+    assert set(J().a.failures.__members__.keys()) == {"foo", "bar", "baz", "quiz"}
+
+    with pytest.raises(FailureError):
+        J().a()
+    # assert exc_info.value.reason is J().a.failures.foo
+
+    result = J().a.run()
+    assert result.failed_because(J().a.failures.foo)

@@ -100,6 +100,16 @@ class WideParentWithList(object):
     errors = a.failures(["foo", "bar", "baz", "quiz"])
 
 
+class ShrinkParentWithList(object):
+    @story
+    def a(I):
+        I.before
+        I.x
+        I.after
+
+    errors = a.failures(["foo", "quiz"])
+
+
 class ChildWithEnum(object):
     @story
     def x(I):
@@ -138,4 +148,17 @@ class WideParentWithEnum(object):
         foo = 1
         bar = 2
         baz = 3
+        quiz = 4
+
+
+class ShrinkParentWithEnum(object):
+    @story
+    def a(I):
+        I.before
+        I.x
+        I.after
+
+    @a.failures
+    class Errors(Enum):
+        foo = 1
         quiz = 4
