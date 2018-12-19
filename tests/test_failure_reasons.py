@@ -783,6 +783,80 @@ Use 'failures' story method to define failure protocol.
     assert str(exc_info.value) == expected
 
 
+def test_use_expanded_protocol_in_summary_result_with_list():
+    """
+    We should allow to use `failed_because` method with expanded
+    protocol.
+    """
+
+    class T(f.ChildWithList, f.NormalMethod):
+        pass
+
+    class Q(f.ShrinkParentWithList, f.NormalParentMethod, T):
+        pass
+
+    class J(f.ShrinkParentWithList, f.NormalParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    # Substory inheritance.
+
+    result = Q().a.run()
+    assert result.is_success
+    assert not result.is_failure
+    assert not result.failed_because("foo")
+    assert not result.failed_because("bar")
+    assert not result.failed_because("baz")
+    assert not result.failed_because("quiz")
+
+    # Substory DI.
+
+    result = J().a.run()
+    assert result.is_success
+    assert not result.is_failure
+    assert not result.failed_because("foo")
+    assert not result.failed_because("bar")
+    assert not result.failed_because("baz")
+    assert not result.failed_because("quiz")
+
+
+def test_use_expanded_protocol_in_summary_result_with_enum():
+    """
+    We should allow to use `failed_because` method with expanded
+    protocol.
+    """
+
+    class T(f.ChildWithEnum, f.NormalMethod):
+        pass
+
+    class Q(f.ShrinkParentWithEnum, f.NormalParentMethod, T):
+        pass
+
+    class J(f.ShrinkParentWithEnum, f.NormalParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    # Substory inheritance.
+
+    result = Q().a.run()
+    assert result.is_success
+    assert not result.is_failure
+    assert not result.failed_because(Q().a.failures.foo)
+    assert not result.failed_because(Q().a.failures.bar)
+    assert not result.failed_because(Q().a.failures.baz)
+    assert not result.failed_because(Q().a.failures.quiz)
+
+    # Substory DI.
+
+    result = J().a.run()
+    assert result.is_success
+    assert not result.is_failure
+    assert not result.failed_because(J().a.failures.foo)
+    assert not result.failed_because(J().a.failures.bar)
+    assert not result.failed_because(J().a.failures.baz)
+    assert not result.failed_because(J().a.failures.quiz)
+
+
 # Composition of the stories.
 
 

@@ -1,13 +1,6 @@
 # TODO:
 #
 # [ ] Protocol errors should be visible in the context representation.
-#
-# [_] Check expanded protocol everywhere.
-#
-# [ ] Check run and call everywhere.
-#
-# [ ] Use expanded protocol in the 'failed_because' method of summary
-#     classes.
 
 
 from enum import Enum
