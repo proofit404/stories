@@ -4,16 +4,16 @@ from .exceptions import FailureProtocolError
 
 
 def make_protocol(failures):
-    if type(failures) not in {type(None), list, tuple, set, frozenset, EnumMeta}:
+
+    if isinstance(failures, EnumMeta):
+        return EnumProtocol(failures)
+    elif isinstance(failures, (list, tuple, set, frozenset)):
+        return CollectionProtocol(failures)
+    elif failures is None:
+        return NullProtocol(failures)
+    else:
         message = wrong_type_template.format(failures=failures)
         raise FailureProtocolError(message)
-    if isinstance(failures, EnumMeta):
-        protocol_class = EnumProtocol
-    elif failures is not None:
-        protocol_class = CollectionProtocol
-    else:
-        protocol_class = NullProtocol
-    return protocol_class(failures)
 
 
 class Protocol(object):
