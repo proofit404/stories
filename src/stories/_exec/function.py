@@ -1,4 +1,4 @@
-from .._collect import end_of_story
+from .._collect import end_of_story, BeginningOfStory
 from .._marker import Marker, substory_end, substory_start
 from .._return import Failure, Result, Skip, Success
 
@@ -12,8 +12,7 @@ def execute(runner, ctx, methods, contract):
         if skipped > 0:
             if method is end_of_story:
                 skipped -= 1
-            elif method.__name__ == "validate_substory_arguments":
-                # FIXME: This is a really flaky comparison mechanism.
+            elif type(method) is BeginningOfStory:
                 skipped += 1
             continue
 

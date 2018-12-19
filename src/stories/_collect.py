@@ -47,7 +47,9 @@ def wrap_story(is_story, collected, cls_name, method_name, obj, protocol):
             method_name = name + " (" + attr.cls_name + "." + attr.name + ")"
 
         sub_obj = sub_methods[0][0]
-        methods.append((sub_obj, make_validator(method_name, attr.arguments), protocol))
+        methods.append(
+            (sub_obj, BeginningOfStory(method_name, attr.arguments), protocol)
+        )
         methods.extend(sub_methods)
         methods.append((sub_obj, end_of_story, protocol))
 
@@ -56,14 +58,17 @@ def wrap_story(is_story, collected, cls_name, method_name, obj, protocol):
     return methods, failures
 
 
-def make_validator(name, arguments):
-    def validate_substory_arguments(self, ctx):
-        assert set(arguments) <= set(ctx)
+class BeginningOfStory(object):
+
+    __name__ = "validate_substory_arguments"
+
+    def __init__(self, name, arguments):
+        self.method_name = name
+        self.arguments = arguments
+
+    def __call__(self, obj, ctx):
+        assert set(self.arguments) <= set(ctx)
         return substory_start
-
-    validate_substory_arguments.method_name = name
-
-    return validate_substory_arguments
 
 
 def end_of_story(self, ctx):
