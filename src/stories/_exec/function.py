@@ -1,4 +1,4 @@
-from .._collect import end_of_story, BeginningOfStory
+from .._collect import BeginningOfStory, end_of_story
 from .._marker import Marker, substory_end, substory_start
 from .._return import Failure, Result, Skip, Success
 
