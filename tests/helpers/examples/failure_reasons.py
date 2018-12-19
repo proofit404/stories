@@ -21,7 +21,8 @@ class StringMethod(object):
 
 class EnumMethod(object):
     def one(self, ctx):
-        return Failure(self.Errors.foo)
+        Errors = Enum("Errors", "foo,bar,baz")
+        return Failure(Errors.foo)
 
 
 class NormalMethod(object):
@@ -52,7 +53,8 @@ class StringParentMethod(object):
 
 class EnumParentMethod(object):
     def before(self, ctx):
-        return Failure(self.Errors.foo)
+        Errors = Enum("Errors", "foo,bar,baz")
+        return Failure(Errors.foo)
 
     def after(self, ctx):
         return Success()

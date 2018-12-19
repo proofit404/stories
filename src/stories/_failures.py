@@ -144,6 +144,27 @@ def combine_failures(
         raise FailureProtocolError(message)
 
 
+class DisabledNullProtocol(NullProtocol):
+    def check_return_statement(self, obj, method, reason):
+        if not reason:
+            message = disabled_null_template.format(
+                cls=obj.__class__.__name__, method=method.__name__
+            )
+            raise FailureProtocolError(message)
+        super(DisabledNullProtocol, self).check_return_statement(obj, method, reason)
+
+
+def maybe_disable_null_protocol(methods, reasons):
+
+    if reasons is None:
+        return methods
+    disabled = DisabledNullProtocol(None)
+    return [
+        (obj, f, disabled if type(protocol) is NullProtocol else protocol)
+        for obj, f, protocol in methods
+    ]
+
+
 wrong_type_template = """
 Unexpected type for story failure protocol: {failures!r}
 """.strip()
@@ -206,4 +227,15 @@ Story failure protocol: {available}
 Substory method: {other_cls}.{other_method}
 
 Substory failure protocol: {other_available}
+""".strip()
+
+
+disabled_null_template = """
+Failure() can not be used in a story composition.
+
+Different types of failure protocol were used in parent and substory definitions.
+
+Function returned value: {cls}.{method}
+
+Use 'failures' story method to define failure protocol.
 """.strip()

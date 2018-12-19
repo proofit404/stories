@@ -1,4 +1,4 @@
-from ._failures import combine_failures
+from ._failures import combine_failures, maybe_disable_null_protocol
 from ._marker import substory_end, substory_start
 
 
@@ -15,27 +15,28 @@ def collect_story(f):
     return calls
 
 
-def wrap_story(is_story, collected, cls_name, method_name, obj, failures):
+def wrap_story(is_story, collected, cls_name, method_name, obj, protocol):
 
     methods = []
+    failures = protocol.failures
 
     for name in collected:
 
         attr = getattr(obj, name)
         if not is_story(attr):
-            methods.append((obj, attr.__func__))
+            methods.append((obj, attr.__func__, protocol))
             continue
 
         sub_methods, sub_failures = wrap_story(
-            is_story,
-            attr.collected,
-            attr.cls_name,
-            attr.name,
-            attr.obj,
-            attr.protocol.failures,
+            is_story, attr.collected, attr.cls_name, attr.name, attr.obj, attr.protocol
         )
         failures = combine_failures(
-            failures, cls_name, method_name, sub_failures, attr.cls_name, attr.name
+            protocol.failures,
+            cls_name,
+            method_name,
+            sub_failures,
+            attr.cls_name,
+            attr.name,
         )
         if not sub_methods:
             continue
@@ -46,9 +47,11 @@ def wrap_story(is_story, collected, cls_name, method_name, obj, failures):
             method_name = name + " (" + attr.cls_name + "." + attr.name + ")"
 
         sub_obj = sub_methods[0][0]
-        methods.append((sub_obj, make_validator(method_name, attr.arguments)))
+        methods.append((sub_obj, make_validator(method_name, attr.arguments), protocol))
         methods.extend(sub_methods)
-        methods.append((sub_obj, end_of_story))
+        methods.append((sub_obj, end_of_story, protocol))
+
+    methods = maybe_disable_null_protocol(methods, failures)
 
     return methods, failures
 

@@ -463,7 +463,7 @@ Failure("'foo' is too big") can not be used in a story without failure protocol.
 Function returned value: T.one
 
 Use 'failures' story method to define failure protocol.
-""".strip()
+    """.strip()
 
     with pytest.raises(FailureProtocolError) as exc_info:
         T().x()
@@ -481,7 +481,7 @@ Failure("'foo' is too big") can not be used in a story without failure protocol.
 Function returned value: Q.one
 
 Use 'failures' story method to define failure protocol.
-""".strip()
+    """.strip()
 
     with pytest.raises(FailureProtocolError) as exc_info:
         Q().a()
@@ -499,7 +499,7 @@ Failure("'foo' is too big") can not be used in a story without failure protocol.
 Function returned value: T.one
 
 Use 'failures' story method to define failure protocol.
-""".strip()
+    """.strip()
 
     with pytest.raises(FailureProtocolError) as exc_info:
         J().a()
@@ -538,7 +538,7 @@ def test_summary_wrong_reason_with_list(method):
 Available failures are: 'foo', 'bar', 'baz'
 
 Story returned result: T.x
-""".strip()
+    """.strip()
 
     result = T().x.run()
 
@@ -554,7 +554,7 @@ Story returned result: T.x
 Available failures are: 'foo', 'bar', 'baz'
 
 Story returned result: Q.a
-""".strip()
+    """.strip()
 
     result = Q().a.run()
 
@@ -570,7 +570,7 @@ Story returned result: Q.a
 Available failures are: 'foo', 'bar', 'baz'
 
 Story returned result: J.a
-""".strip()
+    """.strip()
 
     result = J().a.run()
 
@@ -604,7 +604,7 @@ def test_summary_wrong_reason_with_enum(method):
 Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
 
 Story returned result: T.x
-""".strip()
+    """.strip()
 
     result = T().x.run()
 
@@ -620,7 +620,7 @@ Story returned result: T.x
 Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
 
 Story returned result: Q.a
-""".strip()
+    """.strip()
 
     result = Q().a.run()
 
@@ -636,7 +636,7 @@ Story returned result: Q.a
 Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
 
 Story returned result: J.a
-""".strip()
+    """.strip()
 
     result = J().a.run()
 
@@ -670,7 +670,7 @@ def test_summary_reason_without_protocol(method):
 Story returned result: T.x
 
 Use 'failures' story method to define failure protocol.
-""".strip()
+    """.strip()
 
     result = T().x.run()
 
@@ -686,7 +686,7 @@ Use 'failures' story method to define failure protocol.
 Story returned result: Q.a
 
 Use 'failures' story method to define failure protocol.
-""".strip()
+    """.strip()
 
     result = Q().a.run()
 
@@ -702,7 +702,7 @@ Use 'failures' story method to define failure protocol.
 Story returned result: J.a
 
 Use 'failures' story method to define failure protocol.
-""".strip()
+    """.strip()
 
     result = J().a.run()
 
@@ -936,13 +936,13 @@ def test_deny_failure_substory_without_protocol_story_protocol_with_list():
     Q().a.failures == ["foo", "bar", "baz"]
 
     expected = """
-Failure() can not be used in a story with failure protocol.
+Failure() can not be used in a story composition.
 
-Available failures are: 'foo', 'bar', 'baz'
+Different types of failure protocol were used in parent and substory definitions.
 
 Function returned value: Q.one
 
-Use one of them as Failure() argument.
+Use 'failures' story method to define failure protocol.
     """.strip()
 
     with pytest.raises(FailureProtocolError) as exc_info:
@@ -954,13 +954,13 @@ Use one of them as Failure() argument.
     J().a.failures == ["foo", "bar", "baz"]
 
     expected = """
-Failure() can not be used in a story with failure protocol.
+Failure() can not be used in a story composition.
 
-Available failures are: 'foo', 'bar', 'baz'
+Different types of failure protocol were used in parent and substory definitions.
 
 Function returned value: T.one
 
-Use one of them as Failure() argument.
+Use 'failures' story method to define failure protocol.
     """.strip()
 
     with pytest.raises(FailureProtocolError) as exc_info:
@@ -991,13 +991,13 @@ def test_deny_failure_substory_without_protocol_story_protocol_with_enum():
     assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
     expected = """
-Failure() can not be used in a story with failure protocol.
+Failure() can not be used in a story composition.
 
-Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
+Different types of failure protocol were used in parent and substory definitions.
 
 Function returned value: Q.one
 
-Use one of them as Failure() argument.
+Use 'failures' story method to define failure protocol.
     """.strip()
 
     with pytest.raises(FailureProtocolError) as exc_info:
@@ -1010,13 +1010,13 @@ Use one of them as Failure() argument.
     assert set(J().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
     expected = """
-Failure() can not be used in a story with failure protocol.
+Failure() can not be used in a story composition.
 
-Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
+Different types of failure protocol were used in parent and substory definitions.
 
 Function returned value: T.one
 
-Use one of them as Failure() argument.
+Use 'failures' story method to define failure protocol.
     """.strip()
 
     with pytest.raises(FailureProtocolError) as exc_info:
@@ -1046,13 +1046,13 @@ def test_deny_failure_story_without_protocol_substory_protocol_with_list():
     Q().a.failures == ["foo", "bar", "baz"]
 
     expected = """
-Failure() can not be used in a story with failure protocol.
+Failure() can not be used in a story composition.
 
-Available failures are: 'foo', 'bar', 'baz'
+Different types of failure protocol were used in parent and substory definitions.
 
 Function returned value: Q.before
 
-Use one of them as Failure() argument.
+Use 'failures' story method to define failure protocol.
     """.strip()
 
     with pytest.raises(FailureProtocolError) as exc_info:
@@ -1064,13 +1064,13 @@ Use one of them as Failure() argument.
     J().a.failures == ["foo", "bar", "baz"]
 
     expected = """
-Failure() can not be used in a story with failure protocol.
+Failure() can not be used in a story composition.
 
-Available failures are: 'foo', 'bar', 'baz'
+Different types of failure protocol were used in parent and substory definitions.
 
 Function returned value: J.before
 
-Use one of them as Failure() argument.
+Use 'failures' story method to define failure protocol.
     """.strip()
 
     with pytest.raises(FailureProtocolError) as exc_info:
@@ -1101,13 +1101,13 @@ def test_deny_failure_story_without_protocol_substory_protocol_with_enum():
     assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
     expected = """
-Failure() can not be used in a story with failure protocol.
+Failure() can not be used in a story composition.
 
-Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
+Different types of failure protocol were used in parent and substory definitions.
 
 Function returned value: Q.before
 
-Use one of them as Failure() argument.
+Use 'failures' story method to define failure protocol.
     """.strip()
 
     with pytest.raises(FailureProtocolError) as exc_info:
@@ -1120,13 +1120,13 @@ Use one of them as Failure() argument.
     assert set(J().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
     expected = """
-Failure() can not be used in a story with failure protocol.
+Failure() can not be used in a story composition.
 
-Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
+Different types of failure protocol were used in parent and substory definitions.
 
 Function returned value: J.before
 
-Use one of them as Failure() argument.
+Use 'failures' story method to define failure protocol.
     """.strip()
 
     with pytest.raises(FailureProtocolError) as exc_info:
@@ -1319,7 +1319,7 @@ Story failure protocol: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
 Substory method: Q.x
 
 Substory failure protocol: 'foo', 'bar', 'baz'
-""".strip()
+    """.strip()
 
     with pytest.raises(FailureProtocolError) as exc_info:
         Q().a
@@ -1337,7 +1337,7 @@ Story failure protocol: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
 Substory method: T.x
 
 Substory failure protocol: 'foo', 'bar', 'baz'
-""".strip()
+    """.strip()
 
     with pytest.raises(FailureProtocolError) as exc_info:
         J().a
@@ -1369,7 +1369,7 @@ Story failure protocol: 'foo', 'bar', 'baz'
 Substory method: Q.x
 
 Substory failure protocol: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
-""".strip()
+    """.strip()
 
     with pytest.raises(FailureProtocolError) as exc_info:
         Q().a
@@ -1387,7 +1387,7 @@ Story failure protocol: 'foo', 'bar', 'baz'
 Substory method: T.x
 
 Substory failure protocol: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
-""".strip()
+    """.strip()
 
     with pytest.raises(FailureProtocolError) as exc_info:
         J().a
@@ -1421,7 +1421,7 @@ Use 'failures' story method to define failure protocol.
     """.strip()
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        Q().a
+        Q().a()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -1435,7 +1435,7 @@ Use 'failures' story method to define failure protocol.
     """.strip()
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        J().a
+        J().a()
     assert str(exc_info.value) == expected
 
 
@@ -1466,7 +1466,7 @@ Use 'failures' story method to define failure protocol.
     """.strip()
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        Q().a
+        Q().a()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -1480,7 +1480,7 @@ Use 'failures' story method to define failure protocol.
     """.strip()
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        J().a
+        J().a()
     assert str(exc_info.value) == expected
 
 
@@ -1511,7 +1511,7 @@ Use 'failures' story method to define failure protocol.
     """.strip()
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        Q().a
+        Q().a()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -1525,7 +1525,7 @@ Use 'failures' story method to define failure protocol.
     """.strip()
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        J().a
+        J().a()
     assert str(exc_info.value) == expected
 
 
@@ -1556,7 +1556,7 @@ Use 'failures' story method to define failure protocol.
     """.strip()
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        Q().a
+        Q().a()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -1570,5 +1570,5 @@ Use 'failures' story method to define failure protocol.
     """.strip()
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        J().a
+        J().a()
     assert str(exc_info.value) == expected

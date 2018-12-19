@@ -3,11 +3,11 @@ from .._marker import Marker, substory_end, substory_start
 from .._return import Failure, Result, Skip, Success
 
 
-def execute(runner, ctx, methods, contract, protocol):
+def execute(runner, ctx, methods, contract):
 
     skipped = 0
 
-    for obj, method in methods:
+    for obj, method, protocol in methods:
 
         if skipped > 0:
             if method is end_of_story:
