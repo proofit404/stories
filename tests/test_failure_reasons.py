@@ -771,7 +771,7 @@ def test_substory_protocol_match_with_list():
 
     # Substory inheritance.
 
-    Q().a.failures == ["foo", "bar", "baz", "quiz"]
+    assert Q().a.failures == ["foo", "bar", "baz", "quiz"]
 
     with pytest.raises(FailureError) as exc_info:
         Q().a()
@@ -782,7 +782,7 @@ def test_substory_protocol_match_with_list():
 
     # Substory DI.
 
-    J().a.failures == ["foo", "bar", "baz", "quiz"]
+    assert J().a.failures == ["foo", "bar", "baz", "quiz"]
 
     with pytest.raises(FailureError) as exc_info:
         J().a()
@@ -852,7 +852,7 @@ def test_expand_substory_protocol_null_with_list():
 
     # Substory inheritance.
 
-    Q().a.failures == ["foo", "bar", "baz"]
+    assert Q().a.failures == ["foo", "bar", "baz"]
 
     result = Q().a()
     assert result is None
@@ -863,7 +863,7 @@ def test_expand_substory_protocol_null_with_list():
 
     # Substory DI.
 
-    J().a.failures == ["foo", "bar", "baz"]
+    assert J().a.failures == ["foo", "bar", "baz"]
 
     result = J().a()
     assert result is None
@@ -933,7 +933,7 @@ def test_deny_failure_substory_without_protocol_story_protocol_with_list():
 
     # Substory inheritance.
 
-    Q().a.failures == ["foo", "bar", "baz"]
+    assert Q().a.failures == ["foo", "bar", "baz"]
 
     expected = """
 Failure() can not be used in a story composition.
@@ -951,7 +951,7 @@ Use 'failures' story method to define failure protocol.
 
     # Substory DI.
 
-    J().a.failures == ["foo", "bar", "baz"]
+    assert J().a.failures == ["foo", "bar", "baz"]
 
     expected = """
 Failure() can not be used in a story composition.
@@ -1043,7 +1043,7 @@ def test_deny_failure_story_without_protocol_substory_protocol_with_list():
 
     # Substory inheritance.
 
-    Q().a.failures == ["foo", "bar", "baz"]
+    assert Q().a.failures == ["foo", "bar", "baz"]
 
     expected = """
 Failure() can not be used in a story composition.
@@ -1061,7 +1061,7 @@ Use 'failures' story method to define failure protocol.
 
     # Substory DI.
 
-    J().a.failures == ["foo", "bar", "baz"]
+    assert J().a.failures == ["foo", "bar", "baz"]
 
     expected = """
 Failure() can not be used in a story composition.
@@ -1152,7 +1152,7 @@ def test_expand_substory_protocol_list_with_null():
 
     # Substory inheritance.
 
-    Q().a.failures == ["foo", "bar", "baz"]
+    assert Q().a.failures == ["foo", "bar", "baz"]
 
     result = Q().a()
     assert result is None
@@ -1163,7 +1163,7 @@ def test_expand_substory_protocol_list_with_null():
 
     # Substory DI.
 
-    J().a.failures == ["foo", "bar", "baz"]
+    assert J().a.failures == ["foo", "bar", "baz"]
 
     result = J().a()
     assert result is None
@@ -1232,7 +1232,7 @@ def test_expand_substory_protocol_list_with_list():
 
     # Substory inheritance.
 
-    Q().a.failures == ["foo", "bar", "baz", "quiz"]
+    assert Q().a.failures == ["foo", "quiz", "bar", "baz"]
 
     with pytest.raises(FailureError) as exc_info:
         Q().a()
@@ -1243,7 +1243,7 @@ def test_expand_substory_protocol_list_with_list():
 
     # Substory DI.
 
-    J().a.failures == ["foo", "bar", "baz", "quiz"]
+    assert J().a.failures == ["foo", "quiz", "bar", "baz"]
 
     with pytest.raises(FailureError) as exc_info:
         J().a()
