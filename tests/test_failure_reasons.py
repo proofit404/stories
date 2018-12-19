@@ -52,6 +52,8 @@ def test_reasons_defined_with_list():
 
     # Simple.
 
+    assert T().x.failures == ["foo", "bar", "baz"]
+
     with pytest.raises(FailureError) as exc_info:
         T().x()
     assert exc_info.value.reason == "foo"
@@ -65,6 +67,8 @@ def test_reasons_defined_with_list():
 
     # Substory inheritance.
 
+    assert Q().a.failures == ["foo", "bar", "baz"]
+
     with pytest.raises(FailureError) as exc_info:
         Q().a()
     assert exc_info.value.reason == "foo"
@@ -77,6 +81,8 @@ def test_reasons_defined_with_list():
     assert result.failed_because("foo")
 
     # Substory DI.
+
+    assert J().a.failures == ["foo", "bar", "baz"]
 
     with pytest.raises(FailureError) as exc_info:
         J().a()
@@ -105,6 +111,9 @@ def test_reasons_defined_with_enum():
 
     # Simple.
 
+    assert isinstance(T().x.failures, enum.EnumMeta)
+    assert set(T().x.failures.__members__.keys()) == {"foo", "bar", "baz"}
+
     with pytest.raises(FailureError) as exc_info:
         T().x()
     # assert exc_info.value.reason is T().x.failures.foo
@@ -118,6 +127,9 @@ def test_reasons_defined_with_enum():
 
     # Substory inheritance.
 
+    assert isinstance(Q().a.failures, enum.EnumMeta)
+    assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
+
     with pytest.raises(FailureError) as exc_info:
         Q().a()
     # assert exc_info.value.reason is Q().a.failures.foo
@@ -130,6 +142,9 @@ def test_reasons_defined_with_enum():
     assert result.failed_because(Q().a.failures.foo)
 
     # Substory DI.
+
+    assert isinstance(J().a.failures, enum.EnumMeta)
+    assert set(J().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
     with pytest.raises(FailureError) as exc_info:
         J().a()
@@ -169,6 +184,8 @@ Available failures are: 'foo', 'bar', 'baz'
 Function returned value: T.one
     """.strip()
 
+    assert T().x.failures == ["foo", "bar", "baz"]
+
     with pytest.raises(FailureProtocolError) as exc_info:
         T().x()
     assert str(exc_info.value) == expected
@@ -187,6 +204,8 @@ Available failures are: 'foo', 'bar', 'baz'
 Function returned value: Q.one
     """.strip()
 
+    assert Q().a.failures == ["foo", "bar", "baz"]
+
     with pytest.raises(FailureProtocolError) as exc_info:
         Q().a()
     assert str(exc_info.value) == expected
@@ -204,6 +223,8 @@ Available failures are: 'foo', 'bar', 'baz'
 
 Function returned value: T.one
     """.strip()
+
+    assert J().a.failures == ["foo", "bar", "baz"]
 
     with pytest.raises(FailureProtocolError) as exc_info:
         J().a()
@@ -240,6 +261,9 @@ Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
 Function returned value: T.one
     """.strip()
 
+    assert isinstance(T().x.failures, enum.EnumMeta)
+    assert set(T().x.failures.__members__.keys()) == {"foo", "bar", "baz"}
+
     with pytest.raises(FailureProtocolError) as exc_info:
         T().x()
     assert str(exc_info.value) == expected
@@ -258,6 +282,9 @@ Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
 Function returned value: Q.one
     """.strip()
 
+    assert isinstance(Q().a.failures, enum.EnumMeta)
+    assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
+
     with pytest.raises(FailureProtocolError) as exc_info:
         Q().a()
     assert str(exc_info.value) == expected
@@ -275,6 +302,9 @@ Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
 
 Function returned value: T.one
     """.strip()
+
+    assert isinstance(J().a.failures, enum.EnumMeta)
+    assert set(J().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
     with pytest.raises(FailureProtocolError) as exc_info:
         J().a()
@@ -313,6 +343,8 @@ Function returned value: T.one
 Use one of them as Failure() argument.
     """.strip()
 
+    assert T().x.failures == ["foo", "bar", "baz"]
+
     with pytest.raises(FailureProtocolError) as exc_info:
         T().x()
     assert str(exc_info.value) == expected
@@ -333,6 +365,8 @@ Function returned value: Q.one
 Use one of them as Failure() argument.
     """.strip()
 
+    assert Q().a.failures == ["foo", "bar", "baz"]
+
     with pytest.raises(FailureProtocolError) as exc_info:
         Q().a()
     assert str(exc_info.value) == expected
@@ -352,6 +386,8 @@ Function returned value: T.one
 
 Use one of them as Failure() argument.
     """.strip()
+
+    assert J().a.failures == ["foo", "bar", "baz"]
 
     with pytest.raises(FailureProtocolError) as exc_info:
         J().a()
@@ -390,6 +426,9 @@ Function returned value: T.one
 Use one of them as Failure() argument.
     """.strip()
 
+    assert isinstance(T().x.failures, enum.EnumMeta)
+    assert set(T().x.failures.__members__.keys()) == {"foo", "bar", "baz"}
+
     with pytest.raises(FailureProtocolError) as exc_info:
         T().x()
     assert str(exc_info.value) == expected
@@ -410,6 +449,9 @@ Function returned value: Q.one
 Use one of them as Failure() argument.
     """.strip()
 
+    assert isinstance(Q().a.failures, enum.EnumMeta)
+    assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
+
     with pytest.raises(FailureProtocolError) as exc_info:
         Q().a()
     assert str(exc_info.value) == expected
@@ -429,6 +471,9 @@ Function returned value: T.one
 
 Use one of them as Failure() argument.
     """.strip()
+
+    assert isinstance(J().a.failures, enum.EnumMeta)
+    assert set(J().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
     with pytest.raises(FailureProtocolError) as exc_info:
         J().a()
@@ -465,6 +510,8 @@ Function returned value: T.one
 Use 'failures' story method to define failure protocol.
     """.strip()
 
+    assert T().x.failures is None
+
     with pytest.raises(FailureProtocolError) as exc_info:
         T().x()
     assert str(exc_info.value) == expected
@@ -483,6 +530,8 @@ Function returned value: Q.one
 Use 'failures' story method to define failure protocol.
     """.strip()
 
+    assert Q().a.failures is None
+
     with pytest.raises(FailureProtocolError) as exc_info:
         Q().a()
     assert str(exc_info.value) == expected
@@ -500,6 +549,8 @@ Function returned value: T.one
 
 Use 'failures' story method to define failure protocol.
     """.strip()
+
+    assert J().a.failures is None
 
     with pytest.raises(FailureProtocolError) as exc_info:
         J().a()
@@ -540,6 +591,8 @@ Available failures are: 'foo', 'bar', 'baz'
 Story returned result: T.x
     """.strip()
 
+    assert T().x.failures == ["foo", "bar", "baz"]
+
     result = T().x.run()
 
     with pytest.raises(FailureProtocolError) as exc_info:
@@ -556,6 +609,8 @@ Available failures are: 'foo', 'bar', 'baz'
 Story returned result: Q.a
     """.strip()
 
+    assert Q().a.failures == ["foo", "bar", "baz"]
+
     result = Q().a.run()
 
     with pytest.raises(FailureProtocolError) as exc_info:
@@ -571,6 +626,8 @@ Available failures are: 'foo', 'bar', 'baz'
 
 Story returned result: J.a
     """.strip()
+
+    assert J().a.failures == ["foo", "bar", "baz"]
 
     result = J().a.run()
 
@@ -606,6 +663,9 @@ Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
 Story returned result: T.x
     """.strip()
 
+    assert isinstance(T().x.failures, enum.EnumMeta)
+    assert set(T().x.failures.__members__.keys()) == {"foo", "bar", "baz"}
+
     result = T().x.run()
 
     with pytest.raises(FailureProtocolError) as exc_info:
@@ -622,6 +682,9 @@ Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
 Story returned result: Q.a
     """.strip()
 
+    assert isinstance(Q().a.failures, enum.EnumMeta)
+    assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
+
     result = Q().a.run()
 
     with pytest.raises(FailureProtocolError) as exc_info:
@@ -637,6 +700,9 @@ Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
 
 Story returned result: J.a
     """.strip()
+
+    assert isinstance(J().a.failures, enum.EnumMeta)
+    assert set(J().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
     result = J().a.run()
 
@@ -672,6 +738,8 @@ Story returned result: T.x
 Use 'failures' story method to define failure protocol.
     """.strip()
 
+    assert T().x.failures is None
+
     result = T().x.run()
 
     with pytest.raises(FailureProtocolError) as exc_info:
@@ -688,6 +756,8 @@ Story returned result: Q.a
 Use 'failures' story method to define failure protocol.
     """.strip()
 
+    assert Q().a.failures is None
+
     result = Q().a.run()
 
     with pytest.raises(FailureProtocolError) as exc_info:
@@ -703,6 +773,8 @@ Story returned result: J.a
 
 Use 'failures' story method to define failure protocol.
     """.strip()
+
+    assert J().a.failures is None
 
     result = J().a.run()
 
@@ -1420,8 +1492,14 @@ Function returned value: Q.one
 Use 'failures' story method to define failure protocol.
     """.strip()
 
+    assert Q().a.failures == ["foo", "bar", "baz"]
+
     with pytest.raises(FailureProtocolError) as exc_info:
         Q().a()
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        Q().a.run()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -1434,8 +1512,14 @@ Function returned value: T.one
 Use 'failures' story method to define failure protocol.
     """.strip()
 
+    assert J().a.failures == ["foo", "bar", "baz"]
+
     with pytest.raises(FailureProtocolError) as exc_info:
         J().a()
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        J().a.run()
     assert str(exc_info.value) == expected
 
 
@@ -1465,8 +1549,15 @@ Function returned value: Q.one
 Use 'failures' story method to define failure protocol.
     """.strip()
 
+    assert isinstance(Q().a.failures, enum.EnumMeta)
+    assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
+
     with pytest.raises(FailureProtocolError) as exc_info:
         Q().a()
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        Q().a.run()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -1479,8 +1570,15 @@ Function returned value: T.one
 Use 'failures' story method to define failure protocol.
     """.strip()
 
+    assert isinstance(J().a.failures, enum.EnumMeta)
+    assert set(J().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
+
     with pytest.raises(FailureProtocolError) as exc_info:
         J().a()
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        J().a.run()
     assert str(exc_info.value) == expected
 
 
@@ -1510,8 +1608,14 @@ Function returned value: Q.before
 Use 'failures' story method to define failure protocol.
     """.strip()
 
+    assert Q().a.failures == ["foo", "bar", "baz"]
+
     with pytest.raises(FailureProtocolError) as exc_info:
         Q().a()
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        Q().a.run()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -1524,8 +1628,14 @@ Function returned value: J.before
 Use 'failures' story method to define failure protocol.
     """.strip()
 
+    assert J().a.failures == ["foo", "bar", "baz"]
+
     with pytest.raises(FailureProtocolError) as exc_info:
         J().a()
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        J().a.run()
     assert str(exc_info.value) == expected
 
 
@@ -1555,8 +1665,15 @@ Function returned value: Q.before
 Use 'failures' story method to define failure protocol.
     """.strip()
 
+    assert isinstance(Q().a.failures, enum.EnumMeta)
+    assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
+
     with pytest.raises(FailureProtocolError) as exc_info:
         Q().a()
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        Q().a.run()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -1569,6 +1686,13 @@ Function returned value: J.before
 Use 'failures' story method to define failure protocol.
     """.strip()
 
+    assert isinstance(J().a.failures, enum.EnumMeta)
+    assert set(J().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
+
     with pytest.raises(FailureProtocolError) as exc_info:
         J().a()
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        J().a.run()
     assert str(exc_info.value) == expected

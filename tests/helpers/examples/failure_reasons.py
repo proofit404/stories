@@ -2,7 +2,7 @@
 #
 # [ ] Protocol errors should be visible in the context representation.
 #
-# [ ] Check expanded protocol everywhere.
+# [_] Check expanded protocol everywhere.
 #
 # [ ] Check run and call everywhere.
 #
