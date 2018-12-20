@@ -28,7 +28,11 @@ def execute(runner, ctx, methods, contract):
         assert restype in (Result, Success, Failure, Skip, Marker)
 
         if restype is Failure:
-            protocol.check_return_statement(obj, method, result.reason)
+            try:
+                protocol.check_return_statement(obj, method, result.reason)
+            except Exception as error:
+                ctx.history.on_error(error.__class__.__name__)
+                raise
             ctx.history.on_failure(result.reason)
             return runner.got_failure(ctx, method.__name__, result.reason)
 

@@ -4,7 +4,7 @@ import examples
 from helpers import make_collector
 from stories._context import Context
 from stories._history import History
-from stories.exceptions import FailureError
+from stories.exceptions import FailureError, FailureProtocolError
 
 
 def test_context_dir():
@@ -446,4 +446,26 @@ Context()
     getter = make_collector()
     with pytest.raises(Exception):
         examples.methods.StepError().x.run()
+    assert repr(getter()) == expected
+
+    expected = """
+T.x:
+  one (errored: FailureProtocolError)
+
+Context()
+    """.strip()
+
+    class T(
+        examples.failure_reasons.ChildWithList, examples.failure_reasons.WrongMethod
+    ):
+        pass
+
+    getter = make_collector()
+    with pytest.raises(FailureProtocolError):
+        T().x()
+    assert repr(getter()) == expected
+
+    getter = make_collector()
+    with pytest.raises(FailureProtocolError):
+        T().x.run()
     assert repr(getter()) == expected

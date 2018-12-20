@@ -1,8 +1,3 @@
-# TODO:
-#
-# [ ] Protocol errors should be visible in the context representation.
-
-
 from enum import Enum
 
 from stories import Failure, Success, story
