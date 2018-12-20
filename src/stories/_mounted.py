@@ -44,7 +44,7 @@ class MountedStory(object):
         history = History(self.cls_name, self.name)
         ctx = Context(validate_arguments(self.arguments, args, kwargs), history)
         contract = Contract()
-        runner = Call(self.protocol)
+        runner = Call(make_protocol(self.failures))
         return function.execute(runner, ctx, self.methods, contract)
 
     def run(self, *args, **kwargs):

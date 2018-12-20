@@ -31,12 +31,7 @@ def wrap_story(is_story, collected, cls_name, method_name, obj, protocol):
             is_story, attr.collected, attr.cls_name, attr.name, attr.obj, attr.protocol
         )
         failures = combine_failures(
-            protocol.failures,
-            cls_name,
-            method_name,
-            sub_failures,
-            attr.cls_name,
-            attr.name,
+            failures, cls_name, method_name, sub_failures, attr.cls_name, attr.name
         )
         if not sub_methods:
             continue

@@ -1472,6 +1472,196 @@ def test_expand_substory_protocol_enum_with_enum():
     assert result.failed_because(J().a.failures.foo)
 
 
+def test_expand_sequential_substory_protocol_list_with_null():
+    """
+    If parent story consist from sequential substories, we should
+    merge their failure protocols together.
+    """
+
+    class T(f.ChildWithList, f.StringMethod):
+        pass
+
+    class E(f.NextChildWithNull, f.NormalMethod):
+        pass
+
+    class Q(f.SequenceParentWithNull, f.NormalParentMethod, T, E):
+        pass
+
+    class J(f.SequenceParentWithNull, f.NormalParentMethod):
+        def __init__(self):
+            self.x = T().x
+            self.y = E().y
+
+    # Substory inheritance.
+
+    assert Q().a.failures == ["foo", "bar", "baz"]
+
+    with pytest.raises(FailureError) as exc_info:
+        Q().a()
+    assert exc_info.value.reason == "foo"
+
+    result = Q().a.run()
+    assert result.failed_because("foo")
+
+    # Substory DI.
+
+    assert J().a.failures == ["foo", "bar", "baz"]
+
+    with pytest.raises(FailureError) as exc_info:
+        J().a()
+    assert exc_info.value.reason == "foo"
+
+    result = J().a.run()
+    assert result.failed_because("foo")
+
+
+def test_expand_sequential_substory_protocol_enum_with_null():
+    """
+    If parent story consist from sequential substories, we should
+    merge their failure protocols together.
+    """
+
+    class T(f.ChildWithEnum, f.EnumMethod):
+        pass
+
+    class E(f.NextChildWithNull, f.NormalMethod):
+        pass
+
+    class Q(f.SequenceParentWithNull, f.NormalParentMethod, T, E):
+        pass
+
+    class J(f.SequenceParentWithNull, f.NormalParentMethod):
+        def __init__(self):
+            self.x = T().x
+            self.y = E().y
+
+    # Substory inheritance.
+
+    assert isinstance(Q().a.failures, enum.EnumMeta)
+    assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
+
+    with pytest.raises(FailureError):
+        Q().a()
+    # assert exc_info.value.reason is Q().a.failures.foo
+
+    result = Q().a.run()
+    assert result.failed_because(Q().a.failures.foo)
+
+    # Substory DI.
+
+    assert isinstance(J().a.failures, enum.EnumMeta)
+    assert set(J().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
+
+    with pytest.raises(FailureError):
+        J().a()
+    # assert exc_info.value.reason is J().a.failures.foo
+
+    result = J().a.run()
+    assert result.failed_because(J().a.failures.foo)
+
+
+def test_expand_sequential_substory_protocol_list_with_list():
+    """
+    If parent story consist from sequential substories, we should
+    merge their failure protocols together.
+    """
+
+    class T(f.ChildWithList, f.StringMethod):
+        pass
+
+    class E(f.NextChildWithList, f.StringMethod):
+        pass
+
+    class Q(f.SequenceParentWithNull, f.NormalParentMethod, T, E):
+        pass
+
+    class J(f.SequenceParentWithNull, f.NormalParentMethod):
+        def __init__(self):
+            self.x = T().x
+            self.y = E().y
+
+    # Substory inheritance.
+
+    assert Q().a.failures == ["foo", "bar", "baz", "spam", "ham", "eggs"]
+
+    with pytest.raises(FailureError) as exc_info:
+        Q().a()
+    assert exc_info.value.reason == "foo"
+
+    result = Q().a.run()
+    assert result.failed_because("foo")
+
+    # Substory DI.
+
+    assert J().a.failures == ["foo", "bar", "baz", "spam", "ham", "eggs"]
+
+    with pytest.raises(FailureError) as exc_info:
+        J().a()
+    assert exc_info.value.reason == "foo"
+
+    result = J().a.run()
+    assert result.failed_because("foo")
+
+
+def test_expand_sequential_substory_protocol_enum_with_enum():
+    """
+    If parent story consist from sequential substories, we should
+    merge their failure protocols together.
+    """
+
+    class T(f.ChildWithEnum, f.EnumMethod):
+        pass
+
+    class E(f.NextChildWithEnum, f.EnumMethod):
+        pass
+
+    class Q(f.SequenceParentWithNull, f.NormalParentMethod, T, E):
+        pass
+
+    class J(f.SequenceParentWithNull, f.NormalParentMethod):
+        def __init__(self):
+            self.x = T().x
+            self.y = E().y
+
+    # Substory inheritance.
+
+    assert isinstance(Q().a.failures, enum.EnumMeta)
+    assert set(Q().a.failures.__members__.keys()) == {
+        "foo",
+        "bar",
+        "baz",
+        "spam",
+        "ham",
+        "eggs",
+    }
+
+    with pytest.raises(FailureError):
+        Q().a()
+    # assert exc_info.value.reason is Q().a.failures.foo
+
+    result = Q().a.run()
+    assert result.failed_because(Q().a.failures.foo)
+
+    # Substory DI.
+
+    assert isinstance(J().a.failures, enum.EnumMeta)
+    assert set(J().a.failures.__members__.keys()) == {
+        "foo",
+        "bar",
+        "baz",
+        "spam",
+        "ham",
+        "eggs",
+    }
+
+    with pytest.raises(FailureError):
+        J().a()
+    # assert exc_info.value.reason is J().a.failures.foo
+
+    result = J().a.run()
+    assert result.failed_because(J().a.failures.foo)
+
+
 def test_composition_type_error_list_with_enum():
     """We can't combine different types of stories and substories."""
 
