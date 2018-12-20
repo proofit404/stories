@@ -1,6 +1,5 @@
 from collections import OrderedDict
 
-from ._marker import undefined
 from ._repr import context_representation, history_representation
 
 
@@ -25,7 +24,8 @@ class Context(object):
         )
 
     def __dir__(self):
-        parent = set(dir(undefined))
+        spec = type("Context", (object,), {})
+        parent = set(dir(spec()))
         current = set(self.__dict__) - {"ns", "history", "lines"}
         scope = set(self.ns)
         attributes = sorted(parent | current | scope)
