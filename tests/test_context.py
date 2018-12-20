@@ -4,7 +4,11 @@ import examples
 from helpers import make_collector
 from stories._context import Context
 from stories._history import History
-from stories.exceptions import FailureError, FailureProtocolError
+from stories.exceptions import (
+    ContextContractError,
+    FailureError,
+    FailureProtocolError,
+)
 
 
 def test_context_dir():
@@ -468,4 +472,23 @@ Context()
     getter = make_collector()
     with pytest.raises(FailureProtocolError):
         T().x.run()
+    assert repr(getter()) == expected
+
+    expected = """
+ExistedKey.x:
+  one (errored: ContextContractError)
+
+Context:
+    foo = 1  # Story argument
+    bar = 2  # Story argument
+    """.strip()
+
+    getter = make_collector()
+    with pytest.raises(ContextContractError):
+        examples.contract.ExistedKey().x(1, 2)
+    assert repr(getter()) == expected
+
+    getter = make_collector()
+    with pytest.raises(ContextContractError):
+        examples.contract.ExistedKey().x.run(1, 2)
     assert repr(getter()) == expected

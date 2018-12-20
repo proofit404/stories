@@ -53,7 +53,12 @@ def execute(runner, ctx, methods, contract):
             ctx.history.on_substory_end()
             continue
 
-        contract.check(obj, method, ctx, result.kwargs)
+        try:
+            contract.check(obj, method, ctx, result.kwargs)
+        except Exception as error:
+            ctx.history.on_error(error.__class__.__name__)
+            raise
+
         ctx.ns.update(result.kwargs)
         line = "Set by %s.%s" % (obj.__class__.__name__, method.__name__)
         ctx.lines.extend([line] * len(result.kwargs))
