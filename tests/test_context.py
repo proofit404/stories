@@ -4,11 +4,7 @@ import examples
 from helpers import make_collector
 from stories._context import Context
 from stories._history import History
-from stories.exceptions import (
-    ContextContractError,
-    FailureError,
-    FailureProtocolError,
-)
+from stories.exceptions import ContextContractError, FailureError, FailureProtocolError
 
 
 def test_context_dir():
