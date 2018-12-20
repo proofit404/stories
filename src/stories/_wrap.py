@@ -1,5 +1,5 @@
 from ._failures import combine_failures, maybe_disable_null_protocol
-from ._marker import substory_end, substory_start
+from ._marker import BeginningOfStory, EndOfStory
 
 
 def wrap_story(is_story, collected, cls_name, method_name, obj, protocol):
@@ -33,25 +33,8 @@ def wrap_story(is_story, collected, cls_name, method_name, obj, protocol):
             (sub_obj, BeginningOfStory(method_name, attr.arguments), protocol)
         )
         methods.extend(sub_methods)
-        methods.append((sub_obj, end_of_story, protocol))
+        methods.append((sub_obj, EndOfStory(), protocol))
 
     methods = maybe_disable_null_protocol(methods, failures)
 
     return methods, failures
-
-
-class BeginningOfStory(object):
-
-    __name__ = "validate_substory_arguments"
-
-    def __init__(self, name, arguments):
-        self.method_name = name
-        self.arguments = arguments
-
-    def __call__(self, obj, ctx):
-        assert set(self.arguments) <= set(ctx)
-        return substory_start
-
-
-def end_of_story(self, ctx):
-    return substory_end

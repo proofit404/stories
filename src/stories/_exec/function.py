@@ -1,6 +1,5 @@
-from .._marker import Marker, substory_end, substory_start
+from .._marker import BeginningOfStory, EndOfStory
 from .._return import Failure, Result, Skip, Success
-from .._wrap import BeginningOfStory, end_of_story
 
 
 def execute(runner, ctx, methods, contract):
@@ -9,10 +8,12 @@ def execute(runner, ctx, methods, contract):
 
     for obj, method, protocol in methods:
 
+        method_type = type(method)
+
         if skipped > 0:
-            if method is end_of_story:
+            if method_type is EndOfStory:
                 skipped -= 1
-            elif type(method) is BeginningOfStory:
+            elif method_type is BeginningOfStory:
                 skipped += 1
             continue
 
@@ -25,7 +26,7 @@ def execute(runner, ctx, methods, contract):
             raise
 
         restype = type(result)
-        assert restype in (Result, Success, Failure, Skip, Marker)
+        assert restype in (Result, Success, Failure, Skip)
 
         if restype is Failure:
             try:
@@ -45,11 +46,11 @@ def execute(runner, ctx, methods, contract):
             skipped = 1
             continue
 
-        if result is substory_start:
+        if method_type is BeginningOfStory:
             ctx.history.on_substory_start(method.method_name)
             continue
 
-        if result is substory_end:
+        if method_type is EndOfStory:
             ctx.history.on_substory_end()
             continue
 
