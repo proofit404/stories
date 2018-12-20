@@ -1,6 +1,6 @@
-from .._collect import BeginningOfStory, end_of_story
 from .._marker import Marker, substory_end, substory_start
 from .._return import Failure, Result, Skip, Success
+from .._wrap import BeginningOfStory, end_of_story
 
 
 def execute(runner, ctx, methods, contract):

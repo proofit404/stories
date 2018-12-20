@@ -1,4 +1,3 @@
-from ._collect import wrap_story
 from ._context import Context
 from ._contract import Contract, validate_arguments
 from ._exec import function
@@ -6,6 +5,7 @@ from ._failures import make_protocol
 from ._history import History
 from ._repr import story_representation
 from ._run import Call, Run
+from ._wrap import wrap_story
 
 
 class ClassMountedStory(object):
