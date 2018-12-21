@@ -222,30 +222,35 @@ Context:
     examples.methods.SubstoryReasonWithEnum().y.run(4)
     assert repr(getter()) == expected
 
-    # TODO:
-    #
-    #     expected = """
-    # SubstoryDI.y:
-    #   start
-    #   before
-    #   x (Simple.x)
-    #     one
-    #     two (failed: "'foo' is too big")
-    #
-    # Context:
-    #     spam = 4  # Story argument
-    #     foo = 3   # Set by SubstoryDI.start
-    #     bar = 5   # Set by SubstoryDI.before
-    #         """.strip()
-    #
-    #     getter = make_collector()
-    #     with pytest.raises(FailureError):
-    #         examples.methods.SubstoryDI(examples.methods.Simple().x).y(4)
-    #     assert repr(getter()) == expected
-    #
-    #     getter = make_collector()
-    #     examples.methods.SubstoryDI(examples.methods.Simple().x).y.run(4)
-    #     assert repr(getter()) == expected
+    expected = """
+J.a:
+  before
+  x (T.x)
+    one (failed: 'foo')
+
+Context()
+    """.strip()
+
+    class T(
+        examples.failure_reasons.ChildWithList, examples.failure_reasons.StringMethod
+    ):
+        pass
+
+    class J(
+        examples.failure_reasons.ParentWithList,
+        examples.failure_reasons.NormalParentMethod,
+    ):
+        def __init__(self):
+            self.x = T().x
+
+    getter = make_collector()
+    with pytest.raises(FailureError):
+        J().a()
+    assert repr(getter()) == expected
+
+    getter = make_collector()
+    J().a.run()
+    assert repr(getter()) == expected
 
     # Result.
 
