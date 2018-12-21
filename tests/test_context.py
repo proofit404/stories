@@ -39,7 +39,7 @@ Context()
 EmptySubstory.y()
 
 Context()
-        """.strip()
+    """.strip()
 
     getter = make_collector()
     examples.methods.EmptySubstory().y()
@@ -59,7 +59,7 @@ Context:
     spam = 3  # Story argument
     foo = 2   # Set by SubstoryDI.start
     bar = 4   # Set by SubstoryDI.before
-        """.strip()
+    """.strip()
 
     getter = make_collector()
     examples.methods.SubstoryDI(examples.methods.Empty().x).y(3)
@@ -79,7 +79,7 @@ Simple.x:
 Context:
     foo = 2  # Story argument
     bar = 2  # Story argument
-        """.strip()
+    """.strip()
 
     getter = make_collector()
     with pytest.raises(FailureError):
@@ -102,7 +102,7 @@ Context:
     spam = 3  # Story argument
     foo = 2   # Set by SimpleSubstory.start
     bar = 4   # Set by SimpleSubstory.before
-        """.strip()
+    """.strip()
 
     getter = make_collector()
     with pytest.raises(FailureError):
@@ -125,7 +125,7 @@ Context:
     spam = 3  # Story argument
     foo = 2   # Set by SubstoryDI.start
     bar = 4   # Set by SubstoryDI.before
-        """.strip()
+    """.strip()
 
     getter = make_collector()
     with pytest.raises(FailureError):
@@ -259,7 +259,7 @@ Context:
     foo = 1  # Story argument
     bar = 3  # Story argument
     baz = 4  # Set by Simple.two
-        """.strip()
+    """.strip()
 
     getter = make_collector()
     examples.methods.Simple().x(1, 3)
@@ -283,7 +283,7 @@ Context:
     foo = 1   # Set by SimpleSubstory.start
     bar = 3   # Set by SimpleSubstory.before
     baz = 4   # Set by SimpleSubstory.two
-        """.strip()
+    """.strip()
 
     getter = make_collector()
     examples.methods.SimpleSubstory().y(2)
@@ -331,7 +331,7 @@ Context:
     spam = 3  # Story argument
     foo = 2   # Set by SubstoryDI.start
     bar = 4   # Set by SubstoryDI.before
-        """.strip()
+    """.strip()
 
     getter = make_collector()
     examples.methods.SubstoryDI(examples.methods.Pipe().x).y(3)
@@ -351,7 +351,7 @@ Simple.x:
 Context:
     foo = 1   # Story argument
     bar = -1  # Story argument
-        """.strip()
+    """.strip()
 
     getter = make_collector()
     examples.methods.Simple().x(1, -1)
@@ -374,7 +374,7 @@ Context:
     spam = -2  # Story argument
     foo = -3   # Set by SimpleSubstory.start
     bar = -1   # Set by SimpleSubstory.before
-        """.strip()
+    """.strip()
 
     getter = make_collector()
     examples.methods.SimpleSubstory().y(-2)
@@ -397,7 +397,7 @@ Context:
     spam = -2  # Story argument
     foo = -3   # Set by SubstoryDI.start
     bar = -1   # Set by SubstoryDI.before
-        """.strip()
+    """.strip()
 
     getter = make_collector()
     examples.methods.SubstoryDI(examples.methods.Simple().x).y(-2)
@@ -419,7 +419,7 @@ Context:
     spam = 2  # Story argument
     foo = 1   # Set by SubstoryDI.start
     bar = 3   # Set by SubstoryDI.before
-        """.strip()
+    """.strip()
 
     getter = make_collector()
     examples.methods.SubstoryDI(examples.methods.SimpleSubstory().z).y(2)
