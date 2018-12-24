@@ -17,9 +17,7 @@ def test_context_dir():
     assert dir(Context({"a": 2, "b": 2}, History("Obj", "meth"))) == dir(Ctx())
 
 
-def test_context_representation():
-
-    # Empty.
+def test_context_representation_with_empty():
 
     expected = """
 Empty.x()
@@ -69,7 +67,8 @@ Context:
     examples.methods.SubstoryDI(examples.methods.Empty().x).y.run(3)
     assert repr(getter()) == expected
 
-    # Failure.
+
+def test_context_representation_with_failure():
 
     expected = """
 Simple.x:
@@ -136,7 +135,8 @@ Context:
     examples.methods.SubstoryDI(examples.methods.Simple().x).y.run(3)
     assert repr(getter()) == expected
 
-    # Failure with reason.
+
+def test_context_representation_with_failure_reason():
 
     expected = """
 ReasonWithList.x:
@@ -252,7 +252,8 @@ Context()
     J().a.run()
     assert repr(getter()) == expected
 
-    # Result.
+
+def test_context_representation_with_result():
 
     expected = """
 Simple.x:
@@ -346,7 +347,8 @@ Context:
     examples.methods.SubstoryDI(examples.methods.Pipe().x).y.run(3)
     assert repr(getter()) == expected
 
-    # Skip.
+
+def test_context_representation_with_skip():
 
     expected = """
 Simple.x:
@@ -434,7 +436,8 @@ Context:
     examples.methods.SubstoryDI(examples.methods.SimpleSubstory().z).y.run(2)
     assert repr(getter()) == expected
 
-    # Error.
+
+def test_context_representation_with_error():
 
     expected = """
 StepError.x:
@@ -452,6 +455,9 @@ Context()
     with pytest.raises(Exception):
         examples.methods.StepError().x.run()
     assert repr(getter()) == expected
+
+
+def test_context_representation_with_failure_protocol_error():
 
     expected = """
 T.x:
@@ -474,6 +480,9 @@ Context()
     with pytest.raises(FailureProtocolError):
         T().x.run()
     assert repr(getter()) == expected
+
+
+def test_context_representation_with_context_contract_error():
 
     expected = """
 ExistedKey.x:
