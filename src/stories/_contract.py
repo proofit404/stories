@@ -30,5 +30,5 @@ This variables already present in the context: {variables}
 
 Function returned value: {cls}.{method}
 
-Use different names as Success() arguments.
+Use different names for Success() keyword arguments.
 """.strip()

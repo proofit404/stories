@@ -21,19 +21,13 @@ def test_arguments_validation():
 
 def test_context_immutability():
 
-    # TODO: Check the same method with
-    #
-    # [ ] Inheritance substories.
-    #
-    # [ ] Substories DI.
-
     expected = """
 This variables already present in the context: 'bar', 'foo'
 
 Function returned value: ExistedKey.one
 
-Use different names as Success() arguments.
-""".strip()
+Use different names for Success() keyword arguments.
+    """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
         examples.contract.ExistedKey().x(1, 2)
@@ -41,4 +35,40 @@ Use different names as Success() arguments.
 
     with pytest.raises(ContextContractError) as exc_info:
         examples.contract.ExistedKey().x.run(1, 2)
+    assert str(exc_info.value) == expected
+
+    # Substory inheritance.
+
+    expected = """
+This variables already present in the context: 'bar', 'foo'
+
+Function returned value: SubstoryExistedKey.one
+
+Use different names for Success() keyword arguments.
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        examples.contract.SubstoryExistedKey().a(1, 2)
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(ContextContractError) as exc_info:
+        examples.contract.SubstoryExistedKey().a.run(1, 2)
+    assert str(exc_info.value) == expected
+
+    # Substory DI.
+
+    expected = """
+This variables already present in the context: 'bar', 'foo'
+
+Function returned value: ExistedKey.one
+
+Use different names for Success() keyword arguments.
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        examples.contract.ExistedKeyDI().a(1, 2)
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(ContextContractError) as exc_info:
+        examples.contract.ExistedKeyDI().a.run(1, 2)
     assert str(exc_info.value) == expected
