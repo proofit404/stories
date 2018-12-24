@@ -9,7 +9,7 @@ class BeginningOfStory(object):
         self.method_name = name
         self.arguments = arguments
 
-    def __call__(self, obj, ctx):
+    def __call__(self, ctx):
         assert set(self.arguments) <= set(ctx)
         return Success()
 
@@ -18,5 +18,5 @@ class EndOfStory(object):
 
     __name__ = "end_of_story"
 
-    def __call__(self, obj, ctx):
+    def __call__(self, ctx):
         return Success()

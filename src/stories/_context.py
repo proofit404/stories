@@ -9,6 +9,11 @@ class Context(object):
         self.history = history
         self.lines = ["Story argument"] * len(ns)
 
+    def assign(self, method, kwargs):
+        self.ns.update(kwargs)
+        line = "Set by %s.%s" % (method.__self__.__class__.__name__, method.__name__)
+        self.lines.extend([line] * len(kwargs))
+
     def __getattr__(self, name):
         return self.ns[name]
 

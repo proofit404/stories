@@ -14,12 +14,12 @@ def validate_arguments(arguments, args, kwargs):
 
 
 class Contract(object):
-    def check_success_statement(self, obj, method, ctx, ns):
+    def check_success_statement(self, method, ctx, ns):
         tries_to_override = set(ctx) & set(ns)
         if tries_to_override:
             message = variable_override_template.format(
                 variables=", ".join(map(repr, sorted(tries_to_override))),
-                cls=obj.__class__.__name__,
+                cls=method.__self__.__class__.__name__,
                 method=method.__name__,
             )
             raise ContextContractError(message)

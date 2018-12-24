@@ -21,11 +21,11 @@ class Protocol(object):
         self.failures = failures
         self.available = failures_representation(failures)
 
-    def check_return_statement(self, obj, method, reason):
+    def check_return_statement(self, method, reason):
         if not reason:
             message = null_reason_template.format(
                 available=self.available,
-                cls=obj.__class__.__name__,
+                cls=method.__self__.__class__.__name__,
                 method=method.__name__,
             )
             raise FailureProtocolError(message)
@@ -33,7 +33,7 @@ class Protocol(object):
             message = wrong_reason_template.format(
                 reason=reason,
                 available=self.available,
-                cls=obj.__class__.__name__,
+                cls=method.__self__.__class__.__name__,
                 method=method.__name__,
             )
             raise FailureProtocolError(message)
@@ -63,10 +63,12 @@ class Protocol(object):
 
 
 class NullProtocol(Protocol):
-    def check_return_statement(self, obj, method, reason):
+    def check_return_statement(self, method, reason):
         if reason:
             message = null_protocol_template.format(
-                reason=reason, cls=obj.__class__.__name__, method=method.__name__
+                reason=reason,
+                cls=method.__self__.__class__.__name__,
+                method=method.__name__,
             )
             raise FailureProtocolError(message)
 
@@ -145,13 +147,13 @@ def combine_failures(
 
 
 class DisabledNullProtocol(NullProtocol):
-    def check_return_statement(self, obj, method, reason):
+    def check_return_statement(self, method, reason):
         if not reason:
             message = disabled_null_template.format(
-                cls=obj.__class__.__name__, method=method.__name__
+                cls=method.__self__.__class__.__name__, method=method.__name__
             )
             raise FailureProtocolError(message)
-        super(DisabledNullProtocol, self).check_return_statement(obj, method, reason)
+        super(DisabledNullProtocol, self).check_return_statement(method, reason)
 
 
 def maybe_disable_null_protocol(methods, reasons):
@@ -160,8 +162,8 @@ def maybe_disable_null_protocol(methods, reasons):
         return methods
     disabled = DisabledNullProtocol(None)
     return [
-        (obj, f, disabled if type(protocol) is NullProtocol else protocol)
-        for obj, f, protocol in methods
+        (f, disabled if type(protocol) is NullProtocol else protocol)
+        for f, protocol in methods
     ]
 
 

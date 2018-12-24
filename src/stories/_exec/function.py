@@ -6,7 +6,7 @@ def execute(runner, ctx, methods, contract):
 
     skipped = 0
 
-    for obj, method, protocol in methods:
+    for method, protocol in methods:
 
         method_type = type(method)
 
@@ -20,7 +20,7 @@ def execute(runner, ctx, methods, contract):
         ctx.history.before_call(method.__name__)
 
         try:
-            result = method(obj, ctx)
+            result = method(ctx)
         except Exception as error:
             ctx.history.on_error(error.__class__.__name__)
             raise
@@ -30,7 +30,7 @@ def execute(runner, ctx, methods, contract):
 
         if restype is Failure:
             try:
-                protocol.check_return_statement(obj, method, result.reason)
+                protocol.check_return_statement(method, result.reason)
             except Exception as error:
                 ctx.history.on_error(error.__class__.__name__)
                 raise
@@ -55,13 +55,11 @@ def execute(runner, ctx, methods, contract):
             continue
 
         try:
-            contract.check_success_statement(obj, method, ctx, result.kwargs)
+            contract.check_success_statement(method, ctx, result.kwargs)
         except Exception as error:
             ctx.history.on_error(error.__class__.__name__)
             raise
 
-        ctx.ns.update(result.kwargs)
-        line = "Set by %s.%s" % (obj.__class__.__name__, method.__name__)
-        ctx.lines.extend([line] * len(result.kwargs))
+        ctx.assign(method, result.kwargs)
 
     return runner.finished()
