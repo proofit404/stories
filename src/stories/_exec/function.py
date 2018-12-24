@@ -55,7 +55,7 @@ def execute(runner, ctx, methods, contract):
             continue
 
         try:
-            contract.check(obj, method, ctx, result.kwargs)
+            contract.check_success_statement(obj, method, ctx, result.kwargs)
         except Exception as error:
             ctx.history.on_error(error.__class__.__name__)
             raise
