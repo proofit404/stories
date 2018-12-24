@@ -1,7 +1,3 @@
-# TODO:
-#
-# [ ] Check what would happen if we define story with @arguments('foo')
-#     and call it with Cls().x(a=1)?
 from enum import Enum
 
 from stories import Failure, Result, Skip, Success, arguments, story
