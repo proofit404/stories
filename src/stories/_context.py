@@ -1,13 +1,15 @@
 from collections import OrderedDict
 
+from ._contract import assign_attribute_template, delete_attribute_template
 from ._repr import context_representation, history_representation
+from .exceptions import ContextContractError
 
 
 class Context(object):
     def __init__(self, ns, history):
-        self.ns = OrderedDict(ns)
-        self.history = history
-        self.lines = ["Story argument"] * len(ns)
+        self.__dict__["ns"] = OrderedDict(ns)
+        self.__dict__["history"] = history
+        self.__dict__["lines"] = ["Story argument"] * len(ns)
 
     def assign(self, method, kwargs):
         self.ns.update(kwargs)
@@ -16,6 +18,12 @@ class Context(object):
 
     def __getattr__(self, name):
         return self.ns[name]
+
+    def __setattr__(self, name, value):
+        raise ContextContractError(assign_attribute_template)
+
+    def __delattr__(self, name):
+        raise ContextContractError(delete_attribute_template)
 
     def __eq__(self, other):
         return self.ns == other

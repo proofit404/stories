@@ -21,6 +21,8 @@ def test_arguments_validation():
 
 def test_context_immutability():
 
+    # Simple.
+
     expected = """
 This variables already present in the context: 'bar', 'foo'
 
@@ -71,4 +73,35 @@ Use different names for Success() keyword arguments.
 
     with pytest.raises(ContextContractError) as exc_info:
         examples.contract.ExistedKeyDI().a.run(1, 2)
+    assert str(exc_info.value) == expected
+
+
+def test_immutable_context_object():
+    """
+    we can't use attribute assignment and deletion with `Context`
+    object.
+    """
+
+    # Assignment.
+
+    expected = """
+Context object is immutable.
+
+Use Success() keyword arguments to expand its scope.
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        examples.contract.AssignAttribute().x()
+    assert str(exc_info.value) == expected
+
+    # Deletion.
+
+    expected = """
+Context object is immutable.
+
+Variables can not be removed from Context.
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        examples.contract.DeleteAttribute().x(foo=1)
     assert str(exc_info.value) == expected
