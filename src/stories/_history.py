@@ -1,7 +1,7 @@
 class History(object):
-    def __init__(self, cls_name, name):
-        self.indent = 1
-        self.lines = [cls_name + "." + name + ":"]
+    def __init__(self):
+        self.indent = 0
+        self.lines = []
 
     def before_call(self, method_name):
         self.lines.append("  " * self.indent + method_name)

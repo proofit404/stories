@@ -15,15 +15,13 @@ def test_context_dir():
         a = 2
         b = 2
 
-    assert dir(Context({"a": 2, "b": 2}, History("Obj", "meth"), Contract())) == dir(
-        Ctx()
-    )
+    assert dir(Context({"a": 2, "b": 2}, History(), Contract())) == dir(Ctx())
 
 
 def test_context_representation_with_empty():
 
     expected = """
-Empty.x()
+Empty.x
 
 Context()
     """.strip()
@@ -37,7 +35,7 @@ Context()
     assert repr(getter()) == expected
 
     expected = """
-EmptySubstory.y()
+EmptySubstory.y
 
 Context()
     """.strip()
@@ -51,7 +49,7 @@ Context()
     assert repr(getter()) == expected
 
     expected = """
-SubstoryDI.y:
+SubstoryDI.y
   start
   before
   after (returned: 6)
@@ -74,7 +72,7 @@ Context:
 def test_context_representation_with_failure():
 
     expected = """
-Simple.x:
+Simple.x
   one
   two (failed)
 
@@ -93,7 +91,7 @@ Context:
     assert repr(getter()) == expected
 
     expected = """
-SimpleSubstory.y:
+SimpleSubstory.y
   start
   before
   x
@@ -116,7 +114,7 @@ Context:
     assert repr(getter()) == expected
 
     expected = """
-SubstoryDI.y:
+SubstoryDI.y
   start
   before
   x (Simple.x)
@@ -142,7 +140,7 @@ Context:
 def test_context_representation_with_failure_reason():
 
     expected = """
-ReasonWithList.x:
+ReasonWithList.x
   one
   two (failed: 'foo')
 
@@ -161,7 +159,7 @@ Context:
     assert repr(getter()) == expected
 
     expected = """
-ReasonWithEnum.x:
+ReasonWithEnum.x
   one
   two (failed: <Errors.foo: 1>)
 
@@ -180,7 +178,7 @@ Context:
     assert repr(getter()) == expected
 
     expected = """
-SubstoryReasonWithList.y:
+SubstoryReasonWithList.y
   start
   before
   x
@@ -203,7 +201,7 @@ Context:
     assert repr(getter()) == expected
 
     expected = """
-SubstoryReasonWithEnum.y:
+SubstoryReasonWithEnum.y
   start
   before
   x
@@ -226,7 +224,7 @@ Context:
     assert repr(getter()) == expected
 
     expected = """
-J.a:
+J.a
   before
   x (T.x)
     one (failed: 'foo')
@@ -259,7 +257,7 @@ Context()
 def test_context_representation_with_result():
 
     expected = """
-Simple.x:
+Simple.x
   one
   two
   three (returned: -1)
@@ -279,7 +277,7 @@ Context:
     assert repr(getter()) == expected
 
     expected = """
-SimpleSubstory.y:
+SimpleSubstory.y
   start
   before
   x
@@ -303,7 +301,7 @@ Context:
     assert repr(getter()) == expected
 
     expected = """
-SubstoryDI.y:
+SubstoryDI.y
   start
   before
   x (Simple.x)
@@ -327,7 +325,7 @@ Context:
     assert repr(getter()) == expected
 
     expected = """
-SubstoryDI.y:
+SubstoryDI.y
   start
   before
   x (Pipe.x)
@@ -354,7 +352,7 @@ Context:
 def test_context_representation_with_skip():
 
     expected = """
-Simple.x:
+Simple.x
   one
   two (skipped)
 
@@ -372,7 +370,7 @@ Context:
     assert repr(getter()) == expected
 
     expected = """
-SimpleSubstory.y:
+SimpleSubstory.y
   start
   before
   x
@@ -395,7 +393,7 @@ Context:
     assert repr(getter()) == expected
 
     expected = """
-SubstoryDI.y:
+SubstoryDI.y
   start
   before
   x (Simple.x)
@@ -418,7 +416,7 @@ Context:
     assert repr(getter()) == expected
 
     expected = """
-SubstoryDI.y:
+SubstoryDI.y
   start
   before
   x (SimpleSubstory.z)
@@ -443,7 +441,7 @@ Context:
 def test_context_representation_with_error():
 
     expected = """
-StepError.x:
+StepError.x
   one (errored: Exception)
 
 Context()
@@ -463,7 +461,7 @@ Context()
 def test_context_representation_with_failure_protocol_error():
 
     expected = """
-T.x:
+T.x
   one (errored: FailureProtocolError)
 
 Context()
@@ -488,7 +486,7 @@ Context()
 def test_context_representation_with_context_contract_error():
 
     expected = """
-ExistedKey.x:
+ExistedKey.x
   one (errored: ContextContractError)
 
 Context:

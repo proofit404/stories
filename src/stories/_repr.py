@@ -7,8 +7,6 @@ def namespace_representation(ns):
 
 def history_representation(history):
     result = "\n".join(history.lines)
-    if result.endswith(":"):
-        result = result[:-1] + "()"
     return result
 
 

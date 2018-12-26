@@ -38,11 +38,11 @@ class MountedStory(object):
         self.contract = contract
         self.protocol = protocol
         self.methods, self.failures = wrap_story(
-            is_story, collected, cls_name, name, obj, contract, protocol
+            is_story, arguments, collected, cls_name, name, obj, contract, protocol
         )
 
     def __call__(self, *args, **kwargs):
-        history = History(self.cls_name, self.name)
+        history = History()
         ctx = Context(
             validate_arguments(self.arguments, args, kwargs), history, self.contract
         )
@@ -50,7 +50,7 @@ class MountedStory(object):
         return function.execute(runner, ctx, self.methods)
 
     def run(self, *args, **kwargs):
-        history = History(self.cls_name, self.name)
+        history = History()
         ctx = Context(
             validate_arguments(self.arguments, args, kwargs), history, self.contract
         )
