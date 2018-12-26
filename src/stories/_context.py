@@ -1,15 +1,14 @@
 from collections import OrderedDict
 
-from ._contract import assign_attribute_template, delete_attribute_template
 from ._repr import context_representation, history_representation
-from .exceptions import ContextContractError
 
 
 class Context(object):
-    def __init__(self, ns, history):
+    def __init__(self, ns, history, contract):
         self.__dict__["ns"] = OrderedDict(ns)
         self.__dict__["history"] = history
         self.__dict__["lines"] = ["Story argument"] * len(ns)
+        self.__dict__["contract"] = contract
 
     def assign(self, method, kwargs):
         self.ns.update(kwargs)
@@ -20,10 +19,10 @@ class Context(object):
         return self.ns[name]
 
     def __setattr__(self, name, value):
-        raise ContextContractError(assign_attribute_template)
+        self.contract.deny_attribute_assign()
 
     def __delattr__(self, name):
-        raise ContextContractError(delete_attribute_template)
+        self.contract.deny_attribute_delete()
 
     def __eq__(self, other):
         return self.ns == other
@@ -39,7 +38,7 @@ class Context(object):
     def __dir__(self):
         spec = type("Context", (object,), {})
         parent = set(dir(spec()))
-        current = set(self.__dict__) - {"ns", "history", "lines"}
+        current = set(self.__dict__) - {"ns", "history", "lines", "contract"}
         scope = set(self.ns)
         attributes = sorted(parent | current | scope)
         return attributes

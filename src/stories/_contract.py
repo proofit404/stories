@@ -24,6 +24,12 @@ class Contract(object):
             )
             raise ContextContractError(message)
 
+    def deny_attribute_assign(self):
+        raise ContextContractError(assign_attribute_template)
+
+    def deny_attribute_delete(self):
+        raise ContextContractError(delete_attribute_template)
+
 
 variable_override_template = """
 This variables already present in the context: {variables}
