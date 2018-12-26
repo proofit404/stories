@@ -1,5 +1,5 @@
 from ._context import Context
-from ._contract import Contract, validate_arguments
+from ._contract import validate_arguments
 from ._exec import function
 from ._failures import make_protocol
 from ._history import History
@@ -28,35 +28,34 @@ class ClassMountedStory(object):
 
 
 class MountedStory(object):
-    def __init__(self, cls, obj, name, arguments, collected, protocol):
+    def __init__(self, cls, obj, name, arguments, collected, contract, protocol):
         self.cls = cls
         self.obj = obj
-        self.cls_name = cls.__name__
+        self.cls_name = cls_name = cls.__name__
         self.name = name
         self.arguments = arguments
         self.collected = collected  # TODO: Remove.
+        self.contract = contract
         self.protocol = protocol
         self.methods, self.failures = wrap_story(
-            is_story, collected, cls.__name__, name, obj, protocol
+            is_story, collected, cls_name, name, obj, contract, protocol
         )
 
     def __call__(self, *args, **kwargs):
         history = History(self.cls_name, self.name)
-        contract = Contract()
         ctx = Context(
-            validate_arguments(self.arguments, args, kwargs), history, contract
+            validate_arguments(self.arguments, args, kwargs), history, self.contract
         )
         runner = Call(make_protocol(self.failures))
-        return function.execute(runner, ctx, self.methods, contract)
+        return function.execute(runner, ctx, self.methods)
 
     def run(self, *args, **kwargs):
         history = History(self.cls_name, self.name)
-        contract = Contract()
         ctx = Context(
-            validate_arguments(self.arguments, args, kwargs), history, contract
+            validate_arguments(self.arguments, args, kwargs), history, self.contract
         )
         runner = Run(make_protocol(self.failures), self.cls_name, self.name)
-        return function.execute(runner, ctx, self.methods, contract)
+        return function.execute(runner, ctx, self.methods)
 
     def __repr__(self):
         return story_representation(

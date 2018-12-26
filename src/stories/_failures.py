@@ -162,8 +162,8 @@ def maybe_disable_null_protocol(methods, reasons):
         return methods
     disabled = DisabledNullProtocol(None)
     return [
-        (f, disabled if type(protocol) is NullProtocol else protocol)
-        for f, protocol in methods
+        (method, contract, disabled if type(protocol) is NullProtocol else protocol)
+        for method, contract, protocol in methods
     ]
 
 

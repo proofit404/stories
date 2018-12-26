@@ -1,6 +1,10 @@
 from .exceptions import ContextContractError
 
 
+def make_contract():
+    return Contract()
+
+
 def validate_arguments(arguments, args, kwargs):
     # FIXME: Should be a method of the `Contract` class.
     assert not (args and kwargs)

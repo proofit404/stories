@@ -2,11 +2,11 @@ from .._marker import BeginningOfStory, EndOfStory
 from .._return import Failure, Result, Skip, Success
 
 
-def execute(runner, ctx, methods, contract):
+def execute(runner, ctx, methods):
 
     skipped = 0
 
-    for method, protocol in methods:
+    for method, contract, protocol in methods:
 
         method_type = type(method)
 

@@ -2,7 +2,7 @@ from ._failures import combine_failures, maybe_disable_null_protocol
 from ._marker import BeginningOfStory, EndOfStory
 
 
-def wrap_story(is_story, collected, cls_name, story_name, obj, protocol):
+def wrap_story(is_story, collected, cls_name, story_name, obj, contract, protocol):
 
     methods = []
     failures = protocol.failures
@@ -11,7 +11,7 @@ def wrap_story(is_story, collected, cls_name, story_name, obj, protocol):
 
         attr = getattr(obj, name)
         if not is_story(attr):
-            methods.append((attr, protocol))
+            methods.append((attr, contract, protocol))
             continue
 
         failures = combine_failures(
@@ -25,9 +25,11 @@ def wrap_story(is_story, collected, cls_name, story_name, obj, protocol):
         else:
             method_name = name + " (" + attr.cls_name + "." + attr.name + ")"
 
-        methods.append((BeginningOfStory(method_name, attr.arguments), protocol))
+        methods.append(
+            (BeginningOfStory(method_name, attr.arguments), contract, protocol)
+        )
         methods.extend(attr.methods)
-        methods.append((EndOfStory(), protocol))
+        methods.append((EndOfStory(), contract, protocol))
 
     methods = maybe_disable_null_protocol(methods, failures)
 
