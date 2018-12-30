@@ -10,59 +10,27 @@ def make_protocol(failures):
     elif isinstance(failures, (list, tuple, set, frozenset)):
         return CollectionProtocol(failures)
     elif failures is None:
-        return NullProtocol(failures)
+        return NullProtocol()
     else:
         message = wrong_type_template.format(failures=failures)
         raise FailureProtocolError(message)
 
 
-class Protocol(object):
-    def __init__(self, failures):
-        self.failures = failures
-        self.available = failures_representation(failures)
+def maybe_disable_null_protocol(methods, reasons):
 
-    def check_return_statement(self, method, reason):
-        if not reason:
-            message = null_reason_template.format(
-                available=self.available,
-                cls=method.__self__.__class__.__name__,
-                method=method.__name__,
-            )
-            raise FailureProtocolError(message)
-        if not self.check_reason(reason):
-            message = wrong_reason_template.format(
-                reason=reason,
-                available=self.available,
-                cls=method.__self__.__class__.__name__,
-                method=method.__name__,
-            )
-            raise FailureProtocolError(message)
-
-    def summarize(self, cls_name, method_name, reason):
-        # TODO: Deny to use `failed_because(None)`.
-        if not self.check_reason(reason):
-            message = wrong_summary_template.format(
-                reason=reason,
-                available=self.available,
-                cls=cls_name,
-                method=method_name,
-            )
-            raise FailureProtocolError(message)
-
-    def check_reason(self, reason):
-
-        raise NotImplementedError
-
-    def cast_reason(self, reason):
-
-        raise NotImplementedError
-
-    def compare(self, a, b):
-
-        raise NotImplementedError
+    if reasons is None:
+        return methods
+    disabled = DisabledNullProtocol()
+    return [
+        (method, contract, disabled if type(protocol) is NullProtocol else protocol)
+        for method, contract, protocol in methods
+    ]
 
 
-class NullProtocol(Protocol):
+class NullProtocol(object):
+
+    failures = None
+
     def check_return_statement(self, method, reason):
         if reason:
             message = null_protocol_template.format(
@@ -80,7 +48,50 @@ class NullProtocol(Protocol):
         return None
 
 
-class CollectionProtocol(Protocol):
+class DisabledNullProtocol(NullProtocol):
+    def check_return_statement(self, method, reason):
+        if not reason:
+            message = disabled_null_template.format(
+                cls=method.__self__.__class__.__name__, method=method.__name__
+            )
+            raise FailureProtocolError(message)
+        super(DisabledNullProtocol, self).check_return_statement(method, reason)
+
+
+class NotNullProtocol(object):
+    def __init__(self, failures):
+        self.failures = failures
+
+    def check_return_statement(self, method, reason):
+        if not reason:
+            message = null_reason_template.format(
+                available=failures_representation(self.failures),
+                cls=method.__self__.__class__.__name__,
+                method=method.__name__,
+            )
+            raise FailureProtocolError(message)
+        if not self.check_reason(reason):
+            message = wrong_reason_template.format(
+                reason=reason,
+                available=failures_representation(self.failures),
+                cls=method.__self__.__class__.__name__,
+                method=method.__name__,
+            )
+            raise FailureProtocolError(message)
+
+    def summarize(self, cls_name, method_name, reason):
+        # TODO: Deny to use `failed_because(None)`.
+        if not self.check_reason(reason):
+            message = wrong_summary_template.format(
+                reason=reason,
+                available=failures_representation(self.failures),
+                cls=cls_name,
+                method=method_name,
+            )
+            raise FailureProtocolError(message)
+
+
+class CollectionProtocol(NotNullProtocol):
     def check_reason(self, reason):
         return reason in self.failures
 
@@ -88,11 +99,10 @@ class CollectionProtocol(Protocol):
         return reason
 
     def compare(self, a, b):
-
         return a == b
 
 
-class EnumProtocol(Protocol):
+class EnumProtocol(NotNullProtocol):
     def check_reason(self, reason):
         return isinstance(reason, Enum) and reason.name in self.failures.__members__
 
@@ -100,7 +110,6 @@ class EnumProtocol(Protocol):
         return self.failures.__members__[reason.name]
 
     def compare(self, a, b):
-
         return a.name == b.name
 
 
@@ -144,27 +153,6 @@ def combine_failures(
             other_available=failures_representation(second_failures),
         )
         raise FailureProtocolError(message)
-
-
-class DisabledNullProtocol(NullProtocol):
-    def check_return_statement(self, method, reason):
-        if not reason:
-            message = disabled_null_template.format(
-                cls=method.__self__.__class__.__name__, method=method.__name__
-            )
-            raise FailureProtocolError(message)
-        super(DisabledNullProtocol, self).check_return_statement(method, reason)
-
-
-def maybe_disable_null_protocol(methods, reasons):
-
-    if reasons is None:
-        return methods
-    disabled = DisabledNullProtocol(None)
-    return [
-        (method, contract, disabled if type(protocol) is NullProtocol else protocol)
-        for method, contract, protocol in methods
-    ]
 
 
 wrong_type_template = """
