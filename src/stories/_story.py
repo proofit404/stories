@@ -1,6 +1,6 @@
 from ._collect import collect_story
 from ._contract import make_contract
-from ._failures import make_protocol
+from ._failures import make_exec_protocol
 from ._mounted import ClassMountedStory, MountedStory
 
 
@@ -10,7 +10,7 @@ class Story(object):
         self.arguments = getattr(f, "arguments", [])
         self.collected = collect_story(f)
         self.contract = make_contract()
-        self.protocol = make_protocol(None)
+        self.failures(None)
 
     def __get__(self, obj, cls):
         if obj is None:
@@ -27,5 +27,5 @@ class Story(object):
             )
 
     def failures(self, failures):
-        self.protocol = make_protocol(failures)
+        self.protocol = make_exec_protocol(failures)
         return failures

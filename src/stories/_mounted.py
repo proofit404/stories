@@ -1,7 +1,7 @@
 from ._context import Context
 from ._contract import validate_arguments
 from ._exec import function
-from ._failures import make_protocol, make_runner_protocol
+from ._failures import make_run_protocol
 from ._history import History
 from ._repr import story_representation
 from ._run import Call, Run
@@ -53,8 +53,8 @@ class MountedStory(object):
         ctx = Context(
             validate_arguments(self.arguments, args, kwargs), history, self.contract
         )
-        runner_protocol = make_runner_protocol(self.failures, self.cls_name, self.name)
-        runner = Run(runner_protocol)
+        run_protocol = make_run_protocol(self.failures, self.cls_name, self.name)
+        runner = Run(run_protocol)
         return function.execute(runner, ctx, self.methods)
 
     def __repr__(self):

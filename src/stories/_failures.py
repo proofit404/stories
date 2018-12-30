@@ -25,20 +25,20 @@ def enumeration_compare(a, b):
 # Execute.
 
 
-def make_protocol(failures):
+def make_exec_protocol(failures):
 
     if isinstance(failures, EnumMeta):
-        return NotNullProtocol(failures, enumeration_contains)
+        return NotNullExecProtocol(failures, enumeration_contains)
     elif isinstance(failures, (list, tuple, set, frozenset)):
-        return NotNullProtocol(failures, collection_contains)
+        return NotNullExecProtocol(failures, collection_contains)
     elif failures is None:
-        return NullProtocol()
+        return NullExecProtocol()
     else:
         message = wrong_type_template.format(failures=failures)
         raise FailureProtocolError(message)
 
 
-class NullProtocol(object):
+class NullExecProtocol(object):
 
     failures = None
 
@@ -52,17 +52,17 @@ class NullProtocol(object):
             raise FailureProtocolError(message)
 
 
-class DisabledNullProtocol(NullProtocol):
+class DisabledNullExecProtocol(NullExecProtocol):
     def check_return_statement(self, method, reason):
         if not reason:
             message = disabled_null_template.format(
                 cls=method.__self__.__class__.__name__, method=method.__name__
             )
             raise FailureProtocolError(message)
-        super(DisabledNullProtocol, self).check_return_statement(method, reason)
+        super(DisabledNullExecProtocol, self).check_return_statement(method, reason)
 
 
-class NotNullProtocol(object):
+class NotNullExecProtocol(object):
     def __init__(self, failures, contains_func):
         self.failures = failures
         self.contains_func = contains_func
@@ -85,27 +85,27 @@ class NotNullProtocol(object):
             raise FailureProtocolError(message)
 
 
-# Runner.
+# Run.
 
 
-def make_runner_protocol(failures, cls_name, method_name):
+def make_run_protocol(failures, cls_name, method_name):
 
     if isinstance(failures, EnumMeta):
-        return NotNullRunnerProtocol(
+        return NotNullRunProtocol(
             cls_name, method_name, failures, enumeration_contains, enumeration_compare
         )
     elif isinstance(failures, (list, tuple, set, frozenset)):
-        return NotNullRunnerProtocol(
+        return NotNullRunProtocol(
             cls_name, method_name, failures, collection_contains, collection_compare
         )
     elif failures is None:
-        return NullRunnerProtocol(cls_name, method_name)
+        return NullRunProtocol(cls_name, method_name)
     else:
         message = wrong_type_template.format(failures=failures)
         raise FailureProtocolError(message)
 
 
-class NullRunnerProtocol(object):
+class NullRunProtocol(object):
     def __init__(self, cls_name, method_name):
         self.cls_name = cls_name
         self.method_name = method_name
@@ -117,7 +117,7 @@ class NullRunnerProtocol(object):
         raise FailureProtocolError(message)
 
 
-class NotNullRunnerProtocol(object):
+class NotNullRunProtocol(object):
     def __init__(self, cls_name, method_name, failures, contains_func, compare_func):
         self.cls_name = cls_name
         self.method_name = method_name
@@ -189,9 +189,9 @@ def maybe_disable_null_protocol(methods, reasons):
 
     if reasons is None:
         return methods
-    disabled = DisabledNullProtocol()
+    disabled = DisabledNullExecProtocol()
     return [
-        (method, contract, disabled if type(protocol) is NullProtocol else protocol)
+        (method, contract, disabled if type(protocol) is NullExecProtocol else protocol)
         for method, contract, protocol in methods
     ]
 
