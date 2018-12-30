@@ -1,3 +1,4 @@
+from .._context import assign_namespace
 from .._marker import BeginningOfStory, EndOfStory
 from .._return import Failure, Result, Skip, Success
 
@@ -60,6 +61,6 @@ def execute(runner, ctx, history, methods):
             history.on_error(error.__class__.__name__)
             raise
 
-        ctx.assign(method, result.kwargs)
+        assign_namespace(ctx, method, result.kwargs)
 
     return runner.finished()

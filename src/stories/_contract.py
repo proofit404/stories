@@ -19,7 +19,7 @@ def validate_arguments(arguments, args, kwargs):
 
 class Contract(object):
     def check_success_statement(self, method, ctx, ns):
-        tries_to_override = set(ctx) & set(ns)
+        tries_to_override = set(ctx._Context__ns) & set(ns)
         if tries_to_override:
             message = variable_override_template.format(
                 variables=", ".join(map(repr, sorted(tries_to_override))),

@@ -13,7 +13,7 @@ class BeginningOfStory(object):
         self.arguments = arguments
 
     def __call__(self, ctx):
-        assert set(self.arguments) <= set(ctx)
+        assert set(self.arguments) <= set(ctx._Context__ns)
         return Success()
 
     @property

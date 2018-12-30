@@ -3,17 +3,18 @@ from collections import OrderedDict
 from ._repr import context_representation, history_representation
 
 
+def assign_namespace(ctx, method, kwargs):
+    ctx._Context__ns.update(kwargs)
+    line = "Set by %s.%s" % (method.__self__.__class__.__name__, method.__name__)
+    ctx._Context__lines.extend([line] * len(kwargs))
+
+
 class Context(object):
     def __init__(self, ns, history, contract):
         self.__dict__["_Context__ns"] = OrderedDict(ns)
         self.__dict__["_Context__history"] = history
         self.__dict__["_Context__lines"] = ["Story argument"] * len(ns)
         self.__dict__["_Context__contract"] = contract
-
-    def assign(self, method, kwargs):
-        self.__ns.update(kwargs)
-        line = "Set by %s.%s" % (method.__self__.__class__.__name__, method.__name__)
-        self.__lines.extend([line] * len(kwargs))
 
     def __getattr__(self, name):
         return self.__ns[name]
@@ -23,12 +24,6 @@ class Context(object):
 
     def __delattr__(self, name):
         self.__contract.deny_attribute_delete()
-
-    def __eq__(self, other):
-        return self.__ns == other
-
-    def __iter__(self):
-        return iter(self.__ns)
 
     def __repr__(self):
         return (

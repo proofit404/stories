@@ -43,7 +43,7 @@ def test_failure():
     assert not result.is_success
     assert result.is_failure
     assert not result.failure_reason
-    assert result.ctx == {"foo": 2, "bar": 2}
+    assert result.ctx._Context__ns == {"foo": 2, "bar": 2}
     assert result.failed_on("two")
     assert not result.failed_on("one")
     with pytest.raises(AssertionError):
@@ -59,7 +59,7 @@ def test_failure():
     assert not result.is_success
     assert result.is_failure
     assert not result.failure_reason
-    assert result.ctx == {"foo": 2, "bar": 4, "spam": 3}
+    assert result.ctx._Context__ns == {"foo": 2, "bar": 4, "spam": 3}
     assert result.failed_on("two")
     assert not result.failed_on("one")
     with pytest.raises(AssertionError):
@@ -75,7 +75,7 @@ def test_failure():
     assert not result.is_success
     assert result.is_failure
     assert not result.failure_reason
-    assert result.ctx == {"foo": 2, "bar": 4, "spam": 3}
+    assert result.ctx._Context__ns == {"foo": 2, "bar": 4, "spam": 3}
     assert result.failed_on("two")
     assert not result.failed_on("one")
     with pytest.raises(AssertionError):
