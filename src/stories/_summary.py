@@ -1,6 +1,6 @@
 class FailureSummary(object):
     def __init__(self, protocol, ctx, failed_method, reason):
-        self.protocol = protocol
+        self.__protocol = protocol
         self.is_success = False
         self.is_failure = True
         self.ctx = ctx
@@ -11,8 +11,8 @@ class FailureSummary(object):
         return method_name == self.failed_method
 
     def failed_because(self, reason):
-        self.protocol.check_failed_because_argument(reason)
-        return self.protocol.compare_failed_because_argument(
+        self.__protocol.check_failed_because_argument(reason)
+        return self.__protocol.compare_failed_because_argument(
             reason, self.failure_reason
         )
 
@@ -26,7 +26,7 @@ class FailureSummary(object):
 
 class SuccessSummary(object):
     def __init__(self, protocol, value):
-        self.protocol = protocol
+        self.__protocol = protocol
         self.is_success = True
         self.is_failure = False
         self.value = value
@@ -35,7 +35,7 @@ class SuccessSummary(object):
         return False
 
     def failed_because(self, reason):
-        self.protocol.check_failed_because_argument(reason)
+        self.__protocol.check_failed_because_argument(reason)
         return False
 
     def __repr__(self):

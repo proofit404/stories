@@ -5,40 +5,47 @@ from ._repr import context_representation, history_representation
 
 class Context(object):
     def __init__(self, ns, history, contract):
-        self.__dict__["ns"] = OrderedDict(ns)
-        self.__dict__["history"] = history
-        self.__dict__["lines"] = ["Story argument"] * len(ns)
-        self.__dict__["contract"] = contract
+        self.__dict__["_Context__ns"] = OrderedDict(ns)
+        self.__dict__["_Context__history"] = history
+        self.__dict__["_Context__lines"] = ["Story argument"] * len(ns)
+        self.__dict__["_Context__contract"] = contract
 
     def assign(self, method, kwargs):
-        self.ns.update(kwargs)
+        self.__ns.update(kwargs)
         line = "Set by %s.%s" % (method.__self__.__class__.__name__, method.__name__)
-        self.lines.extend([line] * len(kwargs))
+        self.__lines.extend([line] * len(kwargs))
 
     def __getattr__(self, name):
-        return self.ns[name]
+        return self.__ns[name]
 
     def __setattr__(self, name, value):
-        self.contract.deny_attribute_assign()
+        self.__contract.deny_attribute_assign()
 
     def __delattr__(self, name):
-        self.contract.deny_attribute_delete()
+        self.__contract.deny_attribute_delete()
 
     def __eq__(self, other):
-        return self.ns == other
+        return self.__ns == other
 
     def __iter__(self):
-        return iter(self.ns)
+        return iter(self.__ns)
 
     def __repr__(self):
         return (
-            history_representation(self.history) + "\n\n" + context_representation(self)
+            history_representation(self.__history)
+            + "\n\n"
+            + context_representation(self.__ns, self.__lines)
         )
 
     def __dir__(self):
         spec = type("Context", (object,), {})
         parent = set(dir(spec()))
-        current = set(self.__dict__) - {"ns", "history", "lines", "contract"}
-        scope = set(self.ns)
+        current = set(self.__dict__) - {
+            "_Context__ns",
+            "_Context__history",
+            "_Context__lines",
+            "_Context__contract",
+        }
+        scope = set(self.__ns)
         attributes = sorted(parent | current | scope)
         return attributes

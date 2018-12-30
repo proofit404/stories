@@ -46,7 +46,7 @@ class MountedStory(object):
             validate_arguments(self.arguments, args, kwargs), history, self.contract
         )
         runner = Call()
-        return function.execute(runner, ctx, self.methods)
+        return function.execute(runner, ctx, history, self.methods)
 
     def run(self, *args, **kwargs):
         history = History()
@@ -55,7 +55,7 @@ class MountedStory(object):
         )
         run_protocol = make_run_protocol(self.failures, self.cls_name, self.name)
         runner = Run(run_protocol)
-        return function.execute(runner, ctx, self.methods)
+        return function.execute(runner, ctx, history, self.methods)
 
     def __repr__(self):
         return story_representation(

@@ -10,18 +10,16 @@ def history_representation(history):
     return result
 
 
-def context_representation(ctx):
+def context_representation(ns, lines):
 
-    name = ctx.__class__.__name__
-    if not ctx.lines:
-        return name + "()"
-    items = ["%s = %s" % (key, repr(value)) for (key, value) in ctx.ns.items()]
+    if not lines:
+        return "Context()"
+    items = ["%s = %s" % (key, repr(value)) for (key, value) in ns.items()]
     longest = max(map(len, items))
     lines = [
-        "    %s  # %s" % (item.ljust(longest), line)
-        for item, line in zip(items, ctx.lines)
+        "    %s  # %s" % (item.ljust(longest), line) for item, line in zip(items, lines)
     ]
-    return "\n".join([name + ":"] + lines)
+    return "\n".join(["Context:"] + lines)
 
 
 def story_representation(is_story, first_line, cls, obj, collected):
