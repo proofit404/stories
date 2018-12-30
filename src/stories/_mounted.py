@@ -36,7 +36,6 @@ class MountedStory(object):
         self.arguments = arguments
         self.collected = collected  # TODO: Remove.
         self.contract = contract
-        self.protocol = protocol
         self.methods, self.failures = wrap_story(
             is_story, arguments, collected, cls_name, name, obj, contract, protocol
         )
