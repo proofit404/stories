@@ -1,8 +1,8 @@
 from .exceptions import ContextContractError
 
 
-def make_contract():
-    return Contract()
+def make_contract(cls_name, name, arguments):
+    return Contract(cls_name, name, arguments)
 
 
 def validate_arguments(arguments, args, kwargs):
@@ -18,6 +18,23 @@ def validate_arguments(arguments, args, kwargs):
 
 
 class Contract(object):
+    def __init__(self, cls_name, name, arguments):
+        self.cls_name = cls_name
+        self.name = name
+        self.arguments = arguments
+
+    def check_story_arguments(self, ctx):
+        missed = set(self.arguments) - set(ctx._Context__ns)
+        if missed:
+            message = missed_variable_template.format(
+                missed=", ".join(sorted(missed)),
+                cls=self.cls_name,
+                method=self.name,
+                arguments=", ".join(self.arguments),
+                ctx=ctx,
+            )
+            raise ContextContractError(message)
+
     def check_success_statement(self, method, ctx, ns):
         tries_to_override = set(ctx._Context__ns) & set(ns)
         if tries_to_override:
@@ -35,6 +52,17 @@ def deny_attribute_assign():
 
 def deny_attribute_delete():
     raise ContextContractError(delete_attribute_template)
+
+
+missed_variable_template = """
+This variables are missed from the context: {missed}
+
+Story method: {cls}.{method}
+
+Story arguments: {arguments}
+
+{ctx!r}
+""".strip()
 
 
 variable_override_template = """

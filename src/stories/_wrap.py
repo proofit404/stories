@@ -5,10 +5,10 @@ from ._marker import BeginningOfStory, EndOfStory
 
 def wrap_story(is_story, arguments, collected, cls_name, story_name, obj, failures):
 
-    contract = make_contract()
+    contract = make_contract(cls_name, story_name, arguments)
     protocol = make_exec_protocol(failures)
 
-    methods = [(BeginningOfStory(cls_name, story_name, arguments), contract, protocol)]
+    methods = [(BeginningOfStory(cls_name, story_name), contract, protocol)]
 
     for name in collected:
 

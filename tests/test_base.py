@@ -1,7 +1,7 @@
 import pytest
 
 import examples
-from stories.exceptions import FailureError
+from stories.exceptions import ContextContractError, FailureError
 
 
 def test_empty():
@@ -182,3 +182,50 @@ def test_inject_implementation():
     assert result.is_success
     assert not result.is_failure
     assert result.value == 2
+
+
+def test_missing_substory_arguments():
+
+    expected = """
+This variables are missed from the context: bar, foo
+
+Story method: MissingContextSubstory.x
+
+Story arguments: foo, bar
+
+MissingContextSubstory.y
+  before
+  validate_substory_arguments
+
+Context()
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        examples.methods.MissingContextSubstory().y()
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(ContextContractError) as exc_info:
+        examples.methods.MissingContextSubstory().y.run()
+    assert str(exc_info.value) == expected
+
+    expected = """
+This variables are missed from the context: bar, foo
+
+Story method: Simple.x
+
+Story arguments: foo, bar
+
+MissingContextDI.y
+  before
+  validate_substory_arguments
+
+Context()
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        examples.methods.MissingContextDI().y()
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(ContextContractError) as exc_info:
+        examples.methods.MissingContextDI().y.run()
+    assert str(exc_info.value) == expected

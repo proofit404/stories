@@ -5,16 +5,14 @@ class BeginningOfStory(object):
 
     __name__ = "validate_substory_arguments"
 
-    def __init__(self, cls_name, name, arguments):
+    def __call__(self, ctx):
+        return Success()
+
+    def __init__(self, cls_name, name):
         self.cls_name = cls_name
         self.name = name
         self.parent_name = None
         self.same_object = None
-        self.arguments = arguments
-
-    def __call__(self, ctx):
-        assert set(self.arguments) <= set(ctx._Context__ns)
-        return Success()
 
     @property
     def method_name(self):

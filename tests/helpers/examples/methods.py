@@ -260,3 +260,37 @@ class SubstoryReasonWithEnum(ReasonWithEnum):
 
 
 SubstoryReasonWithEnum.y.failures(Errors)
+
+
+# Substory arguments.
+
+
+class MissingContextSubstory(Simple):
+    @story
+    def y(I):
+        I.before
+        I.x
+        I.after
+
+    def before(self, ctx):
+        return Success()
+
+    def after(self, ctx):
+        return Success()
+
+
+class MissingContextDI(object):
+    def __init__(self):
+        self.x = Simple().x
+
+    @story
+    def y(I):
+        I.before
+        I.x
+        I.after
+
+    def before(self, ctx):
+        return Success()
+
+    def after(self, ctx):
+        return Success()

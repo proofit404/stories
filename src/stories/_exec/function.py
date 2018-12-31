@@ -48,6 +48,11 @@ def execute(runner, ctx, history, methods):
             continue
 
         if method_type is BeginningOfStory:
+            try:
+                contract.check_story_arguments(ctx)
+            except Exception as error:
+                history.on_error(error.__class__.__name__)
+                raise
             history.on_substory_start(method.method_name)
             continue
 
