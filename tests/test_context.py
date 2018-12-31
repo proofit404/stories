@@ -509,7 +509,7 @@ def test_context_representation_with_missing_substory_arguments():
     expected = """
 MissingContextSubstory.y
   before
-  validate_substory_arguments (errored: ContextContractError)
+  x (errored: ContextContractError)
 
 Context()
     """.strip()

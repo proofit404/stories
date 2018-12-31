@@ -22,9 +22,7 @@ class History(object):
     def on_error(self, error_name):
         self.lines[-1] = self.lines[-1] + " (errored: " + error_name + ")"
 
-    def on_substory_start(self, method_name):
-        self.lines.pop()
-        self.lines.append("  " * self.indent + method_name)
+    def on_substory_start(self):
         self.indent += 1
 
     def on_substory_end(self):

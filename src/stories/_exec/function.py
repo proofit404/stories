@@ -53,7 +53,7 @@ def execute(runner, ctx, history, methods):
             except Exception as error:
                 history.on_error(error.__class__.__name__)
                 raise
-            history.on_substory_start(method.method_name)
+            history.on_substory_start()
             continue
 
         if method_type is EndOfStory:

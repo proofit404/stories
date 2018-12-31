@@ -195,7 +195,7 @@ Story arguments: foo, bar
 
 MissingContextSubstory.y
   before
-  validate_substory_arguments
+  x
 
 Context()
     """.strip()
@@ -217,7 +217,7 @@ Story arguments: foo, bar
 
 MissingContextDI.y
   before
-  validate_substory_arguments
+  x (Simple.x)
 
 Context()
     """.strip()
