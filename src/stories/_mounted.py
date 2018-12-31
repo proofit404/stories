@@ -28,31 +28,26 @@ class ClassMountedStory(object):
 
 
 class MountedStory(object):
-    def __init__(self, cls, obj, name, arguments, collected, contract, failures):
+    def __init__(self, cls, obj, name, arguments, collected, failures):
         self.cls = cls
         self.obj = obj
         self.cls_name = cls_name = cls.__name__
         self.name = name
         self.arguments = arguments
         self.collected = collected  # TODO: Remove.
-        self.contract = contract
         self.methods, self.failures = wrap_story(
-            is_story, arguments, collected, cls_name, name, obj, contract, failures
+            is_story, arguments, collected, cls_name, name, obj, failures
         )
 
     def __call__(self, *args, **kwargs):
         history = History()
-        ctx = Context(
-            validate_arguments(self.arguments, args, kwargs), history, self.contract
-        )
+        ctx = Context(validate_arguments(self.arguments, args, kwargs), history)
         runner = Call()
         return function.execute(runner, ctx, history, self.methods)
 
     def run(self, *args, **kwargs):
         history = History()
-        ctx = Context(
-            validate_arguments(self.arguments, args, kwargs), history, self.contract
-        )
+        ctx = Context(validate_arguments(self.arguments, args, kwargs), history)
         run_protocol = make_run_protocol(self.failures, self.cls_name, self.name)
         runner = Run(run_protocol)
         return function.execute(runner, ctx, history, self.methods)

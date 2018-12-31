@@ -1,5 +1,6 @@
 from collections import OrderedDict
 
+from ._contract import deny_attribute_assign, deny_attribute_delete
 from ._repr import context_representation, history_representation
 
 
@@ -10,20 +11,19 @@ def assign_namespace(ctx, method, kwargs):
 
 
 class Context(object):
-    def __init__(self, ns, history, contract):
+    def __init__(self, ns, history):
         self.__dict__["_Context__ns"] = OrderedDict(ns)
         self.__dict__["_Context__history"] = history
         self.__dict__["_Context__lines"] = ["Story argument"] * len(ns)
-        self.__dict__["_Context__contract"] = contract
 
     def __getattr__(self, name):
         return self.__ns[name]
 
     def __setattr__(self, name, value):
-        self.__contract.deny_attribute_assign()
+        deny_attribute_assign()
 
     def __delattr__(self, name):
-        self.__contract.deny_attribute_delete()
+        deny_attribute_delete()
 
     def __repr__(self):
         return (

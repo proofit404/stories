@@ -8,8 +8,8 @@ def make_collector():
 
     storage = []
 
-    def wrapper(ctx, ns, history, contract):
-        origin_context_init(ctx, ns, history, contract)
+    def wrapper(ctx, ns, history):
+        origin_context_init(ctx, ns, history)
         storage.append(ctx)
 
     stories._context.Context.__init__ = wrapper

@@ -3,7 +3,6 @@ import pytest
 import examples
 from helpers import make_collector
 from stories._context import Context
-from stories._contract import Contract
 from stories._history import History
 from stories.exceptions import ContextContractError, FailureError, FailureProtocolError
 
@@ -15,7 +14,7 @@ def test_context_dir():
         a = 2
         b = 2
 
-    assert dir(Context({"a": 2, "b": 2}, History(), Contract())) == dir(Ctx())
+    assert dir(Context({"a": 2, "b": 2}, History())) == dir(Ctx())
 
 
 def test_context_representation_with_empty():

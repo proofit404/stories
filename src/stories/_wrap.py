@@ -1,11 +1,11 @@
+from ._contract import make_contract
 from ._failures import combine_failures, make_exec_protocol, maybe_disable_null_protocol
 from ._marker import BeginningOfStory, EndOfStory
 
 
-def wrap_story(
-    is_story, arguments, collected, cls_name, story_name, obj, contract, failures
-):
+def wrap_story(is_story, arguments, collected, cls_name, story_name, obj, failures):
 
+    contract = make_contract()
     protocol = make_exec_protocol(failures)
 
     methods = [(BeginningOfStory(cls_name, story_name, arguments), contract, protocol)]
