@@ -40,7 +40,7 @@ def make_exec_protocol(failures):
 
 class NullExecProtocol(object):
 
-    failures = None
+    failures = None  # TODO: Remove.
 
     def check_return_statement(self, method, reason):
         if reason:
