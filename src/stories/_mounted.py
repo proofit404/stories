@@ -28,7 +28,7 @@ class ClassMountedStory(object):
 
 
 class MountedStory(object):
-    def __init__(self, cls, obj, name, arguments, collected, contract, protocol):
+    def __init__(self, cls, obj, name, arguments, collected, contract, failures):
         self.cls = cls
         self.obj = obj
         self.cls_name = cls_name = cls.__name__
@@ -37,7 +37,7 @@ class MountedStory(object):
         self.collected = collected  # TODO: Remove.
         self.contract = contract
         self.methods, self.failures = wrap_story(
-            is_story, arguments, collected, cls_name, name, obj, contract, protocol
+            is_story, arguments, collected, cls_name, name, obj, contract, failures
         )
 
     def __call__(self, *args, **kwargs):

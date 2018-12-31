@@ -1,6 +1,6 @@
 from ._collect import collect_story
 from ._contract import make_contract
-from ._failures import make_exec_protocol
+from ._failures import check_data_type
 from ._mounted import ClassMountedStory, MountedStory
 
 
@@ -23,9 +23,10 @@ class Story(object):
                 self.arguments,
                 self.collected,
                 self.contract,
-                self.protocol,
+                self.__failures,
             )
 
     def failures(self, failures):
-        self.protocol = make_exec_protocol(failures)
+        check_data_type(failures)
+        self.__failures = failures
         return failures

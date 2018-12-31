@@ -6,6 +6,14 @@ from .exceptions import FailureProtocolError
 # Data type.
 
 
+def check_data_type(failures):
+    if failures is not None and not isinstance(
+        failures, (EnumMeta, list, tuple, set, frozenset)
+    ):
+        message = wrong_type_template.format(failures=failures)
+        raise FailureProtocolError(message)
+
+
 def collection_contains(reason, failures):
     return reason in failures
 
@@ -33,15 +41,9 @@ def make_exec_protocol(failures):
         return NotNullExecProtocol(failures, collection_contains)
     elif failures is None:
         return NullExecProtocol()
-    else:
-        message = wrong_type_template.format(failures=failures)
-        raise FailureProtocolError(message)
 
 
 class NullExecProtocol(object):
-
-    failures = None  # TODO: Remove.
-
     def check_return_statement(self, method, reason):
         if reason:
             message = null_protocol_template.format(
@@ -100,9 +102,6 @@ def make_run_protocol(failures, cls_name, method_name):
         )
     elif failures is None:
         return NullRunProtocol(cls_name, method_name)
-    else:
-        message = wrong_type_template.format(failures=failures)
-        raise FailureProtocolError(message)
 
 
 class NullRunProtocol(object):
