@@ -133,7 +133,6 @@ class NotNullRunProtocol(object):
         self.compare_func = compare_func
 
     def check_failed_because_argument(self, reason):
-        # TODO: Deny to use `failed_because(None)`.
         if not self.contains_func(reason, self.failures):
             message = wrong_summary_template.format(
                 reason=reason,
