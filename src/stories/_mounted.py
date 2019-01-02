@@ -4,7 +4,6 @@ from ._exec import function
 from ._failures import make_run_protocol
 from ._history import History
 from ._marker import BeginningOfStory, EndOfStory
-from ._repr import story_representation
 from ._run import Call, Run
 from ._wrap import wrap_story
 
@@ -12,20 +11,24 @@ from ._wrap import wrap_story
 class ClassMountedStory(object):
     def __init__(self, cls, name, collected, failures):
         self.cls = cls
-        self.obj = None
-        self.cls_name = cls.__name__
         self.name = name
         self.collected = collected
         self.failures = failures
 
     def __repr__(self):
-        return story_representation(
-            is_story,
-            self.cls_name + "." + self.name,
-            self.cls,
-            self.obj,
-            self.collected,
-        )
+        result = [self.cls.__name__ + "." + self.name]
+        if self.collected:
+            for name in self.collected:
+                attr = getattr(self.cls, name, None)
+                if type(attr) is ClassMountedStory:
+                    result.append("  " + attr.name)
+                    result.extend(["  " + line for line in repr(attr).splitlines()[1:]])
+                else:
+                    defined = "" if attr else " ??"
+                    result.append("  " + name + defined)
+        else:
+            result.append("  <empty>")
+        return "\n".join(result)
 
 
 class MountedStory(object):
