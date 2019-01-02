@@ -4,3 +4,7 @@ def arguments(*names):
         return f
 
     return decorator
+
+
+def get_arguments(f):
+    return getattr(f, "arguments", [])
