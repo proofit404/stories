@@ -1,23 +1,6 @@
 from ._compat import EnumMeta
 
 
-def history_representation(history):
-    result = "\n".join(history.lines)
-    return result
-
-
-def context_representation(ns, lines):
-
-    if not lines:
-        return "Context()"
-    items = ["%s = %s" % (key, repr(value)) for (key, value) in ns.items()]
-    longest = max(map(len, items))
-    lines = [
-        "    %s  # %s" % (item.ljust(longest), line) for item, line in zip(items, lines)
-    ]
-    return "\n".join(["Context:"] + lines)
-
-
 def story_representation(is_story, first_line, cls, obj, collected):
 
     result = [first_line]

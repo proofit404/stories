@@ -1,13 +1,6 @@
 from collections import OrderedDict
 
 from ._contract import deny_attribute_assign, deny_attribute_delete
-from ._repr import context_representation, history_representation
-
-
-def assign_namespace(ctx, method, kwargs):
-    ctx._Context__ns.update(kwargs)
-    line = "Set by %s.%s" % (method.__self__.__class__.__name__, method.__name__)
-    ctx._Context__lines.extend([line] * len(kwargs))
 
 
 class Context(object):
@@ -44,3 +37,25 @@ class Context(object):
         scope = set(self.__ns)
         attributes = sorted(parent | current | scope)
         return attributes
+
+
+def assign_namespace(ctx, method, kwargs):
+    ctx._Context__ns.update(kwargs)
+    line = "Set by %s.%s" % (method.__self__.__class__.__name__, method.__name__)
+    ctx._Context__lines.extend([line] * len(kwargs))
+
+
+def history_representation(history):
+    result = "\n".join(history.lines)
+    return result
+
+
+def context_representation(ns, lines):
+    if not lines:
+        return "Context()"
+    items = ["%s = %s" % (key, repr(value)) for (key, value) in ns.items()]
+    longest = max(map(len, items))
+    lines = [
+        "    %s  # %s" % (item.ljust(longest), line) for item, line in zip(items, lines)
+    ]
+    return "\n".join(["Context:"] + lines)
