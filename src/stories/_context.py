@@ -32,7 +32,6 @@ class Context(object):
             "_Context__ns",
             "_Context__history",
             "_Context__lines",
-            "_Context__contract",
         }
         scope = set(self.__ns)
         attributes = sorted(parent | current | scope)
