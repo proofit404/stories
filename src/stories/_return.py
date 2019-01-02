@@ -3,7 +3,7 @@ class Result(object):
         self.value = value
 
     def __repr__(self):
-        return self.__class__.__name__ + "(" + repr(self.value) + ")"
+        return "Result(" + repr(self.value) + ")"
 
 
 class Success(object):
@@ -12,8 +12,7 @@ class Success(object):
 
     def __repr__(self):
         return (
-            self.__class__.__name__
-            + "("
+            "Success("
             + ", ".join([k + "=" + repr(v) for k, v in self.kwargs.items()])
             + ")"
         )
@@ -25,9 +24,9 @@ class Failure(object):
 
     def __repr__(self):
         reason = repr(self.reason) if self.reason else ""
-        return self.__class__.__name__ + "(" + reason + ")"
+        return "Failure(" + reason + ")"
 
 
 class Skip(object):
     def __repr__(self):
-        return self.__class__.__name__ + "()"
+        return "Skip()"

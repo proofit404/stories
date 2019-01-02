@@ -9,7 +9,7 @@ class FailureError(StoryError):
 
     def __repr__(self):
         reason = repr(self.reason) if self.reason else ""  # FIXME: Test me!
-        return self.__class__.__name__ + "(" + reason + ")"
+        return "FailureError(" + reason + ")"
 
 
 class FailureProtocolError(StoryError):
