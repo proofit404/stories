@@ -1,6 +1,3 @@
-from ._repr import namespace_representation
-
-
 class Result(object):
     def __init__(self, value=None):
         self.value = value
@@ -15,7 +12,10 @@ class Success(object):
 
     def __repr__(self):
         return (
-            self.__class__.__name__ + "(" + namespace_representation(self.kwargs) + ")"
+            self.__class__.__name__
+            + "("
+            + ", ".join([k + "=" + repr(v) for k, v in self.kwargs.items()])
+            + ")"
         )
 
 

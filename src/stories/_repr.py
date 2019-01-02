@@ -1,10 +1,6 @@
 from ._compat import EnumMeta
 
 
-def namespace_representation(ns):
-    return ", ".join([k + "=" + repr(v) for k, v in ns.items()])
-
-
 def history_representation(history):
     result = "\n".join(history.lines)
     return result
