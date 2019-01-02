@@ -5,7 +5,6 @@ from ._failures import make_run_protocol
 from ._history import History
 from ._marker import BeginningOfStory, EndOfStory
 from ._run import Call, Run
-from ._wrap import wrap_story
 
 
 class ClassMountedStory(object):
@@ -32,16 +31,13 @@ class ClassMountedStory(object):
 
 
 class MountedStory(object):
-    def __init__(self, cls, obj, name, arguments, collected, failures):
-        self.cls = cls
+    def __init__(self, obj, cls_name, name, arguments, methods, failures):
         self.obj = obj
-        self.cls_name = cls_name = cls.__name__
+        self.cls_name = cls_name
         self.name = name
         self.arguments = arguments
-        self.collected = collected  # TODO: Remove.
-        self.methods, self.failures = wrap_story(
-            is_story, arguments, collected, cls_name, name, obj, failures
-        )
+        self.methods = methods
+        self.failures = failures
 
     def __call__(self, *args, **kwargs):
         history = History()
@@ -70,7 +66,3 @@ class MountedStory(object):
                 if method_type is BeginningOfStory:
                     indent += 1
         return "\n".join(result)
-
-
-def is_story(attribute):
-    return type(attribute) in {ClassMountedStory, MountedStory}

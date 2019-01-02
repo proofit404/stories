@@ -1,9 +1,10 @@
 from ._contract import make_contract
 from ._failures import combine_failures, make_exec_protocol, maybe_disable_null_protocol
 from ._marker import BeginningOfStory, EndOfStory
+from ._mounted import MountedStory
 
 
-def wrap_story(is_story, arguments, collected, cls_name, story_name, obj, failures):
+def wrap_story(arguments, collected, cls_name, story_name, obj, failures):
 
     contract = make_contract(cls_name, story_name, arguments)
     protocol = make_exec_protocol(failures)
@@ -14,7 +15,7 @@ def wrap_story(is_story, arguments, collected, cls_name, story_name, obj, failur
 
         attr = getattr(obj, name)
 
-        if not is_story(attr):
+        if type(attr) is not MountedStory:
             methods.append((attr, contract, protocol))
             continue
 

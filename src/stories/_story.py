@@ -1,6 +1,7 @@
 from ._collect import collect_story
 from ._failures import check_data_type
 from ._mounted import ClassMountedStory, MountedStory
+from ._wrap import wrap_story
 
 
 class Story(object):
@@ -14,8 +15,16 @@ class Story(object):
         if obj is None:
             return ClassMountedStory(cls, self.name, self.collected, self.failures)
         else:
+            methods, failures = wrap_story(
+                self.arguments,
+                self.collected,
+                cls.__name__,
+                self.name,
+                obj,
+                self.__failures,
+            )
             return MountedStory(
-                cls, obj, self.name, self.arguments, self.collected, self.__failures
+                obj, cls.__name__, self.name, self.arguments, methods, failures
             )
 
     def failures(self, failures):
