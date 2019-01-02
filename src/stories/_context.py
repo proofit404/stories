@@ -19,11 +19,7 @@ class Context(object):
         deny_attribute_delete()
 
     def __repr__(self):
-        return (
-            history_representation(self.__history)
-            + "\n\n"
-            + context_representation(self.__ns, self.__lines)
-        )
+        return history_representation(self) + "\n\n" + context_representation(self)
 
     def __dir__(self):
         spec = type("Context", (object,), {})
@@ -44,17 +40,20 @@ def assign_namespace(ctx, method, kwargs):
     ctx._Context__lines.extend([line] * len(kwargs))
 
 
-def history_representation(history):
-    result = "\n".join(history.lines)
+def history_representation(ctx):
+    result = "\n".join(ctx._Context__history.lines)
     return result
 
 
-def context_representation(ns, lines):
-    if not lines:
+def context_representation(ctx):
+    if not ctx._Context__lines:
         return "Context()"
-    items = ["%s = %s" % (key, repr(value)) for (key, value) in ns.items()]
+    items = [
+        "%s = %s" % (key, repr(value)) for (key, value) in ctx._Context__ns.items()
+    ]
     longest = max(map(len, items))
     lines = [
-        "    %s  # %s" % (item.ljust(longest), line) for item, line in zip(items, lines)
+        "    %s  # %s" % (item.ljust(longest), line)
+        for item, line in zip(items, ctx._Context__lines)
     ]
     return "\n".join(["Context:"] + lines)
