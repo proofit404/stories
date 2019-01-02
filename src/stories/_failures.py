@@ -1,5 +1,4 @@
 from ._compat import Enum, EnumMeta
-from ._repr import failures_representation
 from .exceptions import FailureProtocolError
 
 
@@ -12,6 +11,15 @@ def check_data_type(failures):
     ):
         message = wrong_type_template.format(failures=failures)
         raise FailureProtocolError(message)
+
+
+def failures_representation(failures):
+    if isinstance(failures, EnumMeta):
+        return ", ".join(map(repr, failures.__members__.values()))
+    elif isinstance(failures, (list, tuple, set, frozenset)):
+        return ", ".join(map(repr, failures))
+    elif failures is None:
+        return "None"
 
 
 def collection_contains(reason, failures):

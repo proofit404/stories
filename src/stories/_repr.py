@@ -1,6 +1,3 @@
-from ._compat import EnumMeta
-
-
 def story_representation(is_story, first_line, cls, obj, collected):
 
     result = [first_line]
@@ -23,13 +20,3 @@ def story_representation(is_story, first_line, cls, obj, collected):
         result.append("  <empty>")
 
     return "\n".join(result)
-
-
-def failures_representation(failures):
-
-    if isinstance(failures, EnumMeta):
-        return ", ".join(map(repr, failures.__members__.values()))
-    elif isinstance(failures, (list, tuple, set, frozenset)):
-        return ", ".join(map(repr, failures))
-    elif failures is None:
-        return "None"
