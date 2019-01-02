@@ -18,9 +18,6 @@ def wrap_story(is_story, arguments, collected, cls_name, story_name, obj, failur
             methods.append((attr, contract, protocol))
             continue
 
-        if len(attr.methods) == 2:
-            continue
-
         failures = combine_failures(
             failures, cls_name, story_name, attr.failures, attr.cls_name, attr.name
         )
@@ -30,7 +27,7 @@ def wrap_story(is_story, arguments, collected, cls_name, story_name, obj, failur
 
         methods.extend(attr.methods)
 
-    methods.append((EndOfStory(), contract, protocol))
+    methods.append((EndOfStory(is_empty=not collected), contract, protocol))
 
     methods = maybe_disable_null_protocol(methods, failures)
 

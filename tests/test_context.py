@@ -35,6 +35,7 @@ Context()
 
     expected = """
 EmptySubstory.y
+  x
 
 Context()
     """.strip()
@@ -51,6 +52,7 @@ Context()
 SubstoryDI.y
   start
   before
+  x (Empty.x)
   after (returned: 6)
 
 Context:

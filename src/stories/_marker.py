@@ -31,3 +31,6 @@ class EndOfStory(object):
 
     def __call__(self, ctx):
         return Success()
+
+    def __init__(self, is_empty):
+        self.is_empty = is_empty

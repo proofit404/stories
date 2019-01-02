@@ -3,6 +3,7 @@ from ._contract import validate_arguments
 from ._exec import function
 from ._failures import make_run_protocol
 from ._history import History
+from ._marker import BeginningOfStory, EndOfStory
 from ._repr import story_representation
 from ._run import Call, Run
 from ._wrap import wrap_story
@@ -53,13 +54,19 @@ class MountedStory(object):
         return function.execute(runner, ctx, history, self.methods)
 
     def __repr__(self):
-        return story_representation(
-            is_story,
-            self.cls_name + "." + self.name,
-            self.cls,
-            self.obj,
-            self.collected,
-        )
+        result = []
+        indent = 0
+        for method, contract, protocol in self.methods:
+            method_type = type(method)
+            if method_type is EndOfStory:
+                if method.is_empty:
+                    result.append("  " * indent + "<empty>")
+                indent -= 1
+            else:
+                result.append("  " * indent + method.__name__)
+                if method_type is BeginningOfStory:
+                    indent += 1
+        return "\n".join(result)
 
 
 def is_story(attribute):
