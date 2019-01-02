@@ -883,6 +883,7 @@ def test_substory_protocol_match_with_empty():
     with pytest.raises(FailureError) as exc_info:
         Q().a()
     assert exc_info.value.reason is None
+    assert repr(exc_info.value) == "FailureError()"
 
     result = Q().a.run()
     assert result.failure_reason is None
@@ -894,6 +895,7 @@ def test_substory_protocol_match_with_empty():
     with pytest.raises(FailureError) as exc_info:
         J().a()
     assert exc_info.value.reason is None
+    assert repr(exc_info.value) == "FailureError()"
 
     result = J().a.run()
     assert result.failure_reason is None

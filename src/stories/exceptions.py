@@ -8,7 +8,7 @@ class FailureError(StoryError):
         super(FailureError, self).__init__()
 
     def __repr__(self):
-        reason = repr(self.reason) if self.reason else ""  # FIXME: Test me!
+        reason = repr(self.reason) if self.reason else ""
         return "FailureError(" + reason + ")"
 
 
