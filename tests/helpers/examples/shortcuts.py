@@ -17,7 +17,7 @@ class SimpleWithList(object):
         return Failure("foo")
 
 
-failures_in(SimpleWithList)(["foo", "bar", "baz"])
+failures_in(SimpleWithList, ["foo", "bar", "baz"])
 
 
 class SimpleWithEnum(object):

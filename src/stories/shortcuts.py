@@ -1,7 +1,7 @@
 from ._mounted import ClassMountedStory
 
 
-def failures_in(cls):
+def failures_in(cls, *args):
     def setter(failures):
         for attrname in dir(cls):
             attribute = getattr(cls, attrname)
@@ -9,4 +9,7 @@ def failures_in(cls):
                 attribute.failures(failures)
         return failures
 
-    return setter
+    if args:
+        return setter(*args)
+    else:
+        return setter
