@@ -23,7 +23,7 @@ def wrap_story(arguments, collected, cls_name, story_name, obj, failures):
             failures, cls_name, story_name, attr.failures, attr.cls_name, attr.name
         )
 
-        # TODO: Is there a way to avoid this modification?
+        # FIXME: Is there a way to avoid this modification?
         attr.methods[0][0].set_parent(name, attr.obj is obj)
 
         methods.extend(attr.methods)
