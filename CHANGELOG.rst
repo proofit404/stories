@@ -4,6 +4,21 @@
 Changelog
 ---------
 
+0.10 (2019-00-00)
++++++++++++++++++
+
+- Add failure protocol of the story.  ``Failure`` argument should
+  match protocol definition in the story.
+- Replace multiple ``argument`` decorators with single ``arguments``.
+- Raise ``ContextContractError`` when keyword argument given to
+  ``Success`` already exists in the context.
+- Raise ``ContextContractError`` when the story can not find necessary
+  arguments in the context.
+- Make context an immutable object.
+- Rename ``reason`` attribute of the summary class into
+  ``failure_reason``.
+- Python 3.7 support.
+
 0.9 (2018-11-28)
 ++++++++++++++++
 
