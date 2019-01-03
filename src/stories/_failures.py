@@ -6,11 +6,16 @@ from .exceptions import FailureProtocolError
 
 
 def check_data_type(failures):
-    if failures is not None and not isinstance(
-        failures, (EnumMeta, list, tuple, set, frozenset)
+    if failures is None:
+        return
+    if isinstance(failures, EnumMeta):
+        return
+    if isinstance(failures, (list, tuple, set, frozenset)) and all(
+        isinstance(failure, str) for failure in failures
     ):
-        message = wrong_type_template.format(failures=failures)
-        raise FailureProtocolError(message)
+        return
+    message = wrong_type_template.format(failures=failures)
+    raise FailureProtocolError(message)
 
 
 def failures_representation(failures):

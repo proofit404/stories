@@ -22,15 +22,21 @@ from stories.exceptions import FailureError, FailureProtocolError
 def test_wrong_definition():
     """We check types used in failures definition."""
 
-    expected = "Unexpected type for story failure protocol: 'boom'"
-
     class T(object):
         @story
         def x(I):
             I.one
 
+    expected = "Unexpected type for story failure protocol: 'boom'"
+
     with pytest.raises(FailureProtocolError) as exc_info:
         T.x.failures("boom")
+    assert str(exc_info.value) == expected
+
+    expected = "Unexpected type for story failure protocol: ['foo', 'bar', None]"
+
+    with pytest.raises(FailureProtocolError) as exc_info:
+        T.x.failures(["foo", "bar", None])
     assert str(exc_info.value) == expected
 
 
