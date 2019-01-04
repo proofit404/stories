@@ -16,16 +16,14 @@ You can write sub-stories in the same class and use them as steps as a
 parent story step.
 
 If you want the parent story to provide some context variables, use
-``@argument`` decorator on the sub-story definition.
+``@arguments`` decorator on the sub-story definition.
 
 .. code:: python
 
     class Subscription:
 
         @story
-        @argument("category_id")
-        @argument("price_id")
-        @argument("user")
+        @arguments("category_id", "price_id", "user")
         def buy(I):
 
             I.find_category
@@ -39,8 +37,7 @@ If you want the parent story to provide some context variables, use
             I.show_category
 
         @story
-        @argument("category")
-        @argument("price")
+        @arguments("category", "price")
         def find_promo_code(I):
 
             I.find_token
@@ -82,9 +79,7 @@ where these steps come from, constructor or not.
     class Subscription:
 
         @story
-        @argument("category_id")
-        @argument("price_id")
-        @argument("user")
+        @arguments("category_id", "price_id", "user")
         def buy(I):
 
             I.find_category
@@ -104,8 +99,7 @@ where these steps come from, constructor or not.
     class PromoCode:
 
         @story
-        @argument("category")
-        @argument("price")
+        @arguments("category", "price")
         def find(I):
 
             I.find_token
@@ -177,8 +171,7 @@ Here are some examples:
     class Subscription:
 
         @story
-        @argument("user")
-        @argument("price_id")
+        @arguments("user", "price_id")
         def buy(I):
 
             I.find_profile

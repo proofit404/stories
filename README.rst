@@ -52,14 +52,12 @@ that include many processing steps.
 
 .. code:: python
 
-    from stories import story, argument, Success
+    from stories import story, arguments, Success
 
     class PurchaseProduct:
 
         @story
-        @argument('user')
-        @argument('product')
-        @argument('shipment_details')
+        @arguments('user', 'product', 'shipment_details')
         def purchase(I):
 
             I.create_order

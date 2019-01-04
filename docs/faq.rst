@@ -66,8 +66,8 @@ semantics, here are the quickest way to prototype it:
 
 Let us know if you stuck!  We can do the redesign together!
 
-Why we need ``@argument`` decorator instead of function arguments?
-==================================================================
+Why we need ``@arguments`` decorator instead of function arguments?
+===================================================================
 
 For the simplicity of implementation inside ``@story`` decorator.
 Otherwise, we will need to use ``inspect`` library to call the

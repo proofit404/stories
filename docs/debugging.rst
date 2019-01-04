@@ -18,7 +18,7 @@ here`_.
     class Action:
 
         @story
-        @argument("value")
+        @arguments("value")
         def do(I):
 
             I.one

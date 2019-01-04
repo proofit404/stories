@@ -152,13 +152,12 @@ intended?
 
 .. code:: python
 
-    from stories import story, argument
+    from stories import story, arguments
 
     class Subscription:
 
         @story
-        @argument("category_id")
-        @argument("price_id")
+        @arguments("category_id", "price_id")
         def buy(I):
 
             I.find_category

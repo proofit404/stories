@@ -17,15 +17,13 @@ subscription to our service.
 
 .. code:: python
 
-    from stories import Failure, Result, Success, argument, story
+    from stories import Failure, Result, Success, arguments, story
 
     class Subscription:
         """Buy subscription for certain category."""
 
         @story
-        @argument("category_id")
-        @argument("price_id")
-        @argument("user")
+        @arguments("category_id", "price_id", "user")
         def buy(I):
 
             I.find_category
@@ -92,7 +90,7 @@ There are a few terms you should be familiar with:
 1. ``@story`` decorated method represents the spec of the business
    process.  It's executed only once at the class definition moment.
    This class attribute became a smart business object.
-2. ``@argument`` decorator describes input data similar to function
+2. ``@arguments`` decorator describes input data similar to function
    arguments.
 3. ``I`` object is used to build the execution spec out of its
    attributes.  You can use any **human-readable** names.
