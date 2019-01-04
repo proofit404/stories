@@ -15,8 +15,6 @@ Changelog
 - Raise ``ContextContractError`` when the story can not find necessary
   arguments in the context.
 - Make context an immutable object.
-- Rename ``reason`` attribute of the summary class into
-  ``failure_reason``.
 - Python 3.7 support.
 
 0.9 (2018-11-28)
