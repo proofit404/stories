@@ -4,11 +4,11 @@ class StoryError(Exception):
 
 class FailureError(StoryError):
     def __init__(self, reason):
-        self.reason = reason
+        self.__reason = reason
         super(FailureError, self).__init__()
 
     def __repr__(self):
-        reason = repr(self.reason) if self.reason else ""
+        reason = repr(self.__reason) if self.__reason else ""
         return "FailureError(" + reason + ")"
 
 

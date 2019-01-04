@@ -37,12 +37,11 @@ def test_failure():
 
     with pytest.raises(FailureError) as exc_info:
         examples.methods.Simple().x(2, 2)
-    assert not exc_info.value.reason
+    assert repr(exc_info.value) == "FailureError()"
 
     result = examples.methods.Simple().x.run(2, 2)
     assert not result.is_success
     assert result.is_failure
-    assert not result.failure_reason
     assert result.ctx._Context__ns == {"foo": 2, "bar": 2}
     assert result.failed_on("two")
     assert not result.failed_on("one")
@@ -53,12 +52,11 @@ def test_failure():
 
     with pytest.raises(FailureError) as exc_info:
         examples.methods.SimpleSubstory().y(3)
-    assert not exc_info.value.reason
+    assert repr(exc_info.value) == "FailureError()"
 
     result = examples.methods.SimpleSubstory().y.run(3)
     assert not result.is_success
     assert result.is_failure
-    assert not result.failure_reason
     assert result.ctx._Context__ns == {"foo": 2, "bar": 4, "spam": 3}
     assert result.failed_on("two")
     assert not result.failed_on("one")
@@ -69,12 +67,11 @@ def test_failure():
 
     with pytest.raises(FailureError) as exc_info:
         examples.methods.SubstoryDI(examples.methods.Simple().x).y(3)
-    assert not exc_info.value.reason
+    assert repr(exc_info.value) == "FailureError()"
 
     result = examples.methods.SubstoryDI(examples.methods.Simple().x).y.run(3)
     assert not result.is_success
     assert result.is_failure
-    assert not result.failure_reason
     assert result.ctx._Context__ns == {"foo": 2, "bar": 4, "spam": 3}
     assert result.failed_on("two")
     assert not result.failed_on("one")

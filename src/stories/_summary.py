@@ -4,16 +4,16 @@ class FailureSummary(object):
         self.is_success = False
         self.is_failure = True
         self.ctx = ctx
-        self.failed_method = failed_method
-        self.failure_reason = reason
+        self.__failed_method = failed_method
+        self.__failure_reason = reason
 
     def failed_on(self, method_name):
-        return method_name == self.failed_method
+        return method_name == self.__failed_method
 
     def failed_because(self, reason):
         self.__protocol.check_failed_because_argument(reason)
         return self.__protocol.compare_failed_because_argument(
-            reason, self.failure_reason
+            reason, self.__failure_reason
         )
 
     @property

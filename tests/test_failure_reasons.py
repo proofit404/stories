@@ -7,15 +7,6 @@ from stories import story
 from stories.exceptions import FailureError, FailureProtocolError
 
 
-# FIXME:
-#
-# Comparison of the Enum should work:
-#
-# T().a.failures.foo is T().a.run().failure_reason
-#
-# Story collected twice here.
-
-
 # Story definition.
 
 
@@ -62,13 +53,11 @@ def test_reasons_defined_with_list():
 
     with pytest.raises(FailureError) as exc_info:
         T().x()
-    assert exc_info.value.reason == "foo"
     assert repr(exc_info.value) == "FailureError('foo')"
 
     result = T().x.run()
     assert not result.is_success
     assert result.is_failure
-    assert result.failure_reason == "foo"
     assert result.failed_because("foo")
 
     # Substory inheritance.
@@ -77,13 +66,11 @@ def test_reasons_defined_with_list():
 
     with pytest.raises(FailureError) as exc_info:
         Q().a()
-    assert exc_info.value.reason == "foo"
     assert repr(exc_info.value) == "FailureError('foo')"
 
     result = Q().a.run()
     assert not result.is_success
     assert result.is_failure
-    assert result.failure_reason == "foo"
     assert result.failed_because("foo")
 
     # Substory DI.
@@ -92,13 +79,11 @@ def test_reasons_defined_with_list():
 
     with pytest.raises(FailureError) as exc_info:
         J().a()
-    assert exc_info.value.reason == "foo"
     assert repr(exc_info.value) == "FailureError('foo')"
 
     result = J().a.run()
     assert not result.is_success
     assert result.is_failure
-    assert result.failure_reason == "foo"
     assert result.failed_because("foo")
 
 
@@ -122,13 +107,11 @@ def test_reasons_defined_with_enum():
 
     with pytest.raises(FailureError) as exc_info:
         T().x()
-    # assert exc_info.value.reason is T().x.failures.foo
     assert repr(exc_info.value) == "FailureError(<Errors.foo: 1>)"
 
     result = T().x.run()
     assert not result.is_success
     assert result.is_failure
-    # assert result.failure_reason is T().x.failures.foo
     assert result.failed_because(T().x.failures.foo)
 
     # Substory inheritance.
@@ -138,13 +121,11 @@ def test_reasons_defined_with_enum():
 
     with pytest.raises(FailureError) as exc_info:
         Q().a()
-    # assert exc_info.value.reason is Q().a.failures.foo
     assert repr(exc_info.value) == "FailureError(<Errors.foo: 1>)"
 
     result = Q().a.run()
     assert not result.is_success
     assert result.is_failure
-    # assert result.failure_reason is Q().a.failures.foo
     assert result.failed_because(Q().a.failures.foo)
 
     # Substory DI.
@@ -154,13 +135,11 @@ def test_reasons_defined_with_enum():
 
     with pytest.raises(FailureError) as exc_info:
         J().a()
-    # assert exc_info.value.reason is J().a.failures.foo
     assert repr(exc_info.value) == "FailureError(<Errors.foo: 1>)"
 
     result = J().a.run()
     assert not result.is_success
     assert result.is_failure
-    # assert result.failure_reason is J().a.failures.foo
     assert result.failed_because(J().a.failures.foo)
 
 
@@ -888,11 +867,10 @@ def test_substory_protocol_match_with_empty():
 
     with pytest.raises(FailureError) as exc_info:
         Q().a()
-    assert exc_info.value.reason is None
     assert repr(exc_info.value) == "FailureError()"
 
     result = Q().a.run()
-    assert result.failure_reason is None
+    assert result.is_failure
 
     # Substory DI.
 
@@ -900,11 +878,10 @@ def test_substory_protocol_match_with_empty():
 
     with pytest.raises(FailureError) as exc_info:
         J().a()
-    assert exc_info.value.reason is None
     assert repr(exc_info.value) == "FailureError()"
 
     result = J().a.run()
-    assert result.failure_reason is None
+    assert result.is_failure
 
 
 def test_substory_protocol_match_with_list():
@@ -929,7 +906,7 @@ def test_substory_protocol_match_with_list():
 
     with pytest.raises(FailureError) as exc_info:
         Q().a()
-    assert exc_info.value.reason == "foo"
+    assert repr(exc_info.value) == "FailureError('foo')"
 
     result = Q().a.run()
     assert result.failed_because("foo")
@@ -940,7 +917,7 @@ def test_substory_protocol_match_with_list():
 
     with pytest.raises(FailureError) as exc_info:
         J().a()
-    assert exc_info.value.reason == "foo"
+    assert repr(exc_info.value) == "FailureError('foo')"
 
     result = J().a.run()
     assert result.failed_because("foo")
@@ -967,9 +944,9 @@ def test_substory_protocol_match_with_enum():
     assert isinstance(Q().a.failures, enum.EnumMeta)
     assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz", "quiz"}
 
-    with pytest.raises(FailureError):
+    with pytest.raises(FailureError) as exc_info:
         Q().a()
-    # assert exc_info.value.reason is Q().a.failures.foo
+    assert repr(exc_info.value) == "FailureError(<Errors.foo: 1>)"
 
     result = Q().a.run()
     assert result.failed_because(Q().a.failures.foo)
@@ -979,9 +956,9 @@ def test_substory_protocol_match_with_enum():
     assert isinstance(J().a.failures, enum.EnumMeta)
     assert set(J().a.failures.__members__.keys()) == {"foo", "bar", "baz", "quiz"}
 
-    with pytest.raises(FailureError):
+    with pytest.raises(FailureError) as exc_info:
         J().a()
-    # assert exc_info.value.reason is J().a.failures.foo
+    assert repr(exc_info.value) == "FailureError(<Errors.foo: 1>)"
 
     result = J().a.run()
     assert result.failed_because(J().a.failures.foo)
@@ -1422,7 +1399,7 @@ def test_expand_substory_protocol_list_with_list():
 
     with pytest.raises(FailureError) as exc_info:
         Q().a()
-    assert exc_info.value.reason == "foo"
+    assert repr(exc_info.value) == "FailureError('foo')"
 
     result = Q().a.run()
     assert result.failed_because("foo")
@@ -1433,7 +1410,7 @@ def test_expand_substory_protocol_list_with_list():
 
     with pytest.raises(FailureError) as exc_info:
         J().a()
-    assert exc_info.value.reason == "foo"
+    assert repr(exc_info.value) == "FailureError('foo')"
 
     result = J().a.run()
     assert result.failed_because("foo")
@@ -1460,9 +1437,9 @@ def test_expand_substory_protocol_enum_with_enum():
     assert isinstance(Q().a.failures, enum.EnumMeta)
     assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz", "quiz"}
 
-    with pytest.raises(FailureError):
+    with pytest.raises(FailureError) as exc_info:
         Q().a()
-    # assert exc_info.value.reason is Q().a.failures.foo
+    assert repr(exc_info.value) == "FailureError(<Errors.foo: 1>)"
 
     result = Q().a.run()
     assert result.failed_because(Q().a.failures.foo)
@@ -1472,9 +1449,9 @@ def test_expand_substory_protocol_enum_with_enum():
     assert isinstance(J().a.failures, enum.EnumMeta)
     assert set(J().a.failures.__members__.keys()) == {"foo", "bar", "baz", "quiz"}
 
-    with pytest.raises(FailureError):
+    with pytest.raises(FailureError) as exc_info:
         J().a()
-    # assert exc_info.value.reason is J().a.failures.foo
+    assert repr(exc_info.value) == "FailureError(<Errors.foo: 1>)"
 
     result = J().a.run()
     assert result.failed_because(J().a.failures.foo)
@@ -1506,7 +1483,7 @@ def test_expand_sequential_substory_protocol_list_with_null():
 
     with pytest.raises(FailureError) as exc_info:
         Q().a()
-    assert exc_info.value.reason == "foo"
+    assert repr(exc_info.value) == "FailureError('foo')"
 
     result = Q().a.run()
     assert result.failed_because("foo")
@@ -1517,7 +1494,7 @@ def test_expand_sequential_substory_protocol_list_with_null():
 
     with pytest.raises(FailureError) as exc_info:
         J().a()
-    assert exc_info.value.reason == "foo"
+    assert repr(exc_info.value) == "FailureError('foo')"
 
     result = J().a.run()
     assert result.failed_because("foo")
@@ -1548,9 +1525,9 @@ def test_expand_sequential_substory_protocol_enum_with_null():
     assert isinstance(Q().a.failures, enum.EnumMeta)
     assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
-    with pytest.raises(FailureError):
+    with pytest.raises(FailureError) as exc_info:
         Q().a()
-    # assert exc_info.value.reason is Q().a.failures.foo
+    assert repr(exc_info.value) == "FailureError(<Errors.foo: 1>)"
 
     result = Q().a.run()
     assert result.failed_because(Q().a.failures.foo)
@@ -1560,9 +1537,9 @@ def test_expand_sequential_substory_protocol_enum_with_null():
     assert isinstance(J().a.failures, enum.EnumMeta)
     assert set(J().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
-    with pytest.raises(FailureError):
+    with pytest.raises(FailureError) as exc_info:
         J().a()
-    # assert exc_info.value.reason is J().a.failures.foo
+    assert repr(exc_info.value) == "FailureError(<Errors.foo: 1>)"
 
     result = J().a.run()
     assert result.failed_because(J().a.failures.foo)
@@ -1594,7 +1571,7 @@ def test_expand_sequential_substory_protocol_list_with_list():
 
     with pytest.raises(FailureError) as exc_info:
         Q().a()
-    assert exc_info.value.reason == "foo"
+    assert repr(exc_info.value) == "FailureError('foo')"
 
     result = Q().a.run()
     assert result.failed_because("foo")
@@ -1605,7 +1582,7 @@ def test_expand_sequential_substory_protocol_list_with_list():
 
     with pytest.raises(FailureError) as exc_info:
         J().a()
-    assert exc_info.value.reason == "foo"
+    assert repr(exc_info.value) == "FailureError('foo')"
 
     result = J().a.run()
     assert result.failed_because("foo")
@@ -1643,9 +1620,9 @@ def test_expand_sequential_substory_protocol_enum_with_enum():
         "eggs",
     }
 
-    with pytest.raises(FailureError):
+    with pytest.raises(FailureError) as exc_info:
         Q().a()
-    # assert exc_info.value.reason is Q().a.failures.foo
+    assert repr(exc_info.value) == "FailureError(<Errors.foo: 1>)"
 
     result = Q().a.run()
     assert result.failed_because(Q().a.failures.foo)
@@ -1662,9 +1639,9 @@ def test_expand_sequential_substory_protocol_enum_with_enum():
         "eggs",
     }
 
-    with pytest.raises(FailureError):
+    with pytest.raises(FailureError) as exc_info:
         J().a()
-    # assert exc_info.value.reason is J().a.failures.foo
+    assert repr(exc_info.value) == "FailureError(<Errors.foo: 1>)"
 
     result = J().a.run()
     assert result.failed_because(J().a.failures.foo)
