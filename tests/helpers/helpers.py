@@ -1,12 +1,11 @@
 import stories._context
 
 
-origin_context_init = stories._context.Context.__init__
-
-
 def make_collector():
 
     storage = []
+
+    origin_context_init = stories._context.Context.__init__
 
     def wrapper(ctx, ns, history):
         origin_context_init(ctx, ns, history)
