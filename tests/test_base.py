@@ -42,7 +42,8 @@ def test_failure():
     result = examples.methods.Simple().x.run(2, 2)
     assert not result.is_success
     assert result.is_failure
-    assert result.ctx._Context__ns == {"foo": 2, "bar": 2}
+    assert result.ctx.foo == 2
+    assert result.ctx.bar == 2
     assert result.failed_on("two")
     assert not result.failed_on("one")
     with pytest.raises(AssertionError):
@@ -57,7 +58,9 @@ def test_failure():
     result = examples.methods.SimpleSubstory().y.run(3)
     assert not result.is_success
     assert result.is_failure
-    assert result.ctx._Context__ns == {"foo": 2, "bar": 4, "spam": 3}
+    assert result.ctx.foo == 2
+    assert result.ctx.bar == 4
+    assert result.ctx.spam == 3
     assert result.failed_on("two")
     assert not result.failed_on("one")
     with pytest.raises(AssertionError):
@@ -72,7 +75,9 @@ def test_failure():
     result = examples.methods.SubstoryDI(examples.methods.Simple().x).y.run(3)
     assert not result.is_success
     assert result.is_failure
-    assert result.ctx._Context__ns == {"foo": 2, "bar": 4, "spam": 3}
+    assert result.ctx.foo == 2
+    assert result.ctx.bar == 4
+    assert result.ctx.spam == 3
     assert result.failed_on("two")
     assert not result.failed_on("one")
     with pytest.raises(AssertionError):
