@@ -144,6 +144,55 @@ Most frameworks are busy with forms, serializers, transport layers,
 field mappings.  And all these implementation details are not the
 right abstractions for decision making.
 
+Usually, our first thought will be moving our business logic from the
+view into a function.
+
+.. code:: python
+
+    def buy_subscription(category_id, price_id, user):
+
+        category = find_category(category_id)
+        price = find_price(price_id)
+        profile = find_profile(user)
+        if profile.balance < price.cost:
+            raise ValueError
+        decrease_balance(profile, price.cost)
+        save_profile(profile)
+        expires = calculate_period(price.period)
+        subscription = create_subscription(profile, category, expires)
+        notification = send_notification('subscribe', profile, category)
+
+The author definitely has a few good points to write code this way.
+
+It is short, has clear names and intent.
+
+If you enjoy writing code like this, stop reading and go write it.
+I'm serious!
+
+But we see a few disadvantages in it.
+
+1. Growth problem.  In real life, functions like this will have ~50
+   lines of code, a lot of variables and nested ``if`` statements.
+   Eventually, a programmer will decide to hide its complexity
+   somewhere.
+
+   * Convert to the object.  The main intent is hiding ~50 variables
+     in ~50 object attributes.  This will improve the readability of
+     the main method.  But will harm the understanding of where data
+     came from.
+
+   * Mixins.  At some point, we will like to reuse parts of our
+     business logic.  A mixin is the most common way to make code with
+     classes reusable.  But it will lead to even more implicit source
+     of date.  Attributes appear from nowhere.
+
+2. Top-down architecture.  We call functions directly.  They call
+   other low level functions directly.  Our business logic has a very
+   high coupling with the way we talk to the database, SMS gateway or
+   notification server.  This approach has zero flexibility.
+
+There is a better way.
+
 DSL
 ===
 
