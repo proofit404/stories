@@ -10,6 +10,7 @@ class Story(object):
         self.name = f.__name__
         self.arguments = get_arguments(f)
         self.collected = collect_story(f)
+        self.contract(None)
         self.failures(None)
 
     def __get__(self, obj, cls):
@@ -27,6 +28,10 @@ class Story(object):
             return MountedStory(
                 obj, cls.__name__, self.name, self.arguments, methods, failures
             )
+
+    def contract(self, contract):
+        self.__contract = contract
+        return contract
 
     def failures(self, failures):
         check_data_type(failures)

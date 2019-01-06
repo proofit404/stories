@@ -105,3 +105,39 @@ Variables can not be removed from Context.
     with pytest.raises(ContextContractError) as exc_info:
         examples.contract.DeleteAttribute().x(foo=1)
     assert str(exc_info.value) == expected
+
+
+@pytest.mark.parametrize("m", examples.contract_modules)
+def test_context_variables_validation(m):
+    """
+    We apply validators to the context variables, if story defines
+    context contract.
+    """
+
+    class T(m.Child, m.WrongMethod):
+        pass
+
+    class Q(m.ParentWithNull, m.NormalParentMethod, T):
+        pass
+
+    class J(m.ParentWithNull, m.NormalParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+
+@pytest.mark.parametrize("m", examples.contract_modules)
+def test_context_unknown_variable(m):
+    """
+    Step can't use Success argument name which was not specified in
+    the contract.
+    """
+
+    class T(m.Child, m.UnknownMethod):
+        pass
+
+    class Q(m.ParentWithNull, m.NormalParentMethod, T):
+        pass
+
+    class J(m.ParentWithNull, m.NormalParentMethod):
+        def __init__(self):
+            self.x = T().x

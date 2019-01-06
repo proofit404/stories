@@ -8,7 +8,16 @@ import examples.methods
 import examples.shortcuts
 
 
+contract_modules = [
+    examples.context_contract_marshmallow,
+    examples.context_contract_cerberus,
+    examples.context_contract_raw,
+]
+
+
 try:
     import examples.context_contract_pydantic
-except ImportError:
+
+    contract_modules.insert(0, examples.context_contract_pydantic)
+except SyntaxError:
     pass
