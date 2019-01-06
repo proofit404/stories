@@ -13,7 +13,7 @@ class WrongMethod(object):
 
 class UnknownMethod(object):
     def one(self, ctx):
-        return Success(bar="1")
+        return Success(quiz="1")
 
 
 # Parent mixins.
@@ -35,7 +35,15 @@ class Child(object):
     def x(I):
         I.one
 
-    contract = x.contract(Validator({"foo": {"type": "integer"}}))
+    contract = x.contract(
+        Validator(
+            {
+                "foo": {"type": "integer"},
+                "bar": {"type": "integer"},
+                "baz": {"type": "integer"},
+            }
+        )
+    )
 
 
 class ParentWithNull(object):

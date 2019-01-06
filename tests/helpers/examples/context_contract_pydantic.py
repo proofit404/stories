@@ -13,7 +13,7 @@ class WrongMethod(object):
 
 class UnknownMethod(object):
     def one(self, ctx):
-        return Success(bar="1")
+        return Success(quiz="1")
 
 
 # Parent mixins.
@@ -38,6 +38,8 @@ class Child(object):
     @x.contract
     class Contract(BaseModel):
         foo: int
+        bar: int
+        baz: int
 
 
 class ParentWithNull(object):

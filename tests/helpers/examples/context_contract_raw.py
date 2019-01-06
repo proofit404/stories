@@ -11,7 +11,7 @@ class WrongMethod(object):
 
 class UnknownMethod(object):
     def one(self, ctx):
-        return Success(bar="1")
+        return Success(quiz="1")
 
 
 # Parent mixins.
@@ -33,7 +33,13 @@ class Child(object):
     def x(I):
         I.one
 
-    contract = x.contract({"foo": lambda value: isinstance(value, int)})
+    contract = x.contract(
+        {
+            "foo": lambda value: isinstance(value, int),
+            "bar": lambda value: isinstance(value, int),
+            "baz": lambda value: isinstance(value, int),
+        }
+    )
 
 
 class ParentWithNull(object):
