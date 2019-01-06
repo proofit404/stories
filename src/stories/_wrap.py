@@ -4,9 +4,9 @@ from ._marker import BeginningOfStory, EndOfStory
 from ._mounted import MountedStory
 
 
-def wrap_story(arguments, collected, cls_name, story_name, obj, failures):
+def wrap_story(arguments, collected, cls_name, story_name, obj, spec, failures):
 
-    contract = make_contract(cls_name, story_name, arguments)
+    contract = make_contract(cls_name, story_name, arguments, spec)
     protocol = make_exec_protocol(failures)
 
     methods = [(BeginningOfStory(cls_name, story_name), contract, protocol)]

@@ -23,6 +23,7 @@ class Story(object):
                 cls.__name__,
                 self.name,
                 obj,
+                self.__contract,
                 self.__failures,
             )
             return MountedStory(

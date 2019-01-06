@@ -1,8 +1,47 @@
+from ._compat import CerberusSpec, MarshmallowSpec, PydanticSpec
 from .exceptions import ContextContractError
 
 
-def make_contract(cls_name, name, arguments):
-    return Contract(cls_name, name, arguments)
+# Validation.
+
+
+def validate_null(spec, kwargs):
+    pass
+
+
+def validate_pydantic(spec, kwargs):
+    spec(**kwargs)
+
+
+def validate_marshmallow(spec, kwargs):
+    spec().load(kwargs)
+
+
+def validate_cerberus(spec, kwargs):
+    assert spec.validate(kwargs)
+
+
+def validate_raw(spec, kwargs):
+    for key, value in kwargs.items():
+        if not spec[key](value):
+            raise Exception("We are here.")
+
+
+# Execute.
+
+
+def make_contract(cls_name, name, arguments, spec):
+    if spec is None:
+        validate_func = validate_null
+    elif isinstance(spec, PydanticSpec):
+        validate_func = validate_pydantic
+    elif isinstance(spec, MarshmallowSpec):
+        validate_func = validate_marshmallow
+    elif isinstance(spec, CerberusSpec):
+        validate_func = validate_cerberus
+    elif isinstance(spec, dict):
+        validate_func = validate_raw
+    return Contract(cls_name, name, arguments, spec, validate_func)
 
 
 def validate_arguments(arguments, args, kwargs):
@@ -18,10 +57,12 @@ def validate_arguments(arguments, args, kwargs):
 
 
 class Contract(object):
-    def __init__(self, cls_name, name, arguments):
+    def __init__(self, cls_name, name, arguments, spec, validate_func):
         self.cls_name = cls_name
         self.name = name
         self.arguments = arguments
+        self.spec = spec
+        self.validate_func = validate_func
 
     def check_story_arguments(self, ctx):
         missed = set(self.arguments) - set(ctx._Context__ns)
@@ -44,6 +85,7 @@ class Contract(object):
                 method=method.__name__,
             )
             raise ContextContractError(message)
+        self.validate_func(self.spec, ns)
 
 
 def deny_attribute_assign():
@@ -52,6 +94,9 @@ def deny_attribute_assign():
 
 def deny_attribute_delete():
     raise ContextContractError(delete_attribute_template)
+
+
+# Messages.
 
 
 missed_variable_template = """

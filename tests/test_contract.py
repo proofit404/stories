@@ -124,6 +124,33 @@ def test_context_variables_validation(m):
         def __init__(self):
             self.x = T().x
 
+    # Simple.
+
+    expected = """
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        T().x()
+    assert str(exc_info.value) == expected
+
+    # Substory inheritance.
+
+    expected = """
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        Q().x()
+    assert str(exc_info.value) == expected
+
+    # Substory DI.
+
+    expected = """
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        J().x()
+    assert str(exc_info.value) == expected
+
 
 @pytest.mark.parametrize("m", examples.contract_modules)
 def test_context_unknown_variable(m):
@@ -141,3 +168,30 @@ def test_context_unknown_variable(m):
     class J(m.ParentWithNull, m.NormalParentMethod):
         def __init__(self):
             self.x = T().x
+
+    # Simple.
+
+    expected = """
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        T().x()
+    assert str(exc_info.value) == expected
+
+    # Substory inheritance.
+
+    expected = """
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        Q().x()
+    assert str(exc_info.value) == expected
+
+    # Substory DI.
+
+    expected = """
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        J().x()
+    assert str(exc_info.value) == expected
