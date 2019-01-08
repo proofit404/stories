@@ -82,7 +82,7 @@ Let's consider this view:
         permission_classes = (CanSubscribe,)
         filter_class = SubscriptionFilter
 
-The only thing we can clue about - it is somehow related to the
+The only thing we have clue about - it is somehow related to the
 subscription to our service.
 
 But it does not tell us:
@@ -101,7 +101,15 @@ different ways to interact with this view.
 When we go to the ``SubscriptionSerializer`` class, we expect to see
 there a mapping of fields from the database model to the JSON object.
 
-And we actually do.  But in addition we see this method:
+And we actually do.
+
+.. code:: python
+
+    class SubscriptionSerializer(Serializer):
+        category_id = IntegerField()
+        price_id = IntegerField()
+
+But in addition we see this method:
 
 .. code:: python
 
@@ -231,10 +239,9 @@ Wouldn't it be nice to have a clear understandable state?
         find_profile
 
     Context:
-      category_id = 1318  # Story argument
-      user = <User: 3292> # Story argument
-      category = <Category: 1318>
-        # Set by Subscription.find_category
+      category_id = 1318           # Story argument
+      user = <User: 3292>          # Story argument
+      category = <Category: 1318>  # Set by Subscription.find_category
     >>> _
 
 Wouldn't it be nice to know which business scenario was executed by
