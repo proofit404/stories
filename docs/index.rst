@@ -65,30 +65,52 @@ that include many processing steps.
 
 .. code:: python
 
-    from stories import story, arguments, Success
+    from stories import story, arguments, Success, Failure, Result
 
-    class PurchaseProduct:
+    class Subscribe:
 
         @story
-        @arguments('user', 'product', 'shipment_details')
-        def purchase(I):
+        @arguments('category_id', 'user_id')
+        def buy(I):
 
-            I.create_order
-            I.calculate_price
-            I.request_payment
-            I.notify_user
+            I.find_category
+            I.find_profile
+            I.check_balance
+            I.persist_subscription
+            I.show_subscription
 
-        def create_order(self, ctx):
+        def find_category(self, ctx):
 
-            order = Order.objects.create(
-                user=ctx.user,
-                product=ctx.product
-            )
-            return Success(order=order)
+            category = Category.objects.get(id=ctx.category_id)
+            return Success(category=category)
 
-        def calculate_price(self, ctx):
+        def find_profile(self, ctx):
 
-            return Success(...
+            profile = Profile.objects.get(user_id=ctx.user_id)
+            return Success(profile=profile)
+
+        def check_balance(self, ctx):
+
+            if ctx.category.cost < ctx.profile.balance:
+                return Success()
+            else:
+                return Failure()
+
+        def persist_subscription(self, ctx):
+
+            subscription = Subscription(ctx.category, ctx.profile)
+            subscription.save()
+            return Success(subscription=subscription)
+
+        def show_subscription(self, ctx):
+
+            return Result(ctx.subscription)
+
+.. code:: python
+
+    >>> Subscribe().buy(category_id=1, user_id=1)
+    <Subscription object>
+    >>> _
 
 This code style allow you clearly separate actual business scenario
 from implementation details.
