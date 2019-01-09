@@ -1,6 +1,6 @@
-============================
- Frequently asked questions
-============================
+=====
+ FAQ
+=====
 
 Here we'll try to explain some reasons behind our decisions.
 
