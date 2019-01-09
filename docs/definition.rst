@@ -109,4 +109,69 @@ There are a few terms you should be familiar with:
 7. ``Success``, ``Failure`` and ``Result`` are markers returned by
    step methods to change business process execution path.
 
+Failure protocols
+=================
+
+To make failure handling a more manageable process we can define a
+`failure protocol`_.
+
+.. code:: python
+
+    from enum import Enum, auto
+    from stories import Failure, Result, Success, arguments, story
+
+    class ShowCategory:
+        """Show category entries."""
+
+        @story
+        @arguments("category_id", "user_id")
+        def show(I):
+
+            I.find_subscription
+            I.check_expiration
+            I.find_category
+            I.show_category
+
+        def find_subscription(self, ctx):
+
+            subscription = load_subscription(ctx.category_id, ctx.user_id)
+            if subscription:
+                return Success(subscription=subscription)
+            else:
+                return Failure(Errors.forbidden)
+
+        def check_expiration(self, ctx):
+
+            if ctx.subscription.is_expired():
+                return Failure(Errors.forbidden)
+            else:
+                return Success()
+
+        def find_category(self, ctx):
+
+            category = load_category(ctx.category_id)
+            if category:
+                return Success(category=category)
+            else:
+                return Failure(Errors.not_found)
+
+        def show_category(self, ctx):
+
+            return Result(ctx.category)
+
+    @ShowCategory.show.failures
+    class Errors(Enum):
+
+        forbidden = auto()
+        not_found = auto()
+
+Explanation
+-----------
+
+1. ``Failure`` marker takes optional ``reason`` argument.  It can be
+   used to show proper error code to the user.
+2. Failure proctor should be defined after the story to allow passing
+   ``reason`` in the ``Failure`` marker.
+
 .. _tutorials: https://github.com/dry-python/tutorials
+.. _failure protocol: failure_protocol.html
