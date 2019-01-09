@@ -23,7 +23,7 @@ subscription to our service.
         """Buy subscription for certain category."""
 
         @story
-        @arguments("category_id", "price_id", "user")
+        @arguments("category_id", "price_id", "user_id")
         def buy(I):
 
             I.find_category
@@ -47,7 +47,7 @@ subscription to our service.
 
         def find_profile(self, ctx):
 
-            profile = load_profile(ctx.user)
+            profile = load_profile(ctx.user_id)
             return Success(profile=profile)
 
         def check_balance(self, ctx):
@@ -55,7 +55,7 @@ subscription to our service.
             if ctx.profile.balance > ctx.price.cost:
                 return Success()
             else:
-                return Failure("low_balance")
+                return Failure()
 
         def persist_payment(self, ctx):
 
@@ -83,7 +83,7 @@ subscription to our service.
             return Result(ctx.category)
 
 Explanation
-===========
+-----------
 
 There are a few terms you should be familiar with:
 

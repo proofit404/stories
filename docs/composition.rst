@@ -23,7 +23,7 @@ If you want the parent story to provide some context variables, use
     class Subscription:
 
         @story
-        @arguments("category_id", "price_id", "user")
+        @arguments("category_id", "price_id", "user_id")
         def buy(I):
 
             I.find_category
@@ -79,7 +79,7 @@ where these steps come from, constructor or not.
     class Subscription:
 
         @story
-        @arguments("category_id", "price_id", "user")
+        @arguments("category_id", "price_id", "user_id")
         def buy(I):
 
             I.find_category
@@ -171,7 +171,7 @@ Here are some examples:
     class Subscription:
 
         @story
-        @arguments("user", "price_id")
+        @arguments("user_id", "price_id")
         def buy(I):
 
             I.find_profile
@@ -180,7 +180,7 @@ Here are some examples:
 
         def find_profile(self, ctx):
 
-            profile = self.load_profile(ctx.user)
+            profile = self.load_profile(ctx.user_id)
             return Success(profile=profile)
 
         def find_price(self, ctx):
@@ -206,13 +206,13 @@ framework or database!  Welcome to the good architecture utopia.
 
 .. code:: python
 
-    >>> def load_profile(user):
-    ...     return Profile.objects.get(user=user)
+    >>> def load_profile(user_id):
+    ...     return Profile.objects.get(user_id=user_id)
     ...
     >>> def load_price(price_id):
     ...     return Price.objects.get(pk=price_id)
     ...
-    >>> Subscription(load_profile, load_price).buy(user=John, price_id=7)
+    >>> Subscription(load_profile, load_price).buy(user_id=1, price_id=7)
     >>> _
 
 You can group delegates into a single object to avoid complex

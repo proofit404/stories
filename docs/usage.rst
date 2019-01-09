@@ -16,8 +16,7 @@ Result
 
 .. code:: python
 
-    >>> john = User.objects.get(name="John")
-    >>> Subscription().buy(category_id=1, price_id=1, user=john)
+    >>> Subscription().buy(category_id=1, price_id=1, user_id=1)
     <Category: Category object (1)>
     >>> _
 
@@ -29,7 +28,7 @@ Failure
 
 .. code:: python
 
-    >>> Subscription().buy(category_id=2, price_id=2, user=john)
+    >>> Subscription().buy(category_id=2, price_id=2, user_id=1)
     Traceback (most recent call last):
       File "<stdin>", line 1, in <module>
       File "stories/_wrapper.py", line 23, in __call__
@@ -59,7 +58,7 @@ Result
 
 .. code:: python
 
-    >>> result = Subscription().buy.run(category_id=1, price_id=1, user=john)
+    >>> result = Subscription().buy.run(category_id=1, price_id=1, user_id=1)
     >>> result.is_success
     True
     >>> result.value
@@ -74,7 +73,7 @@ Failure
 
 .. code:: python
 
-    >>> result = Subscription().buy.run(category_id=2, price_id=2, user=john)
+    >>> result = Subscription().buy.run(category_id=2, price_id=2, user_id=1)
     >>> result.is_failure
     True
     >>> result.failed_on("check_balance")
