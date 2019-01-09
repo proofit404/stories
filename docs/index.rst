@@ -133,6 +133,7 @@ Contents
     execution
     debugging
     composition
+    failure_protocol
     contrib/index
     faq
 
