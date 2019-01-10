@@ -169,7 +169,8 @@ Explanation
 -----------
 
 1. ``Failure`` marker takes optional ``reason`` argument.  It can be
-   used to show proper error code to the user.
+   used in the caller code to handle this failure.  For example, to
+   show a proper error code to the user.
 2. Failure proctor should be defined after the story to allow passing
    ``reason`` in the ``Failure`` marker.
 
