@@ -174,7 +174,7 @@ failed.  Execution stops at this point.
         return runner.got_failure(ctx, method.__name__, result.reason)
       File "stories/_run.py", line 7, in got_failure
         raise FailureError(reason)
-    stories.exceptions.FailureError
+    stories.exceptions.FailureError()
     >>> _
 
 ``Failure`` of the sub-story will fail the whole story.
@@ -229,7 +229,7 @@ failed.  Execution stops at this point.
         return runner.got_failure(ctx, method.__name__, result.reason)
       File "stories/_run.py", line 7, in got_failure
         raise FailureError(reason)
-    stories.exceptions.FailureError
+    stories.exceptions.FailureError()
 
 Result
 ======
