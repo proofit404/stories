@@ -58,7 +58,7 @@ Result
 
 .. code:: python
 
-    >>> result = Subscription().buy.run(category_id=1, price_id=1, user_id=1)
+    >>> result = ShowCategory().show.run(category_id=1, user_id=1)
     >>> result.is_success
     True
     >>> result.value
@@ -73,31 +73,26 @@ Failure
 
 .. code:: python
 
-    >>> result = Subscription().buy.run(category_id=2, price_id=2, user_id=1)
+    >>> result = ShowCategory().show.run(category_id=2, user_id=1)
     >>> result.is_failure
     True
-    >>> result.failed_on("check_balance")
+    >>> result.failed_on("check_expiration")
     True
-    >>> result.failed_because("low_balance")
+    >>> result.failed_because(ShowCategory().show.failures.forbidden)
     True
     >>> result.ctx
-    Subscription.buy:
-      find_category
-      find_price
-      find_profile
-      check_balance (failed: 'low_balance')
+    ShowCategory.show
+      find_subscription
+      check_expiration (failed: <Errors.forbidden: 1>)
 
     Context:
-      category_id = 2                            # Story argument
-      price_id = 2                               # Story argument
-      user = <User: User object (7)>             # Story argument
-      category = <Category: Category object (2)> # Set by Subscription.find_category
-      price = <Price: Price object (2)>          # Set by Subscription.find_price
-      profile = <Profile: Profile object (7)>    # Set by Subscription.find_profile
-    >>> result.ctx.profile.balance
-    20
-    >>> result.ctx.price.cost
-    73
+      category_id = 2                                         # Story argument
+      user_id = 1                                             # Story argument
+      subscription = <Subscription: Subscription object (7)>  # Set by ShowCategory.find_subscription
+    >>> result.ctx.subscription.is_expired()
+    True
+    >>> result.ctx.subscription.created
+    datetime.datetime(1990, 1, 1, 0, 0)
     >>> _
 
 ``run`` does not raise an error.  Even if the story returns
