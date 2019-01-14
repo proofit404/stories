@@ -96,7 +96,14 @@ Failure
     >>> _
 
 ``run`` does not raise an error.  Even if the story returns
-``Failure`` marker.  Instead, you can use methods like ``failed_on``
-and ``failed_because`` to look for failed story method and exact
-reason.  The context of the failed story is also available in the result
+``Failure`` marker.
+
+Instead, you can use methods like ``failed_on`` and ``failed_because``
+to look for failed story method and exact reason.  The argument used
+in the ``failed_because`` method will be described in more details in
+the `failure protocol`_ chapter.
+
+The context of the failed story is also available in the result
 object.
+
+.. _failure protocol: failure_protocol.html
