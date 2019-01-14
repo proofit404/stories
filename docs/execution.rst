@@ -231,6 +231,9 @@ failed.  Execution stops at this point.
         raise FailureError(reason)
     stories.exceptions.FailureError()
 
+``Failure`` has optional ``reason`` argument.  We describe it in
+details in the `failure protocol`_ chapter.
+
 Result
 ======
 
@@ -401,3 +404,5 @@ If the topmost story returns ``Skip`` result, execution will end.
     >>> Action().do()
     one
     >>> _
+
+.. _failure protocol: failure_protocol.html
