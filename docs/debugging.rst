@@ -15,39 +15,67 @@ here`_.
 
 .. code:: python
 
-    class Action:
+    class ApplyPromoCode:
+        """Calculate actual product discount, apply it to the price."""
 
         @story
-        @arguments("value")
-        def do(I):
+        @arguments("category")
+        def apply(I):
 
-            I.one
-            I.two
-            I.three
-            I.four
+            I.find_promo_code
+            I.check_expiration
+            I.calculate_discount
+            I.show_final_price
 
-        def one(self, ctx):
+        def find_promo_code(self, ctx):
 
-            var_a = self.impl.one()
-            return Success(var_a=var_a)
+            promo_code = self.load_promo_code(ctx.category)
+            if promo_code:
+                return Success(promo_code=promo_code)
+            else:
+                return Skip()
 
-        def two(self, ctx):
+        def check_expiration(self, ctx):
 
-            var_b = self.impl.two(ctx.value, ctx.var_a)
-            return Success(var_b=var_b)
+            if ctx.promo_code.is_expired():
+                return Skip()
+            else:
+                return Success()
 
-        def three(self, ctx):
+        def calculate_discount(self, ctx):
 
-            var_c = self.impl.three(ctx.var_b)
-            return Success(var_c=var_c)
+            discount = ctx.promo_code.get(ctx.category.price)
+            return Success(discount=discount)
 
-        def four(self, ctx):
+        def show_final_price(self, ctx):
 
-            return Result(ctx.var_c)
+            return Result(ctx.category.price - ctx.discount)
 
-        def __init__(self, impl):
+        def __init__(self, load_promo_code):
 
-            self.impl = impl
+            self.load_promo_code = load_promo_code
+
+
+    class Category:
+
+        def __init__(self, price):
+
+            self.price = price
+
+
+    class PromoCode:
+
+        def __init__(self, percent):
+
+            self.percent = percent
+
+        def is_expired(self):
+
+            return False
+
+        def get(self, price):
+
+            return (price / 100) * self.percent
 
 It define top level logic without any implementation detail written in
 story methods.
@@ -56,19 +84,9 @@ We provide implementation in a separate class.
 
 .. code:: python
 
-    class Implementation:
+    def load_promo_code(category):
 
-        def one(self):
-
-            return 0
-
-        def two(self, a, b):
-
-            return a / b
-
-        def three(self, a):
-
-            return a * 2
+        return PromoCode(20)
 
 The first run
 =============
@@ -77,8 +95,8 @@ Looks good at the first view.  Let's try to run this code.
 
 .. code:: python
 
-    >>> action = Action(impl=Implementation())
-    >>> result = action.do(value=7)
+    >>> code = ApplyPromoCode(load_promo_code)
+    >>> result = code.apply(Category(715))
     Traceback (most recent call last):
       File "<stdin>", line 1, in <module>
       File "stories/_wrapper.py", line 23, in __call__
