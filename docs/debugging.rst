@@ -80,7 +80,7 @@ here`_.
 It define top level logic without any implementation detail written in
 story methods.
 
-We provide implementation in a separate class.
+We provide an implementation in a separate set of functions.
 
 .. code:: python
 
@@ -115,8 +115,8 @@ Oops...  It's broken...
 PDB walks in to the bar
 =======================
 
-We can read the whole source code, but let's try to use debugger
-instead!
+We can read the whole source code, but let’s try to use a debugger
+instead! Type this in the same console right after traceback.
 
 .. code:: python
 
@@ -189,8 +189,8 @@ And re-run our program.
 .. code:: python
 
     >>> from example import *
-    >>> action = Action(impl=Implementation())
-    >>> result = action.do(value=7)
+    >>> code = ApplyPromoCode(load_promo_code)
+    >>> result = code.apply(Category(715))
     >>> result
     1.4
     >>> _
