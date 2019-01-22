@@ -5,8 +5,8 @@
 .. |codecov| image:: https://codecov.io/gh/dry-python/stories/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/dry-python/stories
 
-.. |pyup| image:: https://pyup.io/repos/github/dry-python/stories/shield.svg
-     :target: https://pyup.io/repos/github/dry-python/stories/
+.. |dependabot| image:: https://api.dependabot.com/badges/status?host=github&repo=dry-python/stories
+    :target: https://dependabot.com
 
 .. |codacy| image:: https://api.codacy.com/project/badge/Grade/bd0a5736bc2f43d6b3fcbf3803d50f9b
     :target: https://www.codacy.com/app/dry-python/stories/
@@ -22,7 +22,7 @@
 
 .. image:: https://raw.githubusercontent.com/dry-python/brand/master/logo/stories.png
 
-|travis| |codecov| |pyup| |codacy| |pypi| |docs| |gitter|
+|travis| |codecov| |dependabot| |codacy| |pypi| |docs| |gitter|
 
 ----
 
