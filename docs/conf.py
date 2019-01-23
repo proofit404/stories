@@ -2,7 +2,7 @@
 
 project = "stories"
 
-copyright = "2018, Artem Malyshev"
+copyright = "2018-2019, Artem Malyshev"
 
 author = "Artem Malyshev"
 

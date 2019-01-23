@@ -1,3 +1,14 @@
+"""
+stories.exceptions
+------------------
+
+This module contains errors definitions user can handle.
+
+:copyright: (c) 2018-2019 by Artem Malyshev.
+:license: BSD, see LICENSE for more details.
+"""
+
+
 class StoryError(Exception):
     pass
 

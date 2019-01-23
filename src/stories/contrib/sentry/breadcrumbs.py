@@ -1,3 +1,13 @@
+"""
+stories.contrib.sentry.breadcrumbs
+----------------------------------
+
+This module contains integration with Sentry.
+
+:copyright: (c) 2018-2019 by Artem Malyshev.
+:license: BSD, see LICENSE for more details.
+"""
+
 import stories._context
 from raven.breadcrumbs import libraryhook, record
 

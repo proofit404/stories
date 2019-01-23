@@ -1,3 +1,13 @@
+"""
+stories.contrib.debug_toolbars.django.panels
+--------------------------------------------
+
+This module contains integration with Django Debug Toolbar.
+
+:copyright: (c) 2018-2019 by Artem Malyshev.
+:license: BSD, see LICENSE for more details.
+"""
+
 import stories._context
 from debug_toolbar.panels import Panel
 from django.utils.translation import ugettext_lazy as _

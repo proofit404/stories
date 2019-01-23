@@ -1,3 +1,13 @@
+"""
+stories.contrib.pytest
+----------------------
+
+This module contains integration with PyTest framework.
+
+:copyright: (c) 2018-2019 by Artem Malyshev.
+:license: BSD, see LICENSE for more details.
+"""
+
 import linecache
 import sys
 import textwrap
