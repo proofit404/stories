@@ -189,7 +189,7 @@ def test_inject_implementation():
 def test_missing_substory_arguments():
 
     expected = """
-This variables are missed from the context: bar, foo
+These variables are missing from the context: bar, foo
 
 Story method: MissingContextSubstory.x
 
@@ -211,7 +211,7 @@ Context()
     assert str(exc_info.value) == expected
 
     expected = """
-This variables are missed from the context: bar, foo
+These variables are missing from the context: bar, foo
 
 Story method: Simple.x
 
