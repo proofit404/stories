@@ -55,7 +55,7 @@ def deny_attribute_delete():
 
 
 missed_variable_template = """
-This variables are missed from the context: {missed}
+These variables are missing from the context: {missed}
 
 Story method: {cls}.{method}
 
@@ -66,7 +66,7 @@ Story arguments: {arguments}
 
 
 variable_override_template = """
-This variables already present in the context: {variables}
+These variables are already present in the context: {variables}
 
 Function returned value: {cls}.{method}
 
