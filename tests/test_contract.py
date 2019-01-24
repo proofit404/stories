@@ -24,7 +24,7 @@ def test_context_immutability():
     # Simple.
 
     expected = """
-This variables already present in the context: 'bar', 'foo'
+These variables are already present in the context: 'bar', 'foo'
 
 Function returned value: ExistedKey.one
 
@@ -42,7 +42,7 @@ Use different names for Success() keyword arguments.
     # Substory inheritance.
 
     expected = """
-This variables already present in the context: 'bar', 'foo'
+These variables are already present in the context: 'bar', 'foo'
 
 Function returned value: SubstoryExistedKey.one
 
@@ -60,7 +60,7 @@ Use different names for Success() keyword arguments.
     # Substory DI.
 
     expected = """
-This variables already present in the context: 'bar', 'foo'
+These variables are already present in the context: 'bar', 'foo'
 
 Function returned value: ExistedKey.one
 
