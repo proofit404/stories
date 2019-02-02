@@ -5,24 +5,18 @@
 .. |codecov| image:: https://codecov.io/gh/dry-python/stories/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/dry-python/stories
 
-.. |dependabot| image:: https://api.dependabot.com/badges/status?host=github&repo=dry-python/stories
-    :target: https://dependabot.com
-
-.. |codacy| image:: https://api.codacy.com/project/badge/Grade/bd0a5736bc2f43d6b3fcbf3803d50f9b
-    :target: https://www.codacy.com/app/dry-python/stories/
-
-.. |pypi| image:: https://img.shields.io/pypi/v/stories.svg
-    :target: https://pypi.python.org/pypi/stories/
-
 .. |docs| image:: https://readthedocs.org/projects/stories/badge/?version=latest
     :target: https://stories.readthedocs.io/en/latest/?badge=latest
 
 .. |gitter| image:: https://badges.gitter.im/dry-python/stories.svg
     :target: https://gitter.im/dry-python/stories
 
+.. |pypi| image:: https://img.shields.io/pypi/v/stories.svg
+    :target: https://pypi.python.org/pypi/stories/
+
 .. image:: https://raw.githubusercontent.com/dry-python/brand/master/logo/stories.png
 
-|travis| |codecov| |dependabot| |codacy| |pypi| |docs| |gitter|
+|travis| |codecov| |docs| |gitter| |pypi|
 
 ----
 
