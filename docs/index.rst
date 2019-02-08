@@ -1,4 +1,3 @@
-
 .. |travis| image:: https://travis-ci.org/dry-python/stories.svg?branch=master
     :target: https://travis-ci.org/dry-python/stories
 

@@ -1,4 +1,0 @@
-include CHANGELOG.rst
-include LICENSE
-recursive-include src/stories/contrib/debug_toolbars/django/templates *.html
-recursive-exclude tests *

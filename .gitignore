@@ -2,6 +2,7 @@
 .pytest_cache/
 .coverage
 .tox/
+pip-wheel-metadata/
 __pycache__/
 docs/_build/
 htmlcov/
@@ -9,5 +10,6 @@ build/
 dist/
 *.egg-info
 *.ipynb
+*.lock
 *.pyc
 *~
