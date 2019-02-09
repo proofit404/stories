@@ -4,7 +4,7 @@ stories.shortcuts
 
 This module contains convenient functions to reduce boilerplate code.
 
-:copyright: (c) 2018-2019 by Artem Malyshev.
+:copyright: (c) 2018-2019 dry-python team.
 :license: BSD, see LICENSE for more details.
 """
 

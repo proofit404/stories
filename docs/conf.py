@@ -2,7 +2,7 @@
 
 project = "stories"
 
-copyright = "2018-2019, Artem Malyshev"
+copyright = "2018-2019, dry-python team"
 
 author = "Artem Malyshev"
 

@@ -4,7 +4,7 @@ stories
 
 This module implements Business Transaction DSL.
 
-:copyright: (c) 2018-2019 by Artem Malyshev.
+:copyright: (c) 2018-2019 dry-python team.
 :license: BSD, see LICENSE for more details.
 """
 
