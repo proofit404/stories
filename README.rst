@@ -102,7 +102,7 @@ from implementation details.
 License
 -------
 
-Dependencies library is offered under the two clause BSD license.
+Stories library is offered under the two clause BSD license.
 
 .. _source code: https://github.com/dry-python/stories
 .. _issue tracker: https://github.com/dry-python/stories/issues
