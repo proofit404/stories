@@ -1,0 +1,12 @@
+[tool.poetry]
+name = "helpers"
+version = "0"
+authors = []
+packages = [
+    { include = "helpers.py" },
+    { include = "examples" },
+]
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
