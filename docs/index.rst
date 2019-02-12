@@ -132,6 +132,7 @@ Contents
     failure_protocol
     contrib/index
     faq
+    changelog
 
 .. _railway oriented programming: http://fsharpforfunandprofit.com/rop/
 .. _dry-transaction: http://dry-rb.org/gems/dry-transaction/
