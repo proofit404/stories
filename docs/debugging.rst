@@ -23,17 +23,24 @@ here`_.
         def apply(I):
 
             I.find_promo_code
+            I.check_code_exists
             I.check_expiration
             I.calculate_discount
             I.show_final_price
 
+        # Steps.
+
         def find_promo_code(self, ctx):
 
             promo_code = self.load_promo_code(ctx.category)
-            if promo_code:
-                return Success(promo_code=promo_code)
-            else:
+            return Success(promo_code=promo_code)
+
+        def check_code_exists(self, ctx):
+
+            if not ctx.promo_code:
                 return Skip()
+            else:
+                return Success()
 
         def check_expiration(self, ctx):
 
@@ -44,12 +51,14 @@ here`_.
 
         def calculate_discount(self, ctx):
 
-            discount = ctx.promo_code.get(ctx.category.price)
+            discount = ctx.promo_code.apply_discount(ctx.category.price)
             return Success(discount=discount)
 
         def show_final_price(self, ctx):
 
             return Result(ctx.category.price - ctx.discount)
+
+        # Dependencies.
 
         def __init__(self, load_promo_code):
 
@@ -67,15 +76,15 @@ here`_.
 
         def __init__(self, percent):
 
-            self.percent = percent
+            self.fraction = percent / 100
 
         def is_expired(self):
 
             return False
 
-        def get(self, price):
+        def apply_discount(self, price):
 
-            return (price / 100) * self.percent
+            return price * self.fraction
 
 It define top level logic without any implementation detail written in
 story methods.
@@ -99,15 +108,17 @@ Looks good at the first view.  Let's try to run this code.
     >>> result = code.apply(Category(715))
     Traceback (most recent call last):
       File "<stdin>", line 1, in <module>
-      File "stories/_wrapper.py", line 23, in __call__
-        return function.execute(runner, ctx, methods)
-      File "stories/_exec/function.py", line 23, in execute
-        result = method(obj, ctx)
-      File "example.py", line 21, in two
-        var_b = self.impl.two(ctx.value, ctx.var_a)
-      File "example.py", line 45, in two
-        return a / b
-    ZeroDivisionError: integer division or modulo by zero
+      File "stories/_mounted.py", line 46, in __call__
+        return function.execute(runner, ctx, history, self.methods)
+      File "stories/_exec/function.py", line 24, in execute
+        result = method(ctx)
+      File "example.py", line 21, in find_promo_code
+        promo_code = self.load_promo_code(ctx.category)
+      File "example.py", line 76, in load_promo_code
+        return PromoCode(0)
+      File "example.py", line 63, in __init__
+        self.fraction = 100 / percent
+    ZeroDivisionError: division by zero
     >>> _
 
 Oops...  It's broken...
