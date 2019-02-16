@@ -9,6 +9,12 @@ several steps into a sub-story for readability.
 
 There are several ways to do it.
 
+.. note::
+
+    `Failure protocol`_ of the story composition is composition
+    itself.  It will use all reasons for all protocols of all stories
+    used in the composition.
+
 Class methods
 =============
 
@@ -240,3 +246,4 @@ check the following libraries:
 .. _dependencies: https://dependencies.readthedocs.io/
 .. _attrs: https://www.attrs.org/
 .. _dataclasses: https://docs.python.org/3/library/dataclasses.html
+.. _failure protocol: failure_protocol.html
