@@ -21,7 +21,7 @@ Django Settings
 ===============
 
 If you use Django, you should add this section to your project config
-instead of documentation above:
+instead of the import statement documented above:
 
 .. code:: python
 
