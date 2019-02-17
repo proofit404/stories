@@ -111,11 +111,10 @@ that include many processing steps.
 This code style allow you clearly separate actual business scenario
 from implementation details.
 
-Note
-====
+.. note::
 
-``stories`` library was heavily inspired by dry-transaction_ ruby
-gem.
+    ``stories`` library was heavily inspired by dry-transaction_ ruby
+    gem.
 
 Contents
 ========
