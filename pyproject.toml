@@ -1,12 +1,27 @@
 [tool.poetry]
 name = "stories"
 version = "0.9"
+
 description = "Define a user story in the business transaction DSL"
 readme = "README.rst"
 license = "BSD-2-Clause"
+
 homepage = "https://dry-python.org/"
 repository = "https://github.com/dry-python/stories/"
-authors = ["Artem Malyshev <proofit404@gmail.com>"]
+documentation = "https://stories.readthedocs.io/"
+
+authors = [
+    "Artem Malyshev <proofit404@gmail.com>",
+]
+
+keywords = [
+    "dsl",
+    "architecture",
+    "design-patterns",
+    "business-logic",
+    "railway-oriented-programming",
+]
+
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
