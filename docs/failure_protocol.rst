@@ -71,6 +71,21 @@ strings.
 
     ApplyPromoCode.apply.failures(["not_found", "expired"])
 
+Now you can use these string literals to process different failures in
+a different way.
+
+.. code:: python
+
+    >>> promo_code = ApplyPromoCode()
+    >>> result = promo_code.apply.run(category=Category(177))
+    >>> if result.is_success:
+    ...     print("Promo code applied")
+    ... elif result.failed_because("not_found"):
+    ...     print("Promo code not found")
+    ... elif result.failed_because("expired"):
+    ...     print("Promo code expired")
+    >>> _
+
 Enum
 ====
 
