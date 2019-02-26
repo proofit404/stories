@@ -167,6 +167,57 @@ Composition
 Shortcuts
 =========
 
+If you use `substories with inheritance`_, your class will usually
+contain multiple story definitions.
+
+.. code:: python
+
+    class Subscription:
+
+        @story
+        @arguments("category_id", "price_id", "user_id")
+        def buy(I):
+
+            I.find_category
+            I.find_promo_code
+            I.check_balance
+
+        @story
+        @arguments("category", "price")
+        def find_promo_code(I):
+
+            I.find_token
+            I.check_expiration
+            I.calculate_discount
+
+You can specify failure protocol for each story using a stack of
+decorators.
+
+.. code:: python
+
+    @Subscription.buy.failures
+    @Subscription.find_promo_code.failures
+    class Errors(Enum):
+
+        forbidden = auto()
+        not_found = auto()
+
+But instead of this, we encourage you to use a simple shortcut
+function.
+
+.. code:: python
+
+    from stories.shortcuts import failures_in
+
+    failures_in(Subscription, ["forbidden", "not_found"])
+
+    @failures_in(Subscription)
+    class Errors(Enum):
+
+        forbidden = auto()
+        not_found = auto()
+
 .. _run the story method: usage.html#run
 .. _enum: https://docs.python.org/3/library/enum.html
 .. _enum34: https://pypi.org/project/enum34/
+.. _substories with inheritance: composition.html#class-methods
