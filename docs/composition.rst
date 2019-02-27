@@ -11,9 +11,9 @@ There are several ways to do it.
 
 .. note::
 
-    `Failure protocol`_ of the story composition is composition
-    itself.  It will use all reasons for all protocols of all stories
-    used in the composition.
+    `Failure protocol`_ of the story composition is `composition
+    itself`_.  It will use all reasons for all protocols of all
+    stories used in the composition.
 
 Class methods
 =============
@@ -247,3 +247,4 @@ check the following libraries:
 .. _attrs: https://www.attrs.org/
 .. _dataclasses: https://docs.python.org/3/library/dataclasses.html
 .. _failure protocol: failure_protocol.html
+.. _composition itself: failure_protocol.html#composition

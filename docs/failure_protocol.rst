@@ -164,10 +164,101 @@ is no need to import ``Errors`` class in the caller code.
 Composition
 ===========
 
+Failure protocols of parent and sub-story often mismatch.  There is a
+good reason for that.  Indeed they usually describe rules at different
+levels of abstraction.  Failure of sub-story can tell us about some
+low-level error.  And the failure of the parent story usually tells us
+something about high-level business rules violation.
+
+.. note::
+
+    A story in the composition can return failures with only reasons
+    match its own protocol.
+
+.. code:: python
+
+    class Subscription:
+
+        @story
+        def buy(I):
+
+            I.find_promo_code
+            I.check_balance
+            I.persist_payment
+            I.show_category
+
+        # Steps.
+
+        def check_balance(self, ctx: "Context"):
+
+            if ctx.user.balance < ctx.category.price:
+                return Failure(self.Errors.low_balance)
+            else:
+                return Success()
+
+        # Protocols.
+
+        @buy.failures
+        class Errors(Enum):
+
+            low_balance = auto()
+
+        # Dependencies.
+
+        def __init__(self, find_promo_code):
+
+            self.find_promo_code = find_promo_code
+
+    class PromoCode:
+
+        @story
+        def find(I):
+
+            I.find_token
+            I.check_expiration
+            I.calculate_discount
+
+        # Steps.
+
+        def check_expiration(self, ctx: "Context"):
+
+            if ctx.token.is_expired():
+                return Failure(self.Errors.expired)
+            else:
+                return Success()
+
+        # Protocols.
+
+        @find.failures
+        class Errors(Enum):
+
+            expired = auto()
+
+A composition of these two stories can fail both because of
+``low_balance`` and ``expired`` reasons.  For convenience,
+``failures`` property will contain protocols composition.  A new
+``enum`` class.
+
+.. code:: python
+
+    >>> buy_subscription = Subscription(PromoCode().find).buy
+    >>> result = buy_subscription.run()
+    >>> if result.is_success:
+    ...     print("Subscribed")
+    ... elif result.failed_because(buy_subscription.failures.low_balance):
+    ...     print("Low balance")
+    ... elif result.failed_because(buy_subscription.failures.expired):
+    ...     print("Promo code expired")
+    Promo code expired
+    >>> _
+
+This composition rule works both for `class methods`_ with inheritance
+and `instance attributes`_ with dependency injection.
+
 Shortcuts
 =========
 
-If you use `substories with inheritance`_, your class will usually
+If you use `sub-stories with inheritance`_, your class will usually
 contain multiple story definitions.
 
 .. code:: python
@@ -220,4 +311,6 @@ function.
 .. _run the story method: usage.html#run
 .. _enum: https://docs.python.org/3/library/enum.html
 .. _enum34: https://pypi.org/project/enum34/
-.. _substories with inheritance: composition.html#class-methods
+.. _sub-stories with inheritance: composition.html#class-methods
+.. _class methods: composition.html#class-methods
+.. _instance attributes: composition.html#instance-attributes
