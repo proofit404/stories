@@ -6,9 +6,9 @@ copyright = "2018-2019, dry-python team"
 
 author = "Artem Malyshev"
 
-version = "0.9"
+version = "0.10"
 
-release = "0.9"
+release = "0.10"
 
 templates_path = ["templates"]
 

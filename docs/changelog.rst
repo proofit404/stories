@@ -5,7 +5,7 @@
 Versions follow `0ver`_ without a strict backward compatibility
 policy.  We still try to figure some things out.
 
-0.10 (2019-00-00)
+0.10 (2019-02-27)
 =================
 
 - Add failure protocol of the story.  ``Failure`` argument should
