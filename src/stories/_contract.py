@@ -2,6 +2,29 @@ from ._compat import CerberusSpec, MarshmallowSpec, PydanticSpec
 from .exceptions import ContextContractError
 
 
+# Unknown variables.
+
+
+def unknown_null(spec, kwargs):
+    return []
+
+
+def unknown_pydantic(spec, kwargs):
+    return set(kwargs) - set(spec.__fields__)
+
+
+def unknown_marshmallow(spec, kwargs):
+    return set(kwargs) - set(spec._declared_fields)
+
+
+def unknown_cerberus(spec, kwargs):
+    return set(kwargs) - set(spec.schema)
+
+
+def unknown_raw(spec, kwargs):
+    return set(kwargs) - set(spec)
+
+
 # Validation.
 
 
@@ -32,16 +55,21 @@ def validate_raw(spec, kwargs):
 
 def make_contract(cls_name, name, arguments, spec):
     if spec is None:
+        unknown_func = unknown_null
         validate_func = validate_null
     elif isinstance(spec, PydanticSpec):
+        unknown_func = unknown_pydantic
         validate_func = validate_pydantic
     elif isinstance(spec, MarshmallowSpec):
+        unknown_func = unknown_marshmallow
         validate_func = validate_marshmallow
     elif isinstance(spec, CerberusSpec):
+        unknown_func = unknown_cerberus
         validate_func = validate_cerberus
     elif isinstance(spec, dict):
+        unknown_func = unknown_raw
         validate_func = validate_raw
-    return Contract(cls_name, name, arguments, spec, validate_func)
+    return Contract(cls_name, name, arguments, spec, unknown_func, validate_func)
 
 
 def validate_arguments(arguments, args, kwargs):
@@ -57,11 +85,12 @@ def validate_arguments(arguments, args, kwargs):
 
 
 class Contract(object):
-    def __init__(self, cls_name, name, arguments, spec, validate_func):
+    def __init__(self, cls_name, name, arguments, spec, unknown_func, validate_func):
         self.cls_name = cls_name
         self.name = name
         self.arguments = arguments
         self.spec = spec
+        self.unknown_func = unknown_func
         self.validate_func = validate_func
 
     def check_story_arguments(self, ctx):
@@ -84,6 +113,10 @@ class Contract(object):
                 cls=method.__self__.__class__.__name__,
                 method=method.__name__,
             )
+            raise ContextContractError(message)
+        unknown_variables = self.unknown_func(self.spec, ns)
+        if unknown_variables:
+            message = ""
             raise ContextContractError(message)
         self.validate_func(self.spec, ns)
 
