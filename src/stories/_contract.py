@@ -43,7 +43,7 @@ def validate_pydantic(spec, kwargs):
         new_value, error = field.validate(value, {}, loc=field.alias, cls=spec)
         if error:
             # FIXME: Errors can be a list.
-            errors[key] = error.msg
+            errors[key] = [error.msg]
     return errors
 
 
@@ -62,7 +62,7 @@ def validate_raw(spec, kwargs):
     errors = {}
     for key, value in kwargs.items():
         if not spec[key](value):
-            errors[key] = "Invalid value"
+            errors[key] = ["Invalid value"]
     return errors
 
 
@@ -141,7 +141,14 @@ class Contract(object):
             raise ContextContractError(message)
         errors = self.validate_func(self.spec, ns)
         if errors:
-            message = ""
+            message = invalid_variable_template.format(
+                variables=", ".join(map(repr, sorted(errors))),
+                cls=method.__self__.__class__.__name__,
+                method=method.__name__,
+                violations="\n\n".join(
+                    [key + ":\n  " + "\n  ".join(errors[key]) for key in sorted(errors)]
+                ),
+            )
             raise ContextContractError(message)
 
 
@@ -184,6 +191,17 @@ Available variables are: {available}
 Function returned value: {cls}.{method}
 
 Use different names for Success() keyword arguments or add these names to the contract.
+""".strip()
+
+
+invalid_variable_template = """
+These variables violates context contract: {variables}
+
+Function returned value: {cls}.{method}
+
+Violations:
+
+{violations}
 """.strip()
 
 

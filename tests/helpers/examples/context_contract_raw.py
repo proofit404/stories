@@ -6,7 +6,7 @@ from stories import Success, story
 
 class WrongMethod(object):
     def one(self, ctx):
-        return Success(foo="<boom>")
+        return Success(foo="<boom>", bar="<boom>")
 
 
 class UnknownMethod(object):

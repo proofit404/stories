@@ -127,29 +127,50 @@ def test_context_variables_validation(m):
     # Simple.
 
     expected = """
+These variables violates context contract: 'bar', 'foo'
+
+Function returned value: T.one
+
+Violations:
+
+bar:
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
         T().x()
-    assert str(exc_info.value) == expected
+    assert str(exc_info.value).startswith(expected)
 
     # Substory inheritance.
 
     expected = """
+These variables violates context contract: 'bar', 'foo'
+
+Function returned value: Q.one
+
+Violations:
+
+bar:
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
         Q().x()
-    assert str(exc_info.value) == expected
+    assert str(exc_info.value).startswith(expected)
 
     # Substory DI.
 
     expected = """
+These variables violates context contract: 'bar', 'foo'
+
+Function returned value: T.one
+
+Violations:
+
+bar:
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
         J().x()
-    assert str(exc_info.value) == expected
+    assert str(exc_info.value).startswith(expected)
 
 
 @pytest.mark.parametrize("m", examples.contract_modules)
