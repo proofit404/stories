@@ -172,6 +172,13 @@ def test_context_unknown_variable(m):
     # Simple.
 
     expected = """
+These variables were not defined in the context contract: 'quiz', 'spam'
+
+Available variables are: 'bar', 'baz', 'foo'
+
+Function returned value: T.one
+
+Use different names for Success() keyword arguments or add these names to the contract.
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
@@ -181,6 +188,13 @@ def test_context_unknown_variable(m):
     # Substory inheritance.
 
     expected = """
+These variables were not defined in the context contract: 'quiz', 'spam'
+
+Available variables are: 'bar', 'baz', 'foo'
+
+Function returned value: Q.one
+
+Use different names for Success() keyword arguments or add these names to the contract.
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
@@ -190,6 +204,13 @@ def test_context_unknown_variable(m):
     # Substory DI.
 
     expected = """
+These variables were not defined in the context contract: 'quiz', 'spam'
+
+Available variables are: 'bar', 'baz', 'foo'
+
+Function returned value: T.one
+
+Use different names for Success() keyword arguments or add these names to the contract.
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:

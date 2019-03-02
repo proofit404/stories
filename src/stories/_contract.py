@@ -6,23 +6,27 @@ from .exceptions import ContextContractError
 
 
 def unknown_null(spec, kwargs):
-    return []
+    return [], None
 
 
 def unknown_pydantic(spec, kwargs):
-    return set(kwargs) - set(spec.__fields__)
+    available = set(spec.__fields__)
+    return set(kwargs) - available, available
 
 
 def unknown_marshmallow(spec, kwargs):
-    return set(kwargs) - set(spec._declared_fields)
+    available = set(spec._declared_fields)
+    return set(kwargs) - available, available
 
 
 def unknown_cerberus(spec, kwargs):
-    return set(kwargs) - set(spec.schema)
+    available = set(spec.schema)
+    return set(kwargs) - available, available
 
 
 def unknown_raw(spec, kwargs):
-    return set(kwargs) - set(spec)
+    available = set(spec)
+    return set(kwargs) - available, available
 
 
 # Validation.
@@ -114,9 +118,14 @@ class Contract(object):
                 method=method.__name__,
             )
             raise ContextContractError(message)
-        unknown_variables = self.unknown_func(self.spec, ns)
+        unknown_variables, available = self.unknown_func(self.spec, ns)
         if unknown_variables:
-            message = ""
+            message = unknown_variable_template.format(
+                unknown=", ".join(map(repr, sorted(unknown_variables))),
+                available=", ".join(map(repr, sorted(available))),
+                cls=method.__self__.__class__.__name__,
+                method=method.__name__,
+            )
             raise ContextContractError(message)
         self.validate_func(self.spec, ns)
 
@@ -149,6 +158,17 @@ These variables are already present in the context: {variables}
 Function returned value: {cls}.{method}
 
 Use different names for Success() keyword arguments.
+""".strip()
+
+
+unknown_variable_template = """
+These variables were not defined in the context contract: {unknown}
+
+Available variables are: {available}
+
+Function returned value: {cls}.{method}
+
+Use different names for Success() keyword arguments or add these names to the contract.
 """.strip()
 
 

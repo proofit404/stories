@@ -13,7 +13,7 @@ class WrongMethod(object):
 
 class UnknownMethod(object):
     def one(self, ctx):
-        return Success(quiz="1")
+        return Success(spam="0", quiz="1")
 
 
 # Parent mixins.
