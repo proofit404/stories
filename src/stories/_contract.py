@@ -37,21 +37,33 @@ def validate_null(spec, kwargs):
 
 
 def validate_pydantic(spec, kwargs):
-    spec(**kwargs)
+    errors = {}
+    for key, value in kwargs.items():
+        field = spec.__fields__[key]
+        new_value, error = field.validate(value, {}, loc=field.alias, cls=spec)
+        if error:
+            # FIXME: Errors can be a list.
+            errors[key] = error.msg
+    return errors
 
 
 def validate_marshmallow(spec, kwargs):
-    spec().load(kwargs)
+    result, errors = spec().load(kwargs)
+    return errors
 
 
 def validate_cerberus(spec, kwargs):
-    assert spec.validate(kwargs)
+    validator = CerberusSpec()
+    validator.validate(kwargs, spec.schema.schema)
+    return validator.errors
 
 
 def validate_raw(spec, kwargs):
+    errors = {}
     for key, value in kwargs.items():
         if not spec[key](value):
-            raise Exception("We are here.")
+            errors[key] = "Invalid value"
+    return errors
 
 
 # Execute.
@@ -127,7 +139,10 @@ class Contract(object):
                 method=method.__name__,
             )
             raise ContextContractError(message)
-        self.validate_func(self.spec, ns)
+        errors = self.validate_func(self.spec, ns)
+        if errors:
+            message = ""
+            raise ContextContractError(message)
 
 
 def deny_attribute_assign():
