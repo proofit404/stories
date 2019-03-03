@@ -5,6 +5,12 @@
 Versions follow `0ver`_ without a strict backward compatibility
 policy.  We still try to figure some things out.
 
+0.11 (2019-00-00)
+=================
+
+- Add context contract to the story.  ``Success`` keyword arguments
+  can be validated by contract definition in the story.
+
 0.10 (2019-02-27)
 =================
 
