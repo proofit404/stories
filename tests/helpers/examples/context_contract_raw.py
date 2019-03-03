@@ -1,6 +1,18 @@
 from stories import Success, story
 
 
+# Helper functions.
+
+
+def integer(value):
+    if isinstance(value, int):
+        return value, None
+    elif isinstance(value, str) and value.isdigit():
+        return int(value), None
+    else:
+        return None, "Invalid value"
+
+
 # Mixins.
 
 
@@ -38,13 +50,7 @@ class Child(object):
     def x(I):
         I.one
 
-    contract = x.contract(
-        {
-            "foo": lambda value: (value, None) if isinstance(value, int) else (int(value), None) if isinstance(value, str) and value.isdigit() else (None, 'Invalid value'),  # noqa: E501
-            "bar": lambda value: (value, None) if isinstance(value, int) else (int(value), None) if isinstance(value, str) and value.isdigit() else (None, 'Invalid value'),  # noqa: E501
-            "baz": lambda value: (value, None) if isinstance(value, int) else (int(value), None) if isinstance(value, str) and value.isdigit() else (None, 'Invalid value'),  # noqa: E501
-        }
-    )
+    contract = x.contract({"foo": integer, "bar": integer, "baz": integer})
 
 
 class ParentWithNull(object):
