@@ -33,29 +33,31 @@ def unknown_raw(spec, kwargs):
 
 
 def validate_null(spec, kwargs):
-    pass
+    return kwargs, None
 
 
 def validate_pydantic(spec, kwargs):
-    errors = {}
+    result, errors = {}, {}
     for key, value in kwargs.items():
         field = spec.__fields__[key]
         new_value, error = field.validate(value, {}, loc=field.alias, cls=spec)
         if error:
             # FIXME: Errors can be a list.
             errors[key] = [error.msg]
-    return errors
+        else:
+            result[key] = new_value
+    return result, errors
 
 
 def validate_marshmallow(spec, kwargs):
     result, errors = spec().load(kwargs)
-    return errors
+    return result, errors
 
 
 def validate_cerberus(spec, kwargs):
     validator = CerberusSpec()
     validator.validate(kwargs, spec.schema.schema)
-    return validator.errors
+    return kwargs, validator.errors
 
 
 def validate_raw(spec, kwargs):
@@ -63,7 +65,7 @@ def validate_raw(spec, kwargs):
     for key, value in kwargs.items():
         if not spec[key](value):
             errors[key] = ["Invalid value"]
-    return errors
+    return kwargs, errors
 
 
 # Execute.
@@ -139,7 +141,7 @@ class Contract(object):
                 method=method.__name__,
             )
             raise ContextContractError(message)
-        errors = self.validate_func(self.spec, ns)
+        kwargs, errors = self.validate_func(self.spec, ns)
         if errors:
             message = invalid_variable_template.format(
                 variables=", ".join(map(repr, sorted(errors))),
@@ -150,6 +152,7 @@ class Contract(object):
                 ),
             )
             raise ContextContractError(message)
+        return kwargs
 
 
 def deny_attribute_assign():

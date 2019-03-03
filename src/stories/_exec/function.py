@@ -61,11 +61,11 @@ def execute(runner, ctx, history, methods):
             continue
 
         try:
-            contract.check_success_statement(method, ctx, result.kwargs)
+            kwargs = contract.check_success_statement(method, ctx, result.kwargs)
         except Exception as error:
             history.on_error(error.__class__.__name__)
             raise
 
-        assign_namespace(ctx, method, result.kwargs)
+        assign_namespace(ctx, method, kwargs)
 
     return runner.finished()

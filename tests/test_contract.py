@@ -1,6 +1,7 @@
 import pytest
 
 import examples
+from helpers import make_collector
 from stories.exceptions import ContextContractError
 
 
@@ -105,6 +106,46 @@ Variables can not be removed from Context.
     with pytest.raises(ContextContractError) as exc_info:
         examples.contract.DeleteAttribute().x(foo=1)
     assert str(exc_info.value) == expected
+
+
+@pytest.mark.parametrize("m", examples.contract_modules)
+def test_context_variables_normalization(m):
+    """
+    We apply normalization to the context variables, if story defines
+    context contract.  If story step returns a string holding a
+    number, we should store a number in the context.
+    """
+
+    class T(m.Child, m.StringMethod):
+        pass
+
+    class Q(m.ParentWithNull, m.NormalParentMethod, T):
+        pass
+
+    class J(m.ParentWithNull, m.NormalParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    # Simple.
+
+    getter = make_collector()
+    T().x()
+    assert getter().foo == 1
+    assert getter().bar == 2
+
+    # Substory inheritance.
+
+    getter = make_collector()
+    Q().x()
+    assert getter().foo == 1
+    assert getter().bar == 2
+
+    # Substory DI.
+
+    getter = make_collector()
+    J().x()
+    assert getter().foo == 1
+    assert getter().bar == 2
 
 
 @pytest.mark.parametrize("m", examples.contract_modules)

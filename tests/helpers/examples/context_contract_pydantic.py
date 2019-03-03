@@ -6,6 +6,11 @@ from stories import Success, story
 # Mixins.
 
 
+class StringMethod(object):
+    def one(self, ctx):
+        return Success(foo="1", bar="2")
+
+
 class WrongMethod(object):
     def one(self, ctx):
         return Success(foo="<boom>", bar="<boom>")
