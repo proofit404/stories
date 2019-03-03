@@ -40,9 +40,9 @@ class Child(object):
 
     contract = x.contract(
         {
-            "foo": lambda value: isinstance(value, int),
-            "bar": lambda value: isinstance(value, int),
-            "baz": lambda value: isinstance(value, int),
+            "foo": lambda value: (value, None) if isinstance(value, int) else (int(value), None) if isinstance(value, str) and value.isdigit() else (None, 'Invalid value'),  # noqa: E501
+            "bar": lambda value: (value, None) if isinstance(value, int) else (int(value), None) if isinstance(value, str) and value.isdigit() else (None, 'Invalid value'),  # noqa: E501
+            "baz": lambda value: (value, None) if isinstance(value, int) else (int(value), None) if isinstance(value, str) and value.isdigit() else (None, 'Invalid value'),  # noqa: E501
         }
     )
 

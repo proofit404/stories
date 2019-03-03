@@ -61,11 +61,14 @@ def validate_cerberus(spec, kwargs):
 
 
 def validate_raw(spec, kwargs):
-    errors = {}
+    result, errors = {}, {}
     for key, value in kwargs.items():
-        if not spec[key](value):
-            errors[key] = ["Invalid value"]
-    return kwargs, errors
+        new_value, error = spec[key](value)
+        if error:
+            errors[key] = [error]
+        else:
+            result[key] = new_value
+    return result, errors
 
 
 # Execute.
