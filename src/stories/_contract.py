@@ -57,7 +57,7 @@ def validate_marshmallow(spec, kwargs):
 def validate_cerberus(spec, kwargs):
     validator = CerberusSpec()
     validator.validate(kwargs, spec.schema.schema)
-    return kwargs, validator.errors
+    return validator.document, validator.errors
 
 
 def validate_raw(spec, kwargs):

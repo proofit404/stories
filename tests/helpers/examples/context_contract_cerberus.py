@@ -43,9 +43,9 @@ class Child(object):
     contract = x.contract(
         Validator(
             {
-                "foo": {"type": "integer"},
-                "bar": {"type": "integer"},
-                "baz": {"type": "integer"},
+                "foo": {"type": "integer", "coerce": int},
+                "bar": {"type": "integer", "coerce": int},
+                "baz": {"type": "integer", "coerce": int},
             }
         )
     )
