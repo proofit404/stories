@@ -10,6 +10,8 @@ policy.  We still try to figure some things out.
 
 - Add context contract to the story.  ``Success`` keyword arguments
   can be validated by contract definition in the story.
+- Raise ``MutationError`` when some story method tries to set or
+  delete context attribute directly.
 
 0.10 (2019-02-27)
 =================
