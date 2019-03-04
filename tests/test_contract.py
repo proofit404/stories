@@ -5,6 +5,16 @@ from helpers import make_collector
 from stories.exceptions import ContextContractError
 
 
+# TODO:
+#
+# [ ] Apply validators to the story arguments on story call.
+#
+# [ ] Deny unknown arguments.
+#
+# [ ] Collect arguments from all substories.  Allow to pass arguments
+#     to the substories through story call.
+
+
 def test_context_immutability():
 
     # Simple.
