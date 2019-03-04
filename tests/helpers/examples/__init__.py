@@ -1,4 +1,5 @@
 # flake8: noqa
+import examples.context
 import examples.context_contract_raw
 import examples.contract
 import examples.failure_reasons
