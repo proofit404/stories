@@ -268,6 +268,28 @@ Use different names for Success() keyword arguments or add these names to the co
 def test_context_missing_variables():
     """Check story and substory arguments are present in the context."""
 
+    # Simple.
+
+    expected = """
+These variables are missing from the context: bar, foo
+
+Story method: Simple.x
+
+Story arguments: foo, bar
+
+Simple.x
+
+Context()
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        examples.methods.Simple().x()
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(ContextContractError) as exc_info:
+        examples.methods.Simple().x.run()
+    assert str(exc_info.value) == expected
+
     # Substory inheritance.
 
     expected = """

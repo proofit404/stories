@@ -1,5 +1,4 @@
 from ._context import Context
-from ._contract import validate_arguments
 from ._exec import function
 from ._failures import make_run_protocol
 from ._history import History
@@ -41,13 +40,13 @@ class MountedStory(object):
 
     def __call__(self, **kwargs):
         history = History()
-        ctx = Context(validate_arguments(self.arguments, (), kwargs), history)
+        ctx = Context(kwargs, history)
         runner = Call()
         return function.execute(runner, ctx, history, self.methods)
 
     def run(self, **kwargs):
         history = History()
-        ctx = Context(validate_arguments(self.arguments, (), kwargs), history)
+        ctx = Context(kwargs, history)
         run_protocol = make_run_protocol(self.failures, self.cls_name, self.name)
         runner = Run(run_protocol)
         return function.execute(runner, ctx, history, self.methods)
