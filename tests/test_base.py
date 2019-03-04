@@ -189,15 +189,6 @@ def test_return_type():
         examples.methods.WrongResult().x.run()
 
 
-def test_attribute_access():
-
-    with pytest.raises(AssertionError):
-        examples.methods.AttributeAccess().x()
-
-    with pytest.raises(AssertionError):
-        examples.methods.AttributeAccess().x.run()
-
-
 def test_inject_implementation():
 
     result = examples.methods.ImplementationDI(f=lambda arg: arg + 1).x(foo=1)

@@ -145,20 +145,6 @@ class WrongResult(object):
         return 1
 
 
-# Class attribute access.
-
-
-class AttributeAccess(object):
-    clsattr = 1
-
-    @story
-    def x(I):
-        I.one
-
-    def one(self, ctx):
-        self.clsattr
-
-
 # Dependency injection of the implementation methods.
 
 
