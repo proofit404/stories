@@ -594,10 +594,22 @@ Context()
     assert repr(getter()) == expected
 
 
-def test_context_representation_with_context_contract_error():
+@pytest.mark.parametrize("m", examples.contracts)
+def test_context_representation_with_context_contract_error(m):
+    class T(m.ChildWithNull, m.StringMethod):
+        pass
+
+    class Q(m.ParamParentWithNull, m.NormalParentMethod, T):
+        pass
+
+    class J(m.ParamParentWithNull, m.NormalParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    # Simple.
 
     expected = """
-ExistedKey.x
+T.x
   one (errored: ContextContractError)
 
 Context:
@@ -607,12 +619,58 @@ Context:
 
     getter = make_collector()
     with pytest.raises(ContextContractError):
-        examples.contract.ExistedKey().x(foo=1, bar=2)
+        T().x(foo=1, bar=2)
     assert repr(getter()) == expected
 
     getter = make_collector()
     with pytest.raises(ContextContractError):
-        examples.contract.ExistedKey().x.run(foo=1, bar=2)
+        T().x.run(foo=1, bar=2)
+    assert repr(getter()) == expected
+
+    # Substory inheritance.
+
+    expected = """
+Q.a
+  before
+  x
+    one (errored: ContextContractError)
+
+Context:
+    foo = 1  # Story argument
+    bar = 2  # Story argument
+    """.strip()
+
+    getter = make_collector()
+    with pytest.raises(ContextContractError):
+        Q().a(foo=1, bar=2)
+    assert repr(getter()) == expected
+
+    getter = make_collector()
+    with pytest.raises(ContextContractError):
+        Q().a.run(foo=1, bar=2)
+    assert repr(getter()) == expected
+
+    # Substory DI.
+
+    expected = """
+J.a
+  before
+  x (T.x)
+    one (errored: ContextContractError)
+
+Context:
+    foo = 1  # Story argument
+    bar = 2  # Story argument
+    """.strip()
+
+    getter = make_collector()
+    with pytest.raises(ContextContractError):
+        J().a(foo=1, bar=2)
+    assert repr(getter()) == expected
+
+    getter = make_collector()
+    with pytest.raises(ContextContractError):
+        J().a.run(foo=1, bar=2)
     assert repr(getter()) == expected
 
 

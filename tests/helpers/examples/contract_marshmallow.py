@@ -52,6 +52,12 @@ class Child(object):
         baz = fields.Integer()
 
 
+class ChildWithNull(object):
+    @story
+    def x(I):
+        I.one
+
+
 class ParamChildWithNull(object):
     @story
     @arguments("foo", "bar")
@@ -61,6 +67,15 @@ class ParamChildWithNull(object):
 
 class ParentWithNull(object):
     @story
+    def a(I):
+        I.before
+        I.x
+        I.after
+
+
+class ParamParentWithNull(object):
+    @story
+    @arguments("foo", "bar")
     def a(I):
         I.before
         I.x

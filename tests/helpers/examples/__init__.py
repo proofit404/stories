@@ -1,5 +1,4 @@
 import examples.context
-import examples.contract
 import examples.contract_raw
 import examples.failure_reasons
 import examples.methods

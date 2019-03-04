@@ -13,26 +13,45 @@ from stories.exceptions import ContextContractError
 #
 # [ ] Collect arguments from all substories.  Allow to pass arguments
 #     to the substories through story call.
+#
+# [ ] Set contract in the `ClassMountedStory`.
+#
+# [ ] Add `contract_in` shortcut.
 
 
-def test_context_immutability():
+@pytest.mark.parametrize("m", examples.contracts)
+def test_context_existed_variables(m):
+    """
+    We can not write a variable with the same name to the context
+    twice.
+    """
+
+    class T(m.ChildWithNull, m.StringMethod):
+        pass
+
+    class Q(m.ParamParentWithNull, m.NormalParentMethod, T):
+        pass
+
+    class J(m.ParamParentWithNull, m.NormalParentMethod):
+        def __init__(self):
+            self.x = T().x
 
     # Simple.
 
     expected = """
 These variables are already present in the context: 'bar', 'foo'
 
-Function returned value: ExistedKey.one
+Function returned value: T.one
 
 Use different names for Success() keyword arguments.
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        examples.contract.ExistedKey().x(foo=1, bar=2)
+        T().x(foo=1, bar=2)
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        examples.contract.ExistedKey().x.run(foo=1, bar=2)
+        T().x.run(foo=1, bar=2)
     assert str(exc_info.value) == expected
 
     # Substory inheritance.
@@ -40,17 +59,17 @@ Use different names for Success() keyword arguments.
     expected = """
 These variables are already present in the context: 'bar', 'foo'
 
-Function returned value: SubstoryExistedKey.one
+Function returned value: Q.one
 
 Use different names for Success() keyword arguments.
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        examples.contract.SubstoryExistedKey().a(foo=1, bar=2)
+        Q().a(foo=1, bar=2)
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        examples.contract.SubstoryExistedKey().a.run(foo=1, bar=2)
+        Q().a.run(foo=1, bar=2)
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -58,17 +77,17 @@ Use different names for Success() keyword arguments.
     expected = """
 These variables are already present in the context: 'bar', 'foo'
 
-Function returned value: ExistedKey.one
+Function returned value: T.one
 
 Use different names for Success() keyword arguments.
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        examples.contract.ExistedKeyDI().a(foo=1, bar=2)
+        J().a(foo=1, bar=2)
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        examples.contract.ExistedKeyDI().a.run(foo=1, bar=2)
+        J().a.run(foo=1, bar=2)
     assert str(exc_info.value) == expected
 
 
