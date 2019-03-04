@@ -1,32 +1,31 @@
-# flake8: noqa
 import examples.context
-import examples.context_contract_raw
 import examples.contract
+import examples.contract_raw
 import examples.failure_reasons
 import examples.methods
 import examples.shortcuts
 
 
-contract_modules = [examples.context_contract_raw]
+contracts = [examples.contract_raw]
 
 
 try:
-    import examples.context_contract_pydantic
+    import examples.contract_pydantic
 
-    contract_modules.append(examples.context_contract_pydantic)
+    contracts.append(examples.contract_pydantic)
 except (SyntaxError, ImportError):
     pass
 
 try:
-    import examples.context_contract_marshmallow
+    import examples.contract_marshmallow
 
-    contract_modules.append(examples.context_contract_marshmallow)
+    contracts.append(examples.contract_marshmallow)
 except ImportError:
     pass
 
 try:
-    import examples.context_contract_cerberus
+    import examples.contract_cerberus
 
-    contract_modules.append(examples.context_contract_cerberus)
+    contracts.append(examples.contract_cerberus)
 except ImportError:
     pass

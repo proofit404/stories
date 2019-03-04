@@ -72,7 +72,7 @@ Use different names for Success() keyword arguments.
     assert str(exc_info.value) == expected
 
 
-@pytest.mark.parametrize("m", examples.contract_modules)
+@pytest.mark.parametrize("m", examples.contracts)
 def test_context_variables_normalization(m):
     """
     We apply normalization to the context variables, if story defines
@@ -112,7 +112,7 @@ def test_context_variables_normalization(m):
     assert getter().bar == 2
 
 
-@pytest.mark.parametrize("m", examples.contract_modules)
+@pytest.mark.parametrize("m", examples.contracts)
 def test_context_variables_validation(m):
     """
     We apply validators to the context variables, if story defines
@@ -178,7 +178,7 @@ bar:
     assert str(exc_info.value).startswith(expected)
 
 
-@pytest.mark.parametrize("m", examples.contract_modules)
+@pytest.mark.parametrize("m", examples.contracts)
 def test_context_unknown_variable(m):
     """
     Step can't use Success argument name which was not specified in
@@ -244,7 +244,7 @@ Use different names for Success() keyword arguments or add these names to the co
     assert str(exc_info.value) == expected
 
 
-@pytest.mark.parametrize("m", examples.contract_modules)
+@pytest.mark.parametrize("m", examples.contracts)
 def test_context_missing_variables(m):
     """Check story and substory arguments are present in the context."""
 

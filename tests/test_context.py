@@ -616,7 +616,7 @@ Context:
     assert repr(getter()) == expected
 
 
-@pytest.mark.parametrize("m", examples.contract_modules)
+@pytest.mark.parametrize("m", examples.contracts)
 def test_context_representation_with_missing_variables(m):
     class T(m.ParamChildWithNull, m.NormalMethod):
         pass
