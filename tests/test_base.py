@@ -6,17 +6,23 @@ from stories.exceptions import FailureError
 
 def test_signatures():
 
-    expected = "__call__() takes 1 positional argument but 2 were given"
+    expected = {
+        "__call__() takes 1 positional argument but 2 were given",
+        "__call__() takes exactly 1 argument (2 given)",  # Python 2.
+    }
 
     with pytest.raises(TypeError) as exc_info:
         examples.methods.Simple().x(1)
-    assert str(exc_info.value) == expected
+    assert str(exc_info.value) in expected
 
-    expected = "run() takes 1 positional argument but 2 were given"
+    expected = {
+        "run() takes 1 positional argument but 2 were given",
+        "run() takes exactly 1 argument (2 given)",  # Python 2.
+    }
 
     with pytest.raises(TypeError) as exc_info:
         examples.methods.Simple().x.run(1)
-    assert str(exc_info.value) == expected
+    assert str(exc_info.value) in expected
 
 
 def test_empty():
