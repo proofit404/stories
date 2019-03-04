@@ -12,6 +12,8 @@ policy.  We still try to figure some things out.
   can be validated by contract definition in the story.
 - Raise ``MutationError`` when some story method tries to set or
   delete context attribute directly.
+- Only keyword arguments are allowed to ``call`` and ``run`` the
+  story.
 
 0.10 (2019-02-27)
 =================
