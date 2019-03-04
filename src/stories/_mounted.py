@@ -40,12 +40,14 @@ class MountedStory(object):
 
     def __call__(self, **kwargs):
         history = History()
+        # FIXME: Preserve @arguments decorator order.
         ctx = Context(kwargs, history)
         runner = Call()
         return function.execute(runner, ctx, history, self.methods)
 
     def run(self, **kwargs):
         history = History()
+        # FIXME: Preserve @arguments decorator order.
         ctx = Context(kwargs, history)
         run_protocol = make_run_protocol(self.failures, self.cls_name, self.name)
         runner = Run(run_protocol)
