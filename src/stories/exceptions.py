@@ -29,3 +29,7 @@ class FailureProtocolError(StoryError):
 
 class ContextContractError(StoryError):
     pass
+
+
+class MutationError(StoryError):
+    pass

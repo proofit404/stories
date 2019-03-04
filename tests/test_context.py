@@ -4,7 +4,12 @@ import examples
 from helpers import make_collector
 from stories._context import Context
 from stories._history import History
-from stories.exceptions import ContextContractError, FailureError, FailureProtocolError
+from stories.exceptions import (
+    ContextContractError,
+    FailureError,
+    FailureProtocolError,
+    MutationError,
+)
 
 
 def test_context_dir():
@@ -15,6 +20,45 @@ def test_context_dir():
         b = 2
 
     assert dir(Context({"a": 2, "b": 2}, History())) == dir(Ctx())
+
+
+def test_immutable_context_object():
+    """
+    we can't use attribute assignment and deletion with `Context`
+    object.
+    """
+
+    # Assignment.
+
+    expected = """
+Context object is immutable.
+
+Use Success() keyword arguments to expand its scope.
+    """.strip()
+
+    with pytest.raises(MutationError) as exc_info:
+        examples.contract.AssignAttribute().x()
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(MutationError) as exc_info:
+        examples.contract.AssignAttribute().x.run()
+    assert str(exc_info.value) == expected
+
+    # Deletion.
+
+    expected = """
+Context object is immutable.
+
+Variables can not be removed from Context.
+    """.strip()
+
+    with pytest.raises(MutationError) as exc_info:
+        examples.contract.DeleteAttribute().x(foo=1)
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(MutationError) as exc_info:
+        examples.contract.DeleteAttribute().x.run(foo=1)
+    assert str(exc_info.value) == expected
 
 
 def test_context_representation_with_empty():

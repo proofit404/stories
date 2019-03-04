@@ -1,6 +1,6 @@
 from collections import OrderedDict
 
-from ._contract import deny_attribute_assign, deny_attribute_delete
+from .exceptions import MutationError
 
 
 class Context(object):
@@ -13,10 +13,10 @@ class Context(object):
         return self.__ns[name]
 
     def __setattr__(self, name, value):
-        deny_attribute_assign()
+        raise MutationError(assign_attribute_message)
 
     def __delattr__(self, name):
-        deny_attribute_delete()
+        raise MutationError(delete_attribute_message)
 
     def __repr__(self):
         return history_representation(self) + "\n\n" + context_representation(self)
@@ -57,3 +57,20 @@ def context_representation(ctx):
         for item, line in zip(items, ctx._Context__lines)
     ]
     return "\n".join(["Context:"] + lines)
+
+
+# Messages.
+
+
+assign_attribute_message = """
+Context object is immutable.
+
+Use Success() keyword arguments to expand its scope.
+""".strip()
+
+
+delete_attribute_message = """
+Context object is immutable.
+
+Variables can not be removed from Context.
+""".strip()

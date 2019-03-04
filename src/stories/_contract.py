@@ -197,17 +197,3 @@ Violations:
 
 {violations}
 """.strip()
-
-
-assign_attribute_template = """
-Context object is immutable.
-
-Use Success() keyword arguments to expand its scope.
-""".strip()
-
-
-delete_attribute_template = """
-Context object is immutable.
-
-Variables can not be removed from Context.
-""".strip()

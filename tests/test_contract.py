@@ -62,37 +62,6 @@ Use different names for Success() keyword arguments.
     assert str(exc_info.value) == expected
 
 
-def test_immutable_context_object():
-    """
-    we can't use attribute assignment and deletion with `Context`
-    object.
-    """
-
-    # Assignment.
-
-    expected = """
-Context object is immutable.
-
-Use Success() keyword arguments to expand its scope.
-    """.strip()
-
-    with pytest.raises(ContextContractError) as exc_info:
-        examples.contract.AssignAttribute().x()
-    assert str(exc_info.value) == expected
-
-    # Deletion.
-
-    expected = """
-Context object is immutable.
-
-Variables can not be removed from Context.
-    """.strip()
-
-    with pytest.raises(ContextContractError) as exc_info:
-        examples.contract.DeleteAttribute().x(foo=1)
-    assert str(exc_info.value) == expected
-
-
 @pytest.mark.parametrize("m", examples.contract_modules)
 def test_context_variables_normalization(m):
     """
