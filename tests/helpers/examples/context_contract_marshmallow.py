@@ -1,9 +1,14 @@
 from marshmallow import Schema, fields
 
-from stories import Success, story
+from stories import Success, arguments, story
 
 
 # Mixins.
+
+
+class NormalMethod(object):
+    def one(self, ctx):
+        return Success()
 
 
 class StringMethod(object):
@@ -45,6 +50,13 @@ class Child(object):
         foo = fields.Integer()
         bar = fields.Integer()
         baz = fields.Integer()
+
+
+class ParamChildWithNull(object):
+    @story
+    @arguments("foo", "bar")
+    def x(I):
+        I.one
 
 
 class ParentWithNull(object):

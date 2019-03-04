@@ -244,29 +244,40 @@ Use different names for Success() keyword arguments or add these names to the co
     assert str(exc_info.value) == expected
 
 
-def test_context_missing_variables():
+@pytest.mark.parametrize("m", examples.contract_modules)
+def test_context_missing_variables(m):
     """Check story and substory arguments are present in the context."""
+
+    class T(m.ParamChildWithNull, m.NormalMethod):
+        pass
+
+    class Q(m.ParentWithNull, m.NormalParentMethod, T):
+        pass
+
+    class J(m.ParentWithNull, m.NormalParentMethod):
+        def __init__(self):
+            self.x = T().x
 
     # Simple.
 
     expected = """
 These variables are missing from the context: bar, foo
 
-Story method: Simple.x
+Story method: T.x
 
 Story arguments: foo, bar
 
-Simple.x
+T.x
 
 Context()
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        examples.methods.Simple().x()
+        T().x()
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        examples.methods.Simple().x.run()
+        T().x.run()
     assert str(exc_info.value) == expected
 
     # Substory inheritance.
@@ -274,11 +285,11 @@ Context()
     expected = """
 These variables are missing from the context: bar, foo
 
-Story method: MissingContextSubstory.x
+Story method: Q.x
 
 Story arguments: foo, bar
 
-MissingContextSubstory.y
+Q.a
   before
   x
 
@@ -286,11 +297,11 @@ Context()
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        examples.methods.MissingContextSubstory().y()
+        Q().a()
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        examples.methods.MissingContextSubstory().y.run()
+        Q().a.run()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -298,21 +309,21 @@ Context()
     expected = """
 These variables are missing from the context: bar, foo
 
-Story method: Simple.x
+Story method: T.x
 
 Story arguments: foo, bar
 
-MissingContextDI.y
+J.a
   before
-  x (Simple.x)
+  x (T.x)
 
 Context()
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        examples.methods.MissingContextDI().y()
+        J().a()
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        examples.methods.MissingContextDI().y.run()
+        J().a.run()
     assert str(exc_info.value) == expected

@@ -1,9 +1,14 @@
 from pydantic import BaseModel
 
-from stories import Success, story
+from stories import Success, arguments, story
 
 
 # Mixins.
+
+
+class NormalMethod(object):
+    def one(self, ctx):
+        return Success()
 
 
 class StringMethod(object):
@@ -45,6 +50,13 @@ class Child(object):
         foo: int
         bar: int
         baz: int
+
+
+class ParamChildWithNull(object):
+    @story
+    @arguments("foo", "bar")
+    def x(I):
+        I.one
 
 
 class ParentWithNull(object):

@@ -1,4 +1,4 @@
-from stories import Success, story
+from stories import Success, arguments, story
 
 
 # Helper functions.
@@ -14,6 +14,11 @@ def integer(value):
 
 
 # Mixins.
+
+
+class NormalMethod(object):
+    def one(self, ctx):
+        return Success()
 
 
 class StringMethod(object):
@@ -51,6 +56,13 @@ class Child(object):
         I.one
 
     contract = x.contract({"foo": integer, "bar": integer, "baz": integer})
+
+
+class ParamChildWithNull(object):
+    @story
+    @arguments("foo", "bar")
+    def x(I):
+        I.one
 
 
 class ParentWithNull(object):
