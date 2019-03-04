@@ -2,6 +2,8 @@ import stories._context
 
 
 def make_collector():
+    # FIXME: Rewrite to the context manager.  Disable instrumentation
+    # on exit.
 
     storage = []
 
