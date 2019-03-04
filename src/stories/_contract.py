@@ -146,14 +146,6 @@ class Contract(object):
         return kwargs
 
 
-def deny_attribute_assign():
-    raise ContextContractError(assign_attribute_template)
-
-
-def deny_attribute_delete():
-    raise ContextContractError(delete_attribute_template)
-
-
 # Messages.
 
 
