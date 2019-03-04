@@ -1,11 +1,12 @@
 # flake8: noqa
+import examples.context_contract_raw
 import examples.contract
 import examples.failure_reasons
 import examples.methods
 import examples.shortcuts
 
 
-contract_modules = []
+contract_modules = [examples.context_contract_raw]
 
 
 try:
@@ -26,12 +27,5 @@ try:
     import examples.context_contract_cerberus
 
     contract_modules.append(examples.context_contract_cerberus)
-except ImportError:
-    pass
-
-try:
-    import examples.context_contract_raw
-
-    contract_modules.append(examples.context_contract_raw)
 except ImportError:
     pass
