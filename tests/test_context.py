@@ -550,10 +550,40 @@ Context:
     assert repr(getter()) == expected
 
 
-def test_context_representation_with_missing_substory_arguments():
+@pytest.mark.parametrize("m", examples.contract_modules)
+def test_context_representation_with_missing_variables(m):
+    class T(m.ParamChildWithNull, m.NormalMethod):
+        pass
+
+    class Q(m.ParentWithNull, m.NormalParentMethod, T):
+        pass
+
+    class J(m.ParentWithNull, m.NormalParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    # Simple.
 
     expected = """
-MissingContextSubstory.y
+T.x (errored: ContextContractError)
+
+Context()
+    """.strip()
+
+    getter = make_collector()
+    with pytest.raises(ContextContractError):
+        T().x()
+    assert repr(getter()) == expected
+
+    getter = make_collector()
+    with pytest.raises(ContextContractError):
+        T().x.run()
+    assert repr(getter()) == expected
+
+    # Substory inheritance.
+
+    expected = """
+Q.a
   before
   x (errored: ContextContractError)
 
@@ -562,10 +592,30 @@ Context()
 
     getter = make_collector()
     with pytest.raises(ContextContractError):
-        examples.methods.MissingContextSubstory().y()
+        Q().a()
     assert repr(getter()) == expected
 
     getter = make_collector()
     with pytest.raises(ContextContractError):
-        examples.methods.MissingContextSubstory().y.run()
+        Q().a.run()
+    assert repr(getter()) == expected
+
+    # Substory DI.
+
+    expected = """
+J.a
+  before
+  x (T.x) (errored: ContextContractError)
+
+Context()
+    """.strip()
+
+    getter = make_collector()
+    with pytest.raises(ContextContractError):
+        J().a()
+    assert repr(getter()) == expected
+
+    getter = make_collector()
+    with pytest.raises(ContextContractError):
+        J().a.run()
     assert repr(getter()) == expected
