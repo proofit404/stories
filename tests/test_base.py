@@ -1,7 +1,22 @@
 import pytest
 
 import examples
-from stories.exceptions import ContextContractError, FailureError
+from stories.exceptions import FailureError
+
+
+def test_signatures():
+
+    expected = "__call__() takes 1 positional argument but 2 were given"
+
+    with pytest.raises(TypeError) as exc_info:
+        examples.methods.Simple().x(1)
+    assert str(exc_info.value) == expected
+
+    expected = "run() takes 1 positional argument but 2 were given"
+
+    with pytest.raises(TypeError) as exc_info:
+        examples.methods.Simple().x.run(1)
+    assert str(exc_info.value) == expected
 
 
 def test_empty():
@@ -186,50 +201,3 @@ def test_inject_implementation():
     assert result.is_success
     assert not result.is_failure
     assert result.value == 2
-
-
-def test_missing_substory_arguments():
-
-    expected = """
-These variables are missing from the context: bar, foo
-
-Story method: MissingContextSubstory.x
-
-Story arguments: foo, bar
-
-MissingContextSubstory.y
-  before
-  x
-
-Context()
-    """.strip()
-
-    with pytest.raises(ContextContractError) as exc_info:
-        examples.methods.MissingContextSubstory().y()
-    assert str(exc_info.value) == expected
-
-    with pytest.raises(ContextContractError) as exc_info:
-        examples.methods.MissingContextSubstory().y.run()
-    assert str(exc_info.value) == expected
-
-    expected = """
-These variables are missing from the context: bar, foo
-
-Story method: Simple.x
-
-Story arguments: foo, bar
-
-MissingContextDI.y
-  before
-  x (Simple.x)
-
-Context()
-    """.strip()
-
-    with pytest.raises(ContextContractError) as exc_info:
-        examples.methods.MissingContextDI().y()
-    assert str(exc_info.value) == expected
-
-    with pytest.raises(ContextContractError) as exc_info:
-        examples.methods.MissingContextDI().y.run()
-    assert str(exc_info.value) == expected

@@ -5,35 +5,6 @@ from helpers import make_collector
 from stories.exceptions import ContextContractError
 
 
-def test_arguments_validation():
-
-    # No positional arguments allowed.
-
-    expected = "__call__() takes 1 positional argument but 2 were given"
-
-    with pytest.raises(TypeError) as exc_info:
-        examples.methods.Simple().x(1)
-    assert str(exc_info.value) == expected
-
-    expected = "run() takes 1 positional argument but 2 were given"
-
-    with pytest.raises(TypeError) as exc_info:
-        examples.methods.Simple().x.run(1)
-    assert str(exc_info.value) == expected
-
-    with pytest.raises(AssertionError):
-        examples.methods.Simple().x(1)
-
-    with pytest.raises(AssertionError):
-        examples.methods.Simple().x.run(1)
-
-    with pytest.raises(AssertionError):
-        examples.methods.Simple().x(1, b=2)
-
-    with pytest.raises(AssertionError):
-        examples.methods.Simple().x.run(1, b=2)
-
-
 def test_context_immutability():
 
     # Simple.
@@ -291,4 +262,56 @@ Use different names for Success() keyword arguments or add these names to the co
 
     with pytest.raises(ContextContractError) as exc_info:
         J().x()
+    assert str(exc_info.value) == expected
+
+
+def test_context_missing_variables():
+    """Check story and substory arguments are present in the context."""
+
+    # Substory inheritance.
+
+    expected = """
+These variables are missing from the context: bar, foo
+
+Story method: MissingContextSubstory.x
+
+Story arguments: foo, bar
+
+MissingContextSubstory.y
+  before
+  x
+
+Context()
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        examples.methods.MissingContextSubstory().y()
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(ContextContractError) as exc_info:
+        examples.methods.MissingContextSubstory().y.run()
+    assert str(exc_info.value) == expected
+
+    # Substory DI.
+
+    expected = """
+These variables are missing from the context: bar, foo
+
+Story method: Simple.x
+
+Story arguments: foo, bar
+
+MissingContextDI.y
+  before
+  x (Simple.x)
+
+Context()
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        examples.methods.MissingContextDI().y()
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(ContextContractError) as exc_info:
+        examples.methods.MissingContextDI().y.run()
     assert str(exc_info.value) == expected
