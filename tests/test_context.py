@@ -62,11 +62,11 @@ Context:
     """.strip()
 
     getter = make_collector()
-    examples.methods.SubstoryDI(examples.methods.Empty().x).y(3)
+    examples.methods.SubstoryDI(examples.methods.Empty().x).y(spam=3)
     assert repr(getter()) == expected
 
     getter = make_collector()
-    examples.methods.SubstoryDI(examples.methods.Empty().x).y.run(3)
+    examples.methods.SubstoryDI(examples.methods.Empty().x).y.run(spam=3)
     assert repr(getter()) == expected
 
 
@@ -84,11 +84,11 @@ Context:
 
     getter = make_collector()
     with pytest.raises(FailureError):
-        examples.methods.Simple().x(2, 2)
+        examples.methods.Simple().x(foo=2, bar=2)
     assert repr(getter()) == expected
 
     getter = make_collector()
-    examples.methods.Simple().x.run(2, 2)
+    examples.methods.Simple().x.run(foo=2, bar=2)
     assert repr(getter()) == expected
 
     expected = """
@@ -107,11 +107,11 @@ Context:
 
     getter = make_collector()
     with pytest.raises(FailureError):
-        examples.methods.SimpleSubstory().y(3)
+        examples.methods.SimpleSubstory().y(spam=3)
     assert repr(getter()) == expected
 
     getter = make_collector()
-    examples.methods.SimpleSubstory().y.run(3)
+    examples.methods.SimpleSubstory().y.run(spam=3)
     assert repr(getter()) == expected
 
     expected = """
@@ -130,11 +130,11 @@ Context:
 
     getter = make_collector()
     with pytest.raises(FailureError):
-        examples.methods.SubstoryDI(examples.methods.Simple().x).y(3)
+        examples.methods.SubstoryDI(examples.methods.Simple().x).y(spam=3)
     assert repr(getter()) == expected
 
     getter = make_collector()
-    examples.methods.SubstoryDI(examples.methods.Simple().x).y.run(3)
+    examples.methods.SubstoryDI(examples.methods.Simple().x).y.run(spam=3)
     assert repr(getter()) == expected
 
 
@@ -152,11 +152,11 @@ Context:
 
     getter = make_collector()
     with pytest.raises(FailureError):
-        examples.methods.ReasonWithList().x(3, 2)
+        examples.methods.ReasonWithList().x(foo=3, bar=2)
     assert repr(getter()) == expected
 
     getter = make_collector()
-    examples.methods.ReasonWithList().x.run(3, 2)
+    examples.methods.ReasonWithList().x.run(foo=3, bar=2)
     assert repr(getter()) == expected
 
     expected = """
@@ -171,11 +171,11 @@ Context:
 
     getter = make_collector()
     with pytest.raises(FailureError):
-        examples.methods.ReasonWithEnum().x(3, 2)
+        examples.methods.ReasonWithEnum().x(foo=3, bar=2)
     assert repr(getter()) == expected
 
     getter = make_collector()
-    examples.methods.ReasonWithEnum().x.run(3, 2)
+    examples.methods.ReasonWithEnum().x.run(foo=3, bar=2)
     assert repr(getter()) == expected
 
     expected = """
@@ -194,11 +194,11 @@ Context:
 
     getter = make_collector()
     with pytest.raises(FailureError):
-        examples.methods.SubstoryReasonWithList().y(4)
+        examples.methods.SubstoryReasonWithList().y(spam=4)
     assert repr(getter()) == expected
 
     getter = make_collector()
-    examples.methods.SubstoryReasonWithList().y.run(4)
+    examples.methods.SubstoryReasonWithList().y.run(spam=4)
     assert repr(getter()) == expected
 
     expected = """
@@ -217,11 +217,11 @@ Context:
 
     getter = make_collector()
     with pytest.raises(FailureError):
-        examples.methods.SubstoryReasonWithEnum().y(4)
+        examples.methods.SubstoryReasonWithEnum().y(spam=4)
     assert repr(getter()) == expected
 
     getter = make_collector()
-    examples.methods.SubstoryReasonWithEnum().y.run(4)
+    examples.methods.SubstoryReasonWithEnum().y.run(spam=4)
     assert repr(getter()) == expected
 
     expected = """
@@ -270,11 +270,11 @@ Context:
     """.strip()
 
     getter = make_collector()
-    examples.methods.Simple().x(1, 3)
+    examples.methods.Simple().x(foo=1, bar=3)
     assert repr(getter()) == expected
 
     getter = make_collector()
-    examples.methods.Simple().x.run(1, 3)
+    examples.methods.Simple().x.run(foo=1, bar=3)
     assert repr(getter()) == expected
 
     expected = """
@@ -294,11 +294,11 @@ Context:
     """.strip()
 
     getter = make_collector()
-    examples.methods.SimpleSubstory().y(2)
+    examples.methods.SimpleSubstory().y(spam=2)
     assert repr(getter()) == expected
 
     getter = make_collector()
-    examples.methods.SimpleSubstory().y.run(2)
+    examples.methods.SimpleSubstory().y.run(spam=2)
     assert repr(getter()) == expected
 
     expected = """
@@ -318,11 +318,11 @@ Context:
     """.strip()
 
     getter = make_collector()
-    examples.methods.SubstoryDI(examples.methods.Simple().x).y(2)
+    examples.methods.SubstoryDI(examples.methods.Simple().x).y(spam=2)
     assert repr(getter()) == expected
 
     getter = make_collector()
-    examples.methods.SubstoryDI(examples.methods.Simple().x).y.run(2)
+    examples.methods.SubstoryDI(examples.methods.Simple().x).y.run(spam=2)
     assert repr(getter()) == expected
 
     expected = """
@@ -342,11 +342,11 @@ Context:
     """.strip()
 
     getter = make_collector()
-    examples.methods.SubstoryDI(examples.methods.Pipe().x).y(3)
+    examples.methods.SubstoryDI(examples.methods.Pipe().x).y(spam=3)
     assert repr(getter()) == expected
 
     getter = make_collector()
-    examples.methods.SubstoryDI(examples.methods.Pipe().x).y.run(3)
+    examples.methods.SubstoryDI(examples.methods.Pipe().x).y.run(spam=3)
     assert repr(getter()) == expected
 
 
@@ -363,11 +363,11 @@ Context:
     """.strip()
 
     getter = make_collector()
-    examples.methods.Simple().x(1, -1)
+    examples.methods.Simple().x(foo=1, bar=-1)
     assert repr(getter()) == expected
 
     getter = make_collector()
-    examples.methods.Simple().x.run(1, -1)
+    examples.methods.Simple().x.run(foo=1, bar=-1)
     assert repr(getter()) == expected
 
     expected = """
@@ -386,11 +386,11 @@ Context:
     """.strip()
 
     getter = make_collector()
-    examples.methods.SimpleSubstory().y(-2)
+    examples.methods.SimpleSubstory().y(spam=-2)
     assert repr(getter()) == expected
 
     getter = make_collector()
-    examples.methods.SimpleSubstory().y.run(-2)
+    examples.methods.SimpleSubstory().y.run(spam=-2)
     assert repr(getter()) == expected
 
     expected = """
@@ -409,11 +409,11 @@ Context:
     """.strip()
 
     getter = make_collector()
-    examples.methods.SubstoryDI(examples.methods.Simple().x).y(-2)
+    examples.methods.SubstoryDI(examples.methods.Simple().x).y(spam=-2)
     assert repr(getter()) == expected
 
     getter = make_collector()
-    examples.methods.SubstoryDI(examples.methods.Simple().x).y.run(-2)
+    examples.methods.SubstoryDI(examples.methods.Simple().x).y.run(spam=-2)
     assert repr(getter()) == expected
 
     expected = """
@@ -431,11 +431,11 @@ Context:
     """.strip()
 
     getter = make_collector()
-    examples.methods.SubstoryDI(examples.methods.SimpleSubstory().z).y(2)
+    examples.methods.SubstoryDI(examples.methods.SimpleSubstory().z).y(spam=2)
     assert repr(getter()) == expected
 
     getter = make_collector()
-    examples.methods.SubstoryDI(examples.methods.SimpleSubstory().z).y.run(2)
+    examples.methods.SubstoryDI(examples.methods.SimpleSubstory().z).y.run(spam=2)
     assert repr(getter()) == expected
 
 
@@ -497,12 +497,12 @@ Context:
 
     getter = make_collector()
     with pytest.raises(ContextContractError):
-        examples.contract.ExistedKey().x(1, 2)
+        examples.contract.ExistedKey().x(foo=1, bar=2)
     assert repr(getter()) == expected
 
     getter = make_collector()
     with pytest.raises(ContextContractError):
-        examples.contract.ExistedKey().x.run(1, 2)
+        examples.contract.ExistedKey().x.run(foo=1, bar=2)
     assert repr(getter()) == expected
 
 

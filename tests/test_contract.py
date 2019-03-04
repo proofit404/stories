@@ -7,6 +7,20 @@ from stories.exceptions import ContextContractError
 
 def test_arguments_validation():
 
+    # No positional arguments allowed.
+
+    expected = "__call__() takes 1 positional argument but 2 were given"
+
+    with pytest.raises(TypeError) as exc_info:
+        examples.methods.Simple().x(1)
+    assert str(exc_info.value) == expected
+
+    expected = "run() takes 1 positional argument but 2 were given"
+
+    with pytest.raises(TypeError) as exc_info:
+        examples.methods.Simple().x.run(1)
+    assert str(exc_info.value) == expected
+
     with pytest.raises(AssertionError):
         examples.methods.Simple().x(1)
 
@@ -33,11 +47,11 @@ Use different names for Success() keyword arguments.
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        examples.contract.ExistedKey().x(1, 2)
+        examples.contract.ExistedKey().x(foo=1, bar=2)
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        examples.contract.ExistedKey().x.run(1, 2)
+        examples.contract.ExistedKey().x.run(foo=1, bar=2)
     assert str(exc_info.value) == expected
 
     # Substory inheritance.
@@ -51,11 +65,11 @@ Use different names for Success() keyword arguments.
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        examples.contract.SubstoryExistedKey().a(1, 2)
+        examples.contract.SubstoryExistedKey().a(foo=1, bar=2)
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        examples.contract.SubstoryExistedKey().a.run(1, 2)
+        examples.contract.SubstoryExistedKey().a.run(foo=1, bar=2)
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -69,11 +83,11 @@ Use different names for Success() keyword arguments.
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        examples.contract.ExistedKeyDI().a(1, 2)
+        examples.contract.ExistedKeyDI().a(foo=1, bar=2)
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        examples.contract.ExistedKeyDI().a.run(1, 2)
+        examples.contract.ExistedKeyDI().a.run(foo=1, bar=2)
     assert str(exc_info.value) == expected
 
 

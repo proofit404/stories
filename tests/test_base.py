@@ -22,10 +22,10 @@ def test_empty():
     assert not result.is_failure
     assert result.value is None
 
-    result = examples.methods.SubstoryDI(examples.methods.Empty().x).y(3)
+    result = examples.methods.SubstoryDI(examples.methods.Empty().x).y(spam=3)
     assert result == 6
 
-    result = examples.methods.SubstoryDI(examples.methods.Empty().x).y.run(3)
+    result = examples.methods.SubstoryDI(examples.methods.Empty().x).y.run(spam=3)
     assert result.is_success
     assert not result.is_failure
     assert result.value == 6
@@ -36,10 +36,10 @@ def test_failure():
     # Simple.
 
     with pytest.raises(FailureError) as exc_info:
-        examples.methods.Simple().x(2, 2)
+        examples.methods.Simple().x(foo=2, bar=2)
     assert repr(exc_info.value) == "FailureError()"
 
-    result = examples.methods.Simple().x.run(2, 2)
+    result = examples.methods.Simple().x.run(foo=2, bar=2)
     assert not result.is_success
     assert result.is_failure
     assert result.ctx.foo == 2
@@ -52,10 +52,10 @@ def test_failure():
     # Simple substory.
 
     with pytest.raises(FailureError) as exc_info:
-        examples.methods.SimpleSubstory().y(3)
+        examples.methods.SimpleSubstory().y(spam=3)
     assert repr(exc_info.value) == "FailureError()"
 
-    result = examples.methods.SimpleSubstory().y.run(3)
+    result = examples.methods.SimpleSubstory().y.run(spam=3)
     assert not result.is_success
     assert result.is_failure
     assert result.ctx.foo == 2
@@ -69,10 +69,10 @@ def test_failure():
     # Substory DI.
 
     with pytest.raises(FailureError) as exc_info:
-        examples.methods.SubstoryDI(examples.methods.Simple().x).y(3)
+        examples.methods.SubstoryDI(examples.methods.Simple().x).y(spam=3)
     assert repr(exc_info.value) == "FailureError()"
 
-    result = examples.methods.SubstoryDI(examples.methods.Simple().x).y.run(3)
+    result = examples.methods.SubstoryDI(examples.methods.Simple().x).y.run(spam=3)
     assert not result.is_success
     assert result.is_failure
     assert result.ctx.foo == 2
@@ -86,28 +86,28 @@ def test_failure():
 
 def test_result():
 
-    result = examples.methods.Simple().x(1, 3)
+    result = examples.methods.Simple().x(foo=1, bar=3)
     assert result == -1
 
-    result = examples.methods.Simple().x.run(1, 3)
+    result = examples.methods.Simple().x.run(foo=1, bar=3)
     assert result.is_success
     assert not result.is_failure
     assert not result.failed_on("two")
     assert result.value == -1
 
-    result = examples.methods.SimpleSubstory().y(2)
+    result = examples.methods.SimpleSubstory().y(spam=2)
     assert result == -1
 
-    result = examples.methods.SimpleSubstory().y.run(2)
+    result = examples.methods.SimpleSubstory().y.run(spam=2)
     assert result.is_success
     assert not result.is_failure
     assert not result.failed_on("two")
     assert result.value == -1
 
-    result = examples.methods.SubstoryDI(examples.methods.Simple().x).y(2)
+    result = examples.methods.SubstoryDI(examples.methods.Simple().x).y(spam=2)
     assert result == -1
 
-    result = examples.methods.SubstoryDI(examples.methods.Simple().x).y.run(2)
+    result = examples.methods.SubstoryDI(examples.methods.Simple().x).y.run(spam=2)
     assert result.is_success
     assert not result.is_failure
     assert not result.failed_on("two")
@@ -116,42 +116,44 @@ def test_result():
 
 def test_skip():
 
-    result = examples.methods.Simple().x(1, -1)
+    result = examples.methods.Simple().x(foo=1, bar=-1)
     assert result is None
 
-    result = examples.methods.Simple().x.run(1, -1)
+    result = examples.methods.Simple().x.run(foo=1, bar=-1)
     assert result.is_success
     assert not result.is_failure
     assert result.value is None
 
-    result = examples.methods.SimpleSubstory().y(-2)
+    result = examples.methods.SimpleSubstory().y(spam=-2)
     assert result == -4
 
-    result = examples.methods.SimpleSubstory().y.run(-2)
+    result = examples.methods.SimpleSubstory().y.run(spam=-2)
     assert result.is_success
     assert not result.is_failure
     assert result.value == -4
 
-    result = examples.methods.SubstoryDI(examples.methods.Simple().x).y(-2)
+    result = examples.methods.SubstoryDI(examples.methods.Simple().x).y(spam=-2)
     assert result == -4
 
-    result = examples.methods.SubstoryDI(examples.methods.Simple().x).y.run(-2)
+    result = examples.methods.SubstoryDI(examples.methods.Simple().x).y.run(spam=-2)
     assert result.is_success
     assert not result.is_failure
     assert result.value == -4
 
-    result = examples.methods.SubstoryDI(examples.methods.SimpleSubstory().z).y(2)
+    result = examples.methods.SubstoryDI(examples.methods.SimpleSubstory().z).y(spam=2)
     assert result == 4
 
-    result = examples.methods.SubstoryDI(examples.methods.SimpleSubstory().z).y.run(2)
+    result = examples.methods.SubstoryDI(examples.methods.SimpleSubstory().z).y.run(
+        spam=2
+    )
     assert result.is_success
     assert not result.is_failure
     assert result.value == 4
 
-    result = examples.methods.SubstoryDI(examples.methods.Pipe().y).y(-2)
+    result = examples.methods.SubstoryDI(examples.methods.Pipe().y).y(spam=-2)
     assert result == -4
 
-    result = examples.methods.SubstoryDI(examples.methods.Pipe().y).y.run(-2)
+    result = examples.methods.SubstoryDI(examples.methods.Pipe().y).y.run(spam=-2)
     assert result.is_success
     assert not result.is_failure
     assert result.value == -4
@@ -177,10 +179,10 @@ def test_attribute_access():
 
 def test_inject_implementation():
 
-    result = examples.methods.ImplementationDI(f=lambda arg: arg + 1).x(1)
+    result = examples.methods.ImplementationDI(f=lambda arg: arg + 1).x(foo=1)
     assert result == 2
 
-    result = examples.methods.ImplementationDI(f=lambda arg: arg + 1).x.run(1)
+    result = examples.methods.ImplementationDI(f=lambda arg: arg + 1).x.run(foo=1)
     assert result.is_success
     assert not result.is_failure
     assert result.value == 2

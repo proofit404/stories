@@ -39,15 +39,15 @@ class MountedStory(object):
         self.methods = methods
         self.failures = failures
 
-    def __call__(self, *args, **kwargs):
+    def __call__(self, **kwargs):
         history = History()
-        ctx = Context(validate_arguments(self.arguments, args, kwargs), history)
+        ctx = Context(validate_arguments(self.arguments, (), kwargs), history)
         runner = Call()
         return function.execute(runner, ctx, history, self.methods)
 
-    def run(self, *args, **kwargs):
+    def run(self, **kwargs):
         history = History()
-        ctx = Context(validate_arguments(self.arguments, args, kwargs), history)
+        ctx = Context(validate_arguments(self.arguments, (), kwargs), history)
         run_protocol = make_run_protocol(self.failures, self.cls_name, self.name)
         runner = Run(run_protocol)
         return function.execute(runner, ctx, history, self.methods)
