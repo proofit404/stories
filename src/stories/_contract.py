@@ -32,15 +32,15 @@ def unknown_raw(spec, kwargs):
 # Validation.
 
 
-def validate_null(spec, kwargs):
-    return kwargs, None
+def validate_null(spec, ns, keys):
+    return ns, None
 
 
-def validate_pydantic(spec, kwargs):
+def validate_pydantic(spec, ns, keys):
     result, errors = {}, {}
-    for key, value in kwargs.items():
+    for key in keys:
         field = spec.__fields__[key]
-        new_value, error = field.validate(value, {}, loc=field.alias, cls=spec)
+        new_value, error = field.validate(ns[key], {}, loc=field.alias, cls=spec)
         if error:
             # FIXME: Errors can be a list.
             errors[key] = [error.msg]
@@ -49,21 +49,21 @@ def validate_pydantic(spec, kwargs):
     return result, errors
 
 
-def validate_marshmallow(spec, kwargs):
-    result, errors = spec().load(kwargs)
+def validate_marshmallow(spec, ns, keys):
+    result, errors = spec().load(ns)
     return result, errors
 
 
-def validate_cerberus(spec, kwargs):
+def validate_cerberus(spec, ns, keys):
     validator = CerberusSpec()
-    validator.validate(kwargs, spec.schema.schema)
+    validator.validate(ns, spec.schema.schema)
     return validator.document, validator.errors
 
 
-def validate_raw(spec, kwargs):
+def validate_raw(spec, ns, keys):
     result, errors = {}, {}
-    for key, value in kwargs.items():
-        new_value, error = spec[key](value)
+    for key in keys:
+        new_value, error = spec[key](ns[key])
         if error:
             errors[key] = [error]
         else:
@@ -113,6 +113,17 @@ class Contract(object):
                 ctx=ctx,
             )
             raise ContextContractError(message)
+        kwargs, errors = self.validate_func(self.spec, ctx._Context__ns, self.arguments)
+        if errors:
+            message = invalid_argument_template.format(
+                variables=", ".join(map(repr, sorted(errors))),
+                cls=self.cls_name,
+                method=self.name,
+                violations="\n\n".join(
+                    [key + ":\n  " + "\n  ".join(errors[key]) for key in sorted(errors)]
+                ),
+            )
+            raise ContextContractError(message)
 
     def check_success_statement(self, method, ctx, ns):
         tries_to_override = set(ctx._Context__ns) & set(ns)
@@ -132,7 +143,7 @@ class Contract(object):
                 method=method.__name__,
             )
             raise ContextContractError(message)
-        kwargs, errors = self.validate_func(self.spec, ns)
+        kwargs, errors = self.validate_func(self.spec, ns, ns)
         if errors:
             message = invalid_variable_template.format(
                 variables=", ".join(map(repr, sorted(errors))),
@@ -184,6 +195,17 @@ invalid_variable_template = """
 These variables violates context contract: {variables}
 
 Function returned value: {cls}.{method}
+
+Violations:
+
+{violations}
+""".strip()
+
+
+invalid_argument_template = """
+These arguments violates context contract: {variables}
+
+Story method: {cls}.{method}
 
 Violations:
 

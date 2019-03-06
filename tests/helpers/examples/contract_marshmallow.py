@@ -58,6 +58,19 @@ class ChildWithNull(object):
         I.one
 
 
+class ParamChild(object):
+    @story
+    @arguments("foo", "bar")
+    def x(I):
+        I.one
+
+    @x.contract
+    class Contract(Schema):
+        foo = fields.Integer()
+        bar = fields.Integer()
+        baz = fields.Integer()
+
+
 class ParamChildWithNull(object):
     @story
     @arguments("foo", "bar")
@@ -71,6 +84,21 @@ class ParentWithNull(object):
         I.before
         I.x
         I.after
+
+
+class ParamParent(object):
+    @story
+    @arguments("foo", "bar")
+    def a(I):
+        I.before
+        I.x
+        I.after
+
+    @a.contract
+    class Contract(Schema):
+        foo = fields.Integer()
+        bar = fields.Integer()
+        baz = fields.Integer()
 
 
 class ParamParentWithNull(object):

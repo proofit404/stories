@@ -64,6 +64,15 @@ class ChildWithNull(object):
         I.one
 
 
+class ParamChild(object):
+    @story
+    @arguments("foo", "bar")
+    def x(I):
+        I.one
+
+    contract = x.contract({"foo": integer, "bar": integer, "baz": integer})
+
+
 class ParamChildWithNull(object):
     @story
     @arguments("foo", "bar")
@@ -77,6 +86,17 @@ class ParentWithNull(object):
         I.before
         I.x
         I.after
+
+
+class ParamParent(object):
+    @story
+    @arguments("foo", "bar")
+    def a(I):
+        I.before
+        I.x
+        I.after
+
+    contract = a.contract({"foo": integer, "bar": integer, "baz": integer})
 
 
 class ParamParentWithNull(object):

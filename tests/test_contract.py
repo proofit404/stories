@@ -9,7 +9,11 @@ from stories.exceptions import ContextContractError
 #
 # [ ] Apply validators to the story arguments on story call.
 #
-# [ ] Deny unknown arguments.
+# [ ] Apply substory validators of the substory arguments.
+#
+# [ ] Context validators should present for every story argument.
+#
+# [ ] Deny unknown arguments to story call.
 #
 # [ ] Collect arguments from all substories.  Allow to pass arguments
 #     to the substories through story call.
@@ -17,6 +21,10 @@ from stories.exceptions import ContextContractError
 # [ ] Set contract in the `ClassMountedStory`.
 #
 # [ ] Add `contract_in` shortcut.
+#
+# [ ] Some tests does not check `run` method.
+#
+# [ ] Some tests calls wrong story methond like `Q().x()` and `J().x()`.
 
 
 @pytest.mark.parametrize("m", examples.contracts)
@@ -194,6 +202,88 @@ bar:
 
     with pytest.raises(ContextContractError) as exc_info:
         J().x()
+    assert str(exc_info.value).startswith(expected)
+
+
+@pytest.mark.parametrize("m", examples.contracts)
+def test_arguments_validation_call(m):
+    """
+    We apply validators to the story arguments, if story defines
+    context contract.  This is check performed during story call, not
+    execution.
+    """
+
+    class T(m.ParamChild, m.NormalMethod):
+        pass
+
+    class Q(m.ParamParent, m.NormalParentMethod, m.ChildWithNull, m.NormalMethod):
+        pass
+
+    class J(m.ParamParent, m.NormalParentMethod):
+        def __init__(self):
+            class T(m.ChildWithNull, m.NormalMethod):
+                pass
+
+            self.x = T().x
+
+    # Simple.
+
+    expected = """
+These arguments violates context contract: 'bar', 'foo'
+
+Story method: T.x
+
+Violations:
+
+bar:
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        T().x(foo="<boom>", bar="<boom>")
+    assert str(exc_info.value).startswith(expected)
+
+    with pytest.raises(ContextContractError) as exc_info:
+        T().x.run(foo="<boom>", bar="<boom>")
+    assert str(exc_info.value).startswith(expected)
+
+    # Substory inheritance.
+
+    expected = """
+These arguments violates context contract: 'bar', 'foo'
+
+Story method: Q.a
+
+Violations:
+
+bar:
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        Q().a(foo="<boom>", bar="<boom>")
+    assert str(exc_info.value).startswith(expected)
+
+    with pytest.raises(ContextContractError) as exc_info:
+        Q().a.run(foo="<boom>", bar="<boom>")
+    assert str(exc_info.value).startswith(expected)
+
+    # Substory DI.
+
+    expected = """
+These arguments violates context contract: 'bar', 'foo'
+
+Story method: J.a
+
+Violations:
+
+bar:
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        J().a(foo="<boom>", bar="<boom>")
+    assert str(exc_info.value).startswith(expected)
+
+    with pytest.raises(ContextContractError) as exc_info:
+        J().a.run(foo="<boom>", bar="<boom>")
     assert str(exc_info.value).startswith(expected)
 
 
