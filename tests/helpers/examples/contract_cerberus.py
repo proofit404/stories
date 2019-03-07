@@ -86,6 +86,9 @@ class ParamChildWithNull(object):
         I.one
 
 
+# Parent base classes.
+
+
 class ParentWithNull(object):
     @story
     def a(I):
@@ -102,15 +105,16 @@ class ParamParent(object):
         I.x
         I.after
 
-    contract = a.contract(
-        Validator(
-            {
-                "foo": {"type": "integer", "coerce": int},
-                "bar": {"type": "integer", "coerce": int},
-                "baz": {"type": "integer", "coerce": int},
-            }
-        )
+
+ParamParent.a.contract(
+    Validator(
+        {
+            "foo": {"type": "integer", "coerce": int},
+            "bar": {"type": "integer", "coerce": int},
+            "baz": {"type": "integer", "coerce": int},
+        }
     )
+)
 
 
 class ParamParentWithNull(object):

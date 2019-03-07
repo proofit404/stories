@@ -78,6 +78,9 @@ class ParamChildWithNull(object):
         I.one
 
 
+# Parent base classes.
+
+
 class ParentWithNull(object):
     @story
     def a(I):
@@ -94,11 +97,12 @@ class ParamParent(object):
         I.x
         I.after
 
-    @a.contract
-    class Contract(Schema):
-        foo = fields.Integer()
-        bar = fields.Integer()
-        baz = fields.Integer()
+
+@ParamParent.a.contract
+class Contract(Schema):
+    foo = fields.Integer()
+    bar = fields.Integer()
+    baz = fields.Integer()
 
 
 class ParamParentWithNull(object):

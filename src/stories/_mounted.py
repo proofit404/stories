@@ -7,10 +7,11 @@ from ._run import Call, Run
 
 
 class ClassMountedStory(object):
-    def __init__(self, cls, name, collected, failures):
+    def __init__(self, cls, name, collected, contract, failures):
         self.cls = cls
         self.name = name
         self.collected = collected
+        self.contract = contract
         self.failures = failures
 
     def __repr__(self):

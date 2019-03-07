@@ -15,7 +15,9 @@ class Story(object):
 
     def __get__(self, obj, cls):
         if obj is None:
-            return ClassMountedStory(cls, self.name, self.collected, self.failures)
+            return ClassMountedStory(
+                cls, self.name, self.collected, self.contract, self.failures
+            )
         else:
             methods, failures = wrap_story(
                 self.arguments,
