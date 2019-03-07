@@ -23,8 +23,6 @@ from stories.exceptions import ContextContractError
 # [ ] Add `contract_in` shortcut.
 #
 # [ ] Some tests does not check `run` method.
-#
-# [ ] Some tests calls wrong story methond like `Q().x()` and `J().x()`.
 
 
 @pytest.mark.parametrize("m", examples.contracts)
@@ -127,14 +125,14 @@ def test_context_variables_normalization(m):
     # Substory inheritance.
 
     getter = make_collector()
-    Q().x()
+    Q().a()
     assert getter().foo == 1
     assert getter().bar == 2
 
     # Substory DI.
 
     getter = make_collector()
-    J().x()
+    J().a()
     assert getter().foo == 1
     assert getter().bar == 2
 
@@ -185,7 +183,7 @@ bar:
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        Q().x()
+        Q().a()
     assert str(exc_info.value).startswith(expected)
 
     # Substory DI.
@@ -201,7 +199,7 @@ bar:
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        J().x()
+        J().a()
     assert str(exc_info.value).startswith(expected)
 
 
@@ -333,7 +331,7 @@ Use different names for Success() keyword arguments or add these names to the co
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        Q().x()
+        Q().a()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -349,7 +347,7 @@ Use different names for Success() keyword arguments or add these names to the co
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        J().x()
+        J().a()
     assert str(exc_info.value) == expected
 
 
