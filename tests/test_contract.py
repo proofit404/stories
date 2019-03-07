@@ -21,8 +21,6 @@ from stories.exceptions import ContextContractError
 # [ ] Set contract in the `ClassMountedStory`.
 #
 # [ ] Add `contract_in` shortcut.
-#
-# [ ] Some tests does not check `run` method.
 
 
 @pytest.mark.parametrize("m", examples.contracts)
@@ -122,6 +120,11 @@ def test_context_variables_normalization(m):
     assert getter().foo == 1
     assert getter().bar == 2
 
+    getter = make_collector()
+    T().x.run()
+    assert getter().foo == 1
+    assert getter().bar == 2
+
     # Substory inheritance.
 
     getter = make_collector()
@@ -129,10 +132,20 @@ def test_context_variables_normalization(m):
     assert getter().foo == 1
     assert getter().bar == 2
 
+    getter = make_collector()
+    Q().a.run()
+    assert getter().foo == 1
+    assert getter().bar == 2
+
     # Substory DI.
 
     getter = make_collector()
     J().a()
+    assert getter().foo == 1
+    assert getter().bar == 2
+
+    getter = make_collector()
+    J().a.run()
     assert getter().foo == 1
     assert getter().bar == 2
 
@@ -170,6 +183,10 @@ bar:
         T().x()
     assert str(exc_info.value).startswith(expected)
 
+    with pytest.raises(ContextContractError) as exc_info:
+        T().x.run()
+    assert str(exc_info.value).startswith(expected)
+
     # Substory inheritance.
 
     expected = """
@@ -186,6 +203,10 @@ bar:
         Q().a()
     assert str(exc_info.value).startswith(expected)
 
+    with pytest.raises(ContextContractError) as exc_info:
+        Q().a.run()
+    assert str(exc_info.value).startswith(expected)
+
     # Substory DI.
 
     expected = """
@@ -200,6 +221,10 @@ bar:
 
     with pytest.raises(ContextContractError) as exc_info:
         J().a()
+    assert str(exc_info.value).startswith(expected)
+
+    with pytest.raises(ContextContractError) as exc_info:
+        J().a.run()
     assert str(exc_info.value).startswith(expected)
 
 
@@ -318,6 +343,10 @@ Use different names for Success() keyword arguments or add these names to the co
         T().x()
     assert str(exc_info.value) == expected
 
+    with pytest.raises(ContextContractError) as exc_info:
+        T().x.run()
+    assert str(exc_info.value) == expected
+
     # Substory inheritance.
 
     expected = """
@@ -334,6 +363,10 @@ Use different names for Success() keyword arguments or add these names to the co
         Q().a()
     assert str(exc_info.value) == expected
 
+    with pytest.raises(ContextContractError) as exc_info:
+        Q().a.run()
+    assert str(exc_info.value) == expected
+
     # Substory DI.
 
     expected = """
@@ -348,6 +381,10 @@ Use different names for Success() keyword arguments or add these names to the co
 
     with pytest.raises(ContextContractError) as exc_info:
         J().a()
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(ContextContractError) as exc_info:
+        J().a.run()
     assert str(exc_info.value) == expected
 
 
