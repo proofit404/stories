@@ -121,7 +121,8 @@ class ChildWithList(object):
     def x(I):
         I.one
 
-    errors = x.failures(["foo", "bar", "baz"])
+
+ChildWithList.x.failures(["foo", "bar", "baz"])
 
 
 class NextChildWithList(object):
@@ -129,7 +130,8 @@ class NextChildWithList(object):
     def y(I):
         I.two
 
-    errors = y.failures(["spam", "ham", "eggs"])
+
+NextChildWithList.y.failures(["spam", "ham", "eggs"])
 
 
 class ParentWithList(object):
@@ -139,7 +141,8 @@ class ParentWithList(object):
         I.x
         I.after
 
-    a.failures(["foo", "bar", "baz"])
+
+ParentWithList.a.failures(["foo", "bar", "baz"])
 
 
 class WideParentWithList(object):
@@ -149,7 +152,8 @@ class WideParentWithList(object):
         I.x
         I.after
 
-    errors = a.failures(["foo", "bar", "baz", "quiz"])
+
+WideParentWithList.a.failures(["foo", "bar", "baz", "quiz"])
 
 
 class ShrinkParentWithList(object):
@@ -159,7 +163,8 @@ class ShrinkParentWithList(object):
         I.x
         I.after
 
-    errors = a.failures(["foo", "quiz"])
+
+ShrinkParentWithList.a.failures(["foo", "quiz"])
 
 
 class ChildWithEnum(object):

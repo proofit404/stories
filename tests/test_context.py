@@ -2,6 +2,7 @@ import pytest
 
 import examples
 import examples.context as c
+import examples.failure_reasons as f
 from helpers import make_collector
 from stories._context import Context
 from stories._history import History
@@ -248,91 +249,56 @@ Context:
     assert repr(getter()) == expected
 
 
-def test_context_representation_with_failure_reason():
+def test_context_representation_with_failure_reason_list():
+    class T(f.ChildWithList, f.StringMethod):
+        pass
+
+    class Q(f.ParentWithList, f.NormalParentMethod, T):
+        pass
+
+    class J(f.ParentWithList, f.NormalParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    # Simple.
 
     expected = """
-ReasonWithList.x
-  one
-  two (failed: 'foo')
+T.x
+  one (failed: 'foo')
 
-Context:
-    foo = 3  # Story argument
-    bar = 2  # Story argument
+Context()
     """.strip()
 
     getter = make_collector()
     with pytest.raises(FailureError):
-        examples.methods.ReasonWithList().x(foo=3, bar=2)
+        T().x()
     assert repr(getter()) == expected
 
     getter = make_collector()
-    examples.methods.ReasonWithList().x.run(foo=3, bar=2)
+    T().x.run()
     assert repr(getter()) == expected
+
+    # Substory inheritance.
 
     expected = """
-ReasonWithEnum.x
-  one
-  two (failed: <Errors.foo: 1>)
-
-Context:
-    foo = 3  # Story argument
-    bar = 2  # Story argument
-    """.strip()
-
-    getter = make_collector()
-    with pytest.raises(FailureError):
-        examples.methods.ReasonWithEnum().x(foo=3, bar=2)
-    assert repr(getter()) == expected
-
-    getter = make_collector()
-    examples.methods.ReasonWithEnum().x.run(foo=3, bar=2)
-    assert repr(getter()) == expected
-
-    expected = """
-SubstoryReasonWithList.y
-  start
+Q.a
   before
   x
-    one
-    two (failed: 'foo')
+    one (failed: 'foo')
 
-Context:
-    spam = 4  # Story argument
-    foo = 3   # Set by SubstoryReasonWithList.start
-    bar = 5   # Set by SubstoryReasonWithList.before
+Context()
     """.strip()
 
     getter = make_collector()
     with pytest.raises(FailureError):
-        examples.methods.SubstoryReasonWithList().y(spam=4)
+        Q().a()
     assert repr(getter()) == expected
 
     getter = make_collector()
-    examples.methods.SubstoryReasonWithList().y.run(spam=4)
+    Q().a.run()
     assert repr(getter()) == expected
 
-    expected = """
-SubstoryReasonWithEnum.y
-  start
-  before
-  x
-    one
-    two (failed: <Errors.foo: 1>)
-
-Context:
-    spam = 4  # Story argument
-    foo = 3   # Set by SubstoryReasonWithEnum.start
-    bar = 5   # Set by SubstoryReasonWithEnum.before
-    """.strip()
-
-    getter = make_collector()
-    with pytest.raises(FailureError):
-        examples.methods.SubstoryReasonWithEnum().y(spam=4)
-    assert repr(getter()) == expected
-
-    getter = make_collector()
-    examples.methods.SubstoryReasonWithEnum().y.run(spam=4)
-    assert repr(getter()) == expected
+    # Substory DI.
 
     expected = """
 J.a
@@ -343,17 +309,75 @@ J.a
 Context()
     """.strip()
 
-    class T(
-        examples.failure_reasons.ChildWithList, examples.failure_reasons.StringMethod
-    ):
+    getter = make_collector()
+    with pytest.raises(FailureError):
+        J().a()
+    assert repr(getter()) == expected
+
+    getter = make_collector()
+    J().a.run()
+    assert repr(getter()) == expected
+
+
+def test_context_representation_with_failure_reason_enum():
+    class T(f.ChildWithEnum, f.EnumMethod):
         pass
 
-    class J(
-        examples.failure_reasons.ParentWithList,
-        examples.failure_reasons.NormalParentMethod,
-    ):
+    class Q(f.ParentWithEnum, f.NormalParentMethod, T):
+        pass
+
+    class J(f.ParentWithEnum, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
+
+    # Simple.
+
+    expected = """
+T.x
+  one (failed: <Errors.foo: 1>)
+
+Context()
+    """.strip()
+
+    getter = make_collector()
+    with pytest.raises(FailureError):
+        T().x()
+    assert repr(getter()) == expected
+
+    getter = make_collector()
+    T().x.run()
+    assert repr(getter()) == expected
+
+    # Substory inheritance.
+
+    expected = """
+Q.a
+  before
+  x
+    one (failed: <Errors.foo: 1>)
+
+Context()
+    """.strip()
+
+    getter = make_collector()
+    with pytest.raises(FailureError):
+        Q().a()
+    assert repr(getter()) == expected
+
+    getter = make_collector()
+    Q().a.run()
+    assert repr(getter()) == expected
+
+    # Substory DI.
+
+    expected = """
+J.a
+  before
+  x (T.x)
+    one (failed: <Errors.foo: 1>)
+
+Context()
+    """.strip()
 
     getter = make_collector()
     with pytest.raises(FailureError):
@@ -578,9 +602,7 @@ T.x
 Context()
     """.strip()
 
-    class T(
-        examples.failure_reasons.ChildWithList, examples.failure_reasons.WrongMethod
-    ):
+    class T(f.ChildWithList, f.WrongMethod):
         pass
 
     getter = make_collector()
