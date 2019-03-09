@@ -9,8 +9,8 @@ def make_collector():
 
     origin_context_init = stories._context.Context.__init__
 
-    def wrapper(ctx, ns, history):
-        origin_context_init(ctx, ns, history)
+    def wrapper(ctx):
+        origin_context_init(ctx)
         storage.append(ctx)
 
     stories._context.Context.__init__ = wrapper

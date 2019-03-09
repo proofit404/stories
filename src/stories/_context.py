@@ -3,12 +3,16 @@ from collections import OrderedDict
 from .exceptions import MutationError
 
 
-class Context(object):
-    def __init__(self, ns, history):
-        self.__dict__["_Context__ns"] = OrderedDict(ns)
-        self.__dict__["_Context__history"] = history
-        self.__dict__["_Context__lines"] = ["Story argument"] * len(ns)
+def make_context(arguments, kwargs, history):
+    ns = OrderedDict((arg, kwargs[arg]) for arg in arguments if arg in kwargs)
+    ctx = Context()
+    ctx.__dict__["_Context__ns"] = ns
+    ctx.__dict__["_Context__history"] = history
+    ctx.__dict__["_Context__lines"] = ["Story argument"] * len(kwargs)
+    return ctx
 
+
+class Context(object):
     def __getattr__(self, name):
         return self.__ns[name]
 

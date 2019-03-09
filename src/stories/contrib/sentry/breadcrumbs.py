@@ -17,8 +17,8 @@ origin_context_init = stories._context.Context.__init__
 
 @libraryhook("stories")
 def track_context():
-    def wrapper(ctx, ns, history):
-        origin_context_init(ctx, ns, history)
+    def wrapper(ctx):
+        origin_context_init(ctx)
         record(
             processor=lambda data: data.update(
                 {"category": "story", "message": repr(ctx)}

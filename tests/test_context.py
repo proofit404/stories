@@ -4,7 +4,7 @@ import examples
 import examples.context as c
 import examples.failure_reasons as f
 from helpers import make_collector
-from stories._context import Context
+from stories._context import make_context
 from stories._history import History
 from stories.exceptions import (
     ContextContractError,
@@ -21,7 +21,7 @@ def test_context_dir():
         a = 2
         b = 2
 
-    assert dir(Context({"a": 2, "b": 2}, History())) == dir(Ctx())
+    assert dir(make_context(["a", "b"], {"a": 2, "b": 2}, History())) == dir(Ctx())
 
 
 def test_deny_context_attribute_assignment():
@@ -618,7 +618,7 @@ Context()
 
 @pytest.mark.parametrize("m", examples.contracts)
 def test_context_representation_with_context_contract_error(m):
-    class T(m.ChildWithNull, m.StringMethod):
+    class T(m.ParamChildWithNull, m.StringMethod):
         pass
 
     class Q(m.ParamParentWithNull, m.NormalParentMethod, T):
@@ -765,3 +765,32 @@ Context()
     with pytest.raises(ContextContractError):
         J().a.run()
     assert repr(getter()) == expected
+
+
+def test_context_representation_arguments_order():
+
+    # Simple.
+
+    expected = """
+Simple.x
+  one
+  two
+  three (returned: -1)
+
+Context:
+    foo = 1  # Story argument
+    bar = 3  # Story argument
+    baz = 4  # Set by Simple.two
+    """.strip()
+
+    getter = make_collector()
+    examples.methods.Simple().x(bar=3, foo=1)
+    assert repr(getter()) == expected
+
+    getter = make_collector()
+    examples.methods.Simple().x.run(bar=3, foo=1)
+    assert repr(getter()) == expected
+
+    # FIXME: Substory inheritance.
+
+    # FIXME: Substory DI.

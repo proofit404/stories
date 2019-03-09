@@ -18,8 +18,8 @@ origin_context_init = stories._context.Context.__init__
 
 
 def track_context(storage):
-    def wrapper(ctx, ns, history):
-        origin_context_init(ctx, ns, history)
+    def wrapper(ctx):
+        origin_context_init(ctx)
         storage.append(ctx)
 
     return wrapper

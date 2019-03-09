@@ -1,4 +1,4 @@
-from ._context import Context
+from ._context import make_context
 from ._exec import function
 from ._failures import make_run_protocol
 from ._history import History
@@ -41,15 +41,13 @@ class MountedStory(object):
 
     def __call__(self, **kwargs):
         history = History()
-        # FIXME: Preserve @arguments decorator order.
-        ctx = Context(kwargs, history)
+        ctx = make_context(self.arguments, kwargs, history)
         runner = Call()
         return function.execute(runner, ctx, history, self.methods)
 
     def run(self, **kwargs):
         history = History()
-        # FIXME: Preserve @arguments decorator order.
-        ctx = Context(kwargs, history)
+        ctx = make_context(self.arguments, kwargs, history)
         run_protocol = make_run_protocol(self.failures, self.cls_name, self.name)
         runner = Run(run_protocol)
         return function.execute(runner, ctx, history, self.methods)

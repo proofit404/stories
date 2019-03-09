@@ -7,9 +7,12 @@ from stories.exceptions import ContextContractError
 
 # TODO:
 #
-# [ ] Apply validators to the story arguments on story call.
+# [ ] Store normalized story arguments in the context.
 #
 # [ ] Apply substory validators of the substory arguments.
+#
+# [ ] Deny to normalize substory arguments set by parent story
+#     methods.
 #
 # [ ] Context validators should present for every story argument.
 #
@@ -18,7 +21,7 @@ from stories.exceptions import ContextContractError
 # [ ] Collect arguments from all substories.  Allow to pass arguments
 #     to the substories through story call.
 #
-# [ ] Set contract in the `ClassMountedStory`.
+# [ ] Allow to normalize substory arguments passed to the story calls.
 #
 # [ ] Add `contract_in` shortcut.
 
@@ -30,7 +33,7 @@ def test_context_existed_variables(m):
     twice.
     """
 
-    class T(m.ChildWithNull, m.StringMethod):
+    class T(m.ParamChildWithNull, m.StringMethod):
         pass
 
     class Q(m.ParamParentWithNull, m.NormalParentMethod, T):
