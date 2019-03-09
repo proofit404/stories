@@ -1,8 +1,6 @@
 import pytest
 
 import examples
-import examples.context as c
-import examples.failure_reasons as f
 from helpers import make_collector
 from stories._context import make_context
 from stories._history import History
@@ -24,7 +22,7 @@ def test_context_dir():
     assert dir(make_context(["a", "b"], {"a": 2, "b": 2}, History())) == dir(Ctx())
 
 
-def test_deny_context_attribute_assignment():
+def test_deny_context_attribute_assignment(c):
     """
     We can't use attribute assignment with `Context` object.
     """
@@ -76,7 +74,7 @@ Use Success() keyword arguments to expand its scope.
     assert str(exc_info.value) == expected
 
 
-def test_deny_context_attribute_deletion():
+def test_deny_context_attribute_deletion(c):
     """
     We can't use attribute deletion with `Context` object.
     """
@@ -249,7 +247,7 @@ Context:
     assert repr(getter()) == expected
 
 
-def test_context_representation_with_failure_reason_list():
+def test_context_representation_with_failure_reason_list(f):
     class T(f.ChildWithList, f.StringMethod):
         pass
 
@@ -319,7 +317,7 @@ Context()
     assert repr(getter()) == expected
 
 
-def test_context_representation_with_failure_reason_enum():
+def test_context_representation_with_failure_reason_enum(f):
     class T(f.ChildWithEnum, f.EnumMethod):
         pass
 
@@ -593,7 +591,7 @@ Context()
     assert repr(getter()) == expected
 
 
-def test_context_representation_with_failure_protocol_error():
+def test_context_representation_with_failure_protocol_error(f):
 
     expected = """
 T.x
@@ -616,7 +614,6 @@ Context()
     assert repr(getter()) == expected
 
 
-@pytest.mark.parametrize("m", examples.contracts)
 def test_context_representation_with_context_contract_error(m):
     class T(m.ParamChildWithNull, m.StringMethod):
         pass
@@ -696,7 +693,6 @@ Context:
     assert repr(getter()) == expected
 
 
-@pytest.mark.parametrize("m", examples.contracts)
 def test_context_representation_with_missing_variables(m):
     class T(m.ParamChildWithNull, m.NormalMethod):
         pass

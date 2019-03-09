@@ -1,7 +1,10 @@
-# Do not run actual tests in linter environments.
+pytest_plugins = ["examples"]
 
 
 def pytest_collection_modifyitems(session, config, items):
+    """
+    Do not run actual tests in linter environments.
+    """
     for linter in ["flake8", "black", "isort"]:
         try:
             if config.getoption("--" + linter):
