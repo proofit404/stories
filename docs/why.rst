@@ -8,7 +8,7 @@ this constrains in mind.
 ``stories`` force you to write structured, understandable code with
 right separation of concerns and responsibilities.
 
-Let's consider common troubles you meat in development.
+Let's consider common troubles you meet in development.
 
 Micro framework
 ===============
