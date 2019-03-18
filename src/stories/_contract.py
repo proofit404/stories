@@ -2,6 +2,21 @@ from ._compat import CerberusSpec, MarshmallowSpec, PydanticSpec
 from .exceptions import ContextContractError
 
 
+# FIXME:
+#
+# [ ] Handle composition situation with contract conflict.  If both
+#     story and substory defines the same context variable and
+#     substory does not mark this variable as an @argument, it should
+#     be an error.  Most likely someone will have name conflict here
+#     trying to return the same Success argument twice.
+#
+# [ ] Handle protocol extension.  There should be way to say in the
+#     substory contract "this variable should be an integer" and in
+#     addition in the story "this integer should be greater then 7".
+#     This way we also can require a certain substory to declare
+#     context variable for parent story.
+
+
 # Unknown variables.
 
 
