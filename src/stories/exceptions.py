@@ -13,6 +13,10 @@ class StoryError(Exception):
     pass
 
 
+class StoryDefinitionError(StoryError):
+    pass
+
+
 class FailureError(StoryError):
     def __init__(self, reason):
         self.__reason = reason

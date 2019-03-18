@@ -14,6 +14,8 @@ policy.  We still try to figure some things out.
   delete context attribute directly.
 - Only keyword arguments are allowed to ``call`` and ``run`` the
   story.
+- Raise ``StoryDefinitionError`` when ``arguments`` decorator is used
+  incorrectly.
 
 0.10 (2019-02-27)
 =================
