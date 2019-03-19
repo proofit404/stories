@@ -1,5 +1,6 @@
 from collections import OrderedDict
 
+from ._compat import indent
 from .exceptions import MutationError
 
 
@@ -52,11 +53,25 @@ def history_representation(ctx):
 def context_representation(ctx):
     if not ctx._Context__lines:
         return "Context()"
-    items = ["%s: %s" % (key, repr(value)) for (key, value) in ctx._Context__ns.items()]
-    longest = max(map(len, items))
+    items = []
+    longest = 0
+    for key, value in ctx._Context__ns.items():
+        item = repr(value)
+        too_long = len(key) + len(item) + 4 > 88
+        has_new_lines = "\n" in item
+        if too_long or has_new_lines:
+            head = key + ":"
+            tail = "\n" + indent(item, "    ")
+        else:
+            head = "%s: %s" % (key, item)
+            tail = ""
+        items.append((head, tail))
+        head_length = len(head)
+        if head_length > longest:
+            longest = head_length
     lines = [
-        "  %s  # %s" % (item.ljust(longest), line)
-        for item, line in zip(items, ctx._Context__lines)
+        "  %s  # %s%s" % (head.ljust(longest), line, tail)
+        for (head, tail), line in zip(items, ctx._Context__lines)
     ]
     return "\n".join(["Context:"] + lines)
 

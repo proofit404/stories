@@ -31,3 +31,11 @@ except ImportError:
     # Cerberus package is not installed.
     class CerberusSpec(object):
         pass
+
+
+try:
+    from textwrap import indent
+except ImportError:
+    # We are on Python 2.7
+    def indent(text, prefix):
+        return "".join(map(lambda l: prefix + l, text.splitlines(True)))

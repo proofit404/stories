@@ -790,3 +790,169 @@ Context:
     # FIXME: Substory inheritance.
 
     # FIXME: Substory DI.
+
+
+def test_context_representation_long_variable(c):
+    class T(c.ParamChild, c.NormalMethod):
+        foo = list(range(23))
+
+    class Q(c.ParamParent, c.NormalParentMethod, T):
+        pass
+
+    class J(c.ParamParent, c.NormalParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    # Simple.
+
+    expected = """
+T.x
+  one
+
+Context:
+  bar: 'baz'  # Story argument
+  foo:        # Set by T.one
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]
+    """.strip()
+
+    getter = make_collector()
+    T().x(bar="baz")
+    assert repr(getter()) == expected
+
+    getter = make_collector()
+    T().x.run(bar="baz")
+    assert repr(getter()) == expected
+
+    # Substory inheritance.
+
+    expected = """
+Q.a
+  before
+  x
+    one
+  after
+
+Context:
+  bar: 'baz'  # Story argument
+  foo:        # Set by Q.one
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]
+    """.strip()
+
+    getter = make_collector()
+    Q().a(bar="baz")
+    assert repr(getter()) == expected
+
+    getter = make_collector()
+    Q().a.run(bar="baz")
+    assert repr(getter()) == expected
+
+    # Substory DI.
+
+    expected = """
+J.a
+  before
+  x (T.x)
+    one
+  after
+
+Context:
+  bar: 'baz'  # Story argument
+  foo:        # Set by T.one
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]
+    """.strip()
+
+    getter = make_collector()
+    J().a(bar="baz")
+    assert repr(getter()) == expected
+
+    getter = make_collector()
+    J().a.run(bar="baz")
+    assert repr(getter()) == expected
+
+
+def test_context_representation_multiline_variable(c):
+    class userlist(list):
+        def __repr__(self):
+            return "\n ".join(super(userlist, self).__repr__().split())
+
+    class T(c.ParamChild, c.NormalMethod):
+        foo = userlist(range(3))
+
+    class Q(c.ParamParent, c.NormalParentMethod, T):
+        pass
+
+    class J(c.ParamParent, c.NormalParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    # Simple.
+
+    expected = """
+T.x
+  one
+
+Context:
+  bar: 'baz'  # Story argument
+  foo:        # Set by T.one
+    [0,
+     1,
+     2]
+    """.strip()
+
+    getter = make_collector()
+    T().x(bar="baz")
+    assert repr(getter()) == expected
+
+    getter = make_collector()
+    T().x.run(bar="baz")
+    assert repr(getter()) == expected
+
+    # Substory inheritance.
+
+    expected = """
+Q.a
+  before
+  x
+    one
+  after
+
+Context:
+  bar: 'baz'  # Story argument
+  foo:        # Set by Q.one
+    [0,
+     1,
+     2]
+    """.strip()
+
+    getter = make_collector()
+    Q().a(bar="baz")
+    assert repr(getter()) == expected
+
+    getter = make_collector()
+    Q().a.run(bar="baz")
+    assert repr(getter()) == expected
+
+    # Substory DI.
+
+    expected = """
+J.a
+  before
+  x (T.x)
+    one
+  after
+
+Context:
+  bar: 'baz'  # Story argument
+  foo:        # Set by T.one
+    [0,
+     1,
+     2]
+    """.strip()
+
+    getter = make_collector()
+    J().a(bar="baz")
+    assert repr(getter()) == expected
+
+    getter = make_collector()
+    J().a.run(bar="baz")
+    assert repr(getter()) == expected

@@ -1,7 +1,12 @@
-from stories import Success, story
+from stories import Success, arguments, story
 
 
 # Mixins.
+
+
+class NormalMethod(object):
+    def one(self, ctx):
+        return Success(foo=self.foo)
 
 
 class AssignMethod(object):
@@ -34,8 +39,24 @@ class Child(object):
         I.one
 
 
+class ParamChild(object):
+    @story
+    @arguments("bar")
+    def x(I):
+        I.one
+
+
 class Parent(object):
     @story
+    def a(I):
+        I.before
+        I.x
+        I.after
+
+
+class ParamParent(object):
+    @story
+    @arguments("bar")
     def a(I):
         I.before
         I.x
