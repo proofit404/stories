@@ -39,3 +39,10 @@ except ImportError:
     # We are on Python 2.7
     def indent(text, prefix):
         return "".join(map(lambda l: prefix + l, text.splitlines(True)))
+
+
+try:
+    from prettyprinter import pformat
+except ImportError:
+    # Prettyprinter package is not installed.
+    from pprint import pformat

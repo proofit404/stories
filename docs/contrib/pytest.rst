@@ -17,3 +17,6 @@ This plugin is enabled by default.
 
 To disable it add ``-p no:stories`` argument to the ``pytest``
 command.
+
+..
+    FIXME: Document prettyprinter usage.

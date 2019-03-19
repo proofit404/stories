@@ -14,6 +14,7 @@ import textwrap
 
 from _pytest.config import hookimpl
 
+import stories._compat
 import stories._context
 
 
@@ -70,5 +71,12 @@ def pytest_runtest_call(item):
     yield
     stories._context.Context.__init__ = origin_context_init
     for i, (src, ctx) in enumerate(storage, 1):
-        output = "\n\n".join([src, repr(ctx)])
+        output = "\n\n".join(
+            [
+                src,
+                stories._context.history_representation(ctx)
+                + "\n\n"
+                + stories._context.context_representation(ctx, stories._compat.pformat),
+            ]
+        )
         item.add_report_section("call", "story #%d" % (i,), output)

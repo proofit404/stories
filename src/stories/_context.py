@@ -50,13 +50,13 @@ def history_representation(ctx):
     return result
 
 
-def context_representation(ctx):
+def context_representation(ctx, repr_func=repr):
     if not ctx._Context__lines:
         return "Context()"
     items = []
     longest = 0
     for key, value in ctx._Context__ns.items():
-        item = repr(value)
+        item = repr_func(value)
         too_long = len(key) + len(item) + 4 > 88
         has_new_lines = "\n" in item
         if too_long or has_new_lines:

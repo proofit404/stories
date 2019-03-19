@@ -34,3 +34,6 @@ You should see ``stories`` panel in your debug toolbar:
 
 .. image:: /static/debug-toolbar.png
     :class: with-popup
+
+..
+    FIXME: Document prettyprinter usage.
