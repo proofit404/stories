@@ -52,12 +52,10 @@ def history_representation(ctx):
 def context_representation(ctx):
     if not ctx._Context__lines:
         return "Context()"
-    items = [
-        "%s = %s" % (key, repr(value)) for (key, value) in ctx._Context__ns.items()
-    ]
+    items = ["%s: %s" % (key, repr(value)) for (key, value) in ctx._Context__ns.items()]
     longest = max(map(len, items))
     lines = [
-        "    %s  # %s" % (item.ljust(longest), line)
+        "  %s  # %s" % (item.ljust(longest), line)
         for item, line in zip(items, ctx._Context__lines)
     ]
     return "\n".join(["Context:"] + lines)

@@ -165,9 +165,9 @@ SubstoryDI.y
   after (returned: 6)
 
 Context:
-    spam = 3  # Story argument
-    foo = 2   # Set by SubstoryDI.start
-    bar = 4   # Set by SubstoryDI.before
+  spam: 3  # Story argument
+  foo: 2   # Set by SubstoryDI.start
+  bar: 4   # Set by SubstoryDI.before
     """.strip()
 
     getter = make_collector()
@@ -187,8 +187,8 @@ Simple.x
   two (failed)
 
 Context:
-    foo = 2  # Story argument
-    bar = 2  # Story argument
+  foo: 2  # Story argument
+  bar: 2  # Story argument
     """.strip()
 
     getter = make_collector()
@@ -209,9 +209,9 @@ SimpleSubstory.y
     two (failed)
 
 Context:
-    spam = 3  # Story argument
-    foo = 2   # Set by SimpleSubstory.start
-    bar = 4   # Set by SimpleSubstory.before
+  spam: 3  # Story argument
+  foo: 2   # Set by SimpleSubstory.start
+  bar: 4   # Set by SimpleSubstory.before
     """.strip()
 
     getter = make_collector()
@@ -232,9 +232,9 @@ SubstoryDI.y
     two (failed)
 
 Context:
-    spam = 3  # Story argument
-    foo = 2   # Set by SubstoryDI.start
-    bar = 4   # Set by SubstoryDI.before
+  spam: 3  # Story argument
+  foo: 2   # Set by SubstoryDI.start
+  bar: 4   # Set by SubstoryDI.before
     """.strip()
 
     getter = make_collector()
@@ -396,9 +396,9 @@ Simple.x
   three (returned: -1)
 
 Context:
-    foo = 1  # Story argument
-    bar = 3  # Story argument
-    baz = 4  # Set by Simple.two
+  foo: 1  # Story argument
+  bar: 3  # Story argument
+  baz: 4  # Set by Simple.two
     """.strip()
 
     getter = make_collector()
@@ -419,10 +419,10 @@ SimpleSubstory.y
     three (returned: -1)
 
 Context:
-    spam = 2  # Story argument
-    foo = 1   # Set by SimpleSubstory.start
-    bar = 3   # Set by SimpleSubstory.before
-    baz = 4   # Set by SimpleSubstory.two
+  spam: 2  # Story argument
+  foo: 1   # Set by SimpleSubstory.start
+  bar: 3   # Set by SimpleSubstory.before
+  baz: 4   # Set by SimpleSubstory.two
     """.strip()
 
     getter = make_collector()
@@ -443,10 +443,10 @@ SubstoryDI.y
     three (returned: -1)
 
 Context:
-    spam = 2  # Story argument
-    foo = 1   # Set by SubstoryDI.start
-    bar = 3   # Set by SubstoryDI.before
-    baz = 4   # Set by Simple.two
+  spam: 2  # Story argument
+  foo: 1   # Set by SubstoryDI.start
+  bar: 3   # Set by SubstoryDI.before
+  baz: 4   # Set by Simple.two
     """.strip()
 
     getter = make_collector()
@@ -468,9 +468,9 @@ SubstoryDI.y
   after (returned: 6)
 
 Context:
-    spam = 3  # Story argument
-    foo = 2   # Set by SubstoryDI.start
-    bar = 4   # Set by SubstoryDI.before
+  spam: 3  # Story argument
+  foo: 2   # Set by SubstoryDI.start
+  bar: 4   # Set by SubstoryDI.before
     """.strip()
 
     getter = make_collector()
@@ -490,8 +490,8 @@ Simple.x
   two (skipped)
 
 Context:
-    foo = 1   # Story argument
-    bar = -1  # Story argument
+  foo: 1   # Story argument
+  bar: -1  # Story argument
     """.strip()
 
     getter = make_collector()
@@ -512,9 +512,9 @@ SimpleSubstory.y
   after (returned: -4)
 
 Context:
-    spam = -2  # Story argument
-    foo = -3   # Set by SimpleSubstory.start
-    bar = -1   # Set by SimpleSubstory.before
+  spam: -2  # Story argument
+  foo: -3   # Set by SimpleSubstory.start
+  bar: -1   # Set by SimpleSubstory.before
     """.strip()
 
     getter = make_collector()
@@ -535,9 +535,9 @@ SubstoryDI.y
   after (returned: -4)
 
 Context:
-    spam = -2  # Story argument
-    foo = -3   # Set by SubstoryDI.start
-    bar = -1   # Set by SubstoryDI.before
+  spam: -2  # Story argument
+  foo: -3   # Set by SubstoryDI.start
+  bar: -1   # Set by SubstoryDI.before
     """.strip()
 
     getter = make_collector()
@@ -557,9 +557,9 @@ SubstoryDI.y
   after (returned: 4)
 
 Context:
-    spam = 2  # Story argument
-    foo = 1   # Set by SubstoryDI.start
-    bar = 3   # Set by SubstoryDI.before
+  spam: 2  # Story argument
+  foo: 1   # Set by SubstoryDI.start
+  bar: 3   # Set by SubstoryDI.before
     """.strip()
 
     getter = make_collector()
@@ -632,8 +632,8 @@ T.x
   one (errored: ContextContractError)
 
 Context:
-    foo = 1  # Story argument
-    bar = 2  # Story argument
+  foo: 1  # Story argument
+  bar: 2  # Story argument
     """.strip()
 
     getter = make_collector()
@@ -655,8 +655,8 @@ Q.a
     one (errored: ContextContractError)
 
 Context:
-    foo = 1  # Story argument
-    bar = 2  # Story argument
+  foo: 1  # Story argument
+  bar: 2  # Story argument
     """.strip()
 
     getter = make_collector()
@@ -678,8 +678,8 @@ J.a
     one (errored: ContextContractError)
 
 Context:
-    foo = 1  # Story argument
-    bar = 2  # Story argument
+  foo: 1  # Story argument
+  bar: 2  # Story argument
     """.strip()
 
     getter = make_collector()
@@ -774,9 +774,9 @@ Simple.x
   three (returned: -1)
 
 Context:
-    foo = 1  # Story argument
-    bar = 3  # Story argument
-    baz = 4  # Set by Simple.two
+  foo: 1  # Story argument
+  bar: 3  # Story argument
+  baz: 4  # Set by Simple.two
     """.strip()
 
     getter = make_collector()
