@@ -19,6 +19,12 @@ class DeleteMethod(object):
         del ctx.foo
 
 
+class CompareMethod(object):
+    def one(self, ctx):
+        if ctx:
+            pass
+
+
 # Parent mixins.
 
 

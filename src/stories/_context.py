@@ -38,6 +38,10 @@ class Context(object):
         attributes = sorted(parent | current | scope)
         return attributes
 
+    def __bool__(self):
+        message = comparison_template.format(available=", ".join(map(repr, self.__ns)))
+        raise MutationError(message)
+
 
 def assign_namespace(ctx, method, kwargs):
     ctx._Context__ns.update(kwargs)
@@ -97,4 +101,11 @@ delete_attribute_message = """
 Context object is immutable.
 
 Variables can not be removed from Context.
+""".strip()
+
+
+comparison_template = """
+Context object can not be used in boolean comparison.
+
+Available variables: {available}
 """.strip()

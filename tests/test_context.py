@@ -126,6 +126,54 @@ Variables can not be removed from Context.
     assert str(exc_info.value) == expected
 
 
+def test_deny_context_boolean_comparison(c):
+    class T(c.ParamChild, c.CompareMethod):
+        pass
+
+    class Q(c.ParamParent, c.NormalParentMethod, T):
+        pass
+
+    class J(c.ParamParent, c.NormalParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    expected = """
+Context object can not be used in boolean comparison.
+
+Available variables: 'bar'
+    """.strip()
+
+    # Simple.
+
+    with pytest.raises(MutationError) as exc_info:
+        T().x(bar=1)
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(MutationError) as exc_info:
+        T().x.run(bar=1)
+    assert str(exc_info.value) == expected
+
+    # Substory inheritance.
+
+    with pytest.raises(MutationError) as exc_info:
+        Q().a(bar=1)
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(MutationError) as exc_info:
+        Q().a.run(bar=1)
+    assert str(exc_info.value) == expected
+
+    # Substory DI.
+
+    with pytest.raises(MutationError) as exc_info:
+        J().a(bar=1)
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(MutationError) as exc_info:
+        J().a.run(bar=1)
+    assert str(exc_info.value) == expected
+
+
 def test_context_representation_with_empty():
 
     expected = """
