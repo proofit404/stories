@@ -53,10 +53,16 @@ def history_representation(ctx):
 def context_representation(ctx, repr_func=repr):
     if not ctx._Context__lines:
         return "Context()"
+    seen = []
     items = []
     longest = 0
     for key, value in ctx._Context__ns.items():
-        item = repr_func(value)
+        for seen_key, seen_value in seen:
+            if value is seen_value:
+                item = "`%s` alias" % (seen_key,)
+                break
+        else:
+            item = repr_func(value)
         too_long = len(key) + len(item) + 4 > 88
         has_new_lines = "\n" in item
         if too_long or has_new_lines:
@@ -65,6 +71,7 @@ def context_representation(ctx, repr_func=repr):
         else:
             head = "%s: %s" % (key, item)
             tail = ""
+        seen.append((key, value))
         items.append((head, tail))
         head_length = len(head)
         if head_length > longest:

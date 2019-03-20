@@ -187,17 +187,17 @@ Simple.x
   two (failed)
 
 Context:
-  foo: 2  # Story argument
+  foo: 3  # Story argument
   bar: 2  # Story argument
     """.strip()
 
     getter = make_collector()
     with pytest.raises(FailureError):
-        examples.methods.Simple().x(foo=2, bar=2)
+        examples.methods.Simple().x(foo=3, bar=2)
     assert repr(getter()) == expected
 
     getter = make_collector()
-    examples.methods.Simple().x.run(foo=2, bar=2)
+    examples.methods.Simple().x.run(foo=3, bar=2)
     assert repr(getter()) == expected
 
     expected = """
@@ -955,4 +955,79 @@ Context:
 
     getter = make_collector()
     J().a.run(bar="baz")
+    assert repr(getter()) == expected
+
+
+def test_context_representation_variable_aliases(c):
+    class T(c.ParamChild, c.NormalMethod):
+        foo = "baz"
+
+    class Q(c.ParamParent, c.NormalParentMethod, T):
+        pass
+
+    class J(c.ParamParent, c.NormalParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    # Simple.
+
+    expected = """
+T.x
+  one
+
+Context:
+  bar: 'baz'        # Story argument
+  foo: `bar` alias  # Set by T.one
+    """.strip()
+
+    getter = make_collector()
+    T().x(bar=T.foo)
+    assert repr(getter()) == expected
+
+    getter = make_collector()
+    T().x.run(bar=T.foo)
+    assert repr(getter()) == expected
+
+    # Substory inheritance.
+
+    expected = """
+Q.a
+  before
+  x
+    one
+  after
+
+Context:
+  bar: 'baz'        # Story argument
+  foo: `bar` alias  # Set by Q.one
+    """.strip()
+
+    getter = make_collector()
+    Q().a(bar=T.foo)
+    assert repr(getter()) == expected
+
+    getter = make_collector()
+    Q().a.run(bar=T.foo)
+    assert repr(getter()) == expected
+
+    # Substory DI.
+
+    expected = """
+J.a
+  before
+  x (T.x)
+    one
+  after
+
+Context:
+  bar: 'baz'        # Story argument
+  foo: `bar` alias  # Set by T.one
+    """.strip()
+
+    getter = make_collector()
+    J().a(bar=T.foo)
+    assert repr(getter()) == expected
+
+    getter = make_collector()
+    J().a.run(bar=T.foo)
     assert repr(getter()) == expected
