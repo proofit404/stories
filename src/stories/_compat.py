@@ -45,4 +45,4 @@ try:
     from prettyprinter import pformat
 except ImportError:
     # Prettyprinter package is not installed.
-    from pprint import pformat
+    from pprint import pformat  # noqa
