@@ -52,7 +52,7 @@ If you want the parent story to provide some context variables, use
 
 You can see final composition in the class result representation:
 
-.. code:: python
+.. code:: pycon
 
     >>> Subscription.buy
     Subscription.buy:
@@ -115,7 +115,7 @@ where these steps come from, constructor or not.
 At this moment, story definition does not know what
 ``find_promo_code`` step should be.
 
-.. code:: python
+.. code:: pycon
 
     >>> Subscription.buy
     Subscription.buy:
@@ -134,7 +134,7 @@ And when we create an instance of the class we will specify this
 explicitly.  Representation of the instance attribute will show us the
 complete story.
 
-.. code:: python
+.. code:: pycon
 
     >>> Subscription(PromoCode().find).buy
     Subscription.buy:
@@ -210,7 +210,7 @@ This way you decouple your business logic from relation mapper models
 or networking library!  There is no more vendor lock on a certain
 framework or database!  Welcome to the good architecture utopia.
 
-.. code:: python
+.. code:: pycon
 
     >>> def load_profile(user_id):
     ...     return Profile.objects.get(user_id=user_id)

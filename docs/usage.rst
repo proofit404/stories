@@ -14,7 +14,7 @@ method.
 Result
 ------
 
-.. code:: python
+.. code:: pycon
 
     >>> Subscription().buy(category_id=1, price_id=1, user_id=1)
     <Category: Category object (1)>
@@ -26,7 +26,7 @@ The story was executed successfully.  It returns an object we put into
 Failure
 -------
 
-.. code:: python
+.. code:: pycon
 
     >>> Subscription().buy(category_id=2, price_id=2, user_id=1)
     Traceback (most recent call last):
@@ -56,7 +56,7 @@ summary of the business object execution.
 Result
 ------
 
-.. code:: python
+.. code:: pycon
 
     >>> result = ShowCategory().show.run(category_id=1, user_id=1)
     >>> result.is_success
@@ -71,7 +71,7 @@ available in the ``value`` attribute.
 Failure
 -------
 
-.. code:: python
+.. code:: pycon
 
     >>> result = ShowCategory().show.run(category_id=2, user_id=1)
     >>> result.is_failure

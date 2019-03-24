@@ -49,7 +49,7 @@ continues from the next step.
             print("three")
             return Success()
 
-.. code:: python
+.. code:: pycon
 
     >>> Action().do()
     one
@@ -97,7 +97,7 @@ in the next method of the parent story.
             print("four")
             return Success()
 
-.. code:: python
+.. code:: pycon
 
     >>> Action().do()
     one
@@ -129,7 +129,7 @@ variables for future methods.
             print(ctx.var_b)
             return Success()
 
-.. code:: python
+.. code:: pycon
 
     >>> Action().do()
     1
@@ -162,7 +162,7 @@ failed.  Execution stops at this point.
             print("two")
             return Success()
 
-.. code:: python
+.. code:: pycon
 
     >>> Action().do()
     one
@@ -216,7 +216,7 @@ failed.  Execution stops at this point.
             print("four")
             return Success()
 
-.. code:: python
+.. code:: pycon
 
     >>> Action().do()
     one
@@ -267,7 +267,7 @@ be the return value of the story call.
             print("three")
             return Success()
 
-.. code:: python
+.. code:: pycon
 
     >>> res = Action().do()
     one
@@ -316,7 +316,7 @@ The execution stops after the method returned ``Result``.
             print("four")
             return Success()
 
-.. code:: python
+.. code:: pycon
 
     >>> result = Action().do()
     one
@@ -369,7 +369,7 @@ continued form the next method of the caller story.
             print("four")
             return Success()
 
-.. code:: python
+.. code:: pycon
 
     >>> Action().do()
     one
@@ -399,7 +399,7 @@ If the topmost story returns ``Skip`` result, execution will end.
             print("two")
             return Success()
 
-.. code:: python
+.. code:: pycon
 
     >>> Action().do()
     one

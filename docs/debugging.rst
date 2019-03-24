@@ -106,7 +106,7 @@ The first run
 
 Looks good at the first view.  Isn't it?  Let's try to run this code.
 
-.. code:: python
+.. code:: pycon
 
     >>> from example import *
     >>> promo_code = ApplyPromoCode(load_category, load_promo_code)
@@ -238,7 +238,7 @@ Let's fix it.
 
 And re-run our program.
 
-.. code:: python
+.. code:: pycon
 
     >>> from example import *
     >>> promo_code = ApplyPromoCode(load_category, load_promo_code)
