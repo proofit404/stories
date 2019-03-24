@@ -74,7 +74,7 @@ allowed strings.
 Now you can use these string literals to process different failures in
 a different way.
 
-.. code:: python
+.. code:: pycon
 
     >>> promo_code = ApplyPromoCode()
     >>> result = promo_code.apply.run(category=Category(177))
@@ -144,7 +144,7 @@ On Python 2 you can use `enum34`_ package::
 Now you can use `enum`_ members to process different failures in a
 different way.
 
-.. code:: python
+.. code:: pycon
 
     >>> promo_code = ApplyPromoCode()
     >>> result = promo_code.apply.run(category=Category(177))
@@ -239,7 +239,7 @@ A composition of these two stories can fail both because of
 ``failures`` property will contain protocols composition.  A new
 ``enum`` class.
 
-.. code:: python
+.. code:: pycon
 
     >>> buy_subscription = Subscription(PromoCode().find).buy
     >>> result = buy_subscription.run()
