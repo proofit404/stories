@@ -24,12 +24,6 @@ from stories.exceptions import ContextContractError
 # [ ] Allow to normalize substory arguments passed to the story calls.
 #
 # [ ] Add `contract_in` shortcut.
-#
-# [ ] Raise `ContextContractError` if Root and Child contracts define
-#     same variables in the composition Root -> Parent -> Child.
-#
-# [ ] Raise `ContextContractError` if contracts in the composition are
-#     of different types.
 
 
 def test_context_existed_variables(m):
@@ -428,6 +422,56 @@ Use variables with different names.
     with pytest.raises(ContextContractError) as exc_info:
         F().i
     assert str(exc_info.value) == expected
+
+
+def test_composition_contract_incompatible_types(m):
+    """Deny to use different types in the story composition."""
+
+    class T(m.Child, m.NormalMethod):
+        pass
+
+    class Q(m.ParentWithNull, m.NormalParentMethod, T):
+        pass
+
+    class J(m.ParentWithNull, m.NormalParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    # Substory inheritance.
+
+    expected = """
+Story and substory context contracts has incompatible types:
+
+Story method: Q.a
+
+Story context contract: None
+
+Substory method: Q.x
+
+Substory context contract:
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        Q().a
+    assert str(exc_info.value).startswith(expected)
+
+    # Substory DI.
+
+    expected = """
+Story and substory context contracts has incompatible types:
+
+Story method: J.a
+
+Story context contract: None
+
+Substory method: T.x
+
+Substory context contract:
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        J().a
+    assert str(exc_info.value).startswith(expected)
 
 
 def test_context_unknown_variable(m):

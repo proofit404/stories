@@ -190,6 +190,16 @@ def combine_contract(specs, tail):
                 repeated = set(first_spec.schema) & set(second_spec.schema)
             elif isinstance(first_spec, dict) and isinstance(second_spec, dict):
                 repeated = set(first_spec) & set(second_spec)
+            else:
+                message = type_error_template.format(
+                    cls=first_cls_name,
+                    method=first_method_name,
+                    contract=first_spec,
+                    other_cls=second_cls_name,
+                    other_method=second_method_name,
+                    other_contract=second_spec,
+                )
+                raise ContextContractError(message)
             if repeated:
                 message = incompatible_contracts_template.format(
                     repeated=", ".join(map(repr, sorted(repeated))),
@@ -271,4 +281,17 @@ Story method: {cls}.{method}
 Substory method: {other_cls}.{other_method}
 
 Use variables with different names.
+""".strip()
+
+
+type_error_template = """
+Story and substory context contracts has incompatible types:
+
+Story method: {cls}.{method}
+
+Story context contract: {contract}
+
+Substory method: {other_cls}.{other_method}
+
+Substory context contract: {other_contract}
 """.strip()
