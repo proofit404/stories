@@ -91,6 +91,17 @@ class ParentWithNull(object):
         I.after
 
 
+class ParentWithSame(object):
+    @story
+    def a(I):
+        I.before
+        I.x
+        I.after
+
+
+ParentWithSame.a.contract({"foo": integer, "bar": integer, "baz": integer})
+
+
 class ParamParent(object):
     @story
     @arguments("foo", "bar")

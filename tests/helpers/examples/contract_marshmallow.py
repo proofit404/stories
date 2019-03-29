@@ -89,6 +89,21 @@ class ParentWithNull(object):
         I.after
 
 
+class ParentWithSame(object):
+    @story
+    def a(I):
+        I.before
+        I.x
+        I.after
+
+
+@ParentWithSame.a.contract
+class Contract(Schema):
+    foo = fields.Integer()
+    bar = fields.Integer()
+    baz = fields.Integer()
+
+
 class ParamParent(object):
     @story
     @arguments("foo", "bar")

@@ -4,12 +4,6 @@ from .exceptions import ContextContractError
 
 # FIXME:
 #
-# [ ] Handle composition situation with contract conflict.  If both
-#     story and substory defines the same context variable and
-#     substory does not mark this variable as an @argument, it should
-#     be an error.  Most likely someone will have name conflict here
-#     trying to return the same Success argument twice.
-#
 # [ ] Handle protocol extension.  There should be way to say in the
 #     substory contract "this variable should be an integer" and in
 #     addition in the story "this integer should be greater then 7".
@@ -172,6 +166,46 @@ class Contract(object):
         return kwargs
 
 
+# Wrap.
+
+
+def combine_contract(
+    first_spec,
+    first_cls_name,
+    first_method_name,
+    second_spec,
+    second_cls_name,
+    second_method_name,
+):
+    if first_spec is None and second_spec is None:
+        repeated = set()
+        spec = first_spec
+    elif isinstance(first_spec, PydanticSpec) and isinstance(second_spec, PydanticSpec):
+        repeated = set(first_spec.__fields__) & set(second_spec.__fields__)
+        spec = first_spec
+    elif isinstance(first_spec, MarshmallowSpec) and isinstance(
+        second_spec, MarshmallowSpec
+    ):
+        repeated = set(first_spec._declared_fields) & set(second_spec._declared_fields)
+        spec = first_spec
+    elif isinstance(first_spec, CerberusSpec) and isinstance(second_spec, CerberusSpec):
+        repeated = set(first_spec.schema) & set(second_spec.schema)
+        spec = first_spec
+    elif isinstance(first_spec, dict) and isinstance(second_spec, dict):
+        repeated = set(first_spec) & set(second_spec)
+        spec = first_spec
+    if repeated:
+        message = incompatible_contracts_template.format(
+            repeated=", ".join(map(repr, sorted(repeated))),
+            cls=first_cls_name,
+            method=first_method_name,
+            other_cls=second_cls_name,
+            other_method=second_method_name,
+        )
+        raise ContextContractError(message)
+    return spec
+
+
 # Messages.
 
 
@@ -225,4 +259,17 @@ Story method: {cls}.{method}
 Violations:
 
 {violations}
+""".strip()
+
+
+incompatible_contracts_template = """
+Repeated variables can not be used in a story composition.
+
+Variables repeated in both context contracts: {repeated}
+
+Story method: {cls}.{method}
+
+Substory method: {other_cls}.{other_method}
+
+Use variables with different names.
 """.strip()

@@ -97,6 +97,25 @@ class ParentWithNull(object):
         I.after
 
 
+class ParentWithSame(object):
+    @story
+    def a(I):
+        I.before
+        I.x
+        I.after
+
+
+ParentWithSame.a.contract(
+    Validator(
+        {
+            "foo": {"type": "integer", "coerce": int},
+            "bar": {"type": "integer", "coerce": int},
+            "baz": {"type": "integer", "coerce": int},
+        }
+    )
+)
+
+
 class ParamParent(object):
     @story
     @arguments("foo", "bar")

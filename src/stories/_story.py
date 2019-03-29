@@ -19,7 +19,7 @@ class Story(object):
                 cls, self.name, self.collected, self.contract, self.failures
             )
         else:
-            methods, failures = wrap_story(
+            methods, contract, failures = wrap_story(
                 self.arguments,
                 self.collected,
                 cls.__name__,
@@ -29,7 +29,13 @@ class Story(object):
                 self.__failures,
             )
             return MountedStory(
-                obj, cls.__name__, self.name, self.arguments, methods, failures
+                obj,
+                cls.__name__,
+                self.name,
+                self.arguments,
+                methods,
+                contract,
+                failures,
             )
 
     def contract(self, contract):

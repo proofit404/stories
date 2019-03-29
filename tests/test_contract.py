@@ -24,6 +24,12 @@ from stories.exceptions import ContextContractError
 # [ ] Allow to normalize substory arguments passed to the story calls.
 #
 # [ ] Add `contract_in` shortcut.
+#
+# [ ] Raise `ContextContractError` if Root and Child contracts define
+#     same variables in the composition Root -> Parent -> Child.
+#
+# [ ] Raise `ContextContractError` if contracts in the composition are
+#     of different types.
 
 
 @pytest.mark.parametrize("m", examples.contracts)
@@ -232,7 +238,7 @@ bar:
 
 
 @pytest.mark.parametrize("m", examples.contracts)
-def test_arguments_validation_call(m):
+def test_story_arguments_validation(m):
     """
     We apply validators to the story arguments, if story defines
     context contract.  This is check performed during story call, not
@@ -311,6 +317,60 @@ bar:
     with pytest.raises(ContextContractError) as exc_info:
         J().a.run(foo="<boom>", bar="<boom>")
     assert str(exc_info.value).startswith(expected)
+
+
+@pytest.mark.paramparent("m", examples.contracts)
+def test_composition_contract_conflict(m):
+    """
+    Story and substory contracts can not declare the same variable
+    twice.
+    """
+
+    class T(m.Child, m.NormalMethod):
+        pass
+
+    class Q(m.ParentWithSame, m.NormalParentMethod, T):
+        pass
+
+    class J(m.ParentWithSame, m.NormalParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    # Substory inheritance.
+
+    expected = """
+Repeated variables can not be used in a story composition.
+
+Variables repeated in both context contracts: 'bar', 'baz', 'foo'
+
+Story method: Q.a
+
+Substory method: Q.x
+
+Use variables with different names.
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        Q().a
+    assert str(exc_info.value) == expected
+
+    # Substory DI.
+
+    expected = """
+Repeated variables can not be used in a story composition.
+
+Variables repeated in both context contracts: 'bar', 'baz', 'foo'
+
+Story method: J.a
+
+Substory method: T.x
+
+Use variables with different names.
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        J().a
+    assert str(exc_info.value) == expected
 
 
 @pytest.mark.parametrize("m", examples.contracts)
@@ -392,7 +452,7 @@ Use different names for Success() keyword arguments or add these names to the co
 
 
 @pytest.mark.parametrize("m", examples.contracts)
-def test_context_missing_variables(m):
+def test_context_missing_arguments(m):
     """Check story and substory arguments are present in the context."""
 
     class T(m.ParamChildWithNull, m.NormalMethod):

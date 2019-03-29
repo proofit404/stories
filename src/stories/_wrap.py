@@ -1,4 +1,4 @@
-from ._contract import make_contract
+from ._contract import combine_contract, make_contract
 from ._failures import combine_failures, make_exec_protocol, maybe_disable_null_protocol
 from ._marker import BeginningOfStory, EndOfStory
 from ._mounted import MountedStory
@@ -19,6 +19,10 @@ def wrap_story(arguments, collected, cls_name, story_name, obj, spec, failures):
             methods.append((attr, contract, protocol))
             continue
 
+        spec = combine_contract(
+            spec, cls_name, story_name, attr.contract, attr.cls_name, attr.name
+        )
+
         failures = combine_failures(
             failures, cls_name, story_name, attr.failures, attr.cls_name, attr.name
         )
@@ -32,4 +36,4 @@ def wrap_story(arguments, collected, cls_name, story_name, obj, spec, failures):
 
     methods = maybe_disable_null_protocol(methods, failures)
 
-    return methods, failures
+    return methods, spec, failures
