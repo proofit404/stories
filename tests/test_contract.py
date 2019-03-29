@@ -7,8 +7,6 @@ from stories.exceptions import ContextContractError
 
 # TODO:
 #
-# [ ] Store normalized story arguments in the context.
-#
 # [ ] Apply substory validators of the substory arguments.
 #
 # [ ] Deny to normalize substory arguments set by parent story
@@ -149,6 +147,60 @@ def test_context_variables_normalization(m):
     J().a.run()
     assert getter().foo == 1
     assert getter().bar == 2
+
+
+def test_story_arguments_normalization(m):
+    """
+    We apply normalization to the story arguments, if story defines
+    context contract.  If story was called with a string argument
+    holding a number, we should store a number in the context.
+    """
+
+    class T(m.ParamChild, m.NormalMethod):
+        pass
+
+    class Q(m.ParamParent, m.StringParentMethod, T):
+        pass
+
+    class J(m.ParamParent, m.StringParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    # Simple.
+
+    getter = make_collector()
+    T().x(foo="1", bar="2")
+    assert getter().foo == 1
+    assert getter().bar == 2
+
+    getter = make_collector()
+    T().x.run(foo="1", bar="2")
+    assert getter().foo == 1
+    assert getter().bar == 2
+
+    # Substory inheritance.
+
+    getter = make_collector()
+    Q().a(ham="1", eggs="2")
+    assert getter().ham == 1
+    assert getter().eggs == 2
+
+    getter = make_collector()
+    Q().a.run(ham="1", eggs="2")
+    assert getter().ham == 1
+    assert getter().eggs == 2
+
+    # Substory DI.
+
+    getter = make_collector()
+    J().a(ham="1", eggs="2")
+    assert getter().ham == 1
+    assert getter().eggs == 2
+
+    getter = make_collector()
+    J().a.run(ham="1", eggs="2")
+    assert getter().ham == 1
+    assert getter().eggs == 2
 
 
 def test_context_variables_validation(m):
