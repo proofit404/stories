@@ -373,6 +373,67 @@ Use variables with different names.
     assert str(exc_info.value) == expected
 
 
+@pytest.mark.paramparent("m", examples.contracts)
+def test_many_levels_composition_contract_conflict(m):
+    """
+    Story and substory contracts can not declare the same variable
+    twice.
+    """
+
+    class T(m.Child, m.NormalMethod):
+        pass
+
+    class Q(m.Parent, m.NormalParentMethod, T):
+        pass
+
+    class J(m.Parent, m.NormalParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    class R(m.RootWithSame, m.NormalRootMethod, Q):
+        pass
+
+    class F(m.RootWithSame, m.NormalRootMethod):
+        def __init__(self):
+            self.a = J().a
+
+    # Substory inheritance.
+
+    expected = """
+Repeated variables can not be used in a story composition.
+
+Variables repeated in both context contracts: 'bar', 'baz', 'foo'
+
+Story method: R.i
+
+Substory method: R.x
+
+Use variables with different names.
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        R().i
+    assert str(exc_info.value) == expected
+
+    # Substory DI.
+
+    expected = """
+Repeated variables can not be used in a story composition.
+
+Variables repeated in both context contracts: 'bar', 'baz', 'foo'
+
+Story method: F.i
+
+Substory method: T.x
+
+Use variables with different names.
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        F().i
+    assert str(exc_info.value) == expected
+
+
 @pytest.mark.parametrize("m", examples.contracts)
 def test_context_unknown_variable(m):
     """

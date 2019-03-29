@@ -37,6 +37,17 @@ class NormalParentMethod(object):
         return Success()
 
 
+# Root mixins.
+
+
+class NormalRootMethod(object):
+    def start(self, ctx):
+        return Success()
+
+    def finish(self, ctx):
+        return Success()
+
+
 # Base classes.
 
 
@@ -79,6 +90,21 @@ class ParamChildWithNull(object):
 
 
 # Parent base classes.
+
+
+class Parent(object):
+    @story
+    def a(I):
+        I.before
+        I.x
+        I.after
+
+
+@Parent.a.contract
+class Contract(BaseModel):
+    ham: int
+    eggs: int
+    beans: int
 
 
 class ParentWithNull(object):
@@ -127,3 +153,20 @@ class ParamParentWithNull(object):
         I.before
         I.x
         I.after
+
+
+# Root base classes.
+
+
+class RootWithSame(object):
+    @story
+    def i(I):
+        I.start
+        I.a
+        I.finish
+
+    @i.contract
+    class Contract(BaseModel):
+        foo: int
+        bar: int
+        baz: int

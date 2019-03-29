@@ -9,6 +9,7 @@ def wrap_story(arguments, collected, cls_name, story_name, obj, spec, failures):
     contract = make_contract(cls_name, story_name, arguments, spec)
     protocol = make_exec_protocol(failures)
 
+    specs = [(spec, cls_name, story_name)]
     methods = [(BeginningOfStory(cls_name, story_name), contract, protocol)]
 
     for name in collected:
@@ -19,9 +20,7 @@ def wrap_story(arguments, collected, cls_name, story_name, obj, spec, failures):
             methods.append((attr, contract, protocol))
             continue
 
-        spec = combine_contract(
-            spec, cls_name, story_name, attr.contract, attr.cls_name, attr.name
-        )
+        specs = combine_contract(specs, attr.contract)
 
         failures = combine_failures(
             failures, cls_name, story_name, attr.failures, attr.cls_name, attr.name
@@ -36,4 +35,4 @@ def wrap_story(arguments, collected, cls_name, story_name, obj, spec, failures):
 
     methods = maybe_disable_null_protocol(methods, failures)
 
-    return methods, spec, failures
+    return methods, specs, failures

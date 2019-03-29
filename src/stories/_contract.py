@@ -169,41 +169,40 @@ class Contract(object):
 # Wrap.
 
 
-def combine_contract(
-    first_spec,
-    first_cls_name,
-    first_method_name,
-    second_spec,
-    second_cls_name,
-    second_method_name,
-):
-    if first_spec is None and second_spec is None:
-        repeated = set()
-        spec = first_spec
-    elif isinstance(first_spec, PydanticSpec) and isinstance(second_spec, PydanticSpec):
-        repeated = set(first_spec.__fields__) & set(second_spec.__fields__)
-        spec = first_spec
-    elif isinstance(first_spec, MarshmallowSpec) and isinstance(
-        second_spec, MarshmallowSpec
-    ):
-        repeated = set(first_spec._declared_fields) & set(second_spec._declared_fields)
-        spec = first_spec
-    elif isinstance(first_spec, CerberusSpec) and isinstance(second_spec, CerberusSpec):
-        repeated = set(first_spec.schema) & set(second_spec.schema)
-        spec = first_spec
-    elif isinstance(first_spec, dict) and isinstance(second_spec, dict):
-        repeated = set(first_spec) & set(second_spec)
-        spec = first_spec
-    if repeated:
-        message = incompatible_contracts_template.format(
-            repeated=", ".join(map(repr, sorted(repeated))),
-            cls=first_cls_name,
-            method=first_method_name,
-            other_cls=second_cls_name,
-            other_method=second_method_name,
-        )
-        raise ContextContractError(message)
-    return spec
+def combine_contract(specs, tail):
+    for first_spec, first_cls_name, first_method_name in specs:
+        for second_spec, second_cls_name, second_method_name in tail:
+            if first_spec is None and second_spec is None:
+                repeated = set()
+            elif isinstance(first_spec, PydanticSpec) and isinstance(
+                second_spec, PydanticSpec
+            ):
+                repeated = set(first_spec.__fields__) & set(second_spec.__fields__)
+            elif isinstance(first_spec, MarshmallowSpec) and isinstance(
+                second_spec, MarshmallowSpec
+            ):
+                repeated = set(first_spec._declared_fields) & set(
+                    second_spec._declared_fields
+                )
+            elif isinstance(first_spec, CerberusSpec) and isinstance(
+                second_spec, CerberusSpec
+            ):
+                repeated = set(first_spec.schema) & set(second_spec.schema)
+            elif isinstance(first_spec, dict) and isinstance(second_spec, dict):
+                repeated = set(first_spec) & set(second_spec)
+            if repeated:
+                message = incompatible_contracts_template.format(
+                    repeated=", ".join(map(repr, sorted(repeated))),
+                    cls=first_cls_name,
+                    method=first_method_name,
+                    other_cls=second_cls_name,
+                    other_method=second_method_name,
+                )
+                raise ContextContractError(message)
+    contracts = []
+    contracts.extend(specs)
+    contracts.extend(tail)
+    return contracts
 
 
 # Messages.
