@@ -1,35 +1,34 @@
 import pytest
 
-import examples.context
-import examples.contract_raw
-import examples.failure_reasons
 import examples.methods
-import examples.shortcuts
+import examples.shortcuts  # noqa: F401
 
 
-contracts = [examples.contract_raw]
+def contracts():
+    import examples.contract_raw
 
+    yield examples.contract_raw
 
-try:
-    import examples.contract_pydantic
+    try:
+        import examples.contract_pydantic
 
-    contracts.append(examples.contract_pydantic)
-except (SyntaxError, ImportError):
-    pass
+        yield examples.contract_pydantic
+    except (SyntaxError, ImportError):
+        pass
 
-try:
-    import examples.contract_marshmallow
+    try:
+        import examples.contract_marshmallow
 
-    contracts.append(examples.contract_marshmallow)
-except ImportError:
-    pass
+        yield examples.contract_marshmallow
+    except ImportError:
+        pass
 
-try:
-    import examples.contract_cerberus
+    try:
+        import examples.contract_cerberus
 
-    contracts.append(examples.contract_cerberus)
-except ImportError:
-    pass
+        yield examples.contract_cerberus
+    except ImportError:
+        pass
 
 
 # Fixtures.
@@ -37,14 +36,18 @@ except ImportError:
 
 @pytest.fixture
 def c():
+    import examples.context
+
     return examples.context
 
 
 @pytest.fixture
 def f():
+    import examples.failure_reasons
+
     return examples.failure_reasons
 
 
-@pytest.fixture(params=contracts)
+@pytest.fixture(params=contracts())
 def m(request):
     return request.param

@@ -147,7 +147,7 @@ class ParamParent(object):
         I.after
 
 
-@ParamParent.a.contract
+@ParamParent.a.contract  # noqa: F811
 class Contract(BaseModel):
     ham: int
     eggs: int

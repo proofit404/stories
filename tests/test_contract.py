@@ -32,7 +32,6 @@ from stories.exceptions import ContextContractError
 #     of different types.
 
 
-@pytest.mark.parametrize("m", examples.contracts)
 def test_context_existed_variables(m):
     """
     We can not write a variable with the same name to the context
@@ -104,7 +103,6 @@ Use different names for Success() keyword arguments.
     assert str(exc_info.value) == expected
 
 
-@pytest.mark.parametrize("m", examples.contracts)
 def test_context_variables_normalization(m):
     """
     We apply normalization to the context variables, if story defines
@@ -159,7 +157,6 @@ def test_context_variables_normalization(m):
     assert getter().bar == 2
 
 
-@pytest.mark.parametrize("m", examples.contracts)
 def test_context_variables_validation(m):
     """
     We apply validators to the context variables, if story defines
@@ -237,7 +234,6 @@ bar:
     assert str(exc_info.value).startswith(expected)
 
 
-@pytest.mark.parametrize("m", examples.contracts)
 def test_story_arguments_validation(m):
     """
     We apply validators to the story arguments, if story defines
@@ -434,7 +430,6 @@ Use variables with different names.
     assert str(exc_info.value) == expected
 
 
-@pytest.mark.parametrize("m", examples.contracts)
 def test_context_unknown_variable(m):
     """
     Step can't use Success argument name which was not specified in
@@ -512,7 +507,6 @@ Use different names for Success() keyword arguments or add these names to the co
     assert str(exc_info.value) == expected
 
 
-@pytest.mark.parametrize("m", examples.contracts)
 def test_context_missing_arguments(m):
     """Check story and substory arguments are present in the context."""
 
