@@ -46,7 +46,7 @@ class Context(object):
 
 
 def assign_namespace(ctx, method, kwargs):
-    ctx._Context__ns.update(kwargs)
+    ctx._Context__ns.update((arg, kwargs[arg]) for arg in sorted(kwargs))
     line = "Set by %s.%s" % (method.__self__.__class__.__name__, method.__name__)
     ctx._Context__lines.extend([line] * len(kwargs))
 
