@@ -42,6 +42,8 @@ class Context(object):
         message = comparison_template.format(available=", ".join(map(repr, self.__ns)))
         raise MutationError(message)
 
+    __nonzero__ = __bool__
+
 
 def assign_namespace(ctx, method, kwargs):
     ctx._Context__ns.update(kwargs)
