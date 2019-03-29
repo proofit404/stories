@@ -37,6 +37,14 @@ class NormalParentMethod(object):
         return Success()
 
 
+class StringParentMethod(object):
+    def before(self, ctx):
+        return Success(foo="1", bar="2")
+
+    def after(self, ctx):
+        return Success()
+
+
 # Root mixins.
 
 
@@ -123,7 +131,7 @@ class ParentWithSame(object):
         I.after
 
 
-@ParentWithSame.a.contract
+@ParentWithSame.a.contract  # noqa: F811
 class Contract(BaseModel):
     foo: int
     bar: int
@@ -132,7 +140,7 @@ class Contract(BaseModel):
 
 class ParamParent(object):
     @story
-    @arguments("foo", "bar")
+    @arguments("ham", "eggs")
     def a(I):
         I.before
         I.x
@@ -141,14 +149,14 @@ class ParamParent(object):
 
 @ParamParent.a.contract
 class Contract(BaseModel):
-    foo: int
-    bar: int
-    baz: int
+    ham: int
+    eggs: int
+    beans: int
 
 
 class ParamParentWithNull(object):
     @story
-    @arguments("foo", "bar")
+    @arguments("ham", "eggs")
     def a(I):
         I.before
         I.x

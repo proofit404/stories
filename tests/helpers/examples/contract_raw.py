@@ -47,6 +47,25 @@ class NormalParentMethod(object):
         return Success()
 
 
+class StringParentMethod(object):
+    def before(self, ctx):
+        return Success(foo="1", bar="2")
+
+    def after(self, ctx):
+        return Success()
+
+
+# Root mixins.
+
+
+class NormalRootMethod(object):
+    def start(self, ctx):
+        return Success()
+
+    def finish(self, ctx):
+        return Success()
+
+
 # Base classes.
 
 
@@ -83,6 +102,17 @@ class ParamChildWithNull(object):
 # Parent base classes.
 
 
+class Parent(object):
+    @story
+    def a(I):
+        I.before
+        I.x
+        I.after
+
+
+Parent.a.contract({"ham": integer, "eggs": integer, "beans": integer})
+
+
 class ParentWithNull(object):
     @story
     def a(I):
@@ -104,20 +134,33 @@ ParentWithSame.a.contract({"foo": integer, "bar": integer, "baz": integer})
 
 class ParamParent(object):
     @story
-    @arguments("foo", "bar")
+    @arguments("ham", "eggs")
     def a(I):
         I.before
         I.x
         I.after
 
 
-ParamParent.a.contract({"foo": integer, "bar": integer, "baz": integer})
+ParamParent.a.contract({"ham": integer, "eggs": integer, "beans": integer})
 
 
 class ParamParentWithNull(object):
     @story
-    @arguments("foo", "bar")
+    @arguments("ham", "eggs")
     def a(I):
         I.before
         I.x
         I.after
+
+
+# Root base classes.
+
+
+class RootWithSame(object):
+    @story
+    def i(I):
+        I.start
+        I.a
+        I.finish
+
+    i.contract({"foo": integer, "bar": integer, "baz": integer})

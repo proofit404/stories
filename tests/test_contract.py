@@ -42,10 +42,10 @@ def test_context_existed_variables(m):
     class T(m.ParamChildWithNull, m.StringMethod):
         pass
 
-    class Q(m.ParamParentWithNull, m.NormalParentMethod, T):
+    class Q(m.ParentWithNull, m.StringParentMethod, T):
         pass
 
-    class J(m.ParamParentWithNull, m.NormalParentMethod):
+    class J(m.ParentWithNull, m.StringParentMethod):
         def __init__(self):
             self.x = T().x
 
@@ -78,11 +78,11 @@ Use different names for Success() keyword arguments.
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        Q().a(foo=1, bar=2)
+        Q().a()
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        Q().a.run(foo=1, bar=2)
+        Q().a.run()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -96,11 +96,11 @@ Use different names for Success() keyword arguments.
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        J().a(foo=1, bar=2)
+        J().a()
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        J().a.run(foo=1, bar=2)
+        J().a.run()
     assert str(exc_info.value) == expected
 
 
@@ -115,10 +115,10 @@ def test_context_variables_normalization(m):
     class T(m.Child, m.StringMethod):
         pass
 
-    class Q(m.ParentWithNull, m.NormalParentMethod, T):
+    class Q(m.Parent, m.NormalParentMethod, T):
         pass
 
-    class J(m.ParentWithNull, m.NormalParentMethod):
+    class J(m.Parent, m.NormalParentMethod):
         def __init__(self):
             self.x = T().x
 
@@ -169,10 +169,10 @@ def test_context_variables_validation(m):
     class T(m.Child, m.WrongMethod):
         pass
 
-    class Q(m.ParentWithNull, m.NormalParentMethod, T):
+    class Q(m.Parent, m.NormalParentMethod, T):
         pass
 
-    class J(m.ParentWithNull, m.NormalParentMethod):
+    class J(m.Parent, m.NormalParentMethod):
         def __init__(self):
             self.x = T().x
 
@@ -248,12 +248,12 @@ def test_story_arguments_validation(m):
     class T(m.ParamChild, m.NormalMethod):
         pass
 
-    class Q(m.ParamParent, m.NormalParentMethod, m.ChildWithNull, m.NormalMethod):
+    class Q(m.ParamParent, m.NormalParentMethod, m.Child, m.NormalMethod):
         pass
 
     class J(m.ParamParent, m.NormalParentMethod):
         def __init__(self):
-            class T(m.ChildWithNull, m.NormalMethod):
+            class T(m.Child, m.NormalMethod):
                 pass
 
             self.x = T().x
@@ -281,41 +281,41 @@ bar:
     # Substory inheritance.
 
     expected = """
-These arguments violates context contract: 'bar', 'foo'
+These arguments violates context contract: 'eggs', 'ham'
 
 Story method: Q.a
 
 Violations:
 
-bar:
+eggs:
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        Q().a(foo="<boom>", bar="<boom>")
+        Q().a(ham="<boom>", eggs="<boom>")
     assert str(exc_info.value).startswith(expected)
 
     with pytest.raises(ContextContractError) as exc_info:
-        Q().a.run(foo="<boom>", bar="<boom>")
+        Q().a.run(ham="<boom>", eggs="<boom>")
     assert str(exc_info.value).startswith(expected)
 
     # Substory DI.
 
     expected = """
-These arguments violates context contract: 'bar', 'foo'
+These arguments violates context contract: 'eggs', 'ham'
 
 Story method: J.a
 
 Violations:
 
-bar:
+eggs:
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        J().a(foo="<boom>", bar="<boom>")
+        J().a(ham="<boom>", eggs="<boom>")
     assert str(exc_info.value).startswith(expected)
 
     with pytest.raises(ContextContractError) as exc_info:
-        J().a.run(foo="<boom>", bar="<boom>")
+        J().a.run(ham="<boom>", eggs="<boom>")
     assert str(exc_info.value).startswith(expected)
 
 
@@ -444,10 +444,10 @@ def test_context_unknown_variable(m):
     class T(m.Child, m.UnknownMethod):
         pass
 
-    class Q(m.ParentWithNull, m.NormalParentMethod, T):
+    class Q(m.Parent, m.NormalParentMethod, T):
         pass
 
-    class J(m.ParentWithNull, m.NormalParentMethod):
+    class J(m.Parent, m.NormalParentMethod):
         def __init__(self):
             self.x = T().x
 

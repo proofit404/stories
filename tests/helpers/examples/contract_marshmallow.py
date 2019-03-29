@@ -37,6 +37,25 @@ class NormalParentMethod(object):
         return Success()
 
 
+class StringParentMethod(object):
+    def before(self, ctx):
+        return Success(foo="1", bar="2")
+
+    def after(self, ctx):
+        return Success()
+
+
+# Root mixins.
+
+
+class NormalRootMethod(object):
+    def start(self, ctx):
+        return Success()
+
+    def finish(self, ctx):
+        return Success()
+
+
 # Base classes.
 
 
@@ -81,6 +100,21 @@ class ParamChildWithNull(object):
 # Parent base classes.
 
 
+class Parent(object):
+    @story
+    def a(I):
+        I.before
+        I.x
+        I.after
+
+
+@Parent.a.contract
+class Contract(Schema):
+    ham = fields.Integer()
+    eggs = fields.Integer()
+    beans = fields.Integer()
+
+
 class ParentWithNull(object):
     @story
     def a(I):
@@ -97,7 +131,7 @@ class ParentWithSame(object):
         I.after
 
 
-@ParentWithSame.a.contract
+@ParentWithSame.a.contract  # noqa: F811
 class Contract(Schema):
     foo = fields.Integer()
     bar = fields.Integer()
@@ -106,24 +140,41 @@ class Contract(Schema):
 
 class ParamParent(object):
     @story
-    @arguments("foo", "bar")
+    @arguments("ham", "eggs")
     def a(I):
         I.before
         I.x
         I.after
 
 
-@ParamParent.a.contract
+@ParamParent.a.contract  # noqa: F811
 class Contract(Schema):
-    foo = fields.Integer()
-    bar = fields.Integer()
-    baz = fields.Integer()
+    ham = fields.Integer()
+    eggs = fields.Integer()
+    beans = fields.Integer()
 
 
 class ParamParentWithNull(object):
     @story
-    @arguments("foo", "bar")
+    @arguments("ham", "eggs")
     def a(I):
         I.before
         I.x
         I.after
+
+
+# Root base classes.
+
+
+class RootWithSame(object):
+    @story
+    def i(I):
+        I.start
+        I.a
+        I.finish
+
+    @i.contract
+    class Contract(Schema):
+        foo = fields.Integer()
+        bar = fields.Integer()
+        baz = fields.Integer()

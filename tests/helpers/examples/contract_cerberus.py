@@ -37,6 +37,25 @@ class NormalParentMethod(object):
         return Success()
 
 
+class StringParentMethod(object):
+    def before(self, ctx):
+        return Success(foo="1", bar="2")
+
+    def after(self, ctx):
+        return Success()
+
+
+# Root mixins.
+
+
+class NormalRootMethod(object):
+    def start(self, ctx):
+        return Success()
+
+    def finish(self, ctx):
+        return Success()
+
+
 # Base classes.
 
 
@@ -89,6 +108,25 @@ class ParamChildWithNull(object):
 # Parent base classes.
 
 
+class Parent(object):
+    @story
+    def a(I):
+        I.before
+        I.x
+        I.after
+
+
+Parent.a.contract(
+    Validator(
+        {
+            "ham": {"type": "integer", "coerce": int},
+            "eggs": {"type": "integer", "coerce": int},
+            "beans": {"type": "integer", "coerce": int},
+        }
+    )
+)
+
+
 class ParentWithNull(object):
     @story
     def a(I):
@@ -118,7 +156,7 @@ ParentWithSame.a.contract(
 
 class ParamParent(object):
     @story
-    @arguments("foo", "bar")
+    @arguments("ham", "eggs")
     def a(I):
         I.before
         I.x
@@ -128,9 +166,9 @@ class ParamParent(object):
 ParamParent.a.contract(
     Validator(
         {
-            "foo": {"type": "integer", "coerce": int},
-            "bar": {"type": "integer", "coerce": int},
-            "baz": {"type": "integer", "coerce": int},
+            "ham": {"type": "integer", "coerce": int},
+            "eggs": {"type": "integer", "coerce": int},
+            "beans": {"type": "integer", "coerce": int},
         }
     )
 )
@@ -138,8 +176,29 @@ ParamParent.a.contract(
 
 class ParamParentWithNull(object):
     @story
-    @arguments("foo", "bar")
+    @arguments("ham", "eggs")
     def a(I):
         I.before
         I.x
         I.after
+
+
+# Root base classes.
+
+
+class RootWithSame(object):
+    @story
+    def i(I):
+        I.start
+        I.a
+        I.finish
+
+    i.contract(
+        Validator(
+            {
+                "foo": {"type": "integer", "coerce": int},
+                "bar": {"type": "integer", "coerce": int},
+                "baz": {"type": "integer", "coerce": int},
+            }
+        )
+    )

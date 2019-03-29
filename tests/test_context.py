@@ -666,10 +666,10 @@ def test_context_representation_with_context_contract_error(m):
     class T(m.ParamChildWithNull, m.StringMethod):
         pass
 
-    class Q(m.ParamParentWithNull, m.NormalParentMethod, T):
+    class Q(m.ParamParentWithNull, m.StringParentMethod, T):
         pass
 
-    class J(m.ParamParentWithNull, m.NormalParentMethod):
+    class J(m.ParamParentWithNull, m.StringParentMethod):
         def __init__(self):
             self.x = T().x
 
@@ -703,18 +703,20 @@ Q.a
     one (errored: ContextContractError)
 
 Context:
-  foo: 1  # Story argument
-  bar: 2  # Story argument
+  ham: 1    # Story argument
+  eggs: 2   # Story argument
+  bar: '2'  # Set by Q.before
+  foo: '1'  # Set by Q.before
     """.strip()
 
     getter = make_collector()
     with pytest.raises(ContextContractError):
-        Q().a(foo=1, bar=2)
+        Q().a(ham=1, eggs=2)
     assert repr(getter()) == expected
 
     getter = make_collector()
     with pytest.raises(ContextContractError):
-        Q().a.run(foo=1, bar=2)
+        Q().a.run(ham=1, eggs=2)
     assert repr(getter()) == expected
 
     # Substory DI.
@@ -726,18 +728,20 @@ J.a
     one (errored: ContextContractError)
 
 Context:
-  foo: 1  # Story argument
-  bar: 2  # Story argument
+  ham: 1    # Story argument
+  eggs: 2   # Story argument
+  bar: '2'  # Set by J.before
+  foo: '1'  # Set by J.before
     """.strip()
 
     getter = make_collector()
     with pytest.raises(ContextContractError):
-        J().a(foo=1, bar=2)
+        J().a(ham=1, eggs=2)
     assert repr(getter()) == expected
 
     getter = make_collector()
     with pytest.raises(ContextContractError):
-        J().a.run(foo=1, bar=2)
+        J().a.run(ham=1, eggs=2)
     assert repr(getter()) == expected
 
 
