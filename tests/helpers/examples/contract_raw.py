@@ -66,6 +66,14 @@ class NormalRootMethod(object):
         return Success()
 
 
+class StringRootMethod(object):
+    def start(self, ctx):
+        return Success(foo="1", bar="2")
+
+    def finish(self, ctx):
+        return Success()
+
+
 # Base classes.
 
 
@@ -154,6 +162,16 @@ class ParamParentWithNull(object):
 
 
 # Root base classes.
+
+
+class Root(object):
+    @story
+    def i(I):
+        I.start
+        I.a
+        I.finish
+
+    i.contract({"fizz": integer, "buzz": integer})
 
 
 class RootWithSame(object):

@@ -1,6 +1,5 @@
 import pytest
 
-import examples
 from helpers import make_collector
 from stories.exceptions import ContextContractError
 
@@ -361,7 +360,6 @@ eggs:
     assert str(exc_info.value).startswith(expected)
 
 
-@pytest.mark.paramparent("m", examples.contracts)
 def test_composition_contract_conflict(m):
     """
     Story and substory contracts can not declare the same variable
@@ -415,7 +413,6 @@ Use variables with different names.
     assert str(exc_info.value) == expected
 
 
-@pytest.mark.paramparent("m", examples.contracts)
 def test_many_levels_composition_contract_conflict(m):
     """
     Story and substory contracts can not declare the same variable
@@ -685,3 +682,71 @@ Context()
     with pytest.raises(ContextContractError) as exc_info:
         J().a.run()
     assert str(exc_info.value) == expected
+
+
+def test_parent_steps_set_story_arguments(m):
+    """
+    Steps of parent stories should be able to set child stories
+    arguments with `Success` marker keyword arguments.
+    """
+
+    class T(m.ParamChild, m.NormalMethod):
+        pass
+
+    class Q(m.Parent, m.StringParentMethod, T):
+        pass
+
+    class J(m.Parent, m.StringParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    class R(m.Root, m.StringRootMethod, m.Parent, m.NormalParentMethod, T):
+        pass
+
+    class F(m.Root, m.StringRootMethod):
+        def __init__(self):
+            self.a = J().a
+
+    # Substory inheritance.
+
+    getter = make_collector()
+    Q().a()
+    assert getter().foo == 1
+    assert getter().bar == 2
+
+    getter = make_collector()
+    Q().a.run()
+    assert getter().foo == 1
+    assert getter().bar == 2
+
+    getter = make_collector()
+    R().i()
+    assert getter().foo == 1
+    assert getter().bar == 2
+
+    getter = make_collector()
+    R().i.run()
+    assert getter().foo == 1
+    assert getter().bar == 2
+
+    # Substory DI.
+
+    getter = make_collector()
+    J().a()
+    assert getter().foo == 1
+    assert getter().bar == 2
+
+    getter = make_collector()
+    J().a.run()
+    assert getter().foo == 1
+    assert getter().bar == 2
+
+    getter = make_collector()
+    F().i()
+    assert getter().foo == 1
+    assert getter().bar == 2
+
+    getter = make_collector()
+    F().i.run()
+    assert getter().foo == 1
+    assert getter().bar == 2
