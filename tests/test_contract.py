@@ -471,7 +471,7 @@ Use variables with different names.
     assert str(exc_info.value) == expected
 
 
-def test_composition_contract_incompatible_types(m):
+def test_composition_incompatible_contracts(m):
     """Deny to use different types in the story composition."""
 
     class T(m.Child, m.NormalMethod):

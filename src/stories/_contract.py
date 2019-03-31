@@ -10,31 +10,53 @@ from .exceptions import ContextContractError
 #     This way we also can require a certain substory to declare
 #     context variable for parent story.
 
+# Declared validators.
+
+
+def available_null(spec):
+    return None
+
+
+def available_pydantic(spec):
+    return set(spec.__fields__)
+
+
+def available_marshmallow(spec):
+    return set(spec._declared_fields)
+
+
+def available_cerberus(spec):
+    return set(spec.schema)
+
+
+def available_raw(spec):
+    return set(spec)
+
 
 # Unknown variables.
 
 
 def unknown_null(spec, kwargs):
-    return [], None
+    return set(), None
 
 
 def unknown_pydantic(spec, kwargs):
-    available = set(spec.__fields__)
+    available = available_pydantic(spec)
     return set(kwargs) - available, available
 
 
 def unknown_marshmallow(spec, kwargs):
-    available = set(spec._declared_fields)
+    available = available_marshmallow(spec)
     return set(kwargs) - available, available
 
 
 def unknown_cerberus(spec, kwargs):
-    available = set(spec.schema)
+    available = available_cerberus(spec)
     return set(kwargs) - available, available
 
 
 def unknown_raw(spec, kwargs):
-    available = set(spec)
+    available = available_raw(spec)
     return set(kwargs) - available, available
 
 
@@ -85,31 +107,63 @@ def validate_raw(spec, ns, keys):
 
 def make_contract(cls_name, name, arguments, spec):
     if spec is None:
+        available_func = available_null
         unknown_func = unknown_null
         validate_func = validate_null
     elif isinstance(spec, PydanticSpec):
+        available_func = available_pydantic
         unknown_func = unknown_pydantic
         validate_func = validate_pydantic
     elif isinstance(spec, MarshmallowSpec):
+        available_func = available_marshmallow
         unknown_func = unknown_marshmallow
         validate_func = validate_marshmallow
     elif isinstance(spec, CerberusSpec):
+        available_func = available_cerberus
         unknown_func = unknown_cerberus
         validate_func = validate_cerberus
     elif isinstance(spec, dict):
+        available_func = available_raw
         unknown_func = unknown_raw
         validate_func = validate_raw
-    return Contract(cls_name, name, arguments, spec, unknown_func, validate_func)
+    return Contract(
+        cls_name, name, arguments, spec, available_func, unknown_func, validate_func
+    )
 
 
 class Contract(object):
-    def __init__(self, cls_name, name, arguments, spec, unknown_func, validate_func):
+    def __init__(
+        self,
+        cls_name,
+        name,
+        arguments,
+        spec,
+        available_func,
+        unknown_func,
+        validate_func,
+    ):
         self.cls_name = cls_name
         self.name = name
         self.arguments = arguments
         self.spec = spec
+        self.available_func = available_func
         self.unknown_func = unknown_func
         self.validate_func = validate_func
+
+        self.check_arguments_definitions()
+
+    def check_arguments_definitions(self):
+        available = self.available_func(self.spec)
+        if available is not None:
+            undefined = set(self.arguments) - available
+            if undefined:
+                message = undefined_argument_template.format(
+                    undefined=", ".join(sorted(undefined)),
+                    cls=self.cls_name,
+                    method=self.name,
+                    arguments=", ".join(self.arguments),
+                )
+                raise ContextContractError(message)
 
     def check_story_arguments(self, ctx):
         missed = set(self.arguments) - set(ctx._Context__ns)
@@ -216,6 +270,15 @@ def combine_contract(specs, tail):
 
 
 # Messages.
+
+
+undefined_argument_template = """
+These arguments should be declared in the context contract: {undefined}
+
+Story method: {cls}.{method}
+
+Story arguments: {arguments}
+""".strip()
 
 
 missed_variable_template = """
