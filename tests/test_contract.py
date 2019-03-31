@@ -11,8 +11,6 @@ from stories.exceptions import ContextContractError
 # [ ] Deny to normalize substory arguments set by parent story
 #     methods.
 #
-# [ ] Context validators should present for every story argument.
-#
 # [ ] Deny unknown arguments to story call.
 #
 # [ ] Collect arguments from all substories.  Allow to pass arguments
@@ -750,3 +748,62 @@ def test_parent_steps_set_story_arguments(m):
     F().i.run()
     assert getter().foo == 1
     assert getter().bar == 2
+
+
+def test_arguments_should_be_declared_in_contract(m):
+    """
+    We should require all story arguments to be declared in the
+    context contract.
+    """
+
+    class T(m.ParamChildWithShrink, m.NormalMethod):
+        pass
+
+    class Q(m.Parent, m.NormalParentMethod, T):
+        pass
+
+    class J(m.Parent, m.NormalParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    # Simple.
+
+    expected = """
+These arguments should be declared in the context contract: bar, foo
+
+Story method: T.x
+
+Story arguments: foo, bar, baz
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        T().x
+    assert str(exc_info.value) == expected
+
+    # Substory inheritance.
+
+    expected = """
+These arguments should be declared in the context contract: bar, foo
+
+Story method: Q.x
+
+Story arguments: foo, bar, baz
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        Q().a
+    assert str(exc_info.value) == expected
+
+    # Substory DI.
+
+    expected = """
+These arguments should be declared in the context contract: bar, foo
+
+Story method: T.x
+
+Story arguments: foo, bar, baz
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        J().a
+    assert str(exc_info.value) == expected

@@ -107,6 +107,15 @@ class ParamChildWithNull(object):
         I.one
 
 
+class ParamChildWithShrink(object):
+    @story
+    @arguments("foo", "bar", "baz")
+    def x(I):
+        I.one
+
+    contract = x.contract({"baz": integer})
+
+
 # Parent base classes.
 
 

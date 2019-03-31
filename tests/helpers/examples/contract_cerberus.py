@@ -113,6 +113,15 @@ class ParamChildWithNull(object):
         I.one
 
 
+class ParamChildWithShrink(object):
+    @story
+    @arguments("foo", "bar", "baz")
+    def x(I):
+        I.one
+
+    contract = x.contract(Validator({"baz": {"type": "integer", "coerce": int}}))
+
+
 # Parent base classes.
 
 
