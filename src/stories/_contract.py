@@ -9,12 +9,18 @@ from .exceptions import ContextContractError
 #     addition in the story "this integer should be greater then 7".
 #     This way we also can require a certain substory to declare
 #     context variable for parent story.
+#
+# [ ] Split `Contract` class into `NullContract` and `SpecContract`
+#     classes.  Checking `self.spec is None` at the beginning of
+#     methods is ugly.  Drop `available_null` and `validate_null`
+#     functions.
+
 
 # Declared validators.
 
 
 def available_null(spec):
-    return None
+    raise Exception
 
 
 def available_pydantic(spec):
@@ -31,33 +37,6 @@ def available_cerberus(spec):
 
 def available_raw(spec):
     return set(spec)
-
-
-# Unknown variables.
-
-
-def unknown_null(spec, kwargs):
-    return set(), None
-
-
-def unknown_pydantic(spec, kwargs):
-    available = available_pydantic(spec)
-    return set(kwargs) - available, available
-
-
-def unknown_marshmallow(spec, kwargs):
-    available = available_marshmallow(spec)
-    return set(kwargs) - available, available
-
-
-def unknown_cerberus(spec, kwargs):
-    available = available_cerberus(spec)
-    return set(kwargs) - available, available
-
-
-def unknown_raw(spec, kwargs):
-    available = available_raw(spec)
-    return set(kwargs) - available, available
 
 
 # Validation.
@@ -86,7 +65,7 @@ def validate_marshmallow(spec, ns, keys):
 
 
 def validate_cerberus(spec, ns, keys):
-    validator = CerberusSpec()
+    validator = CerberusSpec(allow_unknown=True)
     validator.validate(ns, spec.schema.schema)
     return validator.document, validator.errors
 
@@ -108,62 +87,50 @@ def validate_raw(spec, ns, keys):
 def make_contract(cls_name, name, arguments, spec):
     if spec is None:
         available_func = available_null
-        unknown_func = unknown_null
         validate_func = validate_null
     elif isinstance(spec, PydanticSpec):
         available_func = available_pydantic
-        unknown_func = unknown_pydantic
         validate_func = validate_pydantic
     elif isinstance(spec, MarshmallowSpec):
         available_func = available_marshmallow
-        unknown_func = unknown_marshmallow
         validate_func = validate_marshmallow
     elif isinstance(spec, CerberusSpec):
         available_func = available_cerberus
-        unknown_func = unknown_cerberus
         validate_func = validate_cerberus
     elif isinstance(spec, dict):
         available_func = available_raw
-        unknown_func = unknown_raw
         validate_func = validate_raw
-    return Contract(
-        cls_name, name, arguments, spec, available_func, unknown_func, validate_func
-    )
+    return Contract(cls_name, name, arguments, spec, available_func, validate_func)
 
 
 class Contract(object):
-    def __init__(
-        self,
-        cls_name,
-        name,
-        arguments,
-        spec,
-        available_func,
-        unknown_func,
-        validate_func,
-    ):
+    def __init__(self, cls_name, name, arguments, spec, available_func, validate_func):
         self.cls_name = cls_name
         self.name = name
         self.arguments = arguments
         self.spec = spec
         self.available_func = available_func
-        self.unknown_func = unknown_func
         self.validate_func = validate_func
-
+        self.subcontracts = []
         self.check_arguments_definitions()
 
+    def add_substory_contract(self, contract):
+        self.subcontracts.append(contract)
+
     def check_arguments_definitions(self):
-        available = self.available_func(self.spec)
-        if available is not None:
-            undefined = set(self.arguments) - available
-            if undefined:
-                message = undefined_argument_template.format(
-                    undefined=", ".join(sorted(undefined)),
-                    cls=self.cls_name,
-                    method=self.name,
-                    arguments=", ".join(self.arguments),
-                )
-                raise ContextContractError(message)
+        # vvv
+        if self.spec is None:
+            return
+        # ^^^
+        undefined = set(self.arguments) - self.available_func(self.spec)
+        if undefined:
+            message = undefined_argument_template.format(
+                undefined=", ".join(sorted(undefined)),
+                cls=self.cls_name,
+                method=self.name,
+                arguments=", ".join(self.arguments),
+            )
+            raise ContextContractError(message)
 
     def check_story_arguments(self, ctx):
         missed = set(self.arguments) - set(ctx._Context__ns)
@@ -176,6 +143,10 @@ class Contract(object):
                 ctx=ctx,
             )
             raise ContextContractError(message)
+        # vvv
+        if self.spec is None:
+            return
+        # ^^^
         kwargs, errors = self.validate_func(self.spec, ctx._Context__ns, self.arguments)
         if errors:
             message = invalid_argument_template.format(
@@ -197,7 +168,11 @@ class Contract(object):
                 method=method.__name__,
             )
             raise ContextContractError(message)
-        unknown_variables, available = self.unknown_func(self.spec, ns)
+        # vvv
+        if self.spec is None:
+            return ns
+        # ^^^
+        unknown_variables, available = self.get_unknown_variables(ns)
         if unknown_variables:
             message = unknown_variable_template.format(
                 unknown=", ".join(map(repr, sorted(unknown_variables))),
@@ -206,7 +181,7 @@ class Contract(object):
                 method=method.__name__,
             )
             raise ContextContractError(message)
-        kwargs, errors = self.validate_func(self.spec, ns, ns)
+        kwargs, errors = self.get_invalid_variables(ns)
         if errors:
             message = invalid_variable_template.format(
                 variables=", ".join(map(repr, sorted(errors))),
@@ -218,6 +193,22 @@ class Contract(object):
             )
             raise ContextContractError(message)
         return kwargs
+
+    def get_unknown_variables(self, ns):
+        available = self.available_func(self.spec)
+        unknown_variables = set(ns) - available
+        for contract in self.subcontracts:
+            unknown_variables, _ = contract.get_unknown_variables(unknown_variables)
+        return unknown_variables, available
+
+    def get_invalid_variables(self, ns):
+        available = self.available_func(self.spec)
+        kwargs, errors = self.validate_func(self.spec, ns, set(ns) & available)
+        for contract in self.subcontracts:
+            sub_kwargs, sub_errors = contract.get_invalid_variables(ns)
+            kwargs.update(sub_kwargs)
+            errors.update(sub_errors)
+        return kwargs, errors
 
 
 # Wrap.

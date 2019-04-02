@@ -703,6 +703,10 @@ def test_parent_steps_set_story_arguments(m):
 
     class F(m.Root, m.StringRootMethod):
         def __init__(self):
+            class J(m.Parent, m.NormalParentMethod):
+                def __init__(self):
+                    self.x = T().x
+
             self.a = J().a
 
     # Substory inheritance.

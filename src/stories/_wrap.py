@@ -20,6 +20,8 @@ def wrap_story(arguments, collected, cls_name, story_name, obj, spec, failures):
             methods.append((attr, contract, protocol))
             continue
 
+        contract.add_substory_contract(attr.methods[0][1])
+
         specs = combine_contract(specs, attr.specs)
 
         failures = combine_failures(
