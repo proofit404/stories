@@ -31,13 +31,13 @@ class ClassMountedStory(object):
 
 
 class MountedStory(object):
-    def __init__(self, obj, cls_name, name, arguments, methods, contract, failures):
+    def __init__(self, obj, cls_name, name, arguments, methods, specs, failures):
         self.obj = obj
         self.cls_name = cls_name
         self.name = name
         self.arguments = arguments
         self.methods = methods
-        self.contract = contract
+        self.specs = specs
         self.failures = failures
 
     def __call__(self, **kwargs):
