@@ -1,7 +1,8 @@
+import inspect
 from ._argument import get_arguments
 from ._collect import collect_story
 from ._failures import check_data_type
-from ._mounted import ClassMountedStory, MountedStory
+from ._mounted import ClassMountedStory, MountedStory, AsyncMountedStory
 from ._wrap import wrap_story
 
 
@@ -28,6 +29,10 @@ class Story(object):
                 self.__contract,
                 self.__failures,
             )
+            if any(inspect.iscoroutinefunction(item[0]) for item in methods):
+                return AsyncMountedStory(
+                    obj, cls.__name__, self.name, self.arguments, methods, specs, failures
+                )
             return MountedStory(
                 obj,
                 cls.__name__,

@@ -67,3 +67,18 @@ class MountedStory(object):
                 if method_type is BeginningOfStory:
                     indent += 1
         return "\n".join(result)
+
+
+class AsyncMountedStory(MountedStory):
+    async def __call__(self, **kwargs):
+        history = History()
+        ctx = make_context(self.arguments, kwargs, history)
+        runner = Call()
+        return await function.execute_async(runner, ctx, history, self.methods)
+
+    async def run(self, **kwargs):
+        history = History()
+        ctx = make_context(self.arguments, kwargs, history)
+        run_protocol = make_run_protocol(self.failures, self.cls_name, self.name)
+        runner = Run(run_protocol)
+        return await function.execute_async(runner, ctx, history, self.methods)
