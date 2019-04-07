@@ -1,4 +1,5 @@
 from collections import OrderedDict
+from decimal import Decimal
 
 from ._compat import indent
 from .exceptions import MutationError
@@ -64,7 +65,7 @@ def context_representation(ctx, repr_func=repr):
     longest = 0
     for key, value in ctx._Context__ns.items():
         for seen_key, seen_value in seen:
-            if value is seen_value:
+            if value is seen_value and type(value) not in [bool, int, float, Decimal]:
                 item = "`%s` alias" % (seen_key,)
                 break
         else:

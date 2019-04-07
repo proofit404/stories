@@ -1,3 +1,5 @@
+import decimal
+
 import pytest
 
 import examples
@@ -1075,6 +1077,88 @@ Context:
   bar: 'baz'        # Story argument
   foo: `bar` alias  # Set by T.one
     """.strip()
+
+    getter = make_collector()
+    J().a(bar=T.foo)
+    assert repr(getter()) == expected
+
+    getter = make_collector()
+    J().a.run(bar=T.foo)
+    assert repr(getter()) == expected
+
+
+@pytest.mark.parametrize("arg", [True, 1, 1.0, decimal.Decimal("1.0")])
+def test_context_representation_variable_aliases_ignore(c, arg):
+    class T(c.ParamChild, c.NormalMethod):
+        foo = arg
+
+    class Q(c.ParamParent, c.NormalParentMethod, T):
+        pass
+
+    class J(c.ParamParent, c.NormalParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    # Simple.
+
+    expected = """
+T.x
+  one
+
+Context:
+  bar: %(arg)s  # Story argument
+  foo: %(arg)s  # Set by T.one
+    """.strip() % {
+        "arg": repr(arg)
+    }
+
+    getter = make_collector()
+    T().x(bar=T.foo)
+    assert repr(getter()) == expected
+
+    getter = make_collector()
+    T().x.run(bar=T.foo)
+    assert repr(getter()) == expected
+
+    # Substory inheritance.
+
+    expected = """
+Q.a
+  before
+  x
+    one
+  after
+
+Context:
+  bar: %(arg)s  # Story argument
+  foo: %(arg)s  # Set by Q.one
+    """.strip() % {
+        "arg": repr(arg)
+    }
+
+    getter = make_collector()
+    Q().a(bar=T.foo)
+    assert repr(getter()) == expected
+
+    getter = make_collector()
+    Q().a.run(bar=T.foo)
+    assert repr(getter()) == expected
+
+    # Substory DI.
+
+    expected = """
+J.a
+  before
+  x (T.x)
+    one
+  after
+
+Context:
+  bar: %(arg)s  # Story argument
+  foo: %(arg)s  # Set by T.one
+    """.strip() % {
+        "arg": repr(arg)
+    }
 
     getter = make_collector()
     J().a(bar=T.foo)
