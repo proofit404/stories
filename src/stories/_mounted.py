@@ -42,13 +42,13 @@ class MountedStory(object):
 
     def __call__(self, **kwargs):
         history = History()
-        ctx = make_context(self.arguments, kwargs, history)
+        ctx = make_context(self.methods[0][1], kwargs, history)
         runner = Call()
         return function.execute(runner, ctx, history, self.methods)
 
     def run(self, **kwargs):
         history = History()
-        ctx = make_context(self.arguments, kwargs, history)
+        ctx = make_context(self.methods[0][1], kwargs, history)
         run_protocol = make_run_protocol(self.failures, self.cls_name, self.name)
         runner = Run(run_protocol)
         return function.execute(runner, ctx, history, self.methods)

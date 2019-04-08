@@ -132,22 +132,12 @@ class Contract(object):
             )
             raise ContextContractError(message)
 
-    def check_story_arguments(self, ctx):
-        missed = set(self.arguments) - set(ctx._Context__ns)
-        if missed:
-            message = missed_variable_template.format(
-                missed=", ".join(sorted(missed)),
-                cls=self.cls_name,
-                method=self.name,
-                arguments=", ".join(self.arguments),
-                ctx=ctx,
-            )
-            raise ContextContractError(message)
+    def check_story_call(self, kwargs):
         # vvv
         if self.spec is None:
-            return
+            return kwargs
         # ^^^
-        kwargs, errors = self.validate_func(self.spec, ctx._Context__ns, self.arguments)
+        kwargs, errors = self.get_invalid_variables(kwargs)
         if errors:
             message = invalid_argument_template.format(
                 variables=", ".join(map(repr, sorted(errors))),
@@ -156,6 +146,19 @@ class Contract(object):
                 violations="\n\n".join(
                     [key + ":\n  " + "\n  ".join(errors[key]) for key in sorted(errors)]
                 ),
+            )
+            raise ContextContractError(message)
+        return kwargs
+
+    def check_substory_call(self, ctx):
+        missed = set(self.arguments) - set(ctx._Context__ns)
+        if missed:
+            message = missed_variable_template.format(
+                missed=", ".join(sorted(missed)),
+                cls=self.cls_name,
+                method=self.name,
+                arguments=", ".join(self.arguments),
+                ctx=ctx,
             )
             raise ContextContractError(message)
 

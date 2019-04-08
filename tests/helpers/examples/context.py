@@ -1,4 +1,4 @@
-from stories import Success, arguments, story
+from stories import Result, Success, arguments, story
 
 
 # Mixins.
@@ -25,6 +25,11 @@ class CompareMethod(object):
             pass
 
 
+class DirMethod(object):
+    def one(self, ctx):
+        return Result(dir(ctx))
+
+
 # Parent mixins.
 
 
@@ -34,6 +39,14 @@ class NormalParentMethod(object):
 
     def after(self, ctx):
         return Success()
+
+
+class DirParentMethod(object):
+    def before(self, ctx):
+        return Success()
+
+    def after(self, ctx):
+        return Result(dir(ctx))
 
 
 # Base classes.

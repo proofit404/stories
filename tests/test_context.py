@@ -4,8 +4,6 @@ import pytest
 
 import examples
 from helpers import make_collector
-from stories._context import make_context
-from stories._history import History
 from stories.exceptions import (
     ContextContractError,
     FailureError,
@@ -14,14 +12,50 @@ from stories.exceptions import (
 )
 
 
-def test_context_dir():
+def test_context_dir(c):
     """Show context variables in the `dir` output."""
 
-    class Ctx(object):
-        a = 2
-        b = 2
+    class T(c.ParamChild, c.DirMethod):
+        pass
 
-    assert dir(make_context(["a", "b"], {"a": 2, "b": 2}, History())) == dir(Ctx())
+    class Q(c.ParamParent, c.DirParentMethod, c.Child, c.NormalMethod):
+        foo = 1
+
+    class J(c.ParamParent, c.DirParentMethod):
+        def __init__(self):
+            class T(c.Child, c.NormalMethod):
+                foo = 1
+
+            self.x = T().x
+
+    # Simple.
+
+    class Ctx(object):
+        bar = 2
+
+    assert T().x(bar=2) == dir(Ctx())
+
+    assert T().x.run(bar=2).value == dir(Ctx())
+
+    # Substory inheritance.
+
+    class Ctx(object):
+        foo = 1
+        bar = 2
+
+    assert Q().a(bar=2) == dir(Ctx())
+
+    assert Q().a.run(bar=2).value == dir(Ctx())
+
+    # Substory DI.
+
+    class Ctx(object):
+        foo = 1
+        bar = 2
+
+    assert J().a(bar=1) == dir(Ctx())
+
+    assert J().a.run(bar=1).value == dir(Ctx())
 
 
 def test_deny_context_attribute_assignment(c):
