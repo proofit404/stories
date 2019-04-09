@@ -137,6 +137,15 @@ class Contract(object):
         if self.spec is None:
             return kwargs
         # ^^^
+        unknown_arguments = set(kwargs) - set(self.arguments)
+        if unknown_arguments:
+            message = unknown_argument_template.format(
+                unknown=", ".join(sorted(unknown_arguments)),
+                cls=self.cls_name,
+                method=self.name,
+                arguments=", ".join(self.arguments),
+            )
+            raise ContextContractError(message)
         kwargs, errors = self.get_invalid_variables(kwargs)
         if errors:
             message = invalid_argument_template.format(
@@ -303,6 +312,15 @@ Available variables are: {available}
 Function returned value: {cls}.{method}
 
 Use different names for Success() keyword arguments or add these names to the contract.
+""".strip()
+
+
+unknown_argument_template = """
+These arguments are unknown: {unknown}
+
+Story method: {cls}.{method}
+
+Story composition arguments: {arguments}
 """.strip()
 
 

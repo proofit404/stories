@@ -521,7 +521,7 @@ Substory context contract:
     assert str(exc_info.value).startswith(expected)
 
 
-def test_context_unknown_variable(m):
+def test_unknown_context_variable(m):
     """
     Step can't use Success argument name which was not specified in
     the contract.
@@ -598,7 +598,80 @@ Use different names for Success() keyword arguments or add these names to the co
     assert str(exc_info.value) == expected
 
 
-def test_context_missing_arguments(m):
+def test_unknown_story_arguments(m):
+    """
+    Allow to pass known only story and substory arguments to the call.
+    """
+
+    class T(m.ParamChild, m.NormalMethod):
+        pass
+
+    class Q(m.ParamParent, m.NormalParentMethod, m.Child, m.NormalMethod):
+        pass
+
+    class J(m.ParamParent, m.NormalParentMethod):
+        def __init__(self):
+            class T(m.Child, m.NormalMethod):
+                pass
+
+            self.x = T().x
+
+    # Simple.
+
+    expected = """
+These arguments are unknown: baz, fox
+
+Story method: T.x
+
+Story composition arguments: foo, bar
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        T().x(baz=1, fox=2)
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(ContextContractError) as exc_info:
+        T().x.run(baz=1, fox=2)
+    assert str(exc_info.value) == expected
+
+    # Substory inheritance.
+
+    expected = """
+These arguments are unknown: beans, fox
+
+Story method: Q.a
+
+Story composition arguments: ham, eggs
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        Q().a(beans=1, fox=2)
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(ContextContractError) as exc_info:
+        Q().a.run(beans=1, fox=2)
+    assert str(exc_info.value) == expected
+
+    # Substory DI.
+
+    expected = """
+These arguments are unknown: beans, fox
+
+Story method: J.a
+
+Story composition arguments: ham, eggs
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        J().a(beans=1, fox=2)
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(ContextContractError) as exc_info:
+        J().a.run(beans=1, fox=2)
+    assert str(exc_info.value) == expected
+
+
+def test_missed_story_arguments(m):
     """Check story and substory arguments are present in the context."""
 
     class T(m.ParamChildWithNull, m.NormalMethod):
