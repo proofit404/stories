@@ -215,7 +215,11 @@ class Contract(object):
 
     def get_invalid_variables(self, ns):
         available = self.available_func(self.spec)
-        kwargs, errors = self.validate_func(self.spec, ns, set(ns) & available)
+        processable = set(ns) & available
+        if processable:
+            kwargs, errors = self.validate_func(self.spec, ns, processable)
+        else:
+            kwargs, errors = {}, {}
         for contract in self.subcontracts:
             sub_kwargs, sub_errors = contract.get_invalid_variables(ns)
             kwargs.update(sub_kwargs)
