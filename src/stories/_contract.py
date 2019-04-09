@@ -43,7 +43,7 @@ def available_raw(spec):
 
 
 def validate_null(spec, ns, keys):
-    return ns, None
+    raise Exception
 
 
 def validate_pydantic(spec, ns, keys):
