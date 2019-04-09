@@ -135,7 +135,11 @@ class Contract(object):
     def check_story_call(self, kwargs):
         unknown_arguments = set(kwargs) - set(self.arguments)
         if unknown_arguments:
-            message = unknown_argument_template.format(
+            if self.arguments:
+                template = unknown_argument_template
+            else:
+                template = unknown_argument_null_template
+            message = template.format(
                 unknown=", ".join(sorted(unknown_arguments)),
                 cls=self.cls_name,
                 method=self.name,
@@ -325,6 +329,15 @@ These arguments are unknown: {unknown}
 Story method: {cls}.{method}
 
 Story composition arguments: {arguments}
+""".strip()
+
+
+unknown_argument_null_template = """
+These arguments are unknown: {unknown}
+
+Story method: {cls}.{method}
+
+Story composition has no arguments.
 """.strip()
 
 

@@ -675,6 +675,80 @@ Story composition arguments: ham, eggs
     assert str(exc_info.value) == expected
 
 
+@pytest.mark.parametrize(
+    "child,parent", [("Child", "Parent"), ("ChildWithNull", "ParentWithNull")]
+)
+def test_unknown_story_arguments_with_empty(m, child, parent):
+    """
+    Deny any arguments in the call, if story and substory has no
+    arguments specified.
+    """
+
+    class T(getattr(m, child), m.NormalMethod):
+        pass
+
+    class Q(getattr(m, parent), m.NormalParentMethod, T):
+        pass
+
+    class J(getattr(m, parent), m.NormalParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    # Simple.
+
+    expected = """
+These arguments are unknown: baz, fox
+
+Story method: T.x
+
+Story composition has no arguments.
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        T().x(baz=1, fox=2)
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(ContextContractError) as exc_info:
+        T().x.run(baz=1, fox=2)
+    assert str(exc_info.value) == expected
+
+    # Substory inheritance.
+
+    expected = """
+These arguments are unknown: beans, fox
+
+Story method: Q.a
+
+Story composition has no arguments.
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        Q().a(beans=1, fox=2)
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(ContextContractError) as exc_info:
+        Q().a.run(beans=1, fox=2)
+    assert str(exc_info.value) == expected
+
+    # Substory DI.
+
+    expected = """
+These arguments are unknown: beans, fox
+
+Story method: J.a
+
+Story composition has no arguments.
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        J().a(beans=1, fox=2)
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(ContextContractError) as exc_info:
+        J().a.run(beans=1, fox=2)
+    assert str(exc_info.value) == expected
+
+
 def test_missed_story_arguments(m):
     """Check story and substory arguments are present in the context."""
 
