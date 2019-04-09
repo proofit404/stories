@@ -11,7 +11,7 @@ def make_context(contract, kwargs, history):
     ctx = Context()
     ctx.__dict__["_Context__ns"] = ns
     ctx.__dict__["_Context__history"] = history
-    ctx.__dict__["_Context__lines"] = ["Story argument"] * len(kwargs)
+    ctx.__dict__["_Context__lines"] = ["Story argument"] * len(ns)
     return ctx
 
 

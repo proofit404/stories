@@ -133,10 +133,6 @@ class Contract(object):
             raise ContextContractError(message)
 
     def check_story_call(self, kwargs):
-        # vvv
-        if self.spec is None:
-            return kwargs
-        # ^^^
         unknown_arguments = set(kwargs) - set(self.arguments)
         if unknown_arguments:
             message = unknown_argument_template.format(
@@ -146,6 +142,10 @@ class Contract(object):
                 arguments=", ".join(self.arguments),
             )
             raise ContextContractError(message)
+        # vvv
+        if self.spec is None:
+            return kwargs
+        # ^^^
         kwargs, errors = self.get_invalid_variables(kwargs)
         if errors:
             message = invalid_argument_template.format(
