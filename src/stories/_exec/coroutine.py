@@ -1,9 +1,10 @@
+import inspect
 from .._context import assign_namespace
 from .._marker import BeginningOfStory, EndOfStory
 from .._return import Failure, Result, Skip, Success
 
 
-def execute(runner, ctx, history, methods):
+async def execute(runner, ctx, history, methods):
 
     skipped = 0
 
@@ -21,7 +22,10 @@ def execute(runner, ctx, history, methods):
         history.before_call(method.__name__)
 
         try:
-            result = method(ctx)
+            result = await method(ctx)
+        except TypeError as error:
+            print('Ты делаешь фигню')
+            raise
         except Exception as error:
             history.on_error(error.__class__.__name__)
             raise
