@@ -66,7 +66,7 @@ def context_representation(ctx, repr_func=repr):
     longest = 0
     for key, value in ctx._Context__ns.items():
         for seen_key, seen_value in seen:
-            if value is seen_value and type(value) not in [bool, int, float, Decimal]:
+            if value is seen_value:
                 item = "`%s` alias" % (seen_key,)
                 break
         else:
@@ -79,7 +79,8 @@ def context_representation(ctx, repr_func=repr):
         else:
             head = "%s: %s" % (key, item)
             tail = ""
-        seen.append((key, value))
+        if type(value) not in [type(None), bool, int, float, Decimal]:
+            seen.append((key, value))
         items.append((head, tail))
         head_length = len(head)
         if head_length > longest:

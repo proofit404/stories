@@ -1121,7 +1121,7 @@ Context:
     assert repr(getter()) == expected
 
 
-@pytest.mark.parametrize("arg", [True, 1, 1.0, decimal.Decimal("1.0")])
+@pytest.mark.parametrize("arg", [None, True, 1, 1.0, decimal.Decimal("1.0")])
 def test_context_representation_variable_aliases_ignore(c, arg):
     class T(c.ParamChild, c.NormalMethod):
         foo = arg
