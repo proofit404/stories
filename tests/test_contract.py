@@ -21,7 +21,7 @@ from stories.exceptions import ContextContractError
 # [ ] Add `contract_in` shortcut.
 
 
-def test_context_existed_variables(m):
+def test_assign_existed_variables(m):
     """
     We can not write a variable with the same name to the context
     twice.
@@ -372,13 +372,13 @@ def test_story_arguments_validation(m):
     execution.
     """
 
-    class T(m.ParamChild, m.NormalMethod):
+    class T(m.ParamChild, m.ExceptionMethod):
         pass
 
-    class Q(m.ParamParent, m.NormalParentMethod, m.Child, m.NormalMethod):
+    class Q(m.ParamParent, m.ExceptionParentMethod, m.Child, m.NormalMethod):
         pass
 
-    class J(m.ParamParent, m.NormalParentMethod):
+    class J(m.ParamParent, m.ExceptionParentMethod):
         def __init__(self):
             class T(m.Child, m.NormalMethod):
                 pass
@@ -446,6 +446,74 @@ eggs:
     assert str(exc_info.value).startswith(expected)
 
 
+def test_story_arguments_validation_many_levels(m):
+    """
+    We apply contract validation to the story arguments on any levels
+    of story composition.
+    """
+
+    class T(m.ParamChild, m.NormalMethod):
+        pass
+
+    class Q(m.Parent, m.ExceptionParentMethod, T):
+        pass
+
+    class J(m.Parent, m.ExceptionParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    class R(m.Root, m.ExceptionRootMethod, m.Parent, m.NormalParentMethod, T):
+        pass
+
+    class F(m.Root, m.ExceptionRootMethod):
+        def __init__(self):
+            class J(m.Parent, m.NormalParentMethod):
+                def __init__(self):
+                    self.x = T().x
+
+            self.a = J().a
+
+    # Substory inheritance.
+
+    expected = """
+These arguments violates context contract: 'foo'
+
+Story method: R.i
+
+Violations:
+
+foo:
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        R().i(foo="<boom>", bar=1)
+    assert str(exc_info.value).startswith(expected)
+
+    with pytest.raises(ContextContractError) as exc_info:
+        R().i.run(foo="<boom>", bar=1)
+    assert str(exc_info.value).startswith(expected)
+
+    # Substory DI.
+
+    expected = """
+These arguments violates context contract: 'foo'
+
+Story method: F.i
+
+Violations:
+
+foo:
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        F().i(foo="<boom>", bar=1)
+    assert str(exc_info.value).startswith(expected)
+
+    with pytest.raises(ContextContractError) as exc_info:
+        F().i.run(foo="<boom>", bar=1)
+    assert str(exc_info.value).startswith(expected)
+
+
 def test_composition_contract_conflict(m):
     """
     Story and substory contracts can not declare the same variable
@@ -499,7 +567,7 @@ Use variables with different names.
     assert str(exc_info.value) == expected
 
 
-def test_many_levels_composition_contract_conflict(m):
+def test_composition_contract_conflict_many_levels(m):
     """
     Story and substory contracts can not declare the same variable
     twice.

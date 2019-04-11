@@ -36,6 +36,11 @@ class UnknownMethod(object):
         return Success(spam="0", quiz="1")
 
 
+class ExceptionMethod(object):
+    def one(self, ctx):
+        raise Exception
+
+
 # Parent mixins.
 
 
@@ -55,6 +60,14 @@ class StringParentMethod(object):
         return Success()
 
 
+class ExceptionParentMethod(object):
+    def before(self, ctx):
+        raise Exception
+
+    def after(self, ctx):
+        return Success()
+
+
 # Root mixins.
 
 
@@ -69,6 +82,14 @@ class NormalRootMethod(object):
 class StringRootMethod(object):
     def start(self, ctx):
         return Success(foo="1", bar="2")
+
+    def finish(self, ctx):
+        return Success()
+
+
+class ExceptionRootMethod(object):
+    def start(self, ctx):
+        raise Exception
 
     def finish(self, ctx):
         return Success()
