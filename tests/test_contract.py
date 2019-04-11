@@ -19,6 +19,9 @@ from stories.exceptions import ContextContractError
 # [ ] Allow to normalize substory arguments passed to the story calls.
 #
 # [ ] Add `contract_in` shortcut.
+#
+# [ ] Show collected arguments of the story composition in the error
+#     messages.
 
 
 def test_assign_existed_variables(m):
