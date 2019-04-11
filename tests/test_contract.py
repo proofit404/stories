@@ -200,6 +200,94 @@ def test_story_arguments_normalization(m):
     assert getter().eggs == 2
 
 
+def test_story_arguments_normalization_many_levels(m):
+    """
+    We apply normalization to the story arguments on any levels of
+    story composition.
+    """
+
+    class T(m.ParamChild, m.NormalMethod):
+        pass
+
+    class Q(m.ParamParent, m.NormalParentMethod, T):
+        pass
+
+    class J(m.ParamParent, m.NormalParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    class R(m.ParamRoot, m.NormalRootMethod, Q):
+        pass
+
+    class F(m.ParamRoot, m.NormalRootMethod):
+        def __init__(self):
+            self.a = J().a
+
+    # Substory inheritance.
+
+    getter = make_collector()
+    Q().a(ham="1", eggs="2", foo="3", bar="4")
+    assert getter().ham == 1
+    assert getter().eggs == 2
+    assert getter().foo == 3
+    assert getter().bar == 4
+
+    getter = make_collector()
+    Q().a.run(ham="1", eggs="2", foo="3", bar="4")
+    assert getter().ham == 1
+    assert getter().eggs == 2
+    assert getter().foo == 3
+    assert getter().bar == 4
+
+    getter = make_collector()
+    R().i(fizz="0", ham="1", eggs="2", foo="3", bar="4")
+    assert getter().fizz == 0
+    assert getter().ham == 1
+    assert getter().eggs == 2
+    assert getter().foo == 3
+    assert getter().bar == 4
+
+    getter = make_collector()
+    R().i.run(fizz="0", ham="1", eggs="2", foo="3", bar="4")
+    assert getter().fizz == 0
+    assert getter().ham == 1
+    assert getter().eggs == 2
+    assert getter().foo == 3
+    assert getter().bar == 4
+
+    # Substory DI.
+
+    getter = make_collector()
+    Q().a(ham="1", eggs="2", foo="3", bar="4")
+    assert getter().ham == 1
+    assert getter().eggs == 2
+    assert getter().foo == 3
+    assert getter().bar == 4
+
+    getter = make_collector()
+    Q().a.run(ham="1", eggs="2", foo="3", bar="4")
+    assert getter().ham == 1
+    assert getter().eggs == 2
+    assert getter().foo == 3
+    assert getter().bar == 4
+
+    getter = make_collector()
+    F().i(fizz="0", ham="1", eggs="2", foo="3", bar="4")
+    assert getter().fizz == 0
+    assert getter().ham == 1
+    assert getter().eggs == 2
+    assert getter().foo == 3
+    assert getter().bar == 4
+
+    getter = make_collector()
+    F().i.run(fizz="0", ham="1", eggs="2", foo="3", bar="4")
+    assert getter().fizz == 0
+    assert getter().ham == 1
+    assert getter().eggs == 2
+    assert getter().foo == 3
+    assert getter().bar == 4
+
+
 def test_context_variables_validation(m):
     """
     We apply validators to the context variables, if story defines

@@ -67,7 +67,7 @@ def validate_marshmallow(spec, ns, keys):
 def validate_cerberus(spec, ns, keys):
     validator = CerberusSpec(allow_unknown=True)
     validator.validate(ns, spec.schema.schema)
-    return validator.document, validator.errors
+    return dict((key, validator.document[key]) for key in keys), validator.errors
 
 
 def validate_raw(spec, ns, keys):
@@ -133,7 +133,7 @@ class Contract(object):
             raise ContextContractError(message)
 
     def check_story_call(self, kwargs):
-        unknown_arguments = set(kwargs) - set(self.arguments)
+        unknown_arguments = self.get_unknown_arguments(kwargs)
         if unknown_arguments:
             if self.arguments:
                 template = unknown_argument_template
@@ -210,6 +210,21 @@ class Contract(object):
             raise ContextContractError(message)
         return kwargs
 
+    def get_arguments(self):
+        # FIXME: Remove repeated arguments.
+        arguments = []
+        arguments.extend(self.arguments)
+        for contract in self.subcontracts:
+            arguments.extend(contract.get_arguments())
+        return arguments
+
+    def get_unknown_arguments(self, kwargs):
+        available = set(self.arguments)
+        unknown_arguments = set(kwargs) - available
+        for contract in self.subcontracts:
+            unknown_arguments = contract.get_unknown_arguments(unknown_arguments)
+        return unknown_arguments
+
     def get_unknown_variables(self, ns):
         available = self.available_func(self.spec)
         unknown_variables = set(ns) - available
@@ -219,11 +234,7 @@ class Contract(object):
 
     def get_invalid_variables(self, ns):
         available = self.available_func(self.spec)
-        processable = set(ns) & available
-        if processable:
-            kwargs, errors = self.validate_func(self.spec, ns, processable)
-        else:
-            kwargs, errors = {}, {}
+        kwargs, errors = self.validate_func(self.spec, ns, set(ns) & available)
         for contract in self.subcontracts:
             sub_kwargs, sub_errors = contract.get_invalid_variables(ns)
             kwargs.update(sub_kwargs)

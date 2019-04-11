@@ -7,7 +7,12 @@ from .exceptions import MutationError
 
 def make_context(contract, kwargs, history):
     kwargs = contract.check_story_call(kwargs)
-    ns = OrderedDict((arg, kwargs[arg]) for arg in contract.arguments if arg in kwargs)
+    ns = OrderedDict(
+        # FIXME: We should be able to remove `if` statement here.
+        (arg, kwargs[arg])
+        for arg in contract.get_arguments()
+        if arg in kwargs
+    )
     ctx = Context()
     ctx.__dict__["_Context__ns"] = ns
     ctx.__dict__["_Context__history"] = history

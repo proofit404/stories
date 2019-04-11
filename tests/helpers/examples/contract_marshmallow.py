@@ -210,3 +210,17 @@ class RootWithSame(object):
         foo = fields.Integer()
         bar = fields.Integer()
         baz = fields.Integer()
+
+
+class ParamRoot(object):
+    @story
+    @arguments("fizz")
+    def i(I):
+        I.start
+        I.a
+        I.finish
+
+    @i.contract
+    class Contract(Schema):
+        fizz = fields.Integer()
+        buzz = fields.Integer()

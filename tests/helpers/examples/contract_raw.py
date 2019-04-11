@@ -191,3 +191,14 @@ class RootWithSame(object):
         I.finish
 
     i.contract({"foo": integer, "bar": integer, "baz": integer})
+
+
+class ParamRoot(object):
+    @story
+    @arguments("fizz")
+    def i(I):
+        I.start
+        I.a
+        I.finish
+
+    i.contract({"fizz": integer, "buzz": integer})

@@ -236,3 +236,21 @@ class RootWithSame(object):
             }
         )
     )
+
+
+class ParamRoot(object):
+    @story
+    @arguments("fizz")
+    def i(I):
+        I.start
+        I.a
+        I.finish
+
+    i.contract(
+        Validator(
+            {
+                "fizz": {"type": "integer", "coerce": int},
+                "buzz": {"type": "integer", "coerce": int},
+            }
+        )
+    )

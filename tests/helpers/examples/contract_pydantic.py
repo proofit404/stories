@@ -210,3 +210,17 @@ class RootWithSame(object):
         foo: int
         bar: int
         baz: int
+
+
+class ParamRoot(object):
+    @story
+    @arguments("fizz")
+    def i(I):
+        I.start
+        I.a
+        I.finish
+
+    @i.contract
+    class Contract(BaseModel):
+        fizz: int
+        buzz: int
