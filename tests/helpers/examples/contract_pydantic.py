@@ -3,6 +3,7 @@ from typing import List
 from pydantic import BaseModel
 
 from stories import Success, arguments, story
+from stories.shortcuts import contract_in
 
 
 # Mixins.
@@ -215,10 +216,11 @@ class Root(object):
         I.a
         I.finish
 
-    @i.contract
-    class Contract(BaseModel):
-        fizz: int
-        buzz: int
+
+@contract_in(Root)  # noqa: F811
+class Contract(BaseModel):
+    fizz: int
+    buzz: int
 
 
 class RootWithSame(object):
@@ -228,11 +230,12 @@ class RootWithSame(object):
         I.a
         I.finish
 
-    @i.contract
-    class Contract(BaseModel):
-        foo: int
-        bar: List[int]
-        baz: int
+
+@contract_in(RootWithSame)  # noqa: F811
+class Contract(BaseModel):
+    foo: int
+    bar: List[int]
+    baz: int
 
 
 class ParamRoot(object):
@@ -243,7 +246,8 @@ class ParamRoot(object):
         I.a
         I.finish
 
-    @i.contract
-    class Contract(BaseModel):
-        fizz: int
-        buzz: int
+
+@contract_in(ParamRoot)  # noqa: F811
+class Contract(BaseModel):
+    fizz: int
+    buzz: int

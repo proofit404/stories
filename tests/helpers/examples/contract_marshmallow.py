@@ -1,6 +1,7 @@
 from marshmallow import Schema, fields
 
 from stories import Success, arguments, story
+from stories.shortcuts import contract_in
 
 
 # Mixins.
@@ -213,10 +214,11 @@ class Root(object):
         I.a
         I.finish
 
-    @i.contract
-    class Contract(Schema):
-        fizz = fields.Integer()
-        buzz = fields.Integer()
+
+@contract_in(Root)  # noqa: F811
+class Contract(Schema):
+    fizz = fields.Integer()
+    buzz = fields.Integer()
 
 
 class RootWithSame(object):
@@ -226,11 +228,12 @@ class RootWithSame(object):
         I.a
         I.finish
 
-    @i.contract
-    class Contract(Schema):
-        foo = fields.Integer()
-        bar = fields.List(fields.Integer())
-        baz = fields.Integer()
+
+@contract_in(RootWithSame)  # noqa: F811
+class Contract(Schema):
+    foo = fields.Integer()
+    bar = fields.List(fields.Integer())
+    baz = fields.Integer()
 
 
 class ParamRoot(object):
@@ -241,7 +244,8 @@ class ParamRoot(object):
         I.a
         I.finish
 
-    @i.contract
-    class Contract(Schema):
-        fizz = fields.Integer()
-        buzz = fields.Integer()
+
+@contract_in(ParamRoot)  # noqa: F811
+class Contract(Schema):
+    fizz = fields.Integer()
+    buzz = fields.Integer()

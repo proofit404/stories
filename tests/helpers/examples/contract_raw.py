@@ -1,6 +1,7 @@
 from operator import itemgetter
 
 from stories import Success, arguments, story
+from stories.shortcuts import contract_in
 
 
 # Helper functions.
@@ -217,7 +218,8 @@ class Root(object):
         I.a
         I.finish
 
-    i.contract({"fizz": integer, "buzz": integer})
+
+contract_in(Root, {"fizz": integer, "buzz": integer})
 
 
 class RootWithSame(object):
@@ -227,7 +229,8 @@ class RootWithSame(object):
         I.a
         I.finish
 
-    i.contract({"foo": integer, "bar": list_of(integer), "baz": integer})
+
+contract_in(RootWithSame, {"foo": integer, "bar": list_of(integer), "baz": integer})
 
 
 class ParamRoot(object):
@@ -238,4 +241,5 @@ class ParamRoot(object):
         I.a
         I.finish
 
-    i.contract({"fizz": integer, "buzz": integer})
+
+contract_in(ParamRoot, {"fizz": integer, "buzz": integer})

@@ -1,6 +1,7 @@
 from cerberus import Validator
 
 from stories import Success, arguments, story
+from stories.shortcuts import contract_in
 
 
 # Mixins.
@@ -231,14 +232,16 @@ class Root(object):
         I.a
         I.finish
 
-    i.contract(
-        Validator(
-            {
-                "fizz": {"type": "integer", "coerce": int},
-                "buzz": {"type": "integer", "coerce": int},
-            }
-        )
-    )
+
+contract_in(
+    Root,
+    Validator(
+        {
+            "fizz": {"type": "integer", "coerce": int},
+            "buzz": {"type": "integer", "coerce": int},
+        }
+    ),
+)
 
 
 class RootWithSame(object):
@@ -248,15 +251,17 @@ class RootWithSame(object):
         I.a
         I.finish
 
-    i.contract(
-        Validator(
-            {
-                "foo": {"type": "integer", "coerce": int},
-                "bar": {"type": "list", "schema": {"type": "integer", "coerce": int}},
-                "baz": {"type": "integer", "coerce": int},
-            }
-        )
-    )
+
+contract_in(
+    RootWithSame,
+    Validator(
+        {
+            "foo": {"type": "integer", "coerce": int},
+            "bar": {"type": "list", "schema": {"type": "integer", "coerce": int}},
+            "baz": {"type": "integer", "coerce": int},
+        }
+    ),
+)
 
 
 class ParamRoot(object):
@@ -267,11 +272,13 @@ class ParamRoot(object):
         I.a
         I.finish
 
-    i.contract(
-        Validator(
-            {
-                "fizz": {"type": "integer", "coerce": int},
-                "buzz": {"type": "integer", "coerce": int},
-            }
-        )
-    )
+
+contract_in(
+    ParamRoot,
+    Validator(
+        {
+            "fizz": {"type": "integer", "coerce": int},
+            "buzz": {"type": "integer", "coerce": int},
+        }
+    ),
+)
