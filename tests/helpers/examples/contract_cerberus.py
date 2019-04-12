@@ -13,12 +13,12 @@ class NormalMethod(object):
 
 class StringMethod(object):
     def one(self, ctx):
-        return Success(foo="1", bar="2")
+        return Success(foo="1", bar=["2"])
 
 
 class WrongMethod(object):
     def one(self, ctx):
-        return Success(foo="<boom>", bar="<boom>")
+        return Success(foo="<boom>", bar=["<boom>"])
 
 
 class UnknownMethod(object):
@@ -44,7 +44,7 @@ class NormalParentMethod(object):
 
 class StringParentMethod(object):
     def before(self, ctx):
-        return Success(foo="1", bar="2")
+        return Success(foo="1", bar=["2"])
 
     def after(self, ctx):
         return Success()
@@ -71,7 +71,7 @@ class NormalRootMethod(object):
 
 class StringRootMethod(object):
     def start(self, ctx):
-        return Success(foo="1", bar="2")
+        return Success(foo="1", bar=["2"])
 
     def finish(self, ctx):
         return Success()
@@ -93,11 +93,11 @@ class Child(object):
     def x(I):
         I.one
 
-    contract = x.contract(
+    x.contract(
         Validator(
             {
                 "foo": {"type": "integer", "coerce": int},
-                "bar": {"type": "integer", "coerce": int},
+                "bar": {"type": "list", "schema": {"type": "integer", "coerce": int}},
                 "baz": {"type": "integer", "coerce": int},
             }
         )
@@ -116,11 +116,11 @@ class ParamChild(object):
     def x(I):
         I.one
 
-    contract = x.contract(
+    x.contract(
         Validator(
             {
                 "foo": {"type": "integer", "coerce": int},
-                "bar": {"type": "integer", "coerce": int},
+                "bar": {"type": "list", "schema": {"type": "integer", "coerce": int}},
                 "baz": {"type": "integer", "coerce": int},
             }
         )
@@ -140,7 +140,7 @@ class ParamChildWithShrink(object):
     def x(I):
         I.one
 
-    contract = x.contract(Validator({"baz": {"type": "integer", "coerce": int}}))
+    x.contract(Validator({"baz": {"type": "integer", "coerce": int}}))
 
 
 # Parent base classes.
@@ -185,7 +185,7 @@ ParentWithSame.a.contract(
     Validator(
         {
             "foo": {"type": "integer", "coerce": int},
-            "bar": {"type": "integer", "coerce": int},
+            "bar": {"type": "list", "schema": {"type": "integer", "coerce": int}},
             "baz": {"type": "integer", "coerce": int},
         }
     )
@@ -252,7 +252,7 @@ class RootWithSame(object):
         Validator(
             {
                 "foo": {"type": "integer", "coerce": int},
-                "bar": {"type": "integer", "coerce": int},
+                "bar": {"type": "list", "schema": {"type": "integer", "coerce": int}},
                 "baz": {"type": "integer", "coerce": int},
             }
         )

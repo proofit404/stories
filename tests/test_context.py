@@ -739,10 +739,10 @@ Q.a
     one (errored: ContextContractError)
 
 Context:
-  ham: 1    # Story argument
-  eggs: 2   # Story argument
-  bar: '2'  # Set by Q.before
-  foo: '1'  # Set by Q.before
+  ham: 1      # Story argument
+  eggs: 2     # Story argument
+  bar: ['2']  # Set by Q.before
+  foo: '1'    # Set by Q.before
     """.strip()
 
     getter = make_collector()
@@ -764,10 +764,10 @@ J.a
     one (errored: ContextContractError)
 
 Context:
-  ham: 1    # Story argument
-  eggs: 2   # Story argument
-  bar: '2'  # Set by J.before
-  foo: '1'  # Set by J.before
+  ham: 1      # Story argument
+  eggs: 2     # Story argument
+  bar: ['2']  # Set by J.before
+  foo: '1'    # Set by J.before
     """.strip()
 
     getter = make_collector()

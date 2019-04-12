@@ -51,11 +51,11 @@ Use different names for Success() keyword arguments.
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        T().x(foo=1, bar=2)
+        T().x(foo=1, bar=[2])
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        T().x.run(foo=1, bar=2)
+        T().x.run(foo=1, bar=[2])
     assert str(exc_info.value) == expected
 
     # Substory inheritance.
@@ -117,36 +117,36 @@ def test_context_variables_normalization(m):
     getter = make_collector()
     T().x()
     assert getter().foo == 1
-    assert getter().bar == 2
+    assert getter().bar == [2]
 
     getter = make_collector()
     T().x.run()
     assert getter().foo == 1
-    assert getter().bar == 2
+    assert getter().bar == [2]
 
     # Substory inheritance.
 
     getter = make_collector()
     Q().a()
     assert getter().foo == 1
-    assert getter().bar == 2
+    assert getter().bar == [2]
 
     getter = make_collector()
     Q().a.run()
     assert getter().foo == 1
-    assert getter().bar == 2
+    assert getter().bar == [2]
 
     # Substory DI.
 
     getter = make_collector()
     J().a()
     assert getter().foo == 1
-    assert getter().bar == 2
+    assert getter().bar == [2]
 
     getter = make_collector()
     J().a.run()
     assert getter().foo == 1
-    assert getter().bar == 2
+    assert getter().bar == [2]
 
 
 def test_story_arguments_normalization(m):
@@ -169,14 +169,14 @@ def test_story_arguments_normalization(m):
     # Simple.
 
     getter = make_collector()
-    T().x(foo="1", bar="2")
+    T().x(foo="1", bar=["2"])
     assert getter().foo == 1
-    assert getter().bar == 2
+    assert getter().bar == [2]
 
     getter = make_collector()
-    T().x.run(foo="1", bar="2")
+    T().x.run(foo="1", bar=["2"])
     assert getter().foo == 1
-    assert getter().bar == 2
+    assert getter().bar == [2]
 
     # Substory inheritance.
 
@@ -229,66 +229,66 @@ def test_story_arguments_normalization_many_levels(m):
     # Substory inheritance.
 
     getter = make_collector()
-    Q().a(ham="1", eggs="2", foo="3", bar="4")
+    Q().a(ham="1", eggs="2", foo="3", bar=["4"])
     assert getter().ham == 1
     assert getter().eggs == 2
     assert getter().foo == 3
-    assert getter().bar == 4
+    assert getter().bar == [4]
 
     getter = make_collector()
-    Q().a.run(ham="1", eggs="2", foo="3", bar="4")
+    Q().a.run(ham="1", eggs="2", foo="3", bar=["4"])
     assert getter().ham == 1
     assert getter().eggs == 2
     assert getter().foo == 3
-    assert getter().bar == 4
+    assert getter().bar == [4]
 
     getter = make_collector()
-    R().i(fizz="0", ham="1", eggs="2", foo="3", bar="4")
+    R().i(fizz="0", ham="1", eggs="2", foo="3", bar=["4"])
     assert getter().fizz == 0
     assert getter().ham == 1
     assert getter().eggs == 2
     assert getter().foo == 3
-    assert getter().bar == 4
+    assert getter().bar == [4]
 
     getter = make_collector()
-    R().i.run(fizz="0", ham="1", eggs="2", foo="3", bar="4")
+    R().i.run(fizz="0", ham="1", eggs="2", foo="3", bar=["4"])
     assert getter().fizz == 0
     assert getter().ham == 1
     assert getter().eggs == 2
     assert getter().foo == 3
-    assert getter().bar == 4
+    assert getter().bar == [4]
 
     # Substory DI.
 
     getter = make_collector()
-    Q().a(ham="1", eggs="2", foo="3", bar="4")
+    Q().a(ham="1", eggs="2", foo="3", bar=["4"])
     assert getter().ham == 1
     assert getter().eggs == 2
     assert getter().foo == 3
-    assert getter().bar == 4
+    assert getter().bar == [4]
 
     getter = make_collector()
-    Q().a.run(ham="1", eggs="2", foo="3", bar="4")
+    Q().a.run(ham="1", eggs="2", foo="3", bar=["4"])
     assert getter().ham == 1
     assert getter().eggs == 2
     assert getter().foo == 3
-    assert getter().bar == 4
+    assert getter().bar == [4]
 
     getter = make_collector()
-    F().i(fizz="0", ham="1", eggs="2", foo="3", bar="4")
+    F().i(fizz="0", ham="1", eggs="2", foo="3", bar=["4"])
     assert getter().fizz == 0
     assert getter().ham == 1
     assert getter().eggs == 2
     assert getter().foo == 3
-    assert getter().bar == 4
+    assert getter().bar == [4]
 
     getter = make_collector()
-    F().i.run(fizz="0", ham="1", eggs="2", foo="3", bar="4")
+    F().i.run(fizz="0", ham="1", eggs="2", foo="3", bar=["4"])
     assert getter().fizz == 0
     assert getter().ham == 1
     assert getter().eggs == 2
     assert getter().foo == 3
-    assert getter().bar == 4
+    assert getter().bar == [4]
 
 
 def test_context_variables_validation(m):
@@ -401,11 +401,11 @@ bar:
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        T().x(foo="<boom>", bar="<boom>")
+        T().x(foo="<boom>", bar=["<boom>"])
     assert str(exc_info.value).startswith(expected)
 
     with pytest.raises(ContextContractError) as exc_info:
-        T().x.run(foo="<boom>", bar="<boom>")
+        T().x.run(foo="<boom>", bar=["<boom>"])
     assert str(exc_info.value).startswith(expected)
 
     # Substory inheritance.
@@ -489,11 +489,11 @@ foo:
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        R().i(foo="<boom>", bar=1)
+        R().i(foo="<boom>", bar=[1])
     assert str(exc_info.value).startswith(expected)
 
     with pytest.raises(ContextContractError) as exc_info:
-        R().i.run(foo="<boom>", bar=1)
+        R().i.run(foo="<boom>", bar=[1])
     assert str(exc_info.value).startswith(expected)
 
     # Substory DI.
@@ -509,11 +509,11 @@ foo:
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        F().i(foo="<boom>", bar=1)
+        F().i(foo="<boom>", bar=[1])
     assert str(exc_info.value).startswith(expected)
 
     with pytest.raises(ContextContractError) as exc_info:
-        F().i.run(foo="<boom>", bar=1)
+        F().i.run(foo="<boom>", bar=[1])
     assert str(exc_info.value).startswith(expected)
 
 
@@ -1024,44 +1024,44 @@ def test_parent_steps_set_story_arguments(m):
     getter = make_collector()
     Q().a()
     assert getter().foo == 1
-    assert getter().bar == 2
+    assert getter().bar == [2]
 
     getter = make_collector()
     Q().a.run()
     assert getter().foo == 1
-    assert getter().bar == 2
+    assert getter().bar == [2]
 
     getter = make_collector()
     R().i()
     assert getter().foo == 1
-    assert getter().bar == 2
+    assert getter().bar == [2]
 
     getter = make_collector()
     R().i.run()
     assert getter().foo == 1
-    assert getter().bar == 2
+    assert getter().bar == [2]
 
     # Substory DI.
 
     getter = make_collector()
     J().a()
     assert getter().foo == 1
-    assert getter().bar == 2
+    assert getter().bar == [2]
 
     getter = make_collector()
     J().a.run()
     assert getter().foo == 1
-    assert getter().bar == 2
+    assert getter().bar == [2]
 
     getter = make_collector()
     F().i()
     assert getter().foo == 1
-    assert getter().bar == 2
+    assert getter().bar == [2]
 
     getter = make_collector()
     F().i.run()
     assert getter().foo == 1
-    assert getter().bar == 2
+    assert getter().bar == [2]
 
 
 def test_arguments_should_be_declared_in_contract(m):

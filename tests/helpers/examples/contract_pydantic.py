@@ -1,3 +1,5 @@
+from typing import List
+
 from pydantic import BaseModel
 
 from stories import Success, arguments, story
@@ -13,12 +15,12 @@ class NormalMethod(object):
 
 class StringMethod(object):
     def one(self, ctx):
-        return Success(foo="1", bar="2")
+        return Success(foo="1", bar=["2"])
 
 
 class WrongMethod(object):
     def one(self, ctx):
-        return Success(foo="<boom>", bar="<boom>")
+        return Success(foo="<boom>", bar=["<boom>"])
 
 
 class UnknownMethod(object):
@@ -44,7 +46,7 @@ class NormalParentMethod(object):
 
 class StringParentMethod(object):
     def before(self, ctx):
-        return Success(foo="1", bar="2")
+        return Success(foo="1", bar=["2"])
 
     def after(self, ctx):
         return Success()
@@ -71,7 +73,7 @@ class NormalRootMethod(object):
 
 class StringRootMethod(object):
     def start(self, ctx):
-        return Success(foo="1", bar="2")
+        return Success(foo="1", bar=["2"])
 
     def finish(self, ctx):
         return Success()
@@ -96,7 +98,7 @@ class Child(object):
     @x.contract
     class Contract(BaseModel):
         foo: int
-        bar: int
+        bar: List[int]
         baz: int
 
 
@@ -115,7 +117,7 @@ class ParamChild(object):
     @x.contract
     class Contract(BaseModel):
         foo: int
-        bar: int
+        bar: List[int]
         baz: int
 
 
@@ -174,7 +176,7 @@ class ParentWithSame(object):
 @ParentWithSame.a.contract  # noqa: F811
 class Contract(BaseModel):
     foo: int
-    bar: int
+    bar: List[int]
     baz: int
 
 
@@ -229,7 +231,7 @@ class RootWithSame(object):
     @i.contract
     class Contract(BaseModel):
         foo: int
-        bar: int
+        bar: List[int]
         baz: int
 
 

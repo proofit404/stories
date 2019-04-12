@@ -52,8 +52,10 @@ def validate_pydantic(spec, ns, keys):
         field = spec.__fields__[key]
         new_value, error = field.validate(ns[key], {}, loc=field.alias, cls=spec)
         if error:
-            # FIXME: Errors can be a list.
-            errors[key] = [error.msg]
+            if isinstance(error, list):
+                errors[key] = [e.msg for e in error]
+            else:
+                errors[key] = [error.msg]
         else:
             result[key] = new_value
     return result, errors
@@ -157,7 +159,10 @@ class Contract(object):
                 cls=self.cls_name,
                 method=self.name,
                 violations="\n\n".join(
-                    [key + ":\n  " + "\n  ".join(errors[key]) for key in sorted(errors)]
+                    [
+                        key + ":\n  " + "\n  ".join(str(errors[key]))
+                        for key in sorted(errors)
+                    ]
                 ),
             )
             raise ContextContractError(message)
@@ -204,7 +209,10 @@ class Contract(object):
                 cls=method.__self__.__class__.__name__,
                 method=method.__name__,
                 violations="\n\n".join(
-                    [key + ":\n  " + "\n  ".join(errors[key]) for key in sorted(errors)]
+                    [
+                        key + ":\n  " + "\n  ".join(str(errors[key]))
+                        for key in sorted(errors)
+                    ]
                 ),
             )
             raise ContextContractError(message)

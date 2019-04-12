@@ -1,3 +1,5 @@
+from operator import itemgetter
+
 from stories import Success, arguments, story
 
 
@@ -13,6 +15,20 @@ def integer(value):
         return None, "Invalid value"
 
 
+def list_of(f):
+    def validator(value):
+        if isinstance(value, list):
+            new = list(map(f, value))
+            if any(map(itemgetter(1), new)):
+                return None, "List item is invalid"
+            else:
+                return list(map(itemgetter(0), new)), None
+        else:
+            return None, "Is not a list"
+
+    return validator
+
+
 # Mixins.
 
 
@@ -23,12 +39,12 @@ class NormalMethod(object):
 
 class StringMethod(object):
     def one(self, ctx):
-        return Success(foo="1", bar="2")
+        return Success(foo="1", bar=["2"])
 
 
 class WrongMethod(object):
     def one(self, ctx):
-        return Success(foo="<boom>", bar="<boom>")
+        return Success(foo="<boom>", bar=["<boom>"])
 
 
 class UnknownMethod(object):
@@ -54,7 +70,7 @@ class NormalParentMethod(object):
 
 class StringParentMethod(object):
     def before(self, ctx):
-        return Success(foo="1", bar="2")
+        return Success(foo="1", bar=["2"])
 
     def after(self, ctx):
         return Success()
@@ -81,7 +97,7 @@ class NormalRootMethod(object):
 
 class StringRootMethod(object):
     def start(self, ctx):
-        return Success(foo="1", bar="2")
+        return Success(foo="1", bar=["2"])
 
     def finish(self, ctx):
         return Success()
@@ -103,7 +119,7 @@ class Child(object):
     def x(I):
         I.one
 
-    contract = x.contract({"foo": integer, "bar": integer, "baz": integer})
+    x.contract({"foo": integer, "bar": list_of(integer), "baz": integer})
 
 
 class ChildWithNull(object):
@@ -118,7 +134,7 @@ class ParamChild(object):
     def x(I):
         I.one
 
-    contract = x.contract({"foo": integer, "bar": integer, "baz": integer})
+    x.contract({"foo": integer, "bar": list_of(integer), "baz": integer})
 
 
 class ParamChildWithNull(object):
@@ -134,7 +150,7 @@ class ParamChildWithShrink(object):
     def x(I):
         I.one
 
-    contract = x.contract({"baz": integer})
+    x.contract({"baz": integer})
 
 
 # Parent base classes.
@@ -167,7 +183,7 @@ class ParentWithSame(object):
         I.after
 
 
-ParentWithSame.a.contract({"foo": integer, "bar": integer, "baz": integer})
+ParentWithSame.a.contract({"foo": integer, "bar": list_of(integer), "baz": integer})
 
 
 class ParamParent(object):
@@ -211,7 +227,7 @@ class RootWithSame(object):
         I.a
         I.finish
 
-    i.contract({"foo": integer, "bar": integer, "baz": integer})
+    i.contract({"foo": integer, "bar": list_of(integer), "baz": integer})
 
 
 class ParamRoot(object):
