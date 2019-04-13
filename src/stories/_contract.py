@@ -158,12 +158,7 @@ class Contract(object):
                 variables=", ".join(map(repr, sorted(errors))),
                 cls=self.cls_name,
                 method=self.name,
-                violations="\n\n".join(
-                    [
-                        key + ":\n  " + "\n  ".join(str(errors[key]))
-                        for key in sorted(errors)
-                    ]
-                ),
+                violations=format_violations(errors),
             )
             raise ContextContractError(message)
         return kwargs
@@ -208,12 +203,7 @@ class Contract(object):
                 variables=", ".join(map(repr, sorted(errors))),
                 cls=method.__self__.__class__.__name__,
                 method=method.__name__,
-                violations="\n\n".join(
-                    [
-                        key + ":\n  " + "\n  ".join(str(errors[key]))
-                        for key in sorted(errors)
-                    ]
-                ),
+                violations=format_violations(errors),
             )
             raise ContextContractError(message)
         return kwargs
@@ -248,6 +238,35 @@ class Contract(object):
             kwargs.update(sub_kwargs)
             errors.update(sub_errors)
         return kwargs, errors
+
+
+def format_violations(errors):
+    result = []
+
+    def normalize_str(value, indent):
+        result.append(" " * indent + value)
+
+    def normalize_list(value, indent):
+        for elem in value:
+            if isinstance(elem, dict):
+                normalize_dict(elem, indent + 2)
+            else:
+                normalize_str(elem, indent)
+
+    def normalize_dict(value, indent, end=None):
+        for k in sorted(value):
+            v = value[k]
+            normalize_str(str(k) + ":", indent)
+            if isinstance(v, dict):
+                normalize_dict(v, indent + 2)
+            else:
+                normalize_list(v, indent + 2)
+            if end is not None:
+                normalize_str(end, 0)
+
+    normalize_dict(errors, 0, "")
+
+    return "\n".join(result)
 
 
 # Wrap.
