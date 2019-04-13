@@ -111,6 +111,12 @@ class ChildWithNull(object):
         I.one
 
 
+class ChildReuse(object):
+    @story
+    def x(I):
+        I.one
+
+
 class ParamChild(object):
     @story
     @arguments("foo", "bar")
@@ -189,6 +195,27 @@ ParentWithSame.a.contract(
             "bar": {"type": "list", "schema": {"type": "integer", "coerce": int}},
             "baz": {"type": "integer", "coerce": int},
         }
+    )
+)
+
+
+class ParentReuse(object):
+    @story
+    def a(I):
+        I.before
+        I.x
+        I.after
+
+
+ChildReuse.x.contract(
+    ParentReuse.a.contract(
+        Validator(
+            {
+                "foo": {"type": "integer", "coerce": int},
+                "bar": {"type": "list", "schema": {"type": "integer", "coerce": int}},
+                "baz": {"type": "integer", "coerce": int},
+            }
+        )
     )
 )
 

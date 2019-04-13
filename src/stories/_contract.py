@@ -275,7 +275,9 @@ def format_violations(errors):
 def combine_contract(specs, tail):
     for first_spec, first_cls_name, first_method_name in specs:
         for second_spec, second_cls_name, second_method_name in tail:
-            if first_spec is None and second_spec is None:
+            if first_spec is second_spec:
+                repeated = set()
+            elif first_spec is None and second_spec is None:
                 repeated = set()
             elif isinstance(first_spec, PydanticSpec) and isinstance(
                 second_spec, PydanticSpec

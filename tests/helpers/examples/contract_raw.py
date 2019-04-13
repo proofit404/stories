@@ -129,6 +129,12 @@ class ChildWithNull(object):
         I.one
 
 
+class ChildReuse(object):
+    @story
+    def x(I):
+        I.one
+
+
 class ParamChild(object):
     @story
     @arguments("foo", "bar")
@@ -185,6 +191,19 @@ class ParentWithSame(object):
 
 
 ParentWithSame.a.contract({"foo": integer, "bar": list_of(integer), "baz": integer})
+
+
+class ParentReuse(object):
+    @story
+    def a(I):
+        I.before
+        I.x
+        I.after
+
+
+ChildReuse.x.contract(
+    ParentReuse.a.contract({"foo": integer, "bar": list_of(integer), "baz": integer})
+)
 
 
 class ParamParent(object):

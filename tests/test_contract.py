@@ -517,7 +517,7 @@ foo:
     assert str(exc_info.value).startswith(expected)
 
 
-def test_composition_contract_conflict(m):
+def test_composition_contract_variable_conflict(m):
     """
     Story and substory contracts can not declare the same variable
     twice.
@@ -570,7 +570,7 @@ Use variables with different names.
     assert str(exc_info.value) == expected
 
 
-def test_composition_contract_conflict_many_levels(m):
+def test_composition_contract_variable_conflict_many_levels(m):
     """
     Story and substory contracts can not declare the same variable
     twice.
@@ -678,6 +678,33 @@ Substory context contract:
     with pytest.raises(ContextContractError) as exc_info:
         J().a
     assert str(exc_info.value).startswith(expected)
+
+
+def test_composition_use_same_contract(m):
+    """
+    The same contract class or instance can be used in story and a
+    substory.  This should not lead to the incompatible contract
+    composition error.  Variable declared there can be assigned in one
+    of the story.  And it will be declared once within the contract.
+    """
+
+    class T(m.ChildReuse, m.NormalMethod):
+        pass
+
+    class Q(m.ParentReuse, m.NormalParentMethod, T):
+        pass
+
+    class J(m.ParentReuse, m.NormalParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    # Substory inheritance.
+
+    Q().a
+
+    # Substory DI.
+
+    J().a
 
 
 def test_unknown_context_variable(m):
