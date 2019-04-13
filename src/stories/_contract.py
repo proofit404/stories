@@ -280,19 +280,23 @@ def combine_contract(specs, tail):
             elif isinstance(first_spec, PydanticSpec) and isinstance(
                 second_spec, PydanticSpec
             ):
-                repeated = set(first_spec.__fields__) & set(second_spec.__fields__)
+                repeated = available_pydantic(first_spec) & available_pydantic(
+                    second_spec
+                )
             elif isinstance(first_spec, MarshmallowSpec) and isinstance(
                 second_spec, MarshmallowSpec
             ):
-                repeated = set(first_spec._declared_fields) & set(
-                    second_spec._declared_fields
+                repeated = available_marshmallow(first_spec) & available_marshmallow(
+                    second_spec
                 )
             elif isinstance(first_spec, CerberusSpec) and isinstance(
                 second_spec, CerberusSpec
             ):
-                repeated = set(first_spec.schema) & set(second_spec.schema)
+                repeated = available_cerberus(first_spec) & available_cerberus(
+                    second_spec
+                )
             elif isinstance(first_spec, dict) and isinstance(second_spec, dict):
-                repeated = set(first_spec) & set(second_spec)
+                repeated = available_raw(first_spec) & available_raw(second_spec)
             else:
                 message = type_error_template.format(
                     cls=first_cls_name,
