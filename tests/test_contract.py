@@ -8,6 +8,8 @@ from stories.exceptions import ContextContractError
 #
 # [ ] Show collected arguments of the story composition in the error
 #     messages.
+#
+# [ ] Show violation values in validation error messages.
 
 
 def test_assign_existed_variables(m):

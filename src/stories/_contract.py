@@ -102,6 +102,7 @@ def make_contract(cls_name, name, arguments, spec):
     elif isinstance(spec, dict):
         available_func = available_raw
         validate_func = validate_raw
+    # FIXME: Raise error on unsupported types.
     return Contract(cls_name, name, arguments, spec, available_func, validate_func)
 
 
@@ -253,7 +254,7 @@ def format_violations(errors):
             else:
                 normalize_str(elem, indent)
 
-    def normalize_dict(value, indent, end=None):
+    def normalize_dict(value, indent, sep=None):
         for k in sorted(value):
             v = value[k]
             normalize_str(str(k) + ":", indent)
@@ -261,8 +262,8 @@ def format_violations(errors):
                 normalize_dict(v, indent + 2)
             else:
                 normalize_list(v, indent + 2)
-            if end is not None:
-                normalize_str(end, 0)
+            if sep is not None:
+                normalize_str(sep, 0)
 
     normalize_dict(errors, 0, "")
 
