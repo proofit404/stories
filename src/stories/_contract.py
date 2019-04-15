@@ -14,6 +14,9 @@ from .exceptions import ContextContractError
 #     classes.  Checking `self.spec is None` at the beginning of
 #     methods is ugly.  Drop `available_null` and `validate_null`
 #     functions.
+#
+# [ ] Remove all get methods.  Populate contract subcontracts
+#     attributes in the wrap stage.
 
 
 # Declared validators.
@@ -217,6 +220,21 @@ class Contract(object):
             arguments.extend(contract.get_arguments())
         return arguments
 
+    def get_available(self):
+        available = self.available_func(self.spec)
+        for contract in self.subcontracts:
+            available |= contract.get_available()
+        return available
+
+    def find_conflict_contract(self, repeated):
+        available = self.available_func(self.spec)
+        if available & repeated:
+            return self.cls_name, self.name
+        for contract in self.subcontracts:
+            result = contract.find_conflict_contract(repeated)
+            if result:
+                return result
+
     def get_unknown_arguments(self, kwargs):
         available = set(self.arguments)
         unknown_arguments = set(kwargs) - available
@@ -273,56 +291,40 @@ def format_violations(errors):
 # Wrap.
 
 
-def combine_contract(specs, tail):
-    for first_spec, first_cls_name, first_method_name in specs:
-        for second_spec, second_cls_name, second_method_name in tail:
-            if first_spec is second_spec:
-                repeated = set()
-            elif first_spec is None and second_spec is None:
-                repeated = set()
-            elif isinstance(first_spec, PydanticSpec) and isinstance(
-                second_spec, PydanticSpec
-            ):
-                repeated = available_pydantic(first_spec) & available_pydantic(
-                    second_spec
-                )
-            elif isinstance(first_spec, MarshmallowSpec) and isinstance(
-                second_spec, MarshmallowSpec
-            ):
-                repeated = available_marshmallow(first_spec) & available_marshmallow(
-                    second_spec
-                )
-            elif isinstance(first_spec, CerberusSpec) and isinstance(
-                second_spec, CerberusSpec
-            ):
-                repeated = available_cerberus(first_spec) & available_cerberus(
-                    second_spec
-                )
-            elif isinstance(first_spec, dict) and isinstance(second_spec, dict):
-                repeated = available_raw(first_spec) & available_raw(second_spec)
-            else:
-                message = type_error_template.format(
-                    cls=first_cls_name,
-                    method=first_method_name,
-                    contract=first_spec,
-                    other_cls=second_cls_name,
-                    other_method=second_method_name,
-                    other_contract=second_spec,
-                )
-                raise ContextContractError(message)
-            if repeated:
-                message = incompatible_contracts_template.format(
-                    repeated=", ".join(map(repr, sorted(repeated))),
-                    cls=first_cls_name,
-                    method=first_method_name,
-                    other_cls=second_cls_name,
-                    other_method=second_method_name,
-                )
-                raise ContextContractError(message)
-    contracts = []
-    contracts.extend(specs)
-    contracts.extend(tail)
-    return contracts
+def combine_contract(parent, child):
+    if parent.spec is child.spec:
+        return
+    if parent.spec is None and child.spec is None:
+        parent.add_substory_contract(child)
+        return
+    for spec_type in [PydanticSpec, MarshmallowSpec, CerberusSpec, dict]:
+        if isinstance(parent.spec, spec_type) and isinstance(child.spec, spec_type):
+            break
+    else:
+        message = type_error_template.format(
+            cls=parent.cls_name,
+            method=parent.name,
+            contract=parent.spec,
+            other_cls=child.cls_name,
+            other_method=child.name,
+            other_contract=child.spec,
+        )
+        raise ContextContractError(message)
+    available = parent.get_available() & child.get_available()
+    arguments = set(parent.get_arguments()) & set(child.get_arguments())
+    repeated = available - arguments
+    if repeated:
+        # FIXME: Search on parent too.
+        other_cls, other_method = child.find_conflict_contract(repeated)
+        message = incompatible_contracts_template.format(
+            repeated=", ".join(map(repr, sorted(repeated))),
+            cls=parent.cls_name,
+            method=parent.name,
+            other_cls=other_cls,
+            other_method=other_method,
+        )
+        raise ContextContractError(message)
+    parent.add_substory_contract(child)
 
 
 # Messages.
