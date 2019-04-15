@@ -228,6 +228,21 @@ class ParamParentWithNull(object):
         I.after
 
 
+class ParamParentWithSameWithString(object):
+    @story
+    @arguments("foo", "bar")
+    def a(I):
+        I.before
+        I.x
+        I.after
+
+
+@ParamParentWithSameWithString.a.contract  # noqa: F811
+class Contract(BaseModel):
+    foo: str
+    bar: List[str]
+
+
 # Root base classes.
 
 

@@ -17,6 +17,8 @@ from .exceptions import ContextContractError
 #
 # [ ] Remove all get methods.  Populate contract subcontracts
 #     attributes in the wrap stage.
+#
+# [ ] Add fix suggestion to the bottom of the error message.
 
 
 # Declared validators.
@@ -142,6 +144,7 @@ class Contract(object):
         unknown_arguments = self.get_unknown_arguments(kwargs)
         if unknown_arguments:
             if self.arguments:
+                # FIXME: What if arguments were defined only in the substory?
                 template = unknown_argument_template
             else:
                 template = unknown_argument_null_template
@@ -250,10 +253,38 @@ class Contract(object):
         return unknown_variables, available
 
     def get_invalid_variables(self, ns):
+        # FIXME: This method is unbelievably complex.
         available = self.available_func(self.spec)
         kwargs, errors = self.validate_func(self.spec, ns, set(ns) & available)
         for contract in self.subcontracts:
             sub_kwargs, sub_errors = contract.get_invalid_variables(ns)
+            conflict = set()
+            for variable, value in sub_kwargs.items():
+                if variable in kwargs and kwargs[variable] != value:
+                    conflict.add(variable)
+            if conflict:
+                message = normalization_conflict_template.format(
+                    conflict=", ".join(map(repr, sorted(conflict))),
+                    # FIXME: Do we need to track who first add
+                    # a `variable` to the `kwargs`?
+                    cls=self.cls_name,
+                    method=self.name,
+                    result="\n".join(
+                        [
+                            " - " + variable + ": " + repr(kwargs[variable])
+                            for variable in sorted(conflict)
+                        ]
+                    ),
+                    other_cls=contract.cls_name,
+                    other_method=contract.name,
+                    other_result="\n".join(
+                        [
+                            " - " + variable + ": " + repr(sub_kwargs[variable])
+                            for variable in sorted(conflict)
+                        ]
+                    ),
+                )
+                raise ContextContractError(message)
             kwargs.update(sub_kwargs)
             errors.update(sub_errors)
         return kwargs, errors
@@ -433,4 +464,19 @@ Story context contract: {contract}
 Substory method: {other_cls}.{other_method}
 
 Substory context contract: {other_contract}
+""".strip()
+
+
+normalization_conflict_template = """
+These arguments have normalization conflict: {conflict}
+
+Story method: {cls}.{method}
+
+Story normalization result:
+{result}
+
+Substory method: {other_cls}.{other_method}
+
+Substory normalization result:
+{other_result}
 """.strip()

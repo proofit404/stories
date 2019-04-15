@@ -279,6 +279,81 @@ def test_story_arguments_normalization_many_levels(m):
     assert getter().bar == [4]
 
 
+def test_story_arguments_normalization_conflict(m):
+    """
+    Story and substory can have an argument with the same name.  They
+    both will define validators for this argument.  If normalization
+    result of both contracts will mismatch we should raise an error.
+    """
+
+    # FIXME: Check the same with parent method set substory
+    # arguments.  And there is a normalization conflict in the
+    # sequential substories.  Add parent story method returned
+    # `Success` marker to the error message.
+
+    class T(m.ParamChild, m.NormalMethod):
+        pass
+
+    class Q(m.ParamParentWithSameWithString, m.NormalParentMethod, T):
+        pass
+
+    class J(m.ParamParentWithSameWithString, m.NormalParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    # Substory inheritance.
+
+    expected = """
+These arguments have normalization conflict: 'bar', 'foo'
+
+Story method: Q.a
+
+Story normalization result:
+ - bar: ['2']
+ - foo: '1'
+
+Substory method: Q.x
+
+Substory normalization result:
+ - bar: [2]
+ - foo: 1
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        Q().a(foo="1", bar=["2"])
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(ContextContractError) as exc_info:
+        Q().a.run(foo="1", bar=["2"])
+    assert str(exc_info.value) == expected
+
+    # Substory DI.
+
+    expected = """
+These arguments have normalization conflict: 'bar', 'foo'
+
+Story method: J.a
+
+Story normalization result:
+ - bar: ['2']
+ - foo: '1'
+
+Substory method: T.x
+
+Substory normalization result:
+ - bar: [2]
+ - foo: 1
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        J().a(foo="1", bar=["2"])
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(ContextContractError) as exc_info:
+        J().a.run(foo="1", bar=["2"])
+    assert str(exc_info.value) == expected
+
+
 def test_context_variables_validation(m):
     """
     We apply validators to the context variables, if story defines
@@ -951,7 +1026,7 @@ Context()
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        T().x()
+        T().x()  # FIXME: This should be arguments error (not substory call error).
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:

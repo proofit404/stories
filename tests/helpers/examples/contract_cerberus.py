@@ -249,6 +249,25 @@ class ParamParentWithNull(object):
         I.after
 
 
+class ParamParentWithSameWithString(object):
+    @story
+    @arguments("foo", "bar")
+    def a(I):
+        I.before
+        I.x
+        I.after
+
+
+ParamParentWithSameWithString.a.contract(
+    Validator(
+        {
+            "foo": {"type": "string"},
+            "bar": {"type": "list", "schema": {"type": "string"}},
+        }
+    )
+)
+
+
 # Root base classes.
 
 

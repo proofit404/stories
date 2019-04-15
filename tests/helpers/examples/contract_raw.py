@@ -16,6 +16,13 @@ def integer(value):
         return None, "Invalid value"
 
 
+def string(value):
+    if isinstance(value, str):
+        return value, None
+    else:
+        return None, "Invalid value"
+
+
 def list_of(f):
     def validator(value):
         if isinstance(value, list):
@@ -225,6 +232,18 @@ class ParamParentWithNull(object):
         I.before
         I.x
         I.after
+
+
+class ParamParentWithSameWithString(object):
+    @story
+    @arguments("foo", "bar")
+    def a(I):
+        I.before
+        I.x
+        I.after
+
+
+ParamParentWithSameWithString.a.contract({"foo": string, "bar": list_of(string)})
 
 
 # Root base classes.
