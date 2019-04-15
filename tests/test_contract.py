@@ -6,20 +6,6 @@ from stories.exceptions import ContextContractError
 
 # TODO:
 #
-# [ ] Apply substory validators of the substory arguments.
-#
-# [ ] Deny to normalize substory arguments set by parent story
-#     methods.
-#
-# [ ] Deny unknown arguments to story call.
-#
-# [ ] Collect arguments from all substories.  Allow to pass arguments
-#     to the substories through story call.
-#
-# [ ] Allow to normalize substory arguments passed to the story calls.
-#
-# [ ] Add `contract_in` shortcut.
-#
 # [ ] Show collected arguments of the story composition in the error
 #     messages.
 
@@ -630,7 +616,7 @@ Use variables with different names.
     assert str(exc_info.value) == expected
 
 
-def test_composition_incompatible_contracts(m):
+def test_composition_incompatible_contract_types(m):
     """Deny to use different types in the story composition."""
 
     class T(m.Child, m.NormalMethod):
@@ -680,7 +666,7 @@ Substory context contract:
     assert str(exc_info.value).startswith(expected)
 
 
-def test_composition_use_same_contract(m):
+def test_composition_use_same_contract_instance(m):
     """
     The same contract class or instance can be used in story and a
     substory.  This should not lead to the incompatible contract
@@ -935,7 +921,7 @@ Story composition has no arguments.
     assert str(exc_info.value) == expected
 
 
-def test_missed_story_arguments(m):
+def test_require_story_arguments_present_in_context(m):
     """Check story and substory arguments are present in the context."""
 
     class T(m.ParamChildWithNull, m.NormalMethod):
