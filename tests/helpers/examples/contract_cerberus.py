@@ -134,6 +134,22 @@ class ParamChild(object):
     )
 
 
+class ParamChildWithString(object):
+    @story
+    @arguments("foo", "bar")
+    def y(I):
+        I.one
+
+    y.contract(
+        Validator(
+            {
+                "foo": {"type": "string"},
+                "bar": {"type": "list", "schema": {"type": "string"}},
+            }
+        )
+    )
+
+
 class ParamChildWithNull(object):
     @story
     @arguments("foo", "bar")
@@ -218,6 +234,17 @@ ChildReuse.x.contract(
         )
     )
 )
+
+
+class SequentialParent(object):
+    @story
+    def a(I):
+        I.before
+        I.x
+        I.y
+        I.after
+
+    a.contract(Validator({}))
 
 
 class ParamParent(object):

@@ -126,6 +126,18 @@ class ParamChild(object):
         baz = fields.Integer()
 
 
+class ParamChildWithString(object):
+    @story
+    @arguments("foo", "bar")
+    def y(I):
+        I.one
+
+    @y.contract
+    class Contract(Schema):
+        foo = fields.String()
+        bar = fields.List(fields.String())
+
+
 class ParamChildWithNull(object):
     @story
     @arguments("foo", "bar")
@@ -199,6 +211,19 @@ class Contract(Schema):
     foo = fields.Integer()
     bar = fields.List(fields.Integer())
     baz = fields.Integer()
+
+
+class SequentialParent(object):
+    @story
+    def a(I):
+        I.before
+        I.x
+        I.y
+        I.after
+
+    @a.contract  # FIXME: Should be inferred.
+    class Contract(Schema):
+        pass
 
 
 class ParamParent(object):

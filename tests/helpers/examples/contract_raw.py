@@ -28,11 +28,11 @@ def list_of(f):
         if isinstance(value, list):
             new = list(map(f, value))
             if any(map(itemgetter(1), new)):
-                return None, "List item is invalid"
+                return None, "Invalid value"
             else:
                 return list(map(itemgetter(0), new)), None
         else:
-            return None, "Is not a list"
+            return None, "Invalid value"
 
     return validator
 
@@ -151,6 +151,15 @@ class ParamChild(object):
     x.contract({"foo": integer, "bar": list_of(integer), "baz": integer})
 
 
+class ParamChildWithString(object):
+    @story
+    @arguments("foo", "bar")
+    def y(I):
+        I.one
+
+    y.contract({"foo": string, "bar": list_of(string)})
+
+
 class ParamChildWithNull(object):
     @story
     @arguments("foo", "bar")
@@ -211,6 +220,17 @@ class ParentReuse(object):
 ChildReuse.x.contract(
     ParentReuse.a.contract({"foo": integer, "bar": list_of(integer), "baz": integer})
 )
+
+
+class SequentialParent(object):
+    @story
+    def a(I):
+        I.before
+        I.x
+        I.y
+        I.after
+
+    a.contract({})
 
 
 class ParamParent(object):

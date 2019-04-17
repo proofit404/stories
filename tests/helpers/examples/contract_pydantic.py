@@ -128,6 +128,18 @@ class ParamChild(object):
         baz: int
 
 
+class ParamChildWithString(object):
+    @story
+    @arguments("foo", "bar")
+    def y(I):
+        I.one
+
+    @y.contract
+    class Contract(BaseModel):
+        foo: str
+        bar: List[str]
+
+
 class ParamChildWithNull(object):
     @story
     @arguments("foo", "bar")
@@ -201,6 +213,19 @@ class Contract(BaseModel):
     foo: int
     bar: List[int]
     baz: int
+
+
+class SequentialParent(object):
+    @story
+    def a(I):
+        I.before
+        I.x
+        I.y
+        I.after
+
+    @a.contract
+    class Contract(BaseModel):
+        pass
 
 
 class ParamParent(object):

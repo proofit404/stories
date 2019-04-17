@@ -137,6 +137,80 @@ def test_context_variables_normalization(m):
     assert getter().bar == [2]
 
 
+def test_context_variables_normalization_conflict(m):
+    """
+    More than one substory can declare an argument with the same name.
+    This means validators of both substories should return the same
+    result.
+    """
+
+    class T(m.ParamChild, m.NormalMethod):
+        pass
+
+    class E(m.ParamChildWithString, m.NormalMethod):
+        pass
+
+    class Q(m.SequentialParent, m.StringParentMethod, T, E):
+        pass
+
+    class J(m.SequentialParent, m.StringParentMethod):
+        def __init__(self):
+            self.x = T().x
+            self.y = E().y
+
+    # Substory inheritance.
+
+    expected = """
+These arguments have normalization conflict: 'bar', 'foo'
+
+Story method: Q.x
+
+Story normalization result:
+ - bar: [2]
+ - foo: 1
+
+Substory method: Q.y
+
+Substory normalization result:
+ - bar: ['2']
+ - foo: '1'
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        Q().a()
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(ContextContractError) as exc_info:
+        Q().a.run()
+    assert str(exc_info.value) == expected
+
+    # Substory DI.
+
+    expected = """
+These arguments have normalization conflict: 'bar', 'foo'
+
+Story method: T.x
+
+Story normalization result:
+ - bar: [2]
+ - foo: 1
+
+Substory method: E.y
+
+Substory normalization result:
+ - bar: ['2']
+ - foo: '1'
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        J().a()
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(ContextContractError) as exc_info:
+        J().a.run()
+    assert str(exc_info.value) == expected
+
+
 def test_story_arguments_normalization(m):
     """
     We apply normalization to the story arguments, if story defines
@@ -285,11 +359,6 @@ def test_story_arguments_normalization_conflict(m):
     both will define validators for this argument.  If normalization
     result of both contracts will mismatch we should raise an error.
     """
-
-    # FIXME: Check the same with parent method set substory
-    # arguments.  And there is a normalization conflict in the
-    # sequential substories.  Add parent story method returned
-    # `Success` marker to the error message.
 
     class T(m.ParamChild, m.NormalMethod):
         pass

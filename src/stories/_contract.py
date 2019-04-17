@@ -159,7 +159,7 @@ class Contract(object):
         if self.spec is None:
             return kwargs
         # ^^^
-        kwargs, errors = self.get_invalid_variables(kwargs)
+        kwargs, errors, _ = self.get_invalid_variables(kwargs)
         if errors:
             message = invalid_argument_template.format(
                 variables=", ".join(map(repr, sorted(errors))),
@@ -204,7 +204,7 @@ class Contract(object):
                 method=method.__name__,
             )
             raise ContextContractError(message)
-        kwargs, errors = self.get_invalid_variables(ns)
+        kwargs, errors, _ = self.get_invalid_variables(ns)
         if errors:
             message = invalid_variable_template.format(
                 variables=", ".join(map(repr, sorted(errors))),
@@ -254,10 +254,13 @@ class Contract(object):
 
     def get_invalid_variables(self, ns):
         # FIXME: This method is unbelievably complex.
-        available = self.available_func(self.spec)
-        kwargs, errors = self.validate_func(self.spec, ns, set(ns) & available)
+        available = set(ns) & self.available_func(self.spec)
+        kwargs, errors = self.validate_func(self.spec, ns, available)
+        normalized = dict(
+            (variable, (self.cls_name, self.name)) for variable in available
+        )
         for contract in self.subcontracts:
-            sub_kwargs, sub_errors = contract.get_invalid_variables(ns)
+            sub_kwargs, sub_errors, sub_normalized = contract.get_invalid_variables(ns)
             conflict = set()
             for variable, value in sub_kwargs.items():
                 if variable in kwargs and kwargs[variable] != value:
@@ -265,10 +268,12 @@ class Contract(object):
             if conflict:
                 message = normalization_conflict_template.format(
                     conflict=", ".join(map(repr, sorted(conflict))),
-                    # FIXME: Do we need to track who first add
-                    # a `variable` to the `kwargs`?
-                    cls=self.cls_name,
-                    method=self.name,
+                    # FIXME: Normalization conflict can consist of two
+                    # variables.  The first variable can be set by one
+                    # substory.  The second variable can be set by
+                    # another substory.
+                    cls=normalized[next(iter(conflict))][0],
+                    method=normalized[next(iter(conflict))][1],
                     result="\n".join(
                         [
                             " - " + variable + ": " + repr(kwargs[variable])
@@ -287,7 +292,8 @@ class Contract(object):
                 raise ContextContractError(message)
             kwargs.update(sub_kwargs)
             errors.update(sub_errors)
-        return kwargs, errors
+            normalized.update(sub_normalized)
+        return kwargs, errors, normalized
 
 
 def format_violations(errors):
