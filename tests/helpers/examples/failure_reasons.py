@@ -1,6 +1,7 @@
 from enum import Enum
 
 from stories import Failure, Success, story
+from stories.shortcuts import failures_in
 
 
 # Mixins.
@@ -142,7 +143,7 @@ class ParentWithList(object):
         I.after
 
 
-ParentWithList.a.failures(["foo", "bar", "baz"])
+failures_in(ParentWithList, ["foo", "bar", "baz"])
 
 
 class WideParentWithList(object):
@@ -153,7 +154,7 @@ class WideParentWithList(object):
         I.after
 
 
-WideParentWithList.a.failures(["foo", "bar", "baz", "quiz"])
+failures_in(WideParentWithList, ["foo", "bar", "baz", "quiz"])
 
 
 class ShrinkParentWithList(object):
@@ -164,7 +165,7 @@ class ShrinkParentWithList(object):
         I.after
 
 
-ShrinkParentWithList.a.failures(["foo", "quiz"])
+failures_in(ShrinkParentWithList, ["foo", "quiz"])
 
 
 class ChildWithEnum(object):
@@ -198,11 +199,12 @@ class ParentWithEnum(object):
         I.x
         I.after
 
-    @a.failures
-    class Errors(Enum):
-        foo = 1
-        bar = 2
-        baz = 3
+
+@failures_in(ParentWithEnum)
+class Errors(Enum):
+    foo = 1
+    bar = 2
+    baz = 3
 
 
 class WideParentWithEnum(object):
@@ -212,12 +214,13 @@ class WideParentWithEnum(object):
         I.x
         I.after
 
-    @a.failures
-    class Errors(Enum):
-        foo = 1
-        bar = 2
-        baz = 3
-        quiz = 4
+
+@failures_in(WideParentWithEnum)
+class Errors(Enum):
+    foo = 1
+    bar = 2
+    baz = 3
+    quiz = 4
 
 
 class ShrinkParentWithEnum(object):
@@ -227,7 +230,8 @@ class ShrinkParentWithEnum(object):
         I.x
         I.after
 
-    @a.failures
-    class Errors(Enum):
-        foo = 1
-        quiz = 4
+
+@failures_in(ShrinkParentWithEnum)
+class Errors(Enum):
+    foo = 1
+    quiz = 4

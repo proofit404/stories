@@ -1,7 +1,6 @@
 import pytest
 
-import examples.methods
-import examples.shortcuts  # noqa: F401
+import examples.methods  # noqa: F401
 
 
 def contracts():
