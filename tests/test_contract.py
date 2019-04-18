@@ -147,7 +147,7 @@ def test_context_variables_normalization_conflict(m):
     class T(m.ParamChild, m.NormalMethod):
         pass
 
-    class E(m.ParamChildWithString, m.NormalMethod):
+    class E(m.NextParamChildWithString, m.NormalMethod):
         pass
 
     class Q(m.SequentialParent, m.StringParentMethod, T, E):

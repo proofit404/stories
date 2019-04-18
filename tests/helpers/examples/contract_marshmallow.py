@@ -126,7 +126,7 @@ class ParamChild(object):
         baz = fields.Integer()
 
 
-class ParamChildWithString(object):
+class NextParamChildWithString(object):
     @story
     @arguments("foo", "bar")
     def y(I):

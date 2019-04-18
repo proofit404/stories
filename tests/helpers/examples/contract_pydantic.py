@@ -128,7 +128,7 @@ class ParamChild(object):
         baz: int
 
 
-class ParamChildWithString(object):
+class NextParamChildWithString(object):
     @story
     @arguments("foo", "bar")
     def y(I):

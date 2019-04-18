@@ -134,7 +134,7 @@ class ParamChild(object):
     )
 
 
-class ParamChildWithString(object):
+class NextParamChildWithString(object):
     @story
     @arguments("foo", "bar")
     def y(I):
