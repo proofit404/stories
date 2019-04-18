@@ -86,7 +86,7 @@ class ExceptionRootMethod(object):
         return Success()
 
 
-# Base classes.
+# Child base classes.
 
 
 class Child(object):
@@ -126,6 +126,27 @@ class ParamChild(object):
         baz = fields.Integer()
 
 
+class ParamChildWithNull(object):
+    @story
+    @arguments("foo", "bar")
+    def x(I):
+        I.one
+
+
+class ParamChildWithShrink(object):
+    @story
+    @arguments("foo", "bar", "baz")
+    def x(I):
+        I.one
+
+    @x.contract
+    class Contract(Schema):
+        baz = fields.Integer()
+
+
+# Next child base classes.
+
+
 class NextChildWithSame(object):
     @story
     def y(I):
@@ -148,24 +169,6 @@ class NextParamChildWithString(object):
     class Contract(Schema):
         foo = fields.String()
         bar = fields.List(fields.String())
-
-
-class ParamChildWithNull(object):
-    @story
-    @arguments("foo", "bar")
-    def x(I):
-        I.one
-
-
-class ParamChildWithShrink(object):
-    @story
-    @arguments("foo", "bar", "baz")
-    def x(I):
-        I.one
-
-    @x.contract
-    class Contract(Schema):
-        baz = fields.Integer()
 
 
 # Parent base classes.

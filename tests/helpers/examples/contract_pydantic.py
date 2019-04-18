@@ -88,7 +88,7 @@ class ExceptionRootMethod(object):
         return Success()
 
 
-# Base classes.
+# Child base classes.
 
 
 class Child(object):
@@ -128,6 +128,27 @@ class ParamChild(object):
         baz: int
 
 
+class ParamChildWithNull(object):
+    @story
+    @arguments("foo", "bar")
+    def x(I):
+        I.one
+
+
+class ParamChildWithShrink(object):
+    @story
+    @arguments("foo", "bar", "baz")
+    def x(I):
+        I.one
+
+    @x.contract
+    class Contract(BaseModel):
+        baz: int
+
+
+# Next child base classes.
+
+
 class NextChildWithSame(object):
     @story
     def y(I):
@@ -150,24 +171,6 @@ class NextParamChildWithString(object):
     class Contract(BaseModel):
         foo: str
         bar: List[str]
-
-
-class ParamChildWithNull(object):
-    @story
-    @arguments("foo", "bar")
-    def x(I):
-        I.one
-
-
-class ParamChildWithShrink(object):
-    @story
-    @arguments("foo", "bar", "baz")
-    def x(I):
-        I.one
-
-    @x.contract
-    class Contract(BaseModel):
-        baz: int
 
 
 # Parent base classes.
