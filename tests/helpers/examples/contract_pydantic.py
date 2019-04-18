@@ -128,6 +128,18 @@ class ParamChild(object):
         baz: int
 
 
+class NextChildWithSame(object):
+    @story
+    def y(I):
+        I.one
+
+    @y.contract
+    class Contract(BaseModel):
+        foo: int
+        bar: List[int]
+        baz: int
+
+
 class NextParamChildWithString(object):
     @story
     @arguments("foo", "bar")

@@ -351,12 +351,12 @@ def combine_contract(parent, child):
     arguments = set(parent.get_arguments()) & set(child.get_arguments())
     repeated = available - arguments
     if repeated:
-        # FIXME: Search on parent too.
+        cls_name, name = parent.find_conflict_contract(repeated)
         other_cls, other_method = child.find_conflict_contract(repeated)
         message = incompatible_contracts_template.format(
             repeated=", ".join(map(repr, sorted(repeated))),
-            cls=parent.cls_name,
-            method=parent.name,
+            cls=cls_name,
+            method=name,
             other_cls=other_cls,
             other_method=other_method,
         )

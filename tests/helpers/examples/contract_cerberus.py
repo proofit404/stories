@@ -134,6 +134,22 @@ class ParamChild(object):
     )
 
 
+class NextChildWithSame(object):
+    @story
+    def y(I):
+        I.one
+
+    y.contract(
+        Validator(
+            {
+                "foo": {"type": "integer", "coerce": int},
+                "bar": {"type": "list", "schema": {"type": "integer", "coerce": int}},
+                "baz": {"type": "integer", "coerce": int},
+            }
+        )
+    )
+
+
 class NextParamChildWithString(object):
     @story
     @arguments("foo", "bar")

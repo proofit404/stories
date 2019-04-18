@@ -762,6 +762,63 @@ Use variables with different names.
     assert str(exc_info.value) == expected
 
 
+def test_composition_contract_variable_conflict_sequential(m):
+    """
+    Story and substory contracts can not declare the same variable
+    twice.
+    """
+
+    class T(m.Child, m.NormalMethod):
+        pass
+
+    class E(m.NextChildWithSame, m.NormalMethod):
+        pass
+
+    class Q(m.SequentialParent, m.StringParentMethod, T, E):
+        pass
+
+    class J(m.SequentialParent, m.StringParentMethod):
+        def __init__(self):
+            self.x = T().x
+            self.y = E().y
+
+    # Substory inheritance.
+
+    expected = """
+Repeated variables can not be used in a story composition.
+
+Variables repeated in both context contracts: 'bar', 'baz', 'foo'
+
+Story method: Q.x
+
+Substory method: Q.y
+
+Use variables with different names.
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        Q().a
+    assert str(exc_info.value) == expected
+
+    # Substory DI.
+
+    expected = """
+Repeated variables can not be used in a story composition.
+
+Variables repeated in both context contracts: 'bar', 'baz', 'foo'
+
+Story method: T.x
+
+Substory method: E.y
+
+Use variables with different names.
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        J().a
+    assert str(exc_info.value) == expected
+
+
 def test_composition_incompatible_contract_types(m):
     """Deny to use different types in the story composition."""
 

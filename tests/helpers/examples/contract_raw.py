@@ -151,6 +151,14 @@ class ParamChild(object):
     x.contract({"foo": integer, "bar": list_of(integer), "baz": integer})
 
 
+class NextChildWithSame(object):
+    @story
+    def y(I):
+        I.one
+
+    y.contract({"foo": integer, "bar": list_of(integer), "baz": integer})
+
+
 class NextParamChildWithString(object):
     @story
     @arguments("foo", "bar")

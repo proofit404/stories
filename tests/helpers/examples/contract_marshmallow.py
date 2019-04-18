@@ -126,6 +126,18 @@ class ParamChild(object):
         baz = fields.Integer()
 
 
+class NextChildWithSame(object):
+    @story
+    def y(I):
+        I.one
+
+    @y.contract
+    class Contract(Schema):
+        foo = fields.Integer()
+        bar = fields.List(fields.Integer())
+        baz = fields.Integer()
+
+
 class NextParamChildWithString(object):
     @story
     @arguments("foo", "bar")
