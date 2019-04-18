@@ -78,6 +78,14 @@ class StringRootMethod(object):
         return Success()
 
 
+class StringWideRootMethod(object):
+    def start(self, ctx):
+        return Success(foo="1", bar=["2"], baz="1")
+
+    def finish(self, ctx):
+        return Success()
+
+
 class ExceptionRootMethod(object):
     def start(self, ctx):
         raise Exception
@@ -169,6 +177,13 @@ class NextParamChildWithString(object):
     class Contract(Schema):
         foo = fields.String()
         bar = fields.List(fields.String())
+
+
+class NextParamChildReuse(object):
+    @story
+    @arguments("foo", "bar", "baz")
+    def y(I):
+        I.one
 
 
 # Parent base classes.
@@ -266,6 +281,21 @@ class ParamParentWithNull(object):
         I.after
 
 
+class ParamParentWithSame(object):
+    @story
+    @arguments("foo", "bar", "baz")
+    def a(I):
+        I.before
+        I.after
+
+
+@ParamParentWithSame.a.contract  # noqa: F811
+class Contract(Schema):
+    foo = fields.Integer()
+    bar = fields.List(fields.Integer())
+    baz = fields.Integer()
+
+
 class ParamParentWithSameWithString(object):
     @story
     @arguments("foo", "bar")
@@ -279,6 +309,26 @@ class ParamParentWithSameWithString(object):
 class Contract(Schema):
     foo = fields.String()
     bar = fields.List(fields.String())
+
+
+# Next parent base classes.
+
+
+class NextParamParentReuse(object):
+    @story
+    @arguments("foo", "bar")
+    def b(I):
+        I.before
+        I.y
+        I.after
+
+
+@NextParamChildReuse.y.contract  # noqa: F811
+@NextParamParentReuse.b.contract
+class Contract(Schema):
+    foo = fields.Integer()
+    bar = fields.List(fields.Integer())
+    baz = fields.Integer()
 
 
 # Root base classes.
@@ -311,6 +361,21 @@ class Contract(Schema):
     foo = fields.Integer()
     bar = fields.List(fields.Integer())
     baz = fields.Integer()
+
+
+class SequentialRoot(object):
+    @story
+    def i(I):
+        I.start
+        I.a
+        I.b
+        I.finish
+
+
+@contract_in(SequentialRoot)  # noqa: F811
+class Contract(Schema):
+    fizz = fields.Integer()
+    buzz = fields.Integer()
 
 
 class ParamRoot(object):

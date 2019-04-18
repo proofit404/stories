@@ -330,6 +330,7 @@ def format_violations(errors):
 
 def combine_contract(parent, child):
     if parent.spec is child.spec:
+        parent.add_substory_contract(child)
         return
     if parent.spec is None and child.spec is None:
         parent.add_substory_contract(child)

@@ -80,6 +80,14 @@ class StringRootMethod(object):
         return Success()
 
 
+class StringWideRootMethod(object):
+    def start(self, ctx):
+        return Success(foo="1", bar=["2"], baz="1")
+
+    def finish(self, ctx):
+        return Success()
+
+
 class ExceptionRootMethod(object):
     def start(self, ctx):
         raise Exception
@@ -171,6 +179,13 @@ class NextParamChildWithString(object):
     class Contract(BaseModel):
         foo: str
         bar: List[str]
+
+
+class NextParamChildReuse(object):
+    @story
+    @arguments("foo", "bar", "baz")
+    def y(I):
+        I.one
 
 
 # Parent base classes.
@@ -268,6 +283,21 @@ class ParamParentWithNull(object):
         I.after
 
 
+class ParamParentWithSame(object):
+    @story
+    @arguments("foo", "bar", "baz")
+    def a(I):
+        I.before
+        I.after
+
+
+@ParamParentWithSame.a.contract  # noqa: F811
+class Contract(BaseModel):
+    foo: int
+    bar: List[int]
+    baz: int
+
+
 class ParamParentWithSameWithString(object):
     @story
     @arguments("foo", "bar")
@@ -281,6 +311,26 @@ class ParamParentWithSameWithString(object):
 class Contract(BaseModel):
     foo: str
     bar: List[str]
+
+
+# Next parent base classes.
+
+
+class NextParamParentReuse(object):
+    @story
+    @arguments("foo", "bar")
+    def b(I):
+        I.before
+        I.y
+        I.after
+
+
+@NextParamChildReuse.y.contract  # noqa: F811
+@NextParamParentReuse.b.contract
+class Contract(BaseModel):
+    foo: int
+    bar: List[int]
+    baz: int
 
 
 # Root base classes.
@@ -313,6 +363,21 @@ class Contract(BaseModel):
     foo: int
     bar: List[int]
     baz: int
+
+
+class SequentialRoot(object):
+    @story
+    def i(I):
+        I.start
+        I.a
+        I.b
+        I.finish
+
+
+@contract_in(SequentialRoot)  # noqa: F811
+class Contract(BaseModel):
+    fizz: int
+    buzz: int
 
 
 class ParamRoot(object):

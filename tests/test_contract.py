@@ -819,6 +819,45 @@ Use variables with different names.
     assert str(exc_info.value) == expected
 
 
+def test_composition_contract_variable_conflict_sequential_reuse(m):
+    """
+    Story and substory can reuse the same contract.  Substory can have
+    more arguments than story.  Another sequential substory can have
+    the same arguments as previous substory.
+    """
+
+    class E(m.NextParamChildReuse, m.NormalMethod):
+        pass
+
+    class Q(m.ParamParentWithSame, m.NormalParentMethod):
+        pass
+
+    class V(m.NextParamParentReuse, m.NormalParentMethod, E):
+        pass
+
+    class R(m.SequentialRoot, m.StringWideRootMethod, Q, V):
+        pass
+
+    class F(m.SequentialRoot, m.StringWideRootMethod):
+        def __init__(self):
+            self.a = Q().a
+            self.b = V().b
+
+    # Substory inheritance.
+
+    R().i()
+
+    result = R().i.run()
+    assert result.value is None
+
+    # Substory DI.
+
+    F().i()
+
+    result = F().i.run()
+    assert result.value is None
+
+
 def test_composition_incompatible_contract_types(m):
     """Deny to use different types in the story composition."""
 

@@ -78,6 +78,14 @@ class StringRootMethod(object):
         return Success()
 
 
+class StringWideRootMethod(object):
+    def start(self, ctx):
+        return Success(foo="1", bar=["2"], baz="1")
+
+    def finish(self, ctx):
+        return Success()
+
+
 class ExceptionRootMethod(object):
     def start(self, ctx):
         raise Exception
@@ -183,6 +191,13 @@ class NextParamChildWithString(object):
             }
         )
     )
+
+
+class NextParamChildReuse(object):
+    @story
+    @arguments("foo", "bar", "baz")
+    def y(I):
+        I.one
 
 
 # Parent base classes.
@@ -295,6 +310,25 @@ class ParamParentWithNull(object):
         I.after
 
 
+class ParamParentWithSame(object):
+    @story
+    @arguments("foo", "bar", "baz")
+    def a(I):
+        I.before
+        I.after
+
+
+ParamParentWithSame.a.contract(
+    Validator(
+        {
+            "foo": {"type": "integer", "coerce": int},
+            "bar": {"type": "list", "schema": {"type": "integer", "coerce": int}},
+            "baz": {"type": "integer", "coerce": int},
+        }
+    )
+)
+
+
 class ParamParentWithSameWithString(object):
     @story
     @arguments("foo", "bar")
@@ -310,6 +344,31 @@ ParamParentWithSameWithString.a.contract(
             "foo": {"type": "string"},
             "bar": {"type": "list", "schema": {"type": "string"}},
         }
+    )
+)
+
+
+# Next parent base classes.
+
+
+class NextParamParentReuse(object):
+    @story
+    @arguments("foo", "bar")
+    def b(I):
+        I.before
+        I.y
+        I.after
+
+
+NextParamChildReuse.y.contract(
+    NextParamParentReuse.b.contract(
+        Validator(
+            {
+                "foo": {"type": "integer", "coerce": int},
+                "bar": {"type": "list", "schema": {"type": "integer", "coerce": int}},
+                "baz": {"type": "integer", "coerce": int},
+            }
+        )
     )
 )
 
@@ -351,6 +410,26 @@ contract_in(
             "foo": {"type": "integer", "coerce": int},
             "bar": {"type": "list", "schema": {"type": "integer", "coerce": int}},
             "baz": {"type": "integer", "coerce": int},
+        }
+    ),
+)
+
+
+class SequentialRoot(object):
+    @story
+    def i(I):
+        I.start
+        I.a
+        I.b
+        I.finish
+
+
+contract_in(
+    SequentialRoot,
+    Validator(
+        {
+            "fizz": {"type": "integer", "coerce": int},
+            "buzz": {"type": "integer", "coerce": int},
         }
     ),
 )
