@@ -215,7 +215,7 @@ class WideParentWithEnum(object):
         I.after
 
 
-@failures_in(WideParentWithEnum)
+@failures_in(WideParentWithEnum)  # noqa: F811
 class Errors(Enum):
     foo = 1
     bar = 2
@@ -231,7 +231,7 @@ class ShrinkParentWithEnum(object):
         I.after
 
 
-@failures_in(ShrinkParentWithEnum)
+@failures_in(ShrinkParentWithEnum)  # noqa: F811
 class Errors(Enum):
     foo = 1
     quiz = 4
