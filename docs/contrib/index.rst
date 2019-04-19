@@ -22,7 +22,7 @@ Debug Toolbars
 request-response life-circle in a huge amount of web frameworks.
 ``stories`` add execution path and context variables of all business
 objects ran in this request processing.  See how easy it is to install
-it for `Django`_.
+it for `Django`_ and `Flask`_.
 
 Sentry
 ======

@@ -35,5 +35,27 @@ You should see ``stories`` panel in your debug toolbar:
 .. image:: /static/debug-toolbar.png
     :class: with-popup
 
+
+Flask contrib
+=============
+
+To show a stories panel in `flask_debugtoolbar`, add the panel to the
+`DEBUG_TB_PANELS` config variable before initializing
+`DebugToolbarExtension`:
+
+.. code:: python
+
+    from flask import Flask
+    from flask_debugtoolbar import DebugToolbarExtension
+
+    app = Flask(__name__)
+    app.config['DEBUG_TB_PANELS'] = (
+        'flask_debugtoolbar.panels.versions.VersionDebugPanel',
+        # ...
+        'stories.contrib.debug_toolbars.flask.panels.StoriesPanel'
+    )
+    debug_toolbar = DebugToolbarExtension(app)
+
+
 ..
     FIXME: Document prettyprinter usage.
