@@ -11,9 +11,13 @@ except ImportError:
 
 try:
     from pydantic.main import MetaModel as PydanticSpec
+    from pydantic.error_wrappers import ErrorWrapper as PydanticError
 except ImportError:
     # Pydantic package is not installed.
     class PydanticSpec(object):
+        pass
+
+    class PydanticError(object):
         pass
 
 

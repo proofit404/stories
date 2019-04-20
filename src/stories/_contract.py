@@ -1,4 +1,4 @@
-from ._compat import CerberusSpec, MarshmallowSpec, PydanticSpec
+from ._compat import CerberusSpec, MarshmallowSpec, PydanticError, PydanticSpec
 from .exceptions import ContextContractError
 
 
@@ -57,10 +57,7 @@ def validate_pydantic(spec, ns, keys):
         field = spec.__fields__[key]
         new_value, error = field.validate(ns[key], {}, loc=field.alias, cls=spec)
         if error:
-            if isinstance(error, list):
-                errors[key] = [e.msg for e in error]
-            else:
-                errors[key] = [error.msg]
+            errors[key] = error
         else:
             result[key] = new_value
     return result, errors
@@ -82,7 +79,7 @@ def validate_raw(spec, ns, keys):
     for key in keys:
         new_value, error = spec[key](ns[key])
         if error:
-            errors[key] = [error]
+            errors[key] = error
         else:
             result[key] = new_value
     return result, errors
@@ -299,6 +296,9 @@ class Contract(object):
 def format_violations(errors):
     result = []
 
+    def normalize_pydantic(value, indent):
+        normalize_str(value.msg, indent)
+
     def normalize_str(value, indent):
         result.append(" " * indent + value)
 
@@ -306,6 +306,8 @@ def format_violations(errors):
         for elem in value:
             if isinstance(elem, dict):
                 normalize_dict(elem, indent + 2)
+            elif isinstance(elem, PydanticError):
+                normalize_pydantic(elem, indent)
             else:
                 normalize_str(elem, indent)
 
@@ -315,8 +317,12 @@ def format_violations(errors):
             normalize_str(str(k) + ":", indent)
             if isinstance(v, dict):
                 normalize_dict(v, indent + 2)
-            else:
+            elif isinstance(v, list):
                 normalize_list(v, indent + 2)
+            elif isinstance(v, PydanticError):
+                normalize_pydantic(v, indent + 2)
+            else:
+                normalize_str(v, indent + 2)
             if sep is not None:
                 normalize_str(sep, 0)
 
