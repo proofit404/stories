@@ -296,35 +296,31 @@ class Contract(object):
 def format_violations(errors):
     result = []
 
+    def normalize(value, indent):
+        if isinstance(value, dict):
+            normalize_dict(value, indent + 2)
+        elif isinstance(value, list):
+            normalize_list(value, indent + 2)
+        elif isinstance(value, PydanticError):
+            normalize_pydantic(value, indent)
+        else:
+            normalize_str(value, indent)
+
+    def normalize_dict(value, indent, sep=None):
+        for key in sorted(value):
+            normalize([str(key) + ":", value[key]], indent)
+            if sep is not None:
+                normalize_str(sep, 0)
+
+    def normalize_list(value, indent):
+        for elem in value:
+            normalize(elem, indent)
+
     def normalize_pydantic(value, indent):
         normalize_str(value.msg, indent)
 
     def normalize_str(value, indent):
         result.append(" " * indent + value)
-
-    def normalize_list(value, indent):
-        for elem in value:
-            if isinstance(elem, dict):
-                normalize_dict(elem, indent + 2)
-            elif isinstance(elem, PydanticError):
-                normalize_pydantic(elem, indent)
-            else:
-                normalize_str(elem, indent)
-
-    def normalize_dict(value, indent, sep=None):
-        for k in sorted(value):
-            v = value[k]
-            normalize_str(str(k) + ":", indent)
-            if isinstance(v, dict):
-                normalize_dict(v, indent + 2)
-            elif isinstance(v, list):
-                normalize_list(v, indent + 2)
-            elif isinstance(v, PydanticError):
-                normalize_pydantic(v, indent + 2)
-            else:
-                normalize_str(v, indent + 2)
-            if sep is not None:
-                normalize_str(sep, 0)
 
     normalize_dict(errors, 0, "")
 
