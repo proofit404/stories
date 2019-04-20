@@ -144,6 +144,14 @@ class ChildWithNull(object):
         I.one
 
 
+class ChildWithShrink(object):
+    @story
+    def x(I):
+        I.one
+
+    x.contract({"baz": integer})
+
+
 class ChildReuse(object):
     @story
     def x(I):

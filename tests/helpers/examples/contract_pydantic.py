@@ -117,6 +117,16 @@ class ChildWithNull(object):
         I.one
 
 
+class ChildWithShrink(object):
+    @story
+    def x(I):
+        I.one
+
+    @x.contract
+    class Contract(BaseModel):
+        baz: int
+
+
 class ChildReuse(object):
     @story
     def x(I):

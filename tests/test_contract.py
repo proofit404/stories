@@ -1319,6 +1319,52 @@ def test_parent_steps_set_story_arguments(m):
     assert getter().bar == [2]
 
 
+def test_sequential_story_steps_set_story_arguments(m):
+    """
+    There are a few sequential substories with one common parent
+    story.  One substory should be able to set variable to provide an
+    argument to the next sequential story.
+    """
+
+    class T(m.ChildWithShrink, m.StringMethod):
+        pass
+
+    class E(m.NextParamChildWithString, m.NormalMethod):
+        pass
+
+    class Q(m.SequentialParent, m.NormalParentMethod, T, E):
+        pass
+
+    class J(m.SequentialParent, m.NormalParentMethod):
+        def __init__(self):
+            self.x = T().x
+            self.y = E().y
+
+    # Substory inheritance.
+
+    getter = make_collector()
+    Q().a()
+    assert getter().foo == "1"
+    assert getter().bar == ["2"]
+
+    getter = make_collector()
+    Q().a.run()
+    assert getter().foo == "1"
+    assert getter().bar == ["2"]
+
+    # Substory DI.
+
+    getter = make_collector()
+    J().a()
+    assert getter().foo == "1"
+    assert getter().bar == ["2"]
+
+    getter = make_collector()
+    J().a.run()
+    assert getter().foo == "1"
+    assert getter().bar == ["2"]
+
+
 def test_arguments_should_be_declared_in_contract(m):
     """
     We should require all story arguments to be declared in the

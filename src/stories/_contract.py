@@ -120,6 +120,10 @@ class Contract(object):
         self.check_arguments_definitions()
 
     def add_substory_contract(self, contract):
+        # FIXME: Bad method name.  It should be something more like
+        # `neighbor`.
+        for sub_contract in self.subcontracts:
+            sub_contract.add_substory_contract(contract)
         self.subcontracts.append(contract)
 
     def check_arguments_definitions(self):

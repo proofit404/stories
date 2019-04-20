@@ -119,6 +119,14 @@ class ChildWithNull(object):
         I.one
 
 
+class ChildWithShrink(object):
+    @story
+    def x(I):
+        I.one
+
+    x.contract(Validator({"baz": {"type": "integer", "coerce": int}}))
+
+
 class ChildReuse(object):
     @story
     def x(I):
