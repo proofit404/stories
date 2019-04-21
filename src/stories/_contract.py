@@ -10,11 +10,6 @@ from .exceptions import ContextContractError
 #     This way we also can require a certain substory to declare
 #     context variable for parent story.
 #
-# [ ] Split `Contract` class into `NullContract` and `SpecContract`
-#     classes.  Checking `self.spec is None` at the beginning of
-#     methods is ugly.  Drop `available_null` and `validate_null`
-#     functions.
-#
 # [ ] Remove all get methods.  Populate contract subcontracts
 #     attributes in the wrap stage.
 #
@@ -22,10 +17,6 @@ from .exceptions import ContextContractError
 
 
 # Declared validators.
-
-
-def available_null(spec):
-    raise Exception
 
 
 def available_pydantic(spec):
@@ -45,10 +36,6 @@ def available_raw(spec):
 
 
 # Validation.
-
-
-def validate_null(spec, ns, keys):
-    raise Exception
 
 
 def validate_pydantic(spec, ns, keys):
@@ -90,8 +77,7 @@ def validate_raw(spec, ns, keys):
 
 def make_contract(cls_name, name, arguments, spec):
     if spec is None:
-        available_func = available_null
-        validate_func = validate_null
+        return NullContract(cls_name, name, arguments)
     elif isinstance(spec, PydanticSpec):
         available_func = available_pydantic
         validate_func = validate_pydantic
@@ -105,41 +91,22 @@ def make_contract(cls_name, name, arguments, spec):
         available_func = available_raw
         validate_func = validate_raw
     # FIXME: Raise error on unsupported types.
-    return Contract(cls_name, name, arguments, spec, available_func, validate_func)
+    return SpecContract(cls_name, name, arguments, spec, available_func, validate_func)
 
 
-class Contract(object):
-    def __init__(self, cls_name, name, arguments, spec, available_func, validate_func):
+class NullContract(object):
+    def __init__(self, cls_name, name, arguments):
         self.cls_name = cls_name
         self.name = name
         self.arguments = arguments
-        self.spec = spec
-        self.available_func = available_func
-        self.validate_func = validate_func
         self.subcontracts = []
-        self.check_arguments_definitions()
 
     def add_substory_contract(self, contract):
-        # FIXME: Bad method name.  It should be something more like
-        # `neighbor`.
+        # FIXME: Remove this recursive mechanism together with all get
+        # methods.
         for sub_contract in self.subcontracts:
             sub_contract.add_substory_contract(contract)
         self.subcontracts.append(contract)
-
-    def check_arguments_definitions(self):
-        # vvv
-        if self.spec is None:
-            return
-        # ^^^
-        undefined = set(self.arguments) - self.available_func(self.spec)
-        if undefined:
-            message = undefined_argument_template.format(
-                undefined=", ".join(sorted(undefined)),
-                cls=self.cls_name,
-                method=self.name,
-                arguments=", ".join(self.arguments),
-            )
-            raise ContextContractError(message)
 
     def check_story_call(self, kwargs):
         unknown_arguments = self.get_unknown_arguments(kwargs)
@@ -154,19 +121,6 @@ class Contract(object):
                 cls=self.cls_name,
                 method=self.name,
                 arguments=", ".join(self.arguments),
-            )
-            raise ContextContractError(message)
-        # vvv
-        if self.spec is None:
-            return kwargs
-        # ^^^
-        kwargs, errors, _ = self.get_invalid_variables(kwargs)
-        if errors:
-            message = invalid_argument_template.format(
-                variables=", ".join(map(repr, sorted(errors))),
-                cls=self.cls_name,
-                method=self.name,
-                violations=format_violations(errors),
             )
             raise ContextContractError(message)
         return kwargs
@@ -192,10 +146,58 @@ class Contract(object):
                 method=method.__name__,
             )
             raise ContextContractError(message)
-        # vvv
-        if self.spec is None:
-            return ns
-        # ^^^
+        return ns
+
+    def get_arguments(self):
+        # FIXME: Remove repeated arguments.
+        arguments = []
+        arguments.extend(self.arguments)
+        for contract in self.subcontracts:
+            arguments.extend(contract.get_arguments())
+        return arguments
+
+    def get_unknown_arguments(self, kwargs):
+        available = set(self.arguments)
+        unknown_arguments = set(kwargs) - available
+        for contract in self.subcontracts:
+            unknown_arguments = contract.get_unknown_arguments(unknown_arguments)
+        return unknown_arguments
+
+
+class SpecContract(NullContract):
+    def __init__(self, cls_name, name, arguments, spec, available_func, validate_func):
+        super(SpecContract, self).__init__(cls_name, name, arguments)
+        self.spec = spec
+        self.available_func = available_func
+        self.validate_func = validate_func
+        self.check_arguments_definitions()
+
+    def check_arguments_definitions(self):
+        undefined = set(self.arguments) - self.available_func(self.spec)
+        if undefined:
+            message = undefined_argument_template.format(
+                undefined=", ".join(sorted(undefined)),
+                cls=self.cls_name,
+                method=self.name,
+                arguments=", ".join(self.arguments),
+            )
+            raise ContextContractError(message)
+
+    def check_story_call(self, kwargs):
+        super(SpecContract, self).check_story_call(kwargs)
+        kwargs, errors, _ = self.get_invalid_variables(kwargs)
+        if errors:
+            message = invalid_argument_template.format(
+                variables=", ".join(map(repr, sorted(errors))),
+                cls=self.cls_name,
+                method=self.name,
+                violations=format_violations(errors),
+            )
+            raise ContextContractError(message)
+        return kwargs
+
+    def check_success_statement(self, method, ctx, ns):
+        super(SpecContract, self).check_success_statement(method, ctx, ns)
         unknown_variables, available = self.get_unknown_variables(ns)
         if unknown_variables:
             message = unknown_variable_template.format(
@@ -216,14 +218,6 @@ class Contract(object):
             raise ContextContractError(message)
         return kwargs
 
-    def get_arguments(self):
-        # FIXME: Remove repeated arguments.
-        arguments = []
-        arguments.extend(self.arguments)
-        for contract in self.subcontracts:
-            arguments.extend(contract.get_arguments())
-        return arguments
-
     def get_available(self):
         available = self.available_func(self.spec)
         for contract in self.subcontracts:
@@ -238,13 +232,6 @@ class Contract(object):
             result = contract.find_conflict_contract(repeated)
             if result:
                 return result
-
-    def get_unknown_arguments(self, kwargs):
-        available = set(self.arguments)
-        unknown_arguments = set(kwargs) - available
-        for contract in self.subcontracts:
-            unknown_arguments = contract.get_unknown_arguments(unknown_arguments)
-        return unknown_arguments
 
     def get_unknown_variables(self, ns):
         available = self.available_func(self.spec)
@@ -335,40 +322,49 @@ def format_violations(errors):
 
 
 def combine_contract(parent, child):
-    if parent.spec is child.spec:
+    if type(parent) is NullContract and type(child) is NullContract:
         parent.add_substory_contract(child)
         return
-    if parent.spec is None and child.spec is None:
+    elif (
+        type(parent) is SpecContract
+        and type(child) is SpecContract
+        and parent.spec is child.spec
+    ):
         parent.add_substory_contract(child)
         return
-    for spec_type in [PydanticSpec, MarshmallowSpec, CerberusSpec, dict]:
-        if isinstance(parent.spec, spec_type) and isinstance(child.spec, spec_type):
-            break
+    elif (
+        type(parent) is SpecContract
+        and type(child) is SpecContract
+        and any(
+            isinstance(parent.spec, spec_type) and isinstance(child.spec, spec_type)
+            for spec_type in [PydanticSpec, MarshmallowSpec, CerberusSpec, dict]
+        )
+    ):
+        available = parent.get_available() & child.get_available()
+        arguments = set(parent.get_arguments()) & set(child.get_arguments())
+        repeated = available - arguments
+        if repeated:
+            cls_name, name = parent.find_conflict_contract(repeated)
+            other_cls, other_method = child.find_conflict_contract(repeated)
+            message = incompatible_contracts_template.format(
+                repeated=", ".join(map(repr, sorted(repeated))),
+                cls=cls_name,
+                method=name,
+                other_cls=other_cls,
+                other_method=other_method,
+            )
+            raise ContextContractError(message)
+        parent.add_substory_contract(child)
     else:
         message = type_error_template.format(
             cls=parent.cls_name,
             method=parent.name,
-            contract=parent.spec,
+            contract=parent.spec if type(parent) is SpecContract else None,
             other_cls=child.cls_name,
             other_method=child.name,
-            other_contract=child.spec,
+            other_contract=child.spec if type(child) is SpecContract else None,
         )
         raise ContextContractError(message)
-    available = parent.get_available() & child.get_available()
-    arguments = set(parent.get_arguments()) & set(child.get_arguments())
-    repeated = available - arguments
-    if repeated:
-        cls_name, name = parent.find_conflict_contract(repeated)
-        other_cls, other_method = child.find_conflict_contract(repeated)
-        message = incompatible_contracts_template.format(
-            repeated=", ".join(map(repr, sorted(repeated))),
-            cls=cls_name,
-            method=name,
-            other_cls=other_cls,
-            other_method=other_method,
-        )
-        raise ContextContractError(message)
-    parent.add_substory_contract(child)
 
 
 # Messages.
