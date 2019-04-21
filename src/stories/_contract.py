@@ -203,8 +203,8 @@ class SpecContract(NullContract):
         return kwargs
 
     def identify(self, ns):
-        available = set(self.spec) & set(self.argset)
-        unknown = available - set(ns)
+        available = set(self.spec) | set(self.argset)
+        unknown = set(ns) - available
         return unknown, available
 
     def validate(self, ns):
