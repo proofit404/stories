@@ -1,3 +1,6 @@
+from collections import OrderedDict
+from functools import partial
+
 from ._compat import CerberusSpec, MarshmallowSpec, PydanticError, PydanticSpec
 from .exceptions import ContextContractError
 
@@ -10,17 +13,14 @@ from .exceptions import ContextContractError
 #     This way we also can require a certain substory to declare
 #     context variable for parent story.
 #
-# [ ] Remove all get methods.  Populate contract subcontracts
-#     attributes in the wrap stage.
-#
 # [ ] Add fix suggestion to the bottom of the error message.
+#
+# [ ] Support custom validation of complex relationships.  For
+#     example, `@pydantic.validator` of `password2` depends on
+#     `password1`.
 
 
-# Declared validators.
-
-
-def available_pydantic(spec):
-    return set(spec.__fields__)
+# FIXME: Rewrite as disassemble functions.
 
 
 def available_marshmallow(spec):
@@ -29,25 +29,6 @@ def available_marshmallow(spec):
 
 def available_cerberus(spec):
     return set(spec.schema)
-
-
-def available_raw(spec):
-    return set(spec)
-
-
-# Validation.
-
-
-def validate_pydantic(spec, ns, keys):
-    result, errors = {}, {}
-    for key in keys:
-        field = spec.__fields__[key]
-        new_value, error = field.validate(ns[key], {}, loc=field.alias, cls=spec)
-        if error:
-            errors[key] = error
-        else:
-            result[key] = new_value
-    return result, errors
 
 
 def validate_marshmallow(spec, ns, keys):
@@ -61,15 +42,29 @@ def validate_cerberus(spec, ns, keys):
     return dict((key, validator.document[key]) for key in keys), validator.errors
 
 
-def validate_raw(spec, ns, keys):
-    result, errors = {}, {}
-    for key in keys:
-        new_value, error = spec[key](ns[key])
-        if error:
-            errors[key] = error
-        else:
-            result[key] = new_value
-    return result, errors
+# Disassemble.
+
+
+def disassemble_pydantic(spec):
+    def validator(f, v):
+        return f.validate(v, {}, loc=f.alias, cls=spec)
+
+    result = {}
+    for name, field in spec.__fields__.items():
+        result[name] = partial(validator, field)
+    return result
+
+
+def disassemble_marshmallow(spec):
+    return {}
+
+
+def disassemble_cerberus(spec):
+    return {}
+
+
+def disassemble_raw(spec):
+    return spec.copy()
 
 
 # Execute.
@@ -79,19 +74,27 @@ def make_contract(cls_name, name, arguments, spec):
     if spec is None:
         return NullContract(cls_name, name, arguments)
     elif isinstance(spec, PydanticSpec):
-        available_func = available_pydantic
-        validate_func = validate_pydantic
+        disassembled = disassemble_pydantic(spec)
     elif isinstance(spec, MarshmallowSpec):
-        available_func = available_marshmallow
-        validate_func = validate_marshmallow
+        disassembled = disassemble_marshmallow(spec)
     elif isinstance(spec, CerberusSpec):
-        available_func = available_cerberus
-        validate_func = validate_cerberus
+        disassembled = disassemble_cerberus(spec)
     elif isinstance(spec, dict):
-        available_func = available_raw
-        validate_func = validate_raw
-    # FIXME: Raise error on unsupported types.
-    return SpecContract(cls_name, name, arguments, spec, available_func, validate_func)
+        disassembled = disassemble_raw(spec)
+    check_arguments_definitions(cls_name, name, arguments, disassembled)
+    return SpecContract(cls_name, name, arguments, disassembled)
+
+
+def check_arguments_definitions(cls_name, name, arguments, spec):
+    undefined = set(arguments) - set(spec)
+    if undefined:
+        message = undefined_argument_template.format(
+            undefined=", ".join(sorted(undefined)),
+            cls=cls_name,
+            method=name,
+            arguments=", ".join(arguments),
+        )
+        raise ContextContractError(message)
 
 
 class NullContract(object):
@@ -99,17 +102,14 @@ class NullContract(object):
         self.cls_name = cls_name
         self.name = name
         self.arguments = arguments
-        self.subcontracts = []
+        self.make_argset()
 
-    def add_substory_contract(self, contract):
-        # FIXME: Remove this recursive mechanism together with all get
-        # methods.
-        for sub_contract in self.subcontracts:
-            sub_contract.add_substory_contract(contract)
-        self.subcontracts.append(contract)
+    def make_argset(self):
+        self.argset = OrderedDict((arg, set()) for arg in self.arguments)
 
     def check_story_call(self, kwargs):
-        unknown_arguments = self.get_unknown_arguments(kwargs)
+        # FIXME: Check required arguments here.
+        unknown_arguments = set(kwargs) - set(self.argset)
         if unknown_arguments:
             if self.arguments:
                 # FIXME: What if arguments were defined only in the substory?
@@ -148,44 +148,21 @@ class NullContract(object):
             raise ContextContractError(message)
         return ns
 
-    def get_arguments(self):
-        # FIXME: Remove repeated arguments.
-        arguments = []
-        arguments.extend(self.arguments)
-        for contract in self.subcontracts:
-            arguments.extend(contract.get_arguments())
-        return arguments
-
-    def get_unknown_arguments(self, kwargs):
-        available = set(self.arguments)
-        unknown_arguments = set(kwargs) - available
-        for contract in self.subcontracts:
-            unknown_arguments = contract.get_unknown_arguments(unknown_arguments)
-        return unknown_arguments
-
 
 class SpecContract(NullContract):
-    def __init__(self, cls_name, name, arguments, spec, available_func, validate_func):
-        super(SpecContract, self).__init__(cls_name, name, arguments)
+    def __init__(self, cls_name, name, arguments, spec):
         self.spec = spec
-        self.available_func = available_func
-        self.validate_func = validate_func
-        self.check_arguments_definitions()
+        super(SpecContract, self).__init__(cls_name, name, arguments)
 
-    def check_arguments_definitions(self):
-        undefined = set(self.arguments) - self.available_func(self.spec)
-        if undefined:
-            message = undefined_argument_template.format(
-                undefined=", ".join(sorted(undefined)),
-                cls=self.cls_name,
-                method=self.name,
-                arguments=", ".join(self.arguments),
-            )
-            raise ContextContractError(message)
+    def make_argset(self):
+        super(SpecContract, self).make_argset()
+        for arg in self.arguments:
+            self.argset[arg].add(self.spec[arg])
+            del self.spec[arg]
 
     def check_story_call(self, kwargs):
         super(SpecContract, self).check_story_call(kwargs)
-        kwargs, errors, _ = self.get_invalid_variables(kwargs)
+        kwargs, errors = self.validate(kwargs)
         if errors:
             message = invalid_argument_template.format(
                 variables=", ".join(map(repr, sorted(errors))),
@@ -198,16 +175,16 @@ class SpecContract(NullContract):
 
     def check_success_statement(self, method, ctx, ns):
         super(SpecContract, self).check_success_statement(method, ctx, ns)
-        unknown_variables, available = self.get_unknown_variables(ns)
-        if unknown_variables:
+        unknown, available = self.identify(ns)
+        if unknown:
             message = unknown_variable_template.format(
-                unknown=", ".join(map(repr, sorted(unknown_variables))),
+                unknown=", ".join(map(repr, sorted(unknown))),
                 available=", ".join(map(repr, sorted(available))),
                 cls=method.__self__.__class__.__name__,
                 method=method.__name__,
             )
             raise ContextContractError(message)
-        kwargs, errors, _ = self.get_invalid_variables(ns)
+        kwargs, errors = self.validate(ns)
         if errors:
             message = invalid_variable_template.format(
                 variables=", ".join(map(repr, sorted(errors))),
@@ -218,70 +195,57 @@ class SpecContract(NullContract):
             raise ContextContractError(message)
         return kwargs
 
-    def get_available(self):
-        available = self.available_func(self.spec)
-        for contract in self.subcontracts:
-            available |= contract.get_available()
-        return available
+    def identify(self, ns):
+        available = set(self.spec) & set(self.argset)
+        unknown = available - set(ns)
+        return unknown, available
 
-    def find_conflict_contract(self, repeated):
-        available = self.available_func(self.spec)
-        if available & repeated:
-            return self.cls_name, self.name
-        for contract in self.subcontracts:
-            result = contract.find_conflict_contract(repeated)
-            if result:
-                return result
+    def validate(self, ns):
+        result, errors, conflict = {}, {}, set()
+        for key, value in ns.items():
+            if key in self.spec:
+                self.validate_spec(result, errors, key, value)
+            else:
+                self.validate_argset(result, errors, conflict, key, value)
+        if conflict:
+            message = normalization_conflict_template.format(
+                conflict=", ".join(map(repr, sorted(conflict))),
+                # FIXME: Normalization conflict can consist of two
+                # variables.  The first variable can be set by one
+                # substory.  The second variable can be set by
+                # another substory.
+                cls=self.cls_name,
+                method=self.name,
+                result="\n",
+                other_cls=self.cls_name,
+                other_method=self.name,
+                other_result="\n",
+            )
+            raise ContextContractError(message)
+        return result, errors
 
-    def get_unknown_variables(self, ns):
-        available = self.available_func(self.spec)
-        unknown_variables = set(ns) - available
-        for contract in self.subcontracts:
-            unknown_variables, _ = contract.get_unknown_variables(unknown_variables)
-        return unknown_variables, available
+    def validate_spec(self, result, errors, key, value):
+        new_value, error = self.spec[key](value)
+        if error:
+            errors[key] = error
+        else:
+            result[key] = new_value
 
-    def get_invalid_variables(self, ns):
-        # FIXME: This method is unbelievably complex.
-        available = set(ns) & self.available_func(self.spec)
-        kwargs, errors = self.validate_func(self.spec, ns, available)
-        normalized = dict(
-            (variable, (self.cls_name, self.name)) for variable in available
-        )
-        for contract in self.subcontracts:
-            sub_kwargs, sub_errors, sub_normalized = contract.get_invalid_variables(ns)
-            conflict = set()
-            for variable, value in sub_kwargs.items():
-                if variable in kwargs and kwargs[variable] != value:
-                    conflict.add(variable)
-            if conflict:
-                message = normalization_conflict_template.format(
-                    conflict=", ".join(map(repr, sorted(conflict))),
-                    # FIXME: Normalization conflict can consist of two
-                    # variables.  The first variable can be set by one
-                    # substory.  The second variable can be set by
-                    # another substory.
-                    cls=normalized[next(iter(conflict))][0],
-                    method=normalized[next(iter(conflict))][1],
-                    result="\n".join(
-                        [
-                            " - " + variable + ": " + repr(kwargs[variable])
-                            for variable in sorted(conflict)
-                        ]
-                    ),
-                    other_cls=contract.cls_name,
-                    other_method=contract.name,
-                    other_result="\n".join(
-                        [
-                            " - " + variable + ": " + repr(sub_kwargs[variable])
-                            for variable in sorted(conflict)
-                        ]
-                    ),
-                )
-                raise ContextContractError(message)
-            kwargs.update(sub_kwargs)
-            errors.update(sub_errors)
-            normalized.update(sub_normalized)
-        return kwargs, errors, normalized
+    def validate_argset(self, result, errors, conflict, key, value):
+        new_values, has_error = [], False
+        for validator in self.argset[key]:
+            new_value, error = validator(value)
+            if error:
+                has_error = True
+                errors[key] = error
+            else:
+                new_values.append(new_value)
+        if new_values:
+            first, others = new_values[0], new_values[1:]
+            if not all(first == other for other in others):
+                conflict.add(key)
+        if not has_error:
+            result[key] = new_value
 
 
 def format_violations(errors):
@@ -323,14 +287,14 @@ def format_violations(errors):
 
 def combine_contract(parent, child):
     if type(parent) is NullContract and type(child) is NullContract:
-        parent.add_substory_contract(child)
+        combine_argsets(parent, child)
         return
     elif (
         type(parent) is SpecContract
         and type(child) is SpecContract
         and parent.spec is child.spec
     ):
-        parent.add_substory_contract(child)
+        combine_argsets(parent, child)
         return
     elif (
         type(parent) is SpecContract
@@ -340,21 +304,21 @@ def combine_contract(parent, child):
             for spec_type in [PydanticSpec, MarshmallowSpec, CerberusSpec, dict]
         )
     ):
-        available = parent.get_available() & child.get_available()
-        arguments = set(parent.get_arguments()) & set(child.get_arguments())
-        repeated = available - arguments
+        repeated = set(parent.spec) & set(child.spec)
         if repeated:
-            cls_name, name = parent.find_conflict_contract(repeated)
-            other_cls, other_method = child.find_conflict_contract(repeated)
+            # FIXME: Store conflict in-depth spec.  For example,
+            # conflict can be in two children of common parent.  Each
+            # contract should have additional variable -> subcontract
+            # cls+name mapping.  Without validators.
             message = incompatible_contracts_template.format(
                 repeated=", ".join(map(repr, sorted(repeated))),
-                cls=cls_name,
-                method=name,
-                other_cls=other_cls,
-                other_method=other_method,
+                cls=parent.cls_name,
+                method=parent.name,
+                other_cls=child.cls_name,
+                other_method=child.name,
             )
             raise ContextContractError(message)
-        parent.add_substory_contract(child)
+        combine_argsets(parent, child)
     else:
         message = type_error_template.format(
             cls=parent.cls_name,
@@ -365,6 +329,16 @@ def combine_contract(parent, child):
             other_contract=child.spec if type(child) is SpecContract else None,
         )
         raise ContextContractError(message)
+
+
+def combine_argsets(parent, child):
+    for key in set(parent.argset) & set(child.argset):
+        parent.argset[key].update(child.argset[key])
+        child.argset[key].update(parent.argset[key])
+    for key in set(parent.argset) - set(child.argset):
+        child.argset[key] = parent.argset[key]
+    for key in set(child.argset) - set(parent.argset):
+        parent.argset[key] = child.argset[key]
 
 
 # Messages.

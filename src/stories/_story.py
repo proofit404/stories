@@ -33,6 +33,7 @@ class Story(object):
             )
 
     def contract(self, contract):
+        # FIXME: Raise error on unsupported types.
         self.__contract = contract
         return contract
 
