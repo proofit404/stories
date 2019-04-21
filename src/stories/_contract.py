@@ -150,6 +150,9 @@ class NullContract(object):
 
 
 class SpecContract(NullContract):
+    # FIXME: Deny empty disassembled spec.  If there is such need, we
+    # should replace `NullContract` with empty `SpecContract`
+    # ourselves.
     def __init__(self, cls_name, name, arguments, spec, origin):
         self.spec = spec
         self.origin = origin
