@@ -352,6 +352,13 @@ def combine_declared(parent, child):
     parent.declared.update(child.declared)
 
 
+def maybe_extend_downstream_argsets(methods, root):
+    if type(root) is NullContract:
+        return
+    for method, contract, protocol in methods:
+        combine_argsets(root, contract)
+
+
 # Messages.
 
 

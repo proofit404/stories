@@ -1,4 +1,4 @@
-from ._contract import combine_contract, make_contract
+from ._contract import combine_contract, make_contract, maybe_extend_downstream_argsets
 from ._failures import combine_failures, make_exec_protocol, maybe_disable_null_protocol
 from ._marker import BeginningOfStory, EndOfStory
 from ._mounted import MountedStory
@@ -31,6 +31,8 @@ def wrap_story(arguments, collected, cls_name, story_name, obj, spec, failures):
         methods.extend(attr.methods)
 
     methods.append((EndOfStory(is_empty=not collected), contract, protocol))
+
+    maybe_extend_downstream_argsets(methods, contract)
 
     methods = maybe_disable_null_protocol(methods, failures)
 
