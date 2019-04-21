@@ -82,7 +82,7 @@ def make_contract(cls_name, name, arguments, spec):
     elif isinstance(spec, dict):
         disassembled = disassemble_raw(spec)
     check_arguments_definitions(cls_name, name, arguments, disassembled)
-    return SpecContract(cls_name, name, arguments, disassembled)
+    return SpecContract(cls_name, name, arguments, disassembled, spec)
 
 
 def check_arguments_definitions(cls_name, name, arguments, spec):
@@ -150,8 +150,9 @@ class NullContract(object):
 
 
 class SpecContract(NullContract):
-    def __init__(self, cls_name, name, arguments, spec):
+    def __init__(self, cls_name, name, arguments, spec, origin):
         self.spec = spec
+        self.origin = origin
         super(SpecContract, self).__init__(cls_name, name, arguments)
         self.make_declared()
 
@@ -298,7 +299,7 @@ def combine_contract(parent, child):
     elif (
         type(parent) is SpecContract
         and type(child) is SpecContract
-        and parent.spec is child.spec
+        and parent.origin is child.origin
     ):
         combine_argsets(parent, child)
         return
@@ -306,7 +307,7 @@ def combine_contract(parent, child):
         type(parent) is SpecContract
         and type(child) is SpecContract
         and any(
-            isinstance(parent.spec, spec_type) and isinstance(child.spec, spec_type)
+            isinstance(parent.origin, spec_type) and isinstance(child.origin, spec_type)
             for spec_type in [PydanticSpec, MarshmallowSpec, CerberusSpec, dict]
         )
     ):
