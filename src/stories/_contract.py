@@ -153,12 +153,18 @@ class SpecContract(NullContract):
     def __init__(self, cls_name, name, arguments, spec):
         self.spec = spec
         super(SpecContract, self).__init__(cls_name, name, arguments)
+        self.make_declared()
 
     def make_argset(self):
         super(SpecContract, self).make_argset()
         for arg in self.arguments:
             self.argset[arg].add(self.spec[arg])
             del self.spec[arg]
+
+    def make_declared(self):
+        self.declared = OrderedDict(
+            (variable, (self.cls_name, self.name)) for variable in self.spec
+        )
 
     def check_story_call(self, kwargs):
         super(SpecContract, self).check_story_call(kwargs)
@@ -304,21 +310,21 @@ def combine_contract(parent, child):
             for spec_type in [PydanticSpec, MarshmallowSpec, CerberusSpec, dict]
         )
     ):
-        repeated = set(parent.spec) & set(child.spec)
+        repeated = set(parent.declared) & set(child.declared)
         if repeated:
-            # FIXME: Store conflict in-depth spec.  For example,
-            # conflict can be in two children of common parent.  Each
-            # contract should have additional variable -> subcontract
-            # cls+name mapping.  Without validators.
+            # FIXME: Repeated variables can occur in three different
+            # classes.
+            key = next(iter(repeated))
             message = incompatible_contracts_template.format(
                 repeated=", ".join(map(repr, sorted(repeated))),
-                cls=parent.cls_name,
-                method=parent.name,
-                other_cls=child.cls_name,
-                other_method=child.name,
+                cls=parent.declared[key][0],
+                method=parent.declared[key][1],
+                other_cls=child.declared[key][0],
+                other_method=child.declared[key][1],
             )
             raise ContextContractError(message)
         combine_argsets(parent, child)
+        combine_declared(parent, child)
     else:
         message = type_error_template.format(
             cls=parent.cls_name,
@@ -339,6 +345,10 @@ def combine_argsets(parent, child):
         child.argset[key] = parent.argset[key]
     for key in set(child.argset) - set(parent.argset):
         parent.argset[key] = child.argset[key]
+
+
+def combine_declared(parent, child):
+    parent.declared.update(child.declared)
 
 
 # Messages.
