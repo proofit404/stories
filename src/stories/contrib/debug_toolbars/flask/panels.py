@@ -9,8 +9,8 @@ This module contains integration with flask-debugtoolbar.
 """
 
 import stories._context
-from flask_debugtoolbar.panels import DebugPanel
 from flask import render_template
+from flask_debugtoolbar.panels import DebugPanel
 
 
 original_context_init = stories._context.Context.__init__
@@ -51,15 +51,15 @@ class StoriesPanel(DebugPanel):
 
     def title(self):
         count = len(self.storage)
-        return "Context and execution path of %s" % pluralize(count, 'story', 'stories')
+        return "Context and execution path of %s" % pluralize(count, "story", "stories")
 
     def url(self):
-        return '#'
+        return "#"
 
     def content(self):
         return render_template(
-            "stories/debug_toolbar/stories_panel.html",
-            stories=self.storage)
+            "stories/debug_toolbar/stories_panel.html", stories=self.storage
+        )
 
     def enable_instrumentation(self):
         stories._context.Context.__init__ = track_context(self.storage)
