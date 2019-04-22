@@ -10,6 +10,9 @@ from stories.exceptions import ContextContractError
 #     messages.
 #
 # [ ] Show violation values in validation error messages.
+#
+# [ ] Write correct and verbose docstrings for each test in this
+#     module.
 
 
 def test_assign_existed_variables(m):
