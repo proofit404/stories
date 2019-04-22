@@ -261,19 +261,22 @@ class SpecContract(NullContract):
 def format_violations(errors):
     result = []
 
-    def normalize(value, indent):
+    def normalize(value, indent, dict_value=False):
         if isinstance(value, dict):
             normalize_dict(value, indent + 2)
         elif isinstance(value, list):
             normalize_list(value, indent + 2)
         elif isinstance(value, PydanticError):
+            indent = indent + 2 if dict_value else indent
             normalize_pydantic(value, indent)
         else:
+            indent = indent + 2 if dict_value else indent
             normalize_str(value, indent)
 
     def normalize_dict(value, indent, sep=None):
         for key in sorted(value):
-            normalize([str(key) + ":", value[key]], indent)
+            normalize(str(key) + ":", indent)
+            normalize(value[key], indent, dict_value=True)
             if sep is not None:
                 normalize_str(sep, 0)
 
