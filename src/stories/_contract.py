@@ -20,28 +20,6 @@ from .exceptions import ContextContractError
 #     `password1`.
 
 
-# FIXME: Rewrite as disassemble functions.
-
-
-def available_marshmallow(spec):
-    return set(spec._declared_fields)
-
-
-def available_cerberus(spec):
-    return set(spec.schema)
-
-
-def validate_marshmallow(spec, ns, keys):
-    result, errors = spec().load(ns)
-    return result, errors
-
-
-def validate_cerberus(spec, ns, keys):
-    validator = CerberusSpec(allow_unknown=True)
-    validator.validate(ns, spec.schema.schema)
-    return dict((key, validator.document[key]) for key in keys), validator.errors
-
-
 # Disassemble.
 
 
@@ -56,11 +34,26 @@ def disassemble_pydantic(spec):
 
 
 def disassemble_marshmallow(spec):
-    return {}
+    def validator(f, v):
+        values, errors = spec().load({f: v})
+        return values.get(f), errors.get(f)
+
+    result = {}
+    for name in spec._declared_fields:
+        result[name] = partial(validator, name)
+    return result
 
 
 def disassemble_cerberus(spec):
-    return {}
+    def validator(f, v):
+        validated = CerberusSpec()
+        validated.validate({f: v}, spec.schema.schema)
+        return validated.document.get(f), validated.errors.get(f)
+
+    result = {}
+    for name in spec.schema:
+        result[name] = partial(validator, name)
+    return result
 
 
 def disassemble_raw(spec):
