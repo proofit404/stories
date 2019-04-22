@@ -144,6 +144,11 @@ def test_context_variables_normalization_conflict(m):
     result.
     """
 
+    # FIXME: Normalization conflict can consist of two
+    # variables.  The first variable can be set by one
+    # substory.  The second variable can be set by
+    # another substory.
+
     class T(m.ParamChild, m.NormalMethod):
         pass
 

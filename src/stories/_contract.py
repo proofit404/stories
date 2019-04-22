@@ -162,7 +162,7 @@ class SpecContract(NullContract):
     def make_argset(self):
         super(SpecContract, self).make_argset()
         for arg in self.arguments:
-            self.argset[arg].add(self.spec[arg])
+            self.argset[arg].add((self.spec[arg], self.cls_name, self.name))
             del self.spec[arg]
 
     def make_declared(self):
@@ -211,7 +211,7 @@ class SpecContract(NullContract):
         return unknown, available
 
     def validate(self, ns):
-        result, errors, conflict = {}, {}, set()
+        result, errors, conflict = {}, {}, {}
         for key, value in ns.items():
             if key in self.spec:
                 self.validate_spec(result, errors, key, value)
@@ -219,17 +219,19 @@ class SpecContract(NullContract):
                 self.validate_argset(result, errors, conflict, key, value)
         if conflict:
             message = normalization_conflict_template.format(
-                conflict=", ".join(map(repr, sorted(conflict))),
-                # FIXME: Normalization conflict can consist of two
-                # variables.  The first variable can be set by one
-                # substory.  The second variable can be set by
-                # another substory.
-                cls=self.cls_name,
-                method=self.name,
-                result="\n",
-                other_cls=self.cls_name,
-                other_method=self.name,
-                other_result="\n",
+                conflict=", ".join(
+                    map(repr, sorted(set(j for i in conflict.values() for j in i)))
+                ),
+                results="\n\n".join(
+                    normalization_conflict_result_template.format(
+                        cls=cls,
+                        method=method,
+                        result="\n".join(
+                            "  - %s: %r" % (i, result[i]) for i in sorted(result)
+                        ),
+                    )
+                    for (cls, method), result in conflict.items()
+                ),
             )
             raise ContextContractError(message)
         return result, errors
@@ -243,17 +245,21 @@ class SpecContract(NullContract):
 
     def validate_argset(self, result, errors, conflict, key, value):
         new_values, has_error = [], False
-        for validator in self.argset[key]:
+        for validator, cls_name, name in self.argset[key]:
             new_value, error = validator(value)
             if error:
                 has_error = True
                 errors[key] = error
             else:
-                new_values.append(new_value)
+                new_values.append((new_value, cls_name, name))
         if new_values:
             first, others = new_values[0], new_values[1:]
-            if not all(first == other for other in others):
-                conflict.add(key)
+            for other in others:
+                if first[0] != other[0]:
+                    conflict.setdefault((first[1], first[2]), {})
+                    conflict[(first[1], first[2])][key] = first[0]
+                    conflict.setdefault((other[1], other[2]), {})
+                    conflict[(other[1], other[2])][key] = other[0]
         if not has_error:
             result[key] = new_value
 
@@ -477,13 +483,13 @@ Substory context contract: {other_contract}
 normalization_conflict_template = """
 These arguments have normalization conflict: {conflict}
 
+{results}
+""".strip()
+
+
+normalization_conflict_result_template = """
 Story method: {cls}.{method}
 
 Story normalization result:
 {result}
-
-Substory method: {other_cls}.{other_method}
-
-Substory normalization result:
-{other_result}
 """.strip()
