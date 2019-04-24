@@ -1,4 +1,4 @@
-from ._return import Success
+from .._return import Success
 
 
 class BeginningOfStory(object):
