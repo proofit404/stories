@@ -1,10 +1,10 @@
 import inspect
-from .function import execute as execute_sync
-from .coroutine import execute as execute_async
+from . import function, coroutine
 
 
 def execute(runner, ctx, history, methods):
-    if any(inspect.iscoroutinefunction(item[0]) for item in methods):
-        return execute_async(runner, ctx, history, methods)
+    # Method can be anything callable
+    if inspect.iscoroutinefunction(methods[0][0].__call__):
+        return coroutine.execute(runner, ctx, history, methods)
     else:
-        return execute_sync(runner, ctx, history, methods)
+        return function.execute(runner, ctx, history, methods)

@@ -1,6 +1,5 @@
-import inspect
 from .._context import assign_namespace
-from .._marker import BeginningOfStory, EndOfStory
+from .._marker import AsyncEndOfStory, AsyncBeginningOfStory
 from .._return import Failure, Result, Skip, Success
 
 
@@ -13,9 +12,9 @@ async def execute(runner, ctx, history, methods):
         method_type = type(method)
 
         if skipped > 0:
-            if method_type is EndOfStory:
+            if method_type is AsyncEndOfStory:
                 skipped -= 1
-            elif method_type is BeginningOfStory:
+            elif method_type is AsyncBeginningOfStory:
                 skipped += 1
             continue
 
@@ -23,9 +22,6 @@ async def execute(runner, ctx, history, methods):
 
         try:
             result = await method(ctx)
-        except TypeError as error:
-            print('Ты делаешь фигню')
-            raise
         except Exception as error:
             history.on_error(error.__class__.__name__)
             raise
@@ -51,16 +47,16 @@ async def execute(runner, ctx, history, methods):
             skipped = 1
             continue
 
-        if method_type is BeginningOfStory:
+        if method_type is AsyncBeginningOfStory:
             try:
-                contract.check_story_arguments(ctx)
+                contract.check_substory_call(ctx)
             except Exception as error:
                 history.on_error(error.__class__.__name__)
                 raise
             history.on_substory_start()
             continue
 
-        if method_type is EndOfStory:
+        if method_type is AsyncEndOfStory:
             history.on_substory_end()
             continue
 
