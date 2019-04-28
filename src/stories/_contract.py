@@ -18,6 +18,15 @@ from .exceptions import ContextContractError
 # [ ] Support custom validation of complex relationships.  For
 #     example, `@pydantic.validator` of `password2` depends on
 #     `password1`.
+#
+# [ ] There should be an option to look at the final contract at the
+#     composition.  Maybe something like `repr(Action().do.contract)`
+#
+# [ ] Check that contracts collisions are checked in the situation:
+#     story
+#       substory
+#         substory with variable declaration
+#       substory with this variable as an argument
 
 
 # Disassemble.
