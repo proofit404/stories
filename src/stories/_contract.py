@@ -27,6 +27,9 @@ from .exceptions import ContextContractError
 #       substory
 #         substory with variable declaration
 #       substory with this variable as an argument
+#
+# [ ] Replace all "available" composition arguments with multiline
+#     contract representation at the bottom of error messages.
 
 
 # Disassemble.
