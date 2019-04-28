@@ -177,9 +177,9 @@ Story normalization result:
  - bar: [2]
  - foo: 1
 
-Substory method: Q.y
+Story method: Q.y
 
-Substory normalization result:
+Story normalization result:
  - bar: ['2']
  - foo: '1'
     """.strip()
@@ -197,17 +197,17 @@ Substory normalization result:
     expected = """
 These arguments have normalization conflict: 'bar', 'foo'
 
+Story method: E.y
+
+Story normalization result:
+ - bar: ['2']
+ - foo: '1'
+
 Story method: T.x
 
 Story normalization result:
  - bar: [2]
  - foo: 1
-
-Substory method: E.y
-
-Substory normalization result:
- - bar: ['2']
- - foo: '1'
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
@@ -389,9 +389,9 @@ Story normalization result:
  - bar: ['2']
  - foo: '1'
 
-Substory method: Q.x
+Story method: Q.x
 
-Substory normalization result:
+Story normalization result:
  - bar: [2]
  - foo: 1
     """.strip()
@@ -415,9 +415,9 @@ Story normalization result:
  - bar: ['2']
  - foo: '1'
 
-Substory method: T.x
+Story method: T.x
 
-Substory normalization result:
+Story normalization result:
  - bar: [2]
  - foo: 1
     """.strip()

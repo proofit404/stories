@@ -232,10 +232,12 @@ class SpecContract(NullContract):
                         cls=cls,
                         method=method,
                         result="\n".join(
-                            "  - %s: %r" % (i, result[i]) for i in sorted(result)
+                            " - %s: %r" % (i, result[i]) for i in sorted(result)
                         ),
                     )
-                    for (cls, method), result in conflict.items()
+                    for (cls, method), result in (
+                        (i, conflict[i]) for i in sorted(conflict)
+                    )
                 ),
             )
             raise ContextContractError(message)
