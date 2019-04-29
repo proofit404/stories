@@ -1,5 +1,4 @@
 from collections import OrderedDict
-from functools import partial
 
 from ._compat import CerberusSpec, MarshmallowSpec, PydanticError, PydanticSpec
 from .exceptions import ContextContractError
@@ -32,39 +31,69 @@ from .exceptions import ContextContractError
 #     contract representation at the bottom of error messages.
 
 
+# Validators.
+
+
+class PydanticValidator(object):
+    def __init__(self, spec, field):
+        self.spec = spec
+        self.field = field
+
+    def __call__(self, value):
+        return self.field.validate(value, {}, loc=self.field.alias, cls=self.spec)
+
+    def __repr__(self):
+        return repr(self.field)
+
+
+class MarshmallowValidator(object):
+    def __init__(self, spec, field):
+        self.spec = spec
+        self.field = field
+
+    def __call__(self, value):
+        values, errors = self.spec().load({self.field: value})
+        return values.get(self.field), errors.get(self.field)
+
+    def __repr__(self):
+        return repr(self.spec._declared_fields[self.field])
+
+
+class CerberusValidator(object):
+    def __init__(self, spec, field):
+        self.spec = spec
+        self.field = field
+
+    def __call__(self, value):
+        validated = CerberusSpec()
+        validated.validate({self.field: value}, self.spec.schema.schema)
+        return validated.document.get(self.field), validated.errors.get(self.field)
+
+    def __repr__(self):
+        return repr(self.spec.schema.schema[self.field])
+
+
 # Disassemble.
 
 
 def disassemble_pydantic(spec):
-    def validator(f, v):
-        return f.validate(v, {}, loc=f.alias, cls=spec)
-
     result = {}
     for name, field in spec.__fields__.items():
-        result[name] = partial(validator, field)
+        result[name] = PydanticValidator(spec, field)
     return result
 
 
 def disassemble_marshmallow(spec):
-    def validator(f, v):
-        values, errors = spec().load({f: v})
-        return values.get(f), errors.get(f)
-
     result = {}
     for name in spec._declared_fields:
-        result[name] = partial(validator, name)
+        result[name] = MarshmallowValidator(spec, name)
     return result
 
 
 def disassemble_cerberus(spec):
-    def validator(f, v):
-        validated = CerberusSpec()
-        validated.validate({f: v}, spec.schema.schema)
-        return validated.document.get(f), validated.errors.get(f)
-
     result = {}
     for name in spec.schema:
-        result[name] = partial(validator, name)
+        result[name] = CerberusValidator(spec, name)
     return result
 
 
@@ -172,7 +201,8 @@ class SpecContract(NullContract):
 
     def make_declared(self):
         self.declared = OrderedDict(
-            (variable, (self.cls_name, self.name)) for variable in self.spec
+            (variable, (self.cls_name, self.name, repr(validator)))
+            for variable, validator in self.spec.items()
         )
 
     def check_story_call(self, kwargs):
@@ -269,6 +299,12 @@ class SpecContract(NullContract):
                     conflict[(other[1], other[2])][key] = other[0]
         if not has_error:
             result[key] = new_value
+
+    def __repr__(self):
+        lines = ["Contract:"]
+        for variable, (cls_name, name, field_name) in self.declared.items():
+            lines.append("  %s: %s # %s.%s" % (variable, field_name, cls_name, name))
+        return "\n".join(lines)
 
 
 def format_violations(errors):

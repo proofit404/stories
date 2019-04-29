@@ -1430,3 +1430,97 @@ Story arguments: foo, bar, baz
     with pytest.raises(ContextContractError) as exc_info:
         J().a
     assert str(exc_info.value) == expected
+
+
+# Representation.
+
+
+def test_story_contract_representation_with_spec(m):
+    """
+    Show collected story composition contract as mounted story
+    attribute.
+    """
+
+    class T(m.Child, m.StringMethod):
+        pass
+
+    class Q(m.Parent, m.NormalParentMethod, T):
+        pass
+
+    class J(m.Parent, m.NormalParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    class R(m.Root, m.NormalRootMethod, Q):
+        pass
+
+    class F(m.Root, m.NormalRootMethod):
+        def __init__(self):
+            self.a = J().a
+
+    # Simple.
+
+    expected = """
+Contract:
+  foo: ...  # T.x
+  bar: ...  # T.x
+  baz: ...  # T.x
+    """.strip()
+
+    assert repr(T().x.contract) == expected
+
+    # Substory inheritance.
+
+    expected = """
+Contract:
+  ham: ...   # Q.a
+  eggs: ...  # Q.a
+  beans: ... # Q.a
+  foo: ...   # Q.x
+  bar: ...   # Q.x
+  baz: ...   # Q.x
+    """.strip()
+
+    assert repr(Q().a.contract) == expected
+
+    expected = """
+Contract:
+  fizz: ...  # R.i
+  buzz: ...  # R.i
+  ham: ...   # R.a
+  eggs: ...  # R.a
+  beans: ... # R.a
+  foo: ...   # R.x
+  bar: ...   # R.x
+  baz: ...   # R.x
+    """.strip()
+
+    assert repr(R().i.contract) == expected
+
+    # Substory DI.
+
+    expected = """
+Contract:
+  ham: ...   # J.a
+  eggs: ...  # J.a
+  beans: ... # J.a
+  foo: ...   # T.x
+  bar: ...   # T.x
+  baz: ...   # T.x
+    """.strip()
+
+    assert repr(J().a.contract) == expected
+
+    expected = """
+Contract:
+  fizz: ...  # F.i
+  buzz: ...  # F.i
+  ham: ...   # J.a
+  eggs: ...  # J.a
+  beans: ... # J.a
+  foo: ...   # T.x
+  bar: ...   # T.x
+  baz: ...   # T.x
+    """.strip()
+
+    assert repr(F().i.contract) == expected

@@ -19,7 +19,7 @@ def wrap_story(arguments, collected, cls_name, story_name, obj, spec, failures):
             methods.append((attr, contract, protocol))
             continue
 
-        combine_contract(contract, attr.methods[0][1])
+        combine_contract(contract, attr.contract)
 
         failures = combine_failures(
             failures, cls_name, story_name, attr.failures, attr.cls_name, attr.name
@@ -36,4 +36,4 @@ def wrap_story(arguments, collected, cls_name, story_name, obj, spec, failures):
 
     methods = maybe_disable_null_protocol(methods, failures)
 
-    return methods, failures
+    return methods, contract, failures
