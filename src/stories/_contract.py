@@ -18,17 +18,12 @@ from .exceptions import ContextContractError
 #     example, `@pydantic.validator` of `password2` depends on
 #     `password1`.
 #
-# [ ] There should be an option to look at the final contract at the
-#     composition.  Maybe something like `repr(Action().do.contract)`
-#
 # [ ] Check that contracts collisions are checked in the situation:
+#
 #     story
 #       substory
 #         substory with variable declaration
 #       substory with this variable as an argument
-#
-# [ ] Replace all "available" composition arguments with multiline
-#     contract representation at the bottom of error messages.
 
 
 # Validators.
@@ -214,19 +209,20 @@ class SpecContract(NullContract):
                 cls=self.cls_name,
                 method=self.name,
                 violations=format_violations(errors),
+                contract=self,
             )
             raise ContextContractError(message)
         return kwargs
 
     def check_success_statement(self, method, ctx, ns):
         super(SpecContract, self).check_success_statement(method, ctx, ns)
-        unknown, available = self.identify(ns)
+        unknown = self.identify(ns)
         if unknown:
             message = unknown_variable_template.format(
                 unknown=", ".join(map(repr, sorted(unknown))),
-                available=", ".join(map(repr, sorted(available))),
                 cls=method.__self__.__class__.__name__,
                 method=method.__name__,
+                contract=self,
             )
             raise ContextContractError(message)
         kwargs, errors = self.validate(ns)
@@ -236,6 +232,7 @@ class SpecContract(NullContract):
                 cls=method.__self__.__class__.__name__,
                 method=method.__name__,
                 violations=format_violations(errors),
+                contract=self,
             )
             raise ContextContractError(message)
         return kwargs
@@ -243,7 +240,7 @@ class SpecContract(NullContract):
     def identify(self, ns):
         available = set(self.spec) | set(self.argset)
         unknown = set(ns) - available
-        return unknown, available
+        return unknown
 
     def validate(self, ns):
         result, errors, conflict = {}, {}, {}
@@ -461,11 +458,11 @@ Use different names for Success() keyword arguments.
 unknown_variable_template = """
 These variables were not defined in the context contract: {unknown}
 
-Available variables are: {available}
-
 Function returned value: {cls}.{method}
 
 Use different names for Success() keyword arguments or add these names to the contract.
+
+{contract!r}
 """.strip()
 
 
@@ -495,6 +492,8 @@ Function returned value: {cls}.{method}
 Violations:
 
 {violations}
+
+{contract!r}
 """.strip()
 
 
@@ -506,6 +505,8 @@ Story method: {cls}.{method}
 Violations:
 
 {violations}
+
+{contract!r}
 """.strip()
 
 
