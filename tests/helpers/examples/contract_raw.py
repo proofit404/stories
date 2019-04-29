@@ -65,6 +65,14 @@ class ExceptionMethod(object):
         raise Exception
 
 
+# Next child mixins.
+
+
+class NormalNextMethod(object):
+    def two(self, ctx):
+        return Success()
+
+
 # Parent mixins.
 
 
@@ -198,7 +206,7 @@ class NextParamChildWithString(object):
     @story
     @arguments("foo", "bar")
     def y(I):
-        I.one
+        I.two
 
     y.contract({"foo": string, "bar": list_of(string)})
 

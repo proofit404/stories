@@ -155,7 +155,7 @@ def test_context_variables_normalization_conflict(m):
     class T(m.ParamChild, m.NormalMethod):
         pass
 
-    class E(m.NextParamChildWithString, m.NormalMethod):
+    class E(m.NextParamChildWithString, m.NormalNextMethod):
         pass
 
     class Q(m.SequentialParent, m.StringParentMethod, T, E):
@@ -1337,7 +1337,7 @@ def test_sequential_story_steps_set_story_arguments(m):
     class T(m.ChildWithShrink, m.StringMethod):
         pass
 
-    class E(m.NextParamChildWithString, m.NormalMethod):
+    class E(m.NextParamChildWithString, m.NormalNextMethod):
         pass
 
     class Q(m.SequentialParent, m.NormalParentMethod, T, E):
