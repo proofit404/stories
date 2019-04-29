@@ -1,7 +1,11 @@
-from marshmallow import Schema, fields
+from marshmallow import Schema, fields, utils
 
 from stories import Success, arguments, story
 from stories.shortcuts import contract_in
+
+
+# We don't want to convert strings to unicode on Python 2.
+utils.text_type = str
 
 
 # Mixins.
