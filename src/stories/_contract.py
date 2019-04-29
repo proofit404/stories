@@ -303,7 +303,9 @@ class SpecContract(NullContract):
     def __repr__(self):
         lines = ["Contract:"]
         for variable, (cls_name, name, field_name) in self.declared.items():
-            lines.append("  %s: %s # %s.%s" % (variable, field_name, cls_name, name))
+            lines.append(
+                "  %s: %s # %s.%s variable" % (variable, field_name, cls_name, name)
+            )
         return "\n".join(lines)
 
 

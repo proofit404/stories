@@ -1462,9 +1462,9 @@ def test_story_contract_representation_with_spec(m):
 
     expected = """
 Contract:
-  foo: ...  # T.x
-  bar: ...  # T.x
-  baz: ...  # T.x
+  foo: ...  # T.x variable
+  bar: ...  # T.x variable
+  baz: ...  # T.x variable
     """.strip()
 
     assert repr(T().x.contract) == expected
@@ -1473,26 +1473,26 @@ Contract:
 
     expected = """
 Contract:
-  ham: ...   # Q.a
-  eggs: ...  # Q.a
-  beans: ... # Q.a
-  foo: ...   # Q.x
-  bar: ...   # Q.x
-  baz: ...   # Q.x
+  ham: ...   # Q.a variable
+  eggs: ...  # Q.a variable
+  beans: ... # Q.a variable
+  foo: ...   # Q.x variable
+  bar: ...   # Q.x variable
+  baz: ...   # Q.x variable
     """.strip()
 
     assert repr(Q().a.contract) == expected
 
     expected = """
 Contract:
-  fizz: ...  # R.i
-  buzz: ...  # R.i
-  ham: ...   # R.a
-  eggs: ...  # R.a
-  beans: ... # R.a
-  foo: ...   # R.x
-  bar: ...   # R.x
-  baz: ...   # R.x
+  fizz: ...  # R.i variable
+  buzz: ...  # R.i variable
+  ham: ...   # R.a variable
+  eggs: ...  # R.a variable
+  beans: ... # R.a variable
+  foo: ...   # R.x variable
+  bar: ...   # R.x variable
+  baz: ...   # R.x variable
     """.strip()
 
     assert repr(R().i.contract) == expected
@@ -1501,26 +1501,26 @@ Contract:
 
     expected = """
 Contract:
-  ham: ...   # J.a
-  eggs: ...  # J.a
-  beans: ... # J.a
-  foo: ...   # T.x
-  bar: ...   # T.x
-  baz: ...   # T.x
+  ham: ...   # J.a variable
+  eggs: ...  # J.a variable
+  beans: ... # J.a variable
+  foo: ...   # T.x variable
+  bar: ...   # T.x variable
+  baz: ...   # T.x variable
     """.strip()
 
     assert repr(J().a.contract) == expected
 
     expected = """
 Contract:
-  fizz: ...  # F.i
-  buzz: ...  # F.i
-  ham: ...   # J.a
-  eggs: ...  # J.a
-  beans: ... # J.a
-  foo: ...   # T.x
-  bar: ...   # T.x
-  baz: ...   # T.x
+  fizz: ...  # F.i variable
+  buzz: ...  # F.i variable
+  ham: ...   # J.a variable
+  eggs: ...  # J.a variable
+  beans: ... # J.a variable
+  foo: ...   # T.x variable
+  bar: ...   # T.x variable
+  baz: ...   # T.x variable
     """.strip()
 
     assert repr(F().i.contract) == expected
