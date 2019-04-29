@@ -266,6 +266,7 @@ class SpecContract(NullContract):
                         (i, conflict[i]) for i in sorted(conflict)
                     )
                 ),
+                contract=self,
             )
             raise ContextContractError(message)
         return result, errors
@@ -540,6 +541,8 @@ normalization_conflict_template = """
 These arguments have normalization conflict: {conflict}
 
 {results}
+
+{contract!r}
 """.strip()
 
 
