@@ -1524,3 +1524,179 @@ Contract:
     """.strip()
 
     assert repr(F().i.contract) == expected
+
+
+def test_story_contract_representation_with_spec_with_args(m):
+    """
+    Show collected story composition contract as mounted story
+    attribute.  We show each story arguments.
+    """
+
+    class T(m.ParamChild, m.StringMethod):
+        pass
+
+    class Q(m.ParamParent, m.NormalParentMethod, T):
+        pass
+
+    class J(m.ParamParent, m.NormalParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    class R(m.ParamRoot, m.NormalRootMethod, Q):
+        pass
+
+    class F(m.ParamRoot, m.NormalRootMethod):
+        def __init__(self):
+            self.a = J().a
+
+    # Simple.
+
+    expected = """
+Contract:
+  foo: ...  # T.x argument
+  bar: ...  # T.x argument
+  baz: ...  # T.x variable
+    """.strip()
+
+    assert repr(T().x.contract) == expected
+
+    # Substory inheritance.
+
+    expected = """
+Contract:
+  ham: ...   # Q.a argument
+  eggs: ...  # Q.a argument
+  foo: ...   # Q.x argument
+  bar: ...   # Q.x argument
+  beans: ... # Q.a variable
+  baz: ...   # Q.x variable
+    """.strip()
+
+    assert repr(Q().a.contract) == expected
+
+    expected = """
+Contract:
+  fizz: ...  # R.i argument
+  ham: ...   # R.a argument
+  eggs: ...  # R.a argument
+  foo: ...   # R.x argument
+  bar: ...   # R.x argument
+  buzz: ...  # R.i variable
+  beans: ... # R.a variable
+  baz: ...   # R.x variable
+    """.strip()
+
+    assert repr(R().i.contract) == expected
+
+    # Substory DI.
+
+    expected = """
+Contract:
+  ham: ...   # J.a argument
+  eggs: ...  # J.a argument
+  foo: ...   # T.x argument
+  bar: ...   # T.x argument
+  beans: ... # J.a variable
+  baz: ...   # T.x variable
+    """.strip()
+
+    assert repr(J().a.contract) == expected
+
+    expected = """
+Contract:
+  fizz: ...  # F.i argument
+  ham: ...   # J.a argument
+  eggs: ...  # J.a argument
+  foo: ...   # T.x argument
+  bar: ...   # T.x argument
+  buzz: ...  # F.i variable
+  beans: ... # J.a variable
+  baz: ...   # T.x variable
+    """.strip()
+
+    assert repr(F().i.contract) == expected
+
+
+def test_story_contract_representation_with_spec_with_args_conflict(m):
+    """
+    Show collected story composition contract as mounted story
+    attribute.  We show each story arguments in multiline mode if the
+    same name was declared in multiple substories.
+    """
+
+    class T(m.ParamChild, m.NormalMethod):
+        pass
+
+    class Q(m.ParamParentWithSameWithString, m.NormalParentMethod, T):
+        pass
+
+    class J(m.ParamParentWithSameWithString, m.NormalParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    # FIXME: Implement this.
+    #
+    # class R(..., m.NormalRootMethod, Q):
+    #     pass
+    #
+    # class F(..., m.NormalRootMethod):
+    #     def __init__(self):
+    #         self.a = J().a
+
+    # Substory inheritance.
+
+    expected = """
+Contract:
+  foo:
+    ...     # Q.a argument
+    ...     # Q.x argument
+  bar:
+    ...     # Q.a argument
+    ...     # Q.x argument
+  baz: ...  # Q.x variable
+    """.strip()
+
+    assert repr(Q().a.contract) == expected
+
+    #     expected = """
+    # Contract:
+    #   fizz: ...  # R.i argument
+    #   ham: ...   # R.a argument
+    #   eggs: ...  # R.a argument
+    #   foo: ...   # R.x argument
+    #   bar: ...   # R.x argument
+    #   buzz: ...  # R.i variable
+    #   beans: ... # R.a variable
+    #   baz: ...   # R.x variable
+    #     """.strip()
+    #
+    #     assert repr(R().i.contract) == expected
+
+    # Substory DI.
+
+    expected = """
+Contract:
+  foo:
+    ...     # J.a argument
+    ...     # T.x argument
+  bar:
+    ...     # J.a argument
+    ...     # T.x argument
+  baz: ...  # T.x variable
+    """.strip()
+
+    assert repr(J().a.contract) == expected
+
+    #     expected = """
+    # Contract:
+    #   fizz: ...  # F.i argument
+    #   ham: ...   # J.a argument
+    #   eggs: ...  # J.a argument
+    #   foo: ...   # T.x argument
+    #   bar: ...   # T.x argument
+    #   buzz: ...  # F.i variable
+    #   beans: ... # J.a variable
+    #   baz: ...   # T.x variable
+    #     """.strip()
+    #
+    #     assert repr(F().i.contract) == expected

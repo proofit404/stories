@@ -302,6 +302,16 @@ class SpecContract(NullContract):
 
     def __repr__(self):
         lines = ["Contract:"]
+        for argument, validators in self.argset.items():
+            if len(validators) == 1:
+                ((validator, cls_name, name),) = validators
+                lines.append(
+                    "  %s: %r  # %s.%s argument" % (argument, validator, cls_name, name)
+                )
+            else:
+                lines.append("  %s:" % (argument,))
+                for validator in validators:
+                    lines.append("    %r  # %s.%s argument" % validator)
         for variable, (cls_name, name, field_name) in self.declared.items():
             lines.append(
                 "  %s: %s # %s.%s variable" % (variable, field_name, cls_name, name)
