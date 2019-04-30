@@ -313,7 +313,7 @@ class SpecContract(NullContract):
                     lines.append("    %r  # Argument of %s.%s" % validator)
         for variable, (cls_name, name, field_name) in self.declared.items():
             lines.append(
-                "  %s: %s # Variable in %s.%s" % (variable, field_name, cls_name, name)
+                "  %s: %s  # Variable in %s.%s" % (variable, field_name, cls_name, name)
             )
         return "\n".join(lines)
 
