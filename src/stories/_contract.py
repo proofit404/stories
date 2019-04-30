@@ -38,7 +38,9 @@ class PydanticValidator(object):
         return self.field.validate(value, {}, loc=self.field.alias, cls=self.spec)
 
     def __repr__(self):
-        return repr(self.field)
+        import pydantic.utils  # FIXME: Do not import at the runtime.
+
+        return pydantic.utils.display_as_type(self.field.type_)
 
 
 class MarshmallowValidator(object):
