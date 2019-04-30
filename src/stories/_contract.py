@@ -304,15 +304,16 @@ class SpecContract(NullContract):
             if len(validators) == 1:
                 ((validator, cls_name, name),) = validators
                 lines.append(
-                    "  %s: %r  # %s.%s argument" % (argument, validator, cls_name, name)
+                    "  %s: %r  # Argument of %s.%s"
+                    % (argument, validator, cls_name, name)
                 )
             else:
                 lines.append("  %s:" % (argument,))
                 for validator in validators:
-                    lines.append("    %r  # %s.%s argument" % validator)
+                    lines.append("    %r  # Argument of %s.%s" % validator)
         for variable, (cls_name, name, field_name) in self.declared.items():
             lines.append(
-                "  %s: %s # %s.%s variable" % (variable, field_name, cls_name, name)
+                "  %s: %s # Variable in %s.%s" % (variable, field_name, cls_name, name)
             )
         return "\n".join(lines)
 
