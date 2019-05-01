@@ -204,17 +204,17 @@ class SpecContract(NullContract):
 
     def check_story_call(self, kwargs):
         super(SpecContract, self).check_story_call(kwargs)
-        kwargs, errors = self.validate(kwargs)
+        result, errors = self.validate(kwargs)
         if errors:
             message = invalid_argument_template.format(
                 variables=", ".join(map(repr, sorted(errors))),
                 cls=self.cls_name,
                 method=self.name,
-                violations=format_violations(errors),
+                violations=format_violations(kwargs, errors),
                 contract=self,
             )
             raise ContextContractError(message)
-        return kwargs
+        return result
 
     def check_success_statement(self, method, ctx, ns):
         super(SpecContract, self).check_success_statement(method, ctx, ns)
@@ -233,7 +233,7 @@ class SpecContract(NullContract):
                 variables=", ".join(map(repr, sorted(errors))),
                 cls=method.__self__.__class__.__name__,
                 method=method.__name__,
-                violations=format_violations(errors),
+                violations=format_violations(ns, errors),
                 contract=self,
             )
             raise ContextContractError(message)
@@ -320,7 +320,7 @@ class SpecContract(NullContract):
         return "\n".join(lines)
 
 
-def format_violations(errors):
+def format_violations(ns, errors):
     result = []
 
     def normalize(value, indent, dict_value=False):
@@ -338,6 +338,8 @@ def format_violations(errors):
     def normalize_dict(value, indent, sep=None):
         for key in sorted(value):
             normalize(str(key) + ":", indent)
+            if sep is not None:
+                normalize(repr(ns[key]), indent, dict_value=True)
             normalize(value[key], indent, dict_value=True)
             if sep is not None:
                 normalize_str(sep, 0)
