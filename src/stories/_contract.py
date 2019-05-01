@@ -323,11 +323,11 @@ class SpecContract(NullContract):
 def format_violations(ns, errors):
     result = []
 
-    def normalize(value, indent, dict_value=False):
+    def normalize(value, indent, list_item=False, dict_value=False):
         if isinstance(value, dict):
             normalize_dict(value, indent + 2)
         elif isinstance(value, list):
-            normalize_list(value, indent + 2)
+            normalize_list(value, indent if list_item else indent + 2)
         elif isinstance(value, PydanticError):
             indent = indent + 2 if dict_value else indent
             normalize_pydantic(value, indent)
@@ -346,7 +346,7 @@ def format_violations(ns, errors):
 
     def normalize_list(value, indent):
         for elem in value:
-            normalize(elem, indent)
+            normalize(elem, indent, list_item=True)
 
     def normalize_pydantic(value, indent):
         normalize_str(value.msg, indent)
