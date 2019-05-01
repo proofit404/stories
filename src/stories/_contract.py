@@ -245,12 +245,12 @@ class SpecContract(NullContract):
         return unknown
 
     def validate(self, ns):
-        result, errors, conflict = {}, {}, {}
+        result, errors, seen, conflict = {}, {}, [], {}
         for key, value in ns.items():
             if key in self.spec:
-                self.validate_spec(result, errors, key, value)
+                self.validate_spec(result, errors, seen, key, value)
             else:
-                self.validate_argset(result, errors, conflict, key, value)
+                self.validate_argset(result, errors, seen, conflict, key, value)
         if conflict:
             message = normalization_conflict_template.format(
                 conflict=", ".join(
@@ -273,14 +273,14 @@ class SpecContract(NullContract):
             raise ContextContractError(message)
         return result, errors
 
-    def validate_spec(self, result, errors, key, value):
+    def validate_spec(self, result, errors, seen, key, value):
         new_value, error = self.spec[key](value)
         if error:
             errors[key] = error
         else:
-            result[key] = new_value
+            self.assign_result(result, seen, key, value, new_value)
 
-    def validate_argset(self, result, errors, conflict, key, value):
+    def validate_argset(self, result, errors, seen, conflict, key, value):
         new_values, has_error = [], False
         for validator, cls_name, name in self.argset[key]:
             new_value, error = validator(value)
@@ -298,7 +298,20 @@ class SpecContract(NullContract):
                     conflict.setdefault((other[1], other[2]), {})
                     conflict[(other[1], other[2])][key] = other[0]
         if not has_error:
-            result[key] = new_value
+            self.assign_result(result, seen, key, value, new_value)
+
+    def assign_result(self, result, seen, key, value, new_value):
+        for seen_key, seen_value in seen:
+            if value is seen_value:
+                seen_new_value = result[seen_key]
+                if (
+                    type(new_value) is type(seen_new_value)
+                    and new_value == seen_new_value
+                ):
+                    result[key] = seen_new_value
+                    return
+        result[key] = new_value
+        seen.append((key, value))
 
     def __repr__(self):
         lines = ["Contract:"]

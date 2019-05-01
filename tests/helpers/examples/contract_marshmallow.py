@@ -36,6 +36,12 @@ class ExceptionMethod(object):
         raise Exception
 
 
+class AliasMethod(object):
+    def one(self, ctx):
+        value = {"key": "1"}
+        return Success(foo=value, bar=value, baz=value)
+
+
 # Next child mixins.
 
 
@@ -143,6 +149,18 @@ class ChildReuse(object):
         I.one
 
 
+class ChildAlias(object):
+    @story
+    def x(I):
+        I.one
+
+    @x.contract
+    class Contract(Schema):
+        foo = fields.Dict(keys=fields.Str(), values=fields.Str())
+        bar = fields.Dict(keys=fields.Str(), values=fields.Str())
+        baz = fields.Dict(keys=fields.Str(), values=fields.Integer())
+
+
 class ParamChild(object):
     @story
     @arguments("foo", "bar")
@@ -172,6 +190,19 @@ class ParamChildWithShrink(object):
     @x.contract
     class Contract(Schema):
         baz = fields.Integer()
+
+
+class ParamChildAlias(object):
+    @story
+    @arguments("foo", "bar", "baz")
+    def x(I):
+        I.one
+
+    @x.contract
+    class Contract(Schema):
+        foo = fields.Dict(keys=fields.Str(), values=fields.Str())
+        bar = fields.Dict(keys=fields.Str(), values=fields.Str())
+        baz = fields.Dict(keys=fields.Str(), values=fields.Integer())
 
 
 # Next child base classes.

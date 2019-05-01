@@ -1432,6 +1432,74 @@ Story arguments: foo, bar, baz
     assert str(exc_info.value) == expected
 
 
+# Aliases.
+
+
+def test_story_variable_alias_normalization_store_same_object(m):
+    """
+    When story step sets a set of variables some of them are aliases
+    of each other.  If the type and the value of alias are equal to
+    the origin value, we should preserve the same reference to the
+    value.
+    """
+
+    class T(m.ChildAlias, m.AliasMethod):
+        pass
+
+    # Simple.
+
+    getter = make_collector()
+    T().x()
+    assert getter().foo is getter().bar
+    assert getter().foo == {"key": "1"}
+    assert getter().bar == {"key": "1"}
+    assert getter().baz == {"key": 1}
+
+    getter = make_collector()
+    T().x.run()
+    assert getter().foo is getter().bar
+    assert getter().foo == {"key": "1"}
+    assert getter().bar == {"key": "1"}
+    assert getter().baz == {"key": 1}
+
+    # FIXME: Substory inheritance.
+
+    # FIXME: Substory DI.
+
+
+def test_story_argument_alias_normalization_store_same_object(m):
+    """
+    When story has a set of arguments some of them are aliases of each
+    other.  If the type and the value of alias are equal to the origin
+    value, we should preserve the same reference to the value.
+    """
+
+    class T(m.ParamChildAlias, m.NormalMethod):
+        pass
+
+    # Simple.
+
+    value = {"key": "1"}
+
+    getter = make_collector()
+    T().x(foo=value, bar=value, baz=value)
+    assert getter().foo is getter().bar
+    assert getter().foo == {"key": "1"}
+    assert getter().bar == {"key": "1"}
+    assert getter().baz == {"key": 1}
+
+    getter = make_collector()
+    T().x.run(foo=value, bar=value, baz=value)
+    assert getter().foo is getter().bar
+    assert getter().foo == {"key": "1"}
+    assert getter().bar == {"key": "1"}
+    assert getter().baz == {"key": 1}
+
+    # FIXME: Substory inheritance.
+
+    # FIXME: Substory DI.
+
+
 # Representation.
 
 

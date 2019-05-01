@@ -32,6 +32,12 @@ class ExceptionMethod(object):
         raise Exception
 
 
+class AliasMethod(object):
+    def one(self, ctx):
+        value = {"key": "1"}
+        return Success(foo=value, bar=value, baz=value)
+
+
 # Next child mixins.
 
 
@@ -141,6 +147,25 @@ class ChildReuse(object):
         I.one
 
 
+class ChildAlias(object):
+    @story
+    def x(I):
+        I.one
+
+    x.contract(
+        Validator(
+            {
+                "foo": {"type": "dict", "schema": {"key": {"type": "string"}}},
+                "bar": {"type": "dict", "schema": {"key": {"type": "string"}}},
+                "baz": {
+                    "type": "dict",
+                    "schema": {"key": {"type": "integer", "coerce": int}},
+                },
+            }
+        )
+    )
+
+
 class ParamChild(object):
     @story
     @arguments("foo", "bar")
@@ -172,6 +197,26 @@ class ParamChildWithShrink(object):
         I.one
 
     x.contract(Validator({"baz": {"type": "integer", "coerce": int}}))
+
+
+class ParamChildAlias(object):
+    @story
+    @arguments("foo", "bar", "baz")
+    def x(I):
+        I.one
+
+    x.contract(
+        Validator(
+            {
+                "foo": {"type": "dict", "schema": {"key": {"type": "string"}}},
+                "bar": {"type": "dict", "schema": {"key": {"type": "string"}}},
+                "baz": {
+                    "type": "dict",
+                    "schema": {"key": {"type": "integer", "coerce": int}},
+                },
+            }
+        )
+    )
 
 
 # Next child base classes.

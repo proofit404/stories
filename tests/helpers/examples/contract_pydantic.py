@@ -1,4 +1,4 @@
-from typing import List
+from typing import Dict, List
 
 from pydantic import BaseModel
 
@@ -32,6 +32,12 @@ class UnknownMethod(object):
 class ExceptionMethod(object):
     def one(self, ctx):
         raise Exception
+
+
+class AliasMethod(object):
+    def one(self, ctx):
+        value = {"key": "1"}
+        return Success(foo=value, bar=value, baz=value)
 
 
 # Next child mixins.
@@ -141,6 +147,18 @@ class ChildReuse(object):
         I.one
 
 
+class ChildAlias(object):
+    @story
+    def x(I):
+        I.one
+
+    @x.contract
+    class Contract(BaseModel):
+        foo: Dict[str, str]
+        bar: Dict[str, str]
+        baz: Dict[str, int]
+
+
 class ParamChild(object):
     @story
     @arguments("foo", "bar")
@@ -170,6 +188,19 @@ class ParamChildWithShrink(object):
     @x.contract
     class Contract(BaseModel):
         baz: int
+
+
+class ParamChildAlias(object):
+    @story
+    @arguments("foo", "bar", "baz")
+    def x(I):
+        I.one
+
+    @x.contract
+    class Contract(BaseModel):
+        foo: Dict[str, str]
+        bar: Dict[str, str]
+        baz: Dict[str, int]
 
 
 # Next child base classes.

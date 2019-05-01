@@ -37,6 +37,21 @@ def list_of(f):
     return validator
 
 
+def dict_of(k, v):
+    def validator(value):
+        if isinstance(value, dict):
+            new_key = list(map(k, value.keys()))
+            new_value = list(map(v, value.values()))
+            if any(map(itemgetter(1), new_key)) or any(map(itemgetter(1), new_value)):
+                return None, "Invalid value"
+            else:
+                return dict((k(x)[0], v(y)[0]) for x, y in value.items()), None
+        else:
+            return None, "Invalid value"
+
+    return validator
+
+
 # Mixins.
 
 
@@ -63,6 +78,12 @@ class UnknownMethod(object):
 class ExceptionMethod(object):
     def one(self, ctx):
         raise Exception
+
+
+class AliasMethod(object):
+    def one(self, ctx):
+        value = {"key": "1"}
+        return Success(foo=value, bar=value, baz=value)
 
 
 # Next child mixins.
@@ -166,6 +187,20 @@ class ChildReuse(object):
         I.one
 
 
+class ChildAlias(object):
+    @story
+    def x(I):
+        I.one
+
+    x.contract(
+        {
+            "foo": dict_of(string, string),
+            "bar": dict_of(string, string),
+            "baz": dict_of(string, integer),
+        }
+    )
+
+
 class ParamChild(object):
     @story
     @arguments("foo", "bar")
@@ -189,6 +224,21 @@ class ParamChildWithShrink(object):
         I.one
 
     x.contract({"baz": integer})
+
+
+class ParamChildAlias(object):
+    @story
+    @arguments("foo", "bar", "baz")
+    def x(I):
+        I.one
+
+    x.contract(
+        {
+            "foo": dict_of(string, string),
+            "bar": dict_of(string, string),
+            "baz": dict_of(string, integer),
+        }
+    )
 
 
 # Next child base classes.
