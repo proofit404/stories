@@ -257,12 +257,11 @@ class SpecContract(NullContract):
                     map(repr, sorted(set(j for i in conflict.values() for j in i)))
                 ),
                 results="\n\n".join(
-                    normalization_conflict_result_template.format(
-                        cls=cls,
-                        method=method,
-                        result="\n".join(
-                            " - %s: %r" % (i, result[i]) for i in sorted(result)
-                        ),
+                    "%s.%s:\n%s"
+                    % (
+                        cls,
+                        method,
+                        "\n".join(" - %s: %r" % (i, result[i]) for i in sorted(result)),
                     )
                     for (cls, method), result in (
                         (i, conflict[i]) for i in sorted(conflict)
@@ -561,12 +560,4 @@ These arguments have normalization conflict: {conflict}
 {results}
 
 {contract!r}
-""".strip()
-
-
-normalization_conflict_result_template = """
-Story method: {cls}.{method}
-
-Story normalization result:
-{result}
 """.strip()
