@@ -437,10 +437,10 @@ def combine_contract(parent, child):
         message = type_error_template.format(
             cls=parent.cls_name,
             method=parent.name,
-            contract=parent.spec if type(parent) is SpecContract else None,
+            contract=parent.origin if type(parent) is SpecContract else None,
             other_cls=child.cls_name,
             other_method=child.name,
-            other_contract=child.spec if type(child) is SpecContract else None,
+            other_contract=child.origin if type(child) is SpecContract else None,
         )
         raise ContextContractError(message)
 
