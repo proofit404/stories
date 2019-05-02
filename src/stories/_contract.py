@@ -211,7 +211,7 @@ class SpecContract(NullContract):
                 cls=self.cls_name,
                 method=self.name,
                 violations=format_violations(kwargs, errors),
-                contract=self,
+                contract=self.format_contract_fields(errors),
             )
             raise ContextContractError(message)
         return result
@@ -234,7 +234,7 @@ class SpecContract(NullContract):
                 cls=method.__self__.__class__.__name__,
                 method=method.__name__,
                 violations=format_violations(ns, errors),
-                contract=self,
+                contract=self.format_contract_fields(errors),
             )
             raise ContextContractError(message)
         return kwargs
@@ -329,6 +329,31 @@ class SpecContract(NullContract):
             lines.append(
                 "  %s: %s  # Variable in %s.%s" % (variable, field_name, cls_name, name)
             )
+        return "\n".join(lines)
+
+    def format_contract_fields(self, errors):
+        # FIXME: Remove duplication with `__repr__` function.
+        lines = []
+        for variable in sorted(errors):
+            if variable in self.argset:
+                validators = self.argset[variable]
+                if len(validators) == 1:
+                    ((validator, cls_name, name),) = validators
+                    lines.append(
+                        "%s: %r  # Argument of %s.%s"
+                        % (variable, validator, cls_name, name)
+                    )
+                else:
+                    lines.append("%s:" % (variable,))
+                    for validator in validators:
+                        lines.append("  %r  # Argument of %s.%s" % validator)
+            else:
+                cls_name, name, field_name = self.declared[variable]
+                lines.append(
+                    "%s: %s  # Variable in %s.%s"
+                    % (variable, field_name, cls_name, name)
+                )
+            lines.append("")
         return "\n".join(lines)
 
 
@@ -511,7 +536,9 @@ Violations:
 
 {violations}
 
-{contract!r}
+Contract:
+
+{contract}
 """.strip()
 
 
@@ -524,7 +551,9 @@ Violations:
 
 {violations}
 
-{contract!r}
+Contract:
+
+{contract}
 """.strip()
 
 
