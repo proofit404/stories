@@ -393,7 +393,7 @@ def format_violations(ns, errors):
 
     normalize_dict(errors, 0, "")
 
-    return "\n".join(result)
+    return "\n".join(result).strip()
 
 
 # Wrap.
