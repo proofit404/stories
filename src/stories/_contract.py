@@ -24,6 +24,22 @@ from .exceptions import ContextContractError
 #       substory
 #         substory with variable declaration
 #       substory with this variable as an argument
+#
+# [ ] Depending of the level of nesting the same substory can occurred
+#     multiple times at one argument in the contract representation.
+#
+#     defaults:
+#       typing.Union[typing.Dict[str, str], NoneType]  # Argument of ProcessImages.process
+#       typing.Union[typing.Dict[str, str], NoneType]  # Argument of ProcessImages.process
+#       typing.Union[typing.Dict[str, str], NoneType]  # Argument of ProcessImages.process
+#     raw_urls:
+#       str  # Argument of FetchURLPreviews.fetch
+#       str  # Argument of FetchURLPreviews.fetch
+#     files:
+#       typing.Dict[str, typing.Union[str, int, typing.Any]]  # Argument of ProcessVideos.process
+#       typing.Dict[str, typing.Union[str, int, typing.Any]]  # Argument of ProcessImages.process
+#       typing.Dict[str, typing.Union[str, int, typing.Any]]  # Argument of ProcessImages.process
+#       typing.Dict[str, typing.Union[str, int, typing.Any]]  # Argument of ProcessImages.process
 
 
 # Validators.
