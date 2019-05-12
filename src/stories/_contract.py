@@ -40,6 +40,22 @@ from .exceptions import ContextContractError
 #       typing.Dict[str, typing.Union[str, int, typing.Any]]  # Argument of ProcessImages.process
 #       typing.Dict[str, typing.Union[str, int, typing.Any]]  # Argument of ProcessImages.process
 #       typing.Dict[str, typing.Union[str, int, typing.Any]]  # Argument of ProcessImages.process
+#
+# [ ] Fix pydantic error messages.
+#
+#     In [1]: class Context(pydantic.BaseModel):
+#        ...:     files: typing.Dict[str, typing.Dict[str, typing.Union[str, int, typing.BinaryIO]]]
+#        ...:
+#
+#     In [2]: Context(files={"a": {'name': B(name='test'), 'size': 1}})
+#     ---------------------------------------------------------------------------
+#     ValidationError: 3 validation errors
+#     files -> a -> name
+#       str type expected (type=type_error.str)
+#     files -> a -> name
+#       value is not a valid integer (type=type_error.integer)
+#     files -> a -> name
+#       instance of BinaryIO expected (type=type_error.arbitrary_type; expected_arbitrary_type=BinaryIO)
 
 
 # Validators.
