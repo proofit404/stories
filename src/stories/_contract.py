@@ -547,7 +547,7 @@ These arguments are unknown: {unknown}
 Story method: {cls}.{method}
 
 Story composition arguments: {arguments}
-""".strip()
+""".strip()  # FIXME: Show arguments part of the contract representation.
 
 
 unknown_argument_null_template = """
