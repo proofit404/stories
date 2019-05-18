@@ -192,7 +192,7 @@ But we see a few disadvantages in it.
    * Mixins.  At some point, we will like to reuse parts of our
      business logic.  A mixin is the most common way to make code with
      classes reusable.  But it will lead to even more implicit source
-     of date.  Attributes appear from nowhere.
+     of data.  Attributes appear from nowhere.
 
 2. Top-down architecture.  We call functions directly.  They call
    other low level functions directly.  Our business logic has a very
@@ -255,7 +255,7 @@ Wouldn't it be nice to see the same details in the debug toolbar?
 .. image:: /static/debug-toolbar.png
     :class: with-popup
 
-Wouldn't it be nice to it when production fails?
+Wouldn't it be nice to have it when production fails?
 
 .. image:: /static/sentry.png
     :class: with-popup
