@@ -46,4 +46,5 @@ Contents
 .. _pytest: pytest.html
 .. _debug toolbar: debug_toolbars.html
 .. _django: debug_toolbars.html#django-contrib
+.. _flask: debug_toolbars.html#flask-contrib
 .. _sentry: sentry.html
