@@ -16,6 +16,7 @@ representations = {
     "str_field_repr": "str",
     "list_of_int_field_repr": "List[int]",
     "list_of_str_field_repr": "List[str]",
+    "contract_class_repr": "<class 'pydantic.main.BaseModel'>",
 }
 
 

@@ -1,3 +1,4 @@
+from inspect import isclass
 from operator import itemgetter
 
 from ._compat import CerberusSpec, MarshmallowSpec, PydanticError, PydanticSpec
@@ -464,10 +465,10 @@ def combine_contract(parent, child):
         message = type_error_template.format(
             cls=parent.cls_name,
             method=parent.name,
-            contract=parent.origin if type(parent) is SpecContract else None,
+            contract=format_contract(parent),
             other_cls=child.cls_name,
             other_method=child.name,
-            other_contract=child.origin if type(child) is SpecContract else None,
+            other_contract=format_contract(child),
         )
         raise ContextContractError(message)
 
@@ -484,6 +485,16 @@ def combine_argsets(parent, child):
 
 def combine_declared(parent, child):
     parent.declared.update(child.declared)
+
+
+def format_contract(contract):
+    if type(contract) is SpecContract:
+        if isclass(contract.origin):
+            return contract.origin.__bases__[0]
+        else:
+            return type(contract.origin)
+    else:
+        return None
 
 
 def maybe_extend_downstream_argsets(methods, root):

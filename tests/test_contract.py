@@ -1000,8 +1000,10 @@ Story context contract: None
 
 Substory method: Q.x
 
-Substory context contract:
-    """.strip()
+Substory context contract: {contract_class_repr}
+    """.strip().format(
+        **m.representations
+    )
 
     with pytest.raises(ContextContractError) as exc_info:
         Q().a
@@ -1018,8 +1020,10 @@ Story context contract: None
 
 Substory method: T.x
 
-Substory context contract:
-    """.strip()
+Substory context contract: {contract_class_repr}
+    """.strip().format(
+        **m.representations
+    )
 
     with pytest.raises(ContextContractError) as exc_info:
         J().a

@@ -18,6 +18,7 @@ representations = {
     "str_field_repr": "...",
     "list_of_int_field_repr": "...",
     "list_of_str_field_repr": "...",
+    "contract_class_repr": "<class 'marshmallow.schema.Schema'>",
 }
 
 
