@@ -11,6 +11,7 @@ except ImportError:
 
 try:
     from pydantic.error_wrappers import ErrorWrapper as PydanticError
+    from pydantic.fields import Shape as PydanticShape
     from pydantic.main import MetaModel as PydanticSpec
     from pydantic.utils import display_as_type as pydantic_display
 except ImportError:
@@ -19,6 +20,9 @@ except ImportError:
         pass
 
     class PydanticError(object):
+        pass
+
+    class PydanticShape(object):
         pass
 
     def pydantic_display(t):

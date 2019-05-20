@@ -5,6 +5,7 @@ from ._compat import (
     CerberusSpec,
     MarshmallowSpec,
     PydanticError,
+    PydanticShape,
     PydanticSpec,
     pydantic_display,
 )
@@ -77,7 +78,21 @@ class PydanticValidator(object):
         return self.field.validate(value, {}, loc=self.field.alias, cls=self.spec)
 
     def __repr__(self):
-        return pydantic_display(self.field.type_)
+        if self.field.shape is PydanticShape.SINGLETON:
+            template = "%s"
+        elif self.field.shape is PydanticShape.LIST:
+            template = "List[%s]"
+        elif self.field.shape is PydanticShape.SET:
+            template = "Set[%s]"
+        elif self.field.shape is PydanticShape.MAPPING:
+            template = "Mapping[%s]"
+        elif self.field.shape is PydanticShape.TUPLE:
+            template = "Tuple[%s]"
+        elif self.field.shape is PydanticShape.TUPLE_ELLIPS:
+            template = "Tuple[%s, ...]"
+        elif self.field.shape is PydanticShape.SEQUENCE:
+            template = "Sequence[%s]"
+        return template % (pydantic_display(self.field.type_),)
 
 
 class MarshmallowValidator(object):
