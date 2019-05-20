@@ -10,14 +10,18 @@ except ImportError:
 
 
 try:
-    from pydantic.main import MetaModel as PydanticSpec
     from pydantic.error_wrappers import ErrorWrapper as PydanticError
+    from pydantic.main import MetaModel as PydanticSpec
+    from pydantic.utils import display_as_type as pydantic_display
 except ImportError:
     # Pydantic package is not installed.
     class PydanticSpec(object):
         pass
 
     class PydanticError(object):
+        pass
+
+    def pydantic_display(t):
         pass
 
 

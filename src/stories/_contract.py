@@ -1,7 +1,13 @@
 from inspect import isclass
 from operator import itemgetter
 
-from ._compat import CerberusSpec, MarshmallowSpec, PydanticError, PydanticSpec
+from ._compat import (
+    CerberusSpec,
+    MarshmallowSpec,
+    PydanticError,
+    PydanticSpec,
+    pydantic_display,
+)
 from .exceptions import ContextContractError
 
 
@@ -71,9 +77,7 @@ class PydanticValidator(object):
         return self.field.validate(value, {}, loc=self.field.alias, cls=self.spec)
 
     def __repr__(self):
-        import pydantic.utils  # FIXME: Do not import at the runtime.
-
-        return pydantic.utils.display_as_type(self.field.type_)
+        return pydantic_display(self.field.type_)
 
 
 class MarshmallowValidator(object):
