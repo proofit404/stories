@@ -212,7 +212,6 @@ class NullContract(object):
                 unknown=", ".join(sorted(unknown_arguments)),
                 cls=self.cls_name,
                 method=self.name,
-                # FIXME: This method is defined in the parent class.
                 contract=self.format_contract_fields(self.argset),
             )
             raise ContextContractError(message)
@@ -240,6 +239,15 @@ class NullContract(object):
             )
             raise ContextContractError(message)
         return ns
+
+    def format_contract_fields(self, *fieldset):
+        lines = ["Contract:"]
+        arguments = sorted(
+            [field for fields in fieldset for field in fields if field in self.argset]
+        )
+        for argument in arguments:
+            lines.append("  %s" % (argument,))
+        return "\n".join(lines)
 
 
 class SpecContract(NullContract):
