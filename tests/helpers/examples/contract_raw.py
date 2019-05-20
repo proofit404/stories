@@ -8,12 +8,12 @@ from stories.shortcuts import contract_in
 
 
 representations = {
-    "int_error": "...",
-    "list_of_int_error": "...",
-    "int_field_repr": "...",
-    "str_field_repr": "...",
-    "list_of_int_field_repr": "...",
-    "list_of_str_field_repr": "...",
+    "int_error": "Invalid value",
+    "list_of_int_error": "Invalid value",
+    "int_field_repr": "integer",
+    "str_field_repr": "string",
+    "list_of_int_field_repr": "list_of(integer)",
+    "list_of_str_field_repr": "list_of(string)",
 }
 
 
@@ -47,6 +47,7 @@ def list_of(f):
         else:
             return None, "Invalid value"
 
+    validator.__name__ = "list_of(" + f.__name__ + ")"
     return validator
 
 
@@ -62,6 +63,7 @@ def dict_of(k, v):
         else:
             return None, "Invalid value"
 
+    validator.__name__ = "dict_of(" + k.__name__ + ", " + v.__name__ + ")"
     return validator
 
 

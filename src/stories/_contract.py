@@ -102,6 +102,17 @@ class CerberusValidator(object):
         return repr(self.spec.schema.schema[self.field])
 
 
+class RawValidator(object):
+    def __init__(self, validator):
+        self.validator = validator
+
+    def __call__(self, value):
+        return self.validator(value)
+
+    def __repr__(self):
+        return self.validator.__name__
+
+
 # Disassemble.
 
 
@@ -127,7 +138,10 @@ def disassemble_cerberus(spec):
 
 
 def disassemble_raw(spec):
-    return spec.copy()
+    result = {}
+    for name, validator in spec.items():
+        result[name] = RawValidator(validator)
+    return result
 
 
 # Execute.
