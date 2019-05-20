@@ -1,4 +1,4 @@
-from collections import OrderedDict
+from operator import itemgetter
 
 from ._compat import CerberusSpec, MarshmallowSpec, PydanticError, PydanticSpec
 from .exceptions import ContextContractError
@@ -182,7 +182,7 @@ class NullContract(object):
         self.make_argset()
 
     def make_argset(self):
-        self.argset = OrderedDict((arg, set()) for arg in self.arguments)
+        self.argset = dict((arg, set()) for arg in self.arguments)
 
     def check_story_call(self, kwargs):
         # FIXME: Check required arguments here.
@@ -239,7 +239,7 @@ class SpecContract(NullContract):
             del self.spec[arg]
 
     def make_declared(self):
-        self.declared = OrderedDict(
+        self.declared = dict(
             (variable, (self.cls_name, self.name, repr(validator)))
             for variable, validator in self.spec.items()
         )
@@ -358,9 +358,9 @@ class SpecContract(NullContract):
 
     def format_contract_fields(self, *fieldset):
         lines = ["Contract:"]
-        arguments = [
-            field for fields in fieldset for field in fields if field in self.argset
-        ]
+        arguments = sorted(
+            [field for fields in fieldset for field in fields if field in self.argset]
+        )
         for argument in arguments:
             validators = self.argset[argument]
             if len(validators) == 1:
@@ -371,11 +371,11 @@ class SpecContract(NullContract):
                 )
             else:
                 lines.append("  %s:" % (argument,))
-                for validator in validators:
+                for validator in sorted(validators, key=itemgetter(1, 2)):
                     lines.append("    %r  # Argument of %s.%s" % validator)
-        variables = [
-            field for fields in fieldset for field in fields if field in self.declared
-        ]
+        variables = sorted(
+            [field for fields in fieldset for field in fields if field in self.declared]
+        )
         for variable in variables:
             cls_name, name, field_name = self.declared[variable]
             lines.append(

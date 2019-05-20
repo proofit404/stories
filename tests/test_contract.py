@@ -630,12 +630,16 @@ Story method: Q.a
 Violations:
 
 eggs:
+  '<boom>'
+  {int_error}
 
 ham:
+  '<boom>'
+  {int_error}
 
 Contract:
-  eggs:
-  ham:
+  eggs: {int_field_repr}  # Argument of Q.a
+  ham: {int_field_repr}  # Argument of Q.a
     """.strip().format(
         **m.representations
     )
@@ -658,12 +662,16 @@ Story method: J.a
 Violations:
 
 eggs:
+  '<boom>'
+  {int_error}
 
 ham:
+  '<boom>'
+  {int_error}
 
 Contract:
-  eggs:
-  ham:
+  eggs: {int_field_repr}  # Argument of J.a
+  ham: {int_field_repr}  # Argument of J.a
     """.strip().format(
         **m.representations
     )
@@ -1066,16 +1074,14 @@ def test_unknown_context_variable(m):
     expected = """
 These variables were not defined in the context contract: 'quiz', 'spam'
 
-Available variables are: 'bar', 'baz', 'foo'
-
 Function returned value: T.one
 
 Use different names for Success() keyword arguments or add these names to the contract.
 
 Contract:
-  foo: {int_field_repr}          # Variable in T.x
   bar: {list_of_int_field_repr}  # Variable in T.x
-  baz: {int_field_repr}          # Variable in T.x
+  baz: {int_field_repr}  # Variable in T.x
+  foo: {int_field_repr}  # Variable in T.x
     """.strip().format(
         **m.representations
     )
@@ -1093,12 +1099,17 @@ Contract:
     expected = """
 These variables were not defined in the context contract: 'quiz', 'spam'
 
-Available variables are: 'bar', 'baz', 'foo'
-
 Function returned value: Q.one
 
 Use different names for Success() keyword arguments or add these names to the contract.
-    """.strip()
+
+Contract:
+  bar: {list_of_int_field_repr}  # Variable in Q.x
+  baz: {int_field_repr}  # Variable in Q.x
+  foo: {int_field_repr}  # Variable in Q.x
+    """.strip().format(
+        **m.representations
+    )
 
     with pytest.raises(ContextContractError) as exc_info:
         Q().a()
@@ -1113,12 +1124,17 @@ Use different names for Success() keyword arguments or add these names to the co
     expected = """
 These variables were not defined in the context contract: 'quiz', 'spam'
 
-Available variables are: 'bar', 'baz', 'foo'
-
 Function returned value: T.one
 
 Use different names for Success() keyword arguments or add these names to the contract.
-    """.strip()
+
+Contract:
+  bar: {list_of_int_field_repr}  # Variable in T.x
+  baz: {int_field_repr}  # Variable in T.x
+  foo: {int_field_repr}  # Variable in T.x
+    """.strip().format(
+        **m.representations
+    )
 
     with pytest.raises(ContextContractError) as exc_info:
         J().a()
@@ -1159,9 +1175,11 @@ These arguments are unknown: baz, fox
 Story method: T.x
 
 Contract:
-  foo: int        # Argument of T.x
-  bar: List[int]  # Argument of T.x
-    """.strip()
+  bar: {list_of_int_field_repr}  # Argument of T.x
+  foo: {int_field_repr}  # Argument of T.x
+    """.strip().format(
+        **m.representations
+    )
 
     with pytest.raises(ContextContractError) as exc_info:
         T().x(baz=1, fox=2)
@@ -1179,9 +1197,11 @@ These arguments are unknown: beans, fox
 Story method: Q.a
 
 Contract:
-  ham
-  eggs
-    """.strip()
+  eggs: {int_field_repr}  # Argument of Q.a
+  ham: {int_field_repr}  # Argument of Q.a
+    """.strip().format(
+        **m.representations
+    )
 
     with pytest.raises(ContextContractError) as exc_info:
         Q().a(beans=1, fox=2)
@@ -1199,9 +1219,11 @@ These arguments are unknown: beans, fox
 Story method: J.a
 
 Contract:
-  ham
-  eggs
-    """.strip()
+  eggs: {int_field_repr}  # Argument of J.a
+  ham: {int_field_repr}  # Argument of J.a
+    """.strip().format(
+        **m.representations
+    )
 
     with pytest.raises(ContextContractError) as exc_info:
         J().a(beans=1, fox=2)
@@ -1645,10 +1667,12 @@ def test_story_contract_representation_with_spec(m):
 
     expected = """
 Contract:
-  foo: ...  # T.x variable
-  bar: ...  # T.x variable
-  baz: ...  # T.x variable
-    """.strip()
+  bar: {list_of_int_field_repr}  # Variable in T.x
+  baz: {int_field_repr}  # Variable in T.x
+  foo: {int_field_repr}  # Variable in T.x
+    """.strip().format(
+        **m.representations
+    )
 
     assert repr(T().x.contract) == expected
 
@@ -1656,27 +1680,31 @@ Contract:
 
     expected = """
 Contract:
-  ham: ...   # Q.a variable
-  eggs: ...  # Q.a variable
-  beans: ... # Q.a variable
-  foo: ...   # Q.x variable
-  bar: ...   # Q.x variable
-  baz: ...   # Q.x variable
-    """.strip()
+  bar: {list_of_int_field_repr}  # Variable in Q.x
+  baz: {int_field_repr}  # Variable in Q.x
+  beans: {int_field_repr}  # Variable in Q.a
+  eggs: {int_field_repr}  # Variable in Q.a
+  foo: {int_field_repr}  # Variable in Q.x
+  ham: {int_field_repr}  # Variable in Q.a
+    """.strip().format(
+        **m.representations
+    )
 
     assert repr(Q().a.contract) == expected
 
     expected = """
 Contract:
-  fizz: ...  # R.i variable
-  buzz: ...  # R.i variable
-  ham: ...   # R.a variable
-  eggs: ...  # R.a variable
-  beans: ... # R.a variable
-  foo: ...   # R.x variable
-  bar: ...   # R.x variable
-  baz: ...   # R.x variable
-    """.strip()
+  bar: {list_of_int_field_repr}  # Variable in R.x
+  baz: {int_field_repr}  # Variable in R.x
+  beans: {int_field_repr}  # Variable in R.a
+  buzz: {int_field_repr}  # Variable in R.i
+  eggs: {int_field_repr}  # Variable in R.a
+  fizz: {int_field_repr}  # Variable in R.i
+  foo: {int_field_repr}  # Variable in R.x
+  ham: {int_field_repr}  # Variable in R.a
+    """.strip().format(
+        **m.representations
+    )
 
     assert repr(R().i.contract) == expected
 
@@ -1684,27 +1712,31 @@ Contract:
 
     expected = """
 Contract:
-  ham: ...   # J.a variable
-  eggs: ...  # J.a variable
-  beans: ... # J.a variable
-  foo: ...   # T.x variable
-  bar: ...   # T.x variable
-  baz: ...   # T.x variable
-    """.strip()
+  bar: {list_of_int_field_repr}  # Variable in T.x
+  baz: {int_field_repr}  # Variable in T.x
+  beans: {int_field_repr}  # Variable in J.a
+  eggs: {int_field_repr}  # Variable in J.a
+  foo: {int_field_repr}  # Variable in T.x
+  ham: {int_field_repr}  # Variable in J.a
+    """.strip().format(
+        **m.representations
+    )
 
     assert repr(J().a.contract) == expected
 
     expected = """
 Contract:
-  fizz: ...  # F.i variable
-  buzz: ...  # F.i variable
-  ham: ...   # J.a variable
-  eggs: ...  # J.a variable
-  beans: ... # J.a variable
-  foo: ...   # T.x variable
-  bar: ...   # T.x variable
-  baz: ...   # T.x variable
-    """.strip()
+  bar: {list_of_int_field_repr}  # Variable in T.x
+  baz: {int_field_repr}  # Variable in T.x
+  beans: {int_field_repr}  # Variable in J.a
+  buzz: {int_field_repr}  # Variable in F.i
+  eggs: {int_field_repr}  # Variable in J.a
+  fizz: {int_field_repr}  # Variable in F.i
+  foo: {int_field_repr}  # Variable in T.x
+  ham: {int_field_repr}  # Variable in J.a
+    """.strip().format(
+        **m.representations
+    )
 
     assert repr(F().i.contract) == expected
 
@@ -1736,10 +1768,12 @@ def test_story_contract_representation_with_spec_with_args(m):
 
     expected = """
 Contract:
-  foo: ...  # T.x argument
-  bar: ...  # T.x argument
-  baz: ...  # T.x variable
-    """.strip()
+  bar: {list_of_int_field_repr}  # Argument of T.x
+  foo: {int_field_repr}  # Argument of T.x
+  baz: {int_field_repr}  # Variable in T.x
+    """.strip().format(
+        **m.representations
+    )
 
     assert repr(T().x.contract) == expected
 
@@ -1747,27 +1781,31 @@ Contract:
 
     expected = """
 Contract:
-  ham: ...   # Q.a argument
-  eggs: ...  # Q.a argument
-  foo: ...   # Q.x argument
-  bar: ...   # Q.x argument
-  beans: ... # Q.a variable
-  baz: ...   # Q.x variable
-    """.strip()
+  bar: {list_of_int_field_repr}  # Argument of Q.x
+  eggs: {int_field_repr}  # Argument of Q.a
+  foo: {int_field_repr}  # Argument of Q.x
+  ham: {int_field_repr}  # Argument of Q.a
+  baz: {int_field_repr}  # Variable in Q.x
+  beans: {int_field_repr}  # Variable in Q.a
+    """.strip().format(
+        **m.representations
+    )
 
     assert repr(Q().a.contract) == expected
 
     expected = """
 Contract:
-  fizz: ...  # R.i argument
-  ham: ...   # R.a argument
-  eggs: ...  # R.a argument
-  foo: ...   # R.x argument
-  bar: ...   # R.x argument
-  buzz: ...  # R.i variable
-  beans: ... # R.a variable
-  baz: ...   # R.x variable
-    """.strip()
+  bar: {list_of_int_field_repr}  # Argument of R.x
+  eggs: {int_field_repr}  # Argument of R.a
+  fizz: {int_field_repr}  # Argument of R.i
+  foo: {int_field_repr}  # Argument of R.x
+  ham: {int_field_repr}  # Argument of R.a
+  baz: {int_field_repr}  # Variable in R.x
+  beans: {int_field_repr}  # Variable in R.a
+  buzz: {int_field_repr}  # Variable in R.i
+    """.strip().format(
+        **m.representations
+    )
 
     assert repr(R().i.contract) == expected
 
@@ -1775,27 +1813,31 @@ Contract:
 
     expected = """
 Contract:
-  ham: ...   # J.a argument
-  eggs: ...  # J.a argument
-  foo: ...   # T.x argument
-  bar: ...   # T.x argument
-  beans: ... # J.a variable
-  baz: ...   # T.x variable
-    """.strip()
+  bar: {list_of_int_field_repr}  # Argument of T.x
+  eggs: {int_field_repr}  # Argument of J.a
+  foo: {int_field_repr}  # Argument of T.x
+  ham: {int_field_repr}  # Argument of J.a
+  baz: {int_field_repr}  # Variable in T.x
+  beans: {int_field_repr}  # Variable in J.a
+    """.strip().format(
+        **m.representations
+    )
 
     assert repr(J().a.contract) == expected
 
     expected = """
 Contract:
-  fizz: ...  # F.i argument
-  ham: ...   # J.a argument
-  eggs: ...  # J.a argument
-  foo: ...   # T.x argument
-  bar: ...   # T.x argument
-  buzz: ...  # F.i variable
-  beans: ... # J.a variable
-  baz: ...   # T.x variable
-    """.strip()
+  bar: {list_of_int_field_repr}  # Argument of T.x
+  eggs: {int_field_repr}  # Argument of J.a
+  fizz: {int_field_repr}  # Argument of F.i
+  foo: {int_field_repr}  # Argument of T.x
+  ham: {int_field_repr}  # Argument of J.a
+  baz: {int_field_repr}  # Variable in T.x
+  beans: {int_field_repr}  # Variable in J.a
+  buzz: {int_field_repr}  # Variable in F.i
+    """.strip().format(
+        **m.representations
+    )
 
     assert repr(F().i.contract) == expected
 
@@ -1830,14 +1872,16 @@ def test_story_contract_representation_with_spec_with_args_conflict(m):
 
     expected = """
 Contract:
-  foo:
-    ...     # Q.a argument
-    ...     # Q.x argument
   bar:
-    ...     # Q.a argument
-    ...     # Q.x argument
-  baz: ...  # Q.x variable
-    """.strip()
+    {list_of_str_field_repr}  # Argument of Q.a
+    {list_of_int_field_repr}  # Argument of Q.x
+  foo:
+    {str_field_repr}  # Argument of Q.a
+    {int_field_repr}  # Argument of Q.x
+  baz: {int_field_repr}  # Variable in Q.x
+    """.strip().format(
+        **m.representations
+    )
 
     assert repr(Q().a.contract) == expected
 
@@ -1859,14 +1903,16 @@ Contract:
 
     expected = """
 Contract:
-  foo:
-    ...     # J.a argument
-    ...     # T.x argument
   bar:
-    ...     # J.a argument
-    ...     # T.x argument
-  baz: ...  # T.x variable
-    """.strip()
+    {list_of_str_field_repr}  # Argument of J.a
+    {list_of_int_field_repr}  # Argument of T.x
+  foo:
+    {str_field_repr}  # Argument of J.a
+    {int_field_repr}  # Argument of T.x
+  baz: {int_field_repr}  # Variable in T.x
+    """.strip().format(
+        **m.representations
+    )
 
     assert repr(J().a.contract) == expected
 
