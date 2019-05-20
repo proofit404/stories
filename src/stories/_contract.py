@@ -174,16 +174,12 @@ class NullContract(object):
         # FIXME: Check required arguments here.
         unknown_arguments = set(kwargs) - set(self.argset)
         if unknown_arguments:
-            if self.arguments:
-                # FIXME: What if arguments were defined only in the substory?
-                template = unknown_argument_template
-            else:
-                template = unknown_argument_null_template
-            message = template.format(
+            message = unknown_argument_template.format(
                 unknown=", ".join(sorted(unknown_arguments)),
                 cls=self.cls_name,
                 method=self.name,
-                arguments=", ".join(self.arguments),
+                # FIXME: This method is defined in the parent class.
+                contract=self.format_contract_fields(self.argset),
             )
             raise ContextContractError(message)
         return kwargs
@@ -284,10 +280,9 @@ class SpecContract(NullContract):
             else:
                 self.validate_argset(result, errors, seen, conflict, key, value)
         if conflict:
+            conflict_vars = sorted(set(j for i in conflict.values() for j in i))
             message = normalization_conflict_template.format(
-                conflict=", ".join(
-                    map(repr, sorted(set(j for i in conflict.values() for j in i)))
-                ),
+                conflict=", ".join(map(repr, conflict_vars)),
                 results="\n\n".join(
                     "%s.%s:\n%s"
                     % (
@@ -299,7 +294,7 @@ class SpecContract(NullContract):
                         (i, conflict[i]) for i in sorted(conflict)
                     )
                 ),
-                contract=self,
+                contract=self.format_contract_fields(conflict_vars),
             )
             raise ContextContractError(message)
         return result, errors
@@ -345,8 +340,15 @@ class SpecContract(NullContract):
         seen.append((key, value))
 
     def __repr__(self):
+        return self.format_contract_fields(self.argset, self.declared)
+
+    def format_contract_fields(self, *fieldset):
         lines = ["Contract:"]
-        for argument, validators in self.argset.items():
+        arguments = [
+            field for fields in fieldset for field in fields if field in self.argset
+        ]
+        for argument in arguments:
+            validators = self.argset[argument]
             if len(validators) == 1:
                 ((validator, cls_name, name),) = validators
                 lines.append(
@@ -357,35 +359,14 @@ class SpecContract(NullContract):
                 lines.append("  %s:" % (argument,))
                 for validator in validators:
                     lines.append("    %r  # Argument of %s.%s" % validator)
-        for variable, (cls_name, name, field_name) in self.declared.items():
+        variables = [
+            field for fields in fieldset for field in fields if field in self.declared
+        ]
+        for variable in variables:
+            cls_name, name, field_name = self.declared[variable]
             lines.append(
                 "  %s: %s  # Variable in %s.%s" % (variable, field_name, cls_name, name)
             )
-        return "\n".join(lines)
-
-    def format_contract_fields(self, errors):
-        # FIXME: Remove duplication with `__repr__` function.
-        lines = []
-        for variable in sorted(errors):
-            if variable in self.argset:
-                validators = self.argset[variable]
-                if len(validators) == 1:
-                    ((validator, cls_name, name),) = validators
-                    lines.append(
-                        "%s: %r  # Argument of %s.%s"
-                        % (variable, validator, cls_name, name)
-                    )
-                else:
-                    lines.append("%s:" % (variable,))
-                    for validator in validators:
-                        lines.append("  %r  # Argument of %s.%s" % validator)
-            else:
-                cls_name, name, field_name = self.declared[variable]
-                lines.append(
-                    "%s: %s  # Variable in %s.%s"
-                    % (variable, field_name, cls_name, name)
-                )
-            lines.append("")
         return "\n".join(lines)
 
 
@@ -546,16 +527,7 @@ These arguments are unknown: {unknown}
 
 Story method: {cls}.{method}
 
-Story composition arguments: {arguments}
-""".strip()  # FIXME: Show arguments part of the contract representation.
-
-
-unknown_argument_null_template = """
-These arguments are unknown: {unknown}
-
-Story method: {cls}.{method}
-
-Story composition has no arguments.
+{contract}
 """.strip()
 
 
@@ -567,8 +539,6 @@ Function returned value: {cls}.{method}
 Violations:
 
 {violations}
-
-Contract:
 
 {contract}
 """.strip()
@@ -582,8 +552,6 @@ Story method: {cls}.{method}
 Violations:
 
 {violations}
-
-Contract:
 
 {contract}
 """.strip()
@@ -620,5 +588,5 @@ These arguments have normalization conflict: {conflict}
 
 {results}
 
-{contract!r}
+{contract}
 """.strip()

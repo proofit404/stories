@@ -171,18 +171,24 @@ def test_context_variables_normalization_conflict(m):
     expected = """
 These arguments have normalization conflict: 'bar', 'foo'
 
-Story method: Q.x
-
-Story normalization result:
+Q.x:
  - bar: [2]
  - foo: 1
 
-Story method: Q.y
-
-Story normalization result:
+Q.y:
  - bar: ['2']
  - foo: '1'
-    """.strip()
+
+Contract:
+  bar:
+    {list_of_int_field_repr}  # Argument of Q.x
+    {list_of_str_field_repr}  # Argument of Q.y
+  foo:
+    {int_field_repr}  # Argument of Q.x
+    {str_field_repr}  # Argument of Q.y
+    """.strip().format(
+        **m.representations
+    )
 
     with pytest.raises(ContextContractError) as exc_info:
         Q().a()
@@ -197,18 +203,24 @@ Story normalization result:
     expected = """
 These arguments have normalization conflict: 'bar', 'foo'
 
-Story method: E.y
-
-Story normalization result:
+E.y:
  - bar: ['2']
  - foo: '1'
 
-Story method: T.x
-
-Story normalization result:
+T.x:
  - bar: [2]
  - foo: 1
-    """.strip()
+
+Contract:
+  bar:
+    {list_of_str_field_repr}  # Argument of E.y
+    {list_of_int_field_repr}  # Argument of T.x
+  foo:
+    {str_field_repr}  # Argument of E.y
+    {int_field_repr}  # Argument of T.x
+    """.strip().format(
+        **m.representations
+    )
 
     with pytest.raises(ContextContractError) as exc_info:
         J().a()
@@ -383,18 +395,24 @@ def test_story_arguments_normalization_conflict(m):
     expected = """
 These arguments have normalization conflict: 'bar', 'foo'
 
-Story method: Q.a
-
-Story normalization result:
+Q.a:
  - bar: ['2']
  - foo: '1'
 
-Story method: Q.x
-
-Story normalization result:
+Q.x:
  - bar: [2]
  - foo: 1
-    """.strip()
+
+Contract:
+  bar:
+    {list_of_str_field_repr}  # Argument of Q.a
+    {list_of_int_field_repr}  # Argument of Q.x
+  foo:
+    {str_field_repr}  # Argument of Q.a
+    {int_field_repr}  # Argument of Q.x
+    """.strip().format(
+        **m.representations
+    )
 
     with pytest.raises(ContextContractError) as exc_info:
         Q().a(foo="1", bar=["2"])
@@ -409,18 +427,24 @@ Story normalization result:
     expected = """
 These arguments have normalization conflict: 'bar', 'foo'
 
-Story method: J.a
-
-Story normalization result:
+J.a:
  - bar: ['2']
  - foo: '1'
 
-Story method: T.x
-
-Story normalization result:
+T.x:
  - bar: [2]
  - foo: 1
-    """.strip()
+
+Contract:
+  bar:
+    {list_of_str_field_repr}  # Argument of J.a
+    {list_of_int_field_repr}  # Argument of T.x
+  foo:
+    {str_field_repr}  # Argument of J.a
+    {int_field_repr}  # Argument of T.x
+    """.strip().format(
+        **m.representations
+    )
 
     with pytest.raises(ContextContractError) as exc_info:
         J().a(foo="1", bar=["2"])
@@ -457,15 +481,27 @@ Function returned value: T.one
 Violations:
 
 bar:
-    """.strip()
+  ['<boom>']
+  {list_of_int_error}
+
+foo:
+  '<boom>'
+  {int_error}
+
+Contract:
+  bar: {list_of_int_field_repr}  # Variable in T.x
+  foo: {int_field_repr}  # Variable in T.x
+    """.strip().format(
+        **m.representations
+    )
 
     with pytest.raises(ContextContractError) as exc_info:
         T().x()
-    assert str(exc_info.value).startswith(expected)
+    assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
         T().x.run()
-    assert str(exc_info.value).startswith(expected)
+    assert str(exc_info.value) == expected
 
     # Substory inheritance.
 
@@ -477,15 +513,27 @@ Function returned value: Q.one
 Violations:
 
 bar:
-    """.strip()
+  ['<boom>']
+  {list_of_int_error}
+
+foo:
+  '<boom>'
+  {int_error}
+
+Contract:
+  bar: {list_of_int_field_repr}  # Variable in Q.x
+  foo: {int_field_repr}  # Variable in Q.x
+    """.strip().format(
+        **m.representations
+    )
 
     with pytest.raises(ContextContractError) as exc_info:
         Q().a()
-    assert str(exc_info.value).startswith(expected)
+    assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
         Q().a.run()
-    assert str(exc_info.value).startswith(expected)
+    assert str(exc_info.value) == expected
 
     # Substory DI.
 
@@ -497,15 +545,27 @@ Function returned value: T.one
 Violations:
 
 bar:
-    """.strip()
+  ['<boom>']
+  {list_of_int_error}
+
+foo:
+  '<boom>'
+  {int_error}
+
+Contract:
+  bar: {list_of_int_field_repr}  # Variable in T.x
+  foo: {int_field_repr}  # Variable in T.x
+    """.strip().format(
+        **m.representations
+    )
 
     with pytest.raises(ContextContractError) as exc_info:
         J().a()
-    assert str(exc_info.value).startswith(expected)
+    assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
         J().a.run()
-    assert str(exc_info.value).startswith(expected)
+    assert str(exc_info.value) == expected
 
 
 def test_story_arguments_validation(m):
@@ -538,15 +598,27 @@ Story method: T.x
 Violations:
 
 bar:
-    """.strip()
+  ['<boom>']
+  {list_of_int_error}
+
+foo:
+  '<boom>'
+  {int_error}
+
+Contract:
+  bar: {list_of_int_field_repr}  # Argument of T.x
+  foo: {int_field_repr}  # Argument of T.x
+    """.strip().format(
+        **m.representations
+    )
 
     with pytest.raises(ContextContractError) as exc_info:
         T().x(foo="<boom>", bar=["<boom>"])
-    assert str(exc_info.value).startswith(expected)
+    assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
         T().x.run(foo="<boom>", bar=["<boom>"])
-    assert str(exc_info.value).startswith(expected)
+    assert str(exc_info.value) == expected
 
     # Substory inheritance.
 
@@ -558,15 +630,23 @@ Story method: Q.a
 Violations:
 
 eggs:
-    """.strip()
+
+ham:
+
+Contract:
+  eggs:
+  ham:
+    """.strip().format(
+        **m.representations
+    )
 
     with pytest.raises(ContextContractError) as exc_info:
         Q().a(ham="<boom>", eggs="<boom>")
-    assert str(exc_info.value).startswith(expected)
+    assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
         Q().a.run(ham="<boom>", eggs="<boom>")
-    assert str(exc_info.value).startswith(expected)
+    assert str(exc_info.value) == expected
 
     # Substory DI.
 
@@ -578,15 +658,23 @@ Story method: J.a
 Violations:
 
 eggs:
-    """.strip()
+
+ham:
+
+Contract:
+  eggs:
+  ham:
+    """.strip().format(
+        **m.representations
+    )
 
     with pytest.raises(ContextContractError) as exc_info:
         J().a(ham="<boom>", eggs="<boom>")
-    assert str(exc_info.value).startswith(expected)
+    assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
         J().a.run(ham="<boom>", eggs="<boom>")
-    assert str(exc_info.value).startswith(expected)
+    assert str(exc_info.value) == expected
 
 
 def test_story_arguments_validation_many_levels(m):
@@ -626,15 +714,22 @@ Story method: R.i
 Violations:
 
 foo:
-    """.strip()
+  '<boom>'
+  {int_error}
+
+Contract:
+  foo: {int_field_repr}  # Argument of R.x
+    """.strip().format(
+        **m.representations
+    )
 
     with pytest.raises(ContextContractError) as exc_info:
         R().i(foo="<boom>", bar=[1])
-    assert str(exc_info.value).startswith(expected)
+    assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
         R().i.run(foo="<boom>", bar=[1])
-    assert str(exc_info.value).startswith(expected)
+    assert str(exc_info.value) == expected
 
     # Substory DI.
 
@@ -646,15 +741,22 @@ Story method: F.i
 Violations:
 
 foo:
-    """.strip()
+  '<boom>'
+  {int_error}
+
+Contract:
+  foo: {int_field_repr}  # Argument of T.x
+    """.strip().format(
+        **m.representations
+    )
 
     with pytest.raises(ContextContractError) as exc_info:
         F().i(foo="<boom>", bar=[1])
-    assert str(exc_info.value).startswith(expected)
+    assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
         F().i.run(foo="<boom>", bar=[1])
-    assert str(exc_info.value).startswith(expected)
+    assert str(exc_info.value) == expected
 
 
 def test_composition_contract_variable_conflict(m):
@@ -895,7 +997,7 @@ Substory context contract:
 
     with pytest.raises(ContextContractError) as exc_info:
         Q().a
-    assert str(exc_info.value).startswith(expected)
+    assert str(exc_info.value) == expected
 
     # Substory DI.
 
@@ -913,7 +1015,7 @@ Substory context contract:
 
     with pytest.raises(ContextContractError) as exc_info:
         J().a
-    assert str(exc_info.value).startswith(expected)
+    assert str(exc_info.value) == expected
 
 
 def test_composition_use_same_contract_instance(m):
@@ -969,7 +1071,14 @@ Available variables are: 'bar', 'baz', 'foo'
 Function returned value: T.one
 
 Use different names for Success() keyword arguments or add these names to the contract.
-    """.strip()
+
+Contract:
+  foo: {int_field_repr}          # Variable in T.x
+  bar: {list_of_int_field_repr}  # Variable in T.x
+  baz: {int_field_repr}          # Variable in T.x
+    """.strip().format(
+        **m.representations
+    )
 
     with pytest.raises(ContextContractError) as exc_info:
         T().x()
@@ -1049,7 +1158,9 @@ These arguments are unknown: baz, fox
 
 Story method: T.x
 
-Story composition arguments: foo, bar
+Contract:
+  foo: int        # Argument of T.x
+  bar: List[int]  # Argument of T.x
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
@@ -1067,7 +1178,9 @@ These arguments are unknown: beans, fox
 
 Story method: Q.a
 
-Story composition arguments: ham, eggs
+Contract:
+  ham
+  eggs
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
@@ -1085,7 +1198,9 @@ These arguments are unknown: beans, fox
 
 Story method: J.a
 
-Story composition arguments: ham, eggs
+Contract:
+  ham
+  eggs
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
@@ -1123,7 +1238,7 @@ These arguments are unknown: baz, fox
 
 Story method: T.x
 
-Story composition has no arguments.
+Contract()
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
@@ -1141,7 +1256,7 @@ These arguments are unknown: beans, fox
 
 Story method: Q.a
 
-Story composition has no arguments.
+Contract()
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
@@ -1159,7 +1274,7 @@ These arguments are unknown: beans, fox
 
 Story method: J.a
 
-Story composition has no arguments.
+Contract()
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:

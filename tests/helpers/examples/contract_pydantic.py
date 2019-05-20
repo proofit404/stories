@@ -6,6 +6,19 @@ from stories import Success, arguments, story
 from stories.shortcuts import contract_in
 
 
+# Constants.
+
+
+representations = {
+    "int_error": "value is not a valid integer",
+    "list_of_int_error": "value is not a valid integer",
+    "int_field_repr": "int",
+    "str_field_repr": "str",
+    "list_of_int_field_repr": "List[int]",
+    "list_of_str_field_repr": "List[str]",
+}
+
+
 # Mixins.
 
 

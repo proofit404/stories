@@ -8,6 +8,19 @@ from stories.shortcuts import contract_in
 utils.text_type = str
 
 
+# Constants.
+
+
+representations = {
+    "int_error": "...",
+    "list_of_int_error": "...",
+    "int_field_repr": "...",
+    "str_field_repr": "...",
+    "list_of_int_field_repr": "...",
+    "list_of_str_field_repr": "...",
+}
+
+
 # Mixins.
 
 
