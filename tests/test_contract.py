@@ -1258,6 +1258,7 @@ Story method: T.x
 Contract:
   bar: {list_of_int_field_repr}  # Argument of T.x
   foo: {int_field_repr}  # Argument of T.x
+  baz: {int_field_repr}  # Variable in T.x
     """.strip().format(
         **m.representations
     )
@@ -1280,6 +1281,10 @@ Story method: Q.a
 Contract:
   eggs: {int_field_repr}  # Argument of Q.a
   ham: {int_field_repr}  # Argument of Q.a
+  bar: {list_of_int_field_repr}  # Variable in Q.x
+  baz: {int_field_repr}  # Variable in Q.x
+  beans: {int_field_repr}  # Variable in Q.a
+  foo: {int_field_repr}  # Variable in Q.x
     """.strip().format(
         **m.representations
     )
@@ -1302,6 +1307,10 @@ Story method: J.a
 Contract:
   eggs: {int_field_repr}  # Argument of J.a
   ham: {int_field_repr}  # Argument of J.a
+  bar: {list_of_int_field_repr}  # Variable in T.x
+  baz: {int_field_repr}  # Variable in T.x
+  beans: {int_field_repr}  # Variable in J.a
+  foo: {int_field_repr}  # Variable in T.x
     """.strip().format(
         **m.representations
     )
@@ -1315,22 +1324,19 @@ Contract:
     assert str(exc_info.value) == expected
 
 
-@pytest.mark.parametrize(
-    "child,parent", [("Child", "Parent"), ("ChildWithNull", "ParentWithNull")]
-)
-def test_unknown_story_arguments_with_empty(m, child, parent):
+def test_unknown_story_arguments_with_empty_with_null(m):
     """
     Deny any arguments in the call, if story and substory has no
     arguments specified.
     """
 
-    class T(getattr(m, child), m.NormalMethod):
+    class T(m.ChildWithNull, m.NormalMethod):
         pass
 
-    class Q(getattr(m, parent), m.NormalParentMethod, T):
+    class Q(m.ParentWithNull, m.NormalParentMethod, T):
         pass
 
-    class J(getattr(m, parent), m.NormalParentMethod):
+    class J(m.ParentWithNull, m.NormalParentMethod):
         def __init__(self):
             self.x = T().x
 
@@ -1379,6 +1385,98 @@ Story method: J.a
 
 Contract()
     """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        J().a(beans=1, fox=2)
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(ContextContractError) as exc_info:
+        J().a.run(beans=1, fox=2)
+    assert str(exc_info.value) == expected
+
+
+def test_unknown_story_arguments_with_empty(m):
+    """
+    Deny any arguments in the call, if story and substory has no
+    arguments specified.
+    """
+
+    class T(m.Child, m.NormalMethod):
+        pass
+
+    class Q(m.Parent, m.NormalParentMethod, T):
+        pass
+
+    class J(m.Parent, m.NormalParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    # Simple.
+
+    expected = """
+These arguments are unknown: baz, fox
+
+Story method: T.x
+
+Contract:
+  bar: {list_of_int_field_repr}  # Variable in T.x
+  baz: {int_field_repr}  # Variable in T.x
+  foo: {int_field_repr}  # Variable in T.x
+    """.strip().format(
+        **m.representations
+    )
+
+    with pytest.raises(ContextContractError) as exc_info:
+        T().x(baz=1, fox=2)
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(ContextContractError) as exc_info:
+        T().x.run(baz=1, fox=2)
+    assert str(exc_info.value) == expected
+
+    # Substory inheritance.
+
+    expected = """
+These arguments are unknown: beans, fox
+
+Story method: Q.a
+
+Contract:
+  bar: {list_of_int_field_repr}  # Variable in Q.x
+  baz: {int_field_repr}  # Variable in Q.x
+  beans: {int_field_repr}  # Variable in Q.a
+  eggs: {int_field_repr}  # Variable in Q.a
+  foo: {int_field_repr}  # Variable in Q.x
+  ham: {int_field_repr}  # Variable in Q.a
+    """.strip().format(
+        **m.representations
+    )
+
+    with pytest.raises(ContextContractError) as exc_info:
+        Q().a(beans=1, fox=2)
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(ContextContractError) as exc_info:
+        Q().a.run(beans=1, fox=2)
+    assert str(exc_info.value) == expected
+
+    # Substory DI.
+
+    expected = """
+These arguments are unknown: beans, fox
+
+Story method: J.a
+
+Contract:
+  bar: {list_of_int_field_repr}  # Variable in T.x
+  baz: {int_field_repr}  # Variable in T.x
+  beans: {int_field_repr}  # Variable in J.a
+  eggs: {int_field_repr}  # Variable in J.a
+  foo: {int_field_repr}  # Variable in T.x
+  ham: {int_field_repr}  # Variable in J.a
+    """.strip().format(
+        **m.representations
+    )
 
     with pytest.raises(ContextContractError) as exc_info:
         J().a(beans=1, fox=2)

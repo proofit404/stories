@@ -214,7 +214,7 @@ class NullContract(object):
                 unknown=", ".join(sorted(unknown_arguments)),
                 cls=self.cls_name,
                 method=self.name,
-                contract=self.format_contract_fields(self.argset),
+                contract=self,
             )
             raise ContextContractError(message)
         return kwargs
@@ -242,7 +242,12 @@ class NullContract(object):
             raise ContextContractError(message)
         return ns
 
+    def __repr__(self):
+        return self.format_contract_fields(self.argset)
+
     def format_contract_fields(self, *fieldset):
+        if not self.argset:
+            return "Contract()"
         lines = ["Contract:"]
         arguments = sorted(
             [field for fields in fieldset for field in fields if field in self.argset]
@@ -584,7 +589,7 @@ These arguments are unknown: {unknown}
 
 Story method: {cls}.{method}
 
-{contract}
+{contract!r}
 """.strip()
 
 
