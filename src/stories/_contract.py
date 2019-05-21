@@ -202,7 +202,9 @@ class NullContract(object):
         self.make_argset()
 
     def make_argset(self):
-        self.argset = dict((arg, set()) for arg in self.arguments)
+        self.argset = dict(
+            (arg, {(None, self.cls_name, self.name)}) for arg in self.arguments
+        )
 
     def check_story_call(self, kwargs):
         # FIXME: Check required arguments here.
@@ -246,7 +248,10 @@ class NullContract(object):
             [field for fields in fieldset for field in fields if field in self.argset]
         )
         for argument in arguments:
-            lines.append("  %s" % (argument,))
+            # FIXME: This does not work for story composition when
+            # many stories has the same argument.
+            ((validator, cls_name, name),) = self.argset[argument]
+            lines.append("  %s  # Argument of %s.%s" % (argument, cls_name, name))
         return "\n".join(lines)
 
 
@@ -261,9 +266,9 @@ class SpecContract(NullContract):
         self.make_declared()
 
     def make_argset(self):
-        super(SpecContract, self).make_argset()
+        self.argset = {}
         for arg in self.arguments:
-            self.argset[arg].add((self.spec[arg], self.cls_name, self.name))
+            self.argset[arg] = {(self.spec[arg], self.cls_name, self.name)}
             del self.spec[arg]
 
     def make_declared(self):

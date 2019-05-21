@@ -1149,24 +1149,101 @@ Contract:
     assert str(exc_info.value) == expected
 
 
-@pytest.mark.parametrize("child", ["ParamChild", "ParamChildWithNull"])
-@pytest.mark.parametrize(
-    "parent,base", [("ParamParent", "Child"), ("ParamParentWithNull", "ChildWithNull")]
-)
-def test_unknown_story_arguments(m, child, parent, base):
+def test_unknown_story_arguments_with_null(m):
     """
     Allow to pass known only story and substory arguments to the call.
     """
 
-    class T(getattr(m, child), m.NormalMethod):
+    class T(m.ParamChildWithNull, m.NormalMethod):
         pass
 
-    class Q(getattr(m, parent), m.NormalParentMethod, getattr(m, base), m.NormalMethod):
+    class Q(
+        m.ParamParentWithNull, m.NormalParentMethod, m.ChildWithNull, m.NormalMethod
+    ):
         pass
 
-    class J(getattr(m, parent), m.NormalParentMethod):
+    class J(m.ParamParentWithNull, m.NormalParentMethod):
         def __init__(self):
-            class T(getattr(m, base), m.NormalMethod):
+            class T(m.ChildWithNull, m.NormalMethod):
+                pass
+
+            self.x = T().x
+
+    # Simple.
+
+    expected = """
+These arguments are unknown: baz, fox
+
+Story method: T.x
+
+Contract:
+  bar  # Argument of T.x
+  foo  # Argument of T.x
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        T().x(baz=1, fox=2)
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(ContextContractError) as exc_info:
+        T().x.run(baz=1, fox=2)
+    assert str(exc_info.value) == expected
+
+    # Substory inheritance.
+
+    expected = """
+These arguments are unknown: beans, fox
+
+Story method: Q.a
+
+Contract:
+  eggs  # Argument of Q.a
+  ham  # Argument of Q.a
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        Q().a(beans=1, fox=2)
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(ContextContractError) as exc_info:
+        Q().a.run(beans=1, fox=2)
+    assert str(exc_info.value) == expected
+
+    # Substory DI.
+
+    expected = """
+These arguments are unknown: beans, fox
+
+Story method: J.a
+
+Contract:
+  eggs  # Argument of J.a
+  ham  # Argument of J.a
+    """.strip()
+
+    with pytest.raises(ContextContractError) as exc_info:
+        J().a(beans=1, fox=2)
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(ContextContractError) as exc_info:
+        J().a.run(beans=1, fox=2)
+    assert str(exc_info.value) == expected
+
+
+def test_unknown_story_arguments(m):
+    """
+    Allow to pass known only story and substory arguments to the call.
+    """
+
+    class T(m.ParamChild, m.NormalMethod):
+        pass
+
+    class Q(m.ParamParent, m.NormalParentMethod, m.Child, m.NormalMethod):
+        pass
+
+    class J(m.ParamParent, m.NormalParentMethod):
+        def __init__(self):
+            class T(m.Child, m.NormalMethod):
                 pass
 
             self.x = T().x
