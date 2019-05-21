@@ -8,12 +8,18 @@ from stories.shortcuts import contract_in
 
 
 representations = {
-    "int_error": "...",
-    "list_of_int_error": "...",
-    "int_field_repr": "...",
-    "str_field_repr": "...",
-    "list_of_int_field_repr": "...",
-    "list_of_str_field_repr": "...",
+    "int_error": """
+  field 'foo' cannot be coerced: invalid literal for int() with base 10: '<boom>'
+  must be of integer type
+    """.strip(),
+    "list_of_int_error": """  0:
+      must be of integer type
+      field '0' cannot be coerced: invalid literal for int() with base 10: '<boom>'
+    """.rstrip(),
+    "int_field_repr": "{'type': 'integer', 'coerce': <class 'int'>}",
+    "str_field_repr": "{'type': 'string'}",
+    "list_of_int_field_repr": "{'type': 'list', 'schema': {'type': 'integer', 'coerce': <class 'int'>}}",
+    "list_of_str_field_repr": "{'type': 'list', 'schema': {'type': 'string'}}",
     "contract_class_repr": "<class 'cerberus.validator.Validator'>",
 }
 
