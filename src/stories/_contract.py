@@ -64,6 +64,9 @@ from .exceptions import ContextContractError
 #       value is not a valid integer (type=type_error.integer)
 #     files -> a -> name
 #       instance of BinaryIO expected (type=type_error.arbitrary_type; expected_arbitrary_type=BinaryIO)
+#
+# [ ] Test all field representation for all supported libraries.
+#     I.e. Dict, List, Tuple, Integer, String, etc.
 
 
 # Validators.
@@ -105,7 +108,8 @@ class MarshmallowValidator(object):
         return values.get(self.field), errors.get(self.field)
 
     def __repr__(self):
-        return repr(self.spec._declared_fields[self.field])
+        field = self.spec._declared_fields[self.field]
+        return field.__class__.__name__
 
 
 class CerberusValidator(object):
