@@ -1,10 +1,26 @@
-import inspect
+from ..exceptions import StoryDefinitionError
 from . import function, coroutine
 
+try:
+    from inspect import iscoroutinefunction
+except SyntaxError:
+    iscoroutinefunction = lambda x: False
 
-def execute(runner, ctx, history, methods):
-    # Method can be anything callable
-    if inspect.iscoroutinefunction(methods[0][0].__call__):
-        return coroutine.execute(runner, ctx, history, methods)
+
+def get_executor(method, previous, cls_name):
+    if iscoroutinefunction(method):
+        executor = coroutine.execute
     else:
-        return function.execute(runner, ctx, history, methods)
+        executor = function.execute
+
+    if previous is not None and previous is not executor:
+        message = mixed_method_template.format(
+            cls=cls_name, method=method.__name__
+        )
+        raise StoryDefinitionError(message)
+    return executor
+
+
+mixed_method_template = """
+Class {cls} contains mixed method {method}'
+""".strip()

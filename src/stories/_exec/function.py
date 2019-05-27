@@ -18,6 +18,19 @@ def execute(runner, ctx, history, methods):
                 skipped += 1
             continue
 
+        if method_type is BeginningOfStory:
+            try:
+                contract.check_substory_call(ctx)
+            except Exception as error:
+                history.on_error(error.__class__.__name__)
+                raise
+            history.on_substory_start()
+            continue
+
+        if method_type is EndOfStory:
+            history.on_substory_end()
+            continue
+
         history.before_call(method.__name__)
 
         try:
@@ -45,19 +58,6 @@ def execute(runner, ctx, history, methods):
         if restype is Skip:
             history.on_skip()
             skipped = 1
-            continue
-
-        if method_type is BeginningOfStory:
-            try:
-                contract.check_substory_call(ctx)
-            except Exception as error:
-                history.on_error(error.__class__.__name__)
-                raise
-            history.on_substory_start()
-            continue
-
-        if method_type is EndOfStory:
-            history.on_substory_end()
             continue
 
         try:

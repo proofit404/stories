@@ -1,5 +1,4 @@
 from ._context import make_context
-from ._exec import execute
 from ._failures import make_run_protocol
 from ._history import History
 from ._marker import BeginningOfStory, EndOfStory
@@ -31,7 +30,7 @@ class ClassMountedStory(object):
 
 
 class MountedStory(object):
-    def __init__(self, obj, cls_name, name, arguments, methods, contract, failures):
+    def __init__(self, obj, cls_name, name, arguments, methods, contract, failures, executor):
         self.obj = obj
         self.cls_name = cls_name
         self.name = name
@@ -39,19 +38,20 @@ class MountedStory(object):
         self.methods = methods
         self.contract = contract
         self.failures = failures
+        self.executor = executor
 
     def __call__(self, **kwargs):
         history = History()
         ctx = make_context(self.methods[0][1], kwargs, history)
         runner = Call()
-        return execute(runner, ctx, history, self.methods)
+        return self.executor(runner, ctx, history, self.methods)
 
     def run(self, **kwargs):
         history = History()
         ctx = make_context(self.methods[0][1], kwargs, history)
         run_protocol = make_run_protocol(self.failures, self.cls_name, self.name)
         runner = Run(run_protocol)
-        return execute(runner, ctx, history, self.methods)
+        return self.executor(runner, ctx, history, self.methods)
 
     def __repr__(self):
         result = []

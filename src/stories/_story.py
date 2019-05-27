@@ -19,7 +19,7 @@ class Story(object):
                 cls, self.name, self.collected, self.contract, self.failures
             )
         else:
-            methods, contract, failures = wrap_story(
+            methods, contract, failures, executor = wrap_story(
                 self.arguments,
                 self.collected,
                 cls.__name__,
@@ -36,6 +36,7 @@ class Story(object):
                 methods,
                 contract,
                 failures,
+                executor,
             )
 
     def contract(self, contract):
