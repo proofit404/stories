@@ -17,6 +17,12 @@ policy.  We still try to figure some things out.
 - Raise ``StoryDefinitionError`` when ``arguments`` decorator is used
   incorrectly.
 
+0.10.1 (2019-05-31)
+===================
+
+- Fix pytest reporter to work with fixture functions and
+  ``pytest-bdd`` plugin properly.
+
 0.10 (2019-02-27)
 =================
 
