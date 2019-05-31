@@ -5,6 +5,12 @@
 Versions follow `0ver`_ without a strict backward compatibility
 policy.  We still try to figure some things out.
 
+0.10.1 (2019-05-31)
+===================
+
+- Fix pytest reporter to work with fixture functions and
+  ``pytest-bdd`` plugin properly.
+
 0.10 (2019-02-27)
 =================
 
