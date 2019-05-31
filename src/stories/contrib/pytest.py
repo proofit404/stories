@@ -35,7 +35,6 @@ def get_test_call():
         if (
             "@py_builtins" in f.f_globals
             and "@pytest_ar" in f.f_globals
-            and f.f_code.co_name.startswith("test_")
             and f.f_code.co_filename != __file__
         ):
             return f.f_code.co_filename, f.f_lineno
