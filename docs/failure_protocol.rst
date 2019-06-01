@@ -294,13 +294,19 @@ decorators.
         not_found = auto()
 
 But instead of this, we encourage you to use a simple shortcut
-function.
+function.  This one if you're using a list of strings.
 
 .. code:: python
 
     from stories.shortcuts import failures_in
 
     failures_in(Subscription, ["forbidden", "not_found"])
+
+And this one if you are using an Enum subclass.
+
+.. code:: python
+
+    from stories.shortcuts import failures_in
 
     @failures_in(Subscription)
     class Errors(Enum):
