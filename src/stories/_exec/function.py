@@ -42,11 +42,6 @@ def execute(runner, ctx, history, methods):
             history.on_result(result.value)
             return runner.got_result(result.value)
 
-        if restype is Skip:
-            history.on_skip()
-            skipped = 1
-            continue
-
         if method_type is BeginningOfStory:
             try:
                 contract.check_substory_call(ctx)
@@ -59,6 +54,10 @@ def execute(runner, ctx, history, methods):
         if method_type is EndOfStory:
             history.on_substory_end()
             continue
+
+        if restype is Skip:
+            history.on_skip()
+            skipped = 1
 
         try:
             kwargs = contract.check_success_statement(method, ctx, result.kwargs)

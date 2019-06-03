@@ -12,10 +12,15 @@ class Success(object):
 
     def __repr__(self):
         return (
-            "Success("
+            self.__class__.__name__
+            + "("
             + ", ".join([k + "=" + repr(v) for k, v in self.kwargs.items()])
             + ")"
         )
+
+
+class Skip(Success):
+    pass
 
 
 class Failure(object):
@@ -25,8 +30,3 @@ class Failure(object):
     def __repr__(self):
         reason = repr(self.reason) if self.reason else ""
         return "Failure(" + reason + ")"
-
-
-class Skip(object):
-    def __repr__(self):
-        return "Skip()"
