@@ -4,6 +4,7 @@ from .._return import Failure, Result, Skip, Success
 
 
 def execute(runner, ctx, history, methods):
+    __tracebackhide__ = True
 
     skipped = 0
 
