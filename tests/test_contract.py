@@ -498,7 +498,8 @@ def test_context_variables_validation(m):
 
     # Simple.
 
-    expected = """
+    expected = (
+        """
 These variables violates context contract: 'bar', 'foo'
 
 Function returned value: T.one
@@ -516,8 +517,9 @@ foo:
 Contract:
   bar: {list_of_int_field_repr}  # Variable in T.x
   foo: {int_field_repr}  # Variable in T.x
-    """.strip().format(
-        **m.representations
+    """.strip()
+        .format(**m.representations)
+        .format("foo")
     )
 
     with pytest.raises(ContextContractError) as exc_info:
@@ -615,7 +617,8 @@ def test_story_arguments_validation(m):
 
     # Simple.
 
-    expected = """
+    expected = (
+        """
 These arguments violates context contract: 'bar', 'foo'
 
 Story method: T.x
@@ -633,8 +636,9 @@ foo:
 Contract:
   bar: {list_of_int_field_repr}  # Argument of T.x
   foo: {int_field_repr}  # Argument of T.x
-    """.strip().format(
-        **m.representations
+    """.strip()
+        .format(**m.representations)
+        .format("foo")
     )
 
     with pytest.raises(ContextContractError) as exc_info:
@@ -739,7 +743,8 @@ def test_story_arguments_validation_many_levels(m):
 
     # Substory inheritance.
 
-    expected = """
+    expected = (
+        """
 These arguments violates context contract: 'foo'
 
 Story method: R.i
@@ -752,8 +757,9 @@ foo:
 
 Contract:
   foo: {int_field_repr}  # Argument of R.x
-    """.strip().format(
-        **m.representations
+    """.strip()
+        .format(**m.representations)
+        .format("foo")
     )
 
     with pytest.raises(ContextContractError) as exc_info:
