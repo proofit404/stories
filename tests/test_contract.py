@@ -39,6 +39,13 @@ These variables are already present in the context: 'bar', 'foo'
 Function returned value: T.one
 
 Use different names for Success() keyword arguments.
+
+T.x
+  one
+
+Context:
+  foo: 1    # Story argument
+  bar: [2]  # Story argument
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
@@ -57,6 +64,15 @@ These variables are already present in the context: 'bar', 'foo'
 Function returned value: Q.one
 
 Use different names for Success() keyword arguments.
+
+Q.a
+  before
+  x
+    one
+
+Context:
+  bar: ['2']  # Set by Q.before
+  foo: '1'    # Set by Q.before
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
@@ -75,6 +91,15 @@ These variables are already present in the context: 'bar', 'foo'
 Function returned value: T.one
 
 Use different names for Success() keyword arguments.
+
+J.a
+  before
+  x (T.x)
+    one
+
+Context:
+  bar: ['2']  # Set by J.before
+  foo: '1'    # Set by J.before
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:

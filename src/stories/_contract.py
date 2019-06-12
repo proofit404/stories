@@ -242,6 +242,7 @@ class NullContract(object):
                 variables=", ".join(map(repr, sorted(tries_to_override))),
                 cls=method.__self__.__class__.__name__,
                 method=method.__name__,
+                ctx=ctx,
             )
             raise ContextContractError(message)
         return ns
@@ -574,6 +575,8 @@ These variables are already present in the context: {variables}
 Function returned value: {cls}.{method}
 
 Use different names for Success() keyword arguments.
+
+{ctx!r}
 """.strip()
 
 
