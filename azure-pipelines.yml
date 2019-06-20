@@ -1,0 +1,80 @@
+jobs:
+  - job: 'Test'
+    pool:
+      vmImage: 'ubuntu-latest'
+    strategy:
+      matrix:
+        py27:
+          python.version: '2.7'
+          tox.env: py27
+        py34:
+          python.version: '3.4'
+          tox.env: py34
+        py35:
+          python.version: '3.5'
+          tox.env: py35
+        py36:
+          python.version: '3.6'
+          tox.env: py36
+        py37:
+          python.version: '3.7'
+          tox.env: py37
+        precommit:
+          python.version: '3.7'
+          tox.env: precommit
+        flake8:
+          python.version: '3.7'
+          tox.env: flake8
+        mypy:
+          python.version: '3.7'
+          tox.env: mypy
+        black:
+          python.version: '3.7'
+          tox.env: black
+        isort:
+          python.version: '3.7'
+          tox.env: isort
+        doc8:
+          python.version: '3.7'
+          tox.env: doc8
+    steps:
+      - task: UsePythonVersion@0
+        displayName: Get Python for Python tools.
+        inputs:
+          versionSpec: '3.6'
+          addToPath: false
+        name: pyTools
+      - script: $(pyTools.pythonLocation)/bin/pip install --upgrade tox
+        displayName: Install Python-based tools.
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '$(python.version)'
+          architecture: 'x64'
+        condition: not(in(variables['python.version'], '3.7'))
+        displayName: Use cached Python $(python.version) for tests.
+      - script: |
+          sudo add-apt-repository ppa:deadsnakes
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends python$(python.version)-dev python$(python.version)-distutils
+        condition: in(variables['python.version'], '3.7')
+        displayName: Install Python $(python.version) from the deadsnakes PPA for tests.
+      - task: NodeTool@0
+        condition: in(variables['tox.env'], 'remarklint')
+        displayName: Install NodeJS for tests.
+        inputs:
+          versionSpec: '10.x'
+        name: jsTools
+      - script: $(pyTools.pythonLocation)/bin/tox -e $(tox.env)
+        displayName: run tox -e $(tox.env)
+      - script: |
+          if [ ! -f .coverage ]; then
+            echo No coverage data found.
+            exit 0
+          fi
+          PATH=$HOME/.local/bin:$PATH
+          python$(python.version) -m pip install --user codecov
+          codecov
+        env:
+          CODECOV_TOKEN: $(codecov.token)
+        displayName: Report Coverage
+        condition: succeeded()
