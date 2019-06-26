@@ -1,0 +1,48 @@
+site_name: stories
+site_description: Define a user story in the business transaction DSL.
+theme:
+  name: 'material'
+  palette:
+    primary: 'indigo'
+    accent: 'indigo'
+  logo: 'https://raw.githubusercontent.com/dry-python/brand/master/logo/dry-python.png'
+  # FIXME: Favicon.
+  language: 'en'
+repo_name: stories
+repo_url: 'https://github.com/dry-python/stories'
+edit_uri: ''
+extra:
+  social:
+    - type: github
+      link: 'https://github.com/dry-python'
+    - type: twitter
+      link: 'https://twitter.com/dry_py'
+    - type: linkedin
+      link: 'https://www.linkedin.com/company/drylabs/'
+    - type: gitter  # FIXME: Its not `fa` its `fab` class.  Also, reorder when fixed.
+      link: 'https://gitter.im/dry-python/stories'
+markdown_extensions:
+  - admonition
+  - codehilite:
+      guess_lang: false
+  - toc:
+      permalink: true
+  - pymdownx.magiclink
+  - pymdownx.superfences
+  - pymdownx.tasklist:
+      custom_checkbox: true
+nav:
+  - 'Home': index.md
+  - 'Why': why.md
+  - 'Definition': definition.md
+  - 'Usage': usage.md
+  - 'Execution': execution.md
+  - 'Debugging': debugging.md
+  - 'Composition': composition.md
+  - 'Failure protocol': failure_protocol.md
+  - 'Contrib':
+      - 'Py.test': contrib/pytest.md
+      - 'Debug toolbars': contrib/debug_toolbars.md
+      - 'Sentry': contrib/sentry.md
+  - 'FAQ': faq.md
+  - 'Changelog': changelog.md
