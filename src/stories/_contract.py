@@ -211,6 +211,7 @@ class NullContract(object):
         )
 
     def check_story_call(self, kwargs):
+        __tracebackhide__ = True
         # FIXME: Check required arguments here.
         unknown_arguments = set(kwargs) - set(self.argset)
         if unknown_arguments:
@@ -224,6 +225,7 @@ class NullContract(object):
         return kwargs
 
     def check_substory_call(self, ctx):
+        __tracebackhide__ = True
         missed = set(self.arguments) - set(ctx._Context__ns)
         if missed:
             message = missed_variable_template.format(
@@ -236,6 +238,7 @@ class NullContract(object):
             raise ContextContractError(message)
 
     def check_success_statement(self, method, ctx, ns):
+        __tracebackhide__ = True
         tries_to_override = set(ctx._Context__ns) & set(ns)
         if tries_to_override:
             message = variable_override_template.format(
@@ -288,6 +291,7 @@ class SpecContract(NullContract):
         )
 
     def check_story_call(self, kwargs):
+        __tracebackhide__ = True
         super(SpecContract, self).check_story_call(kwargs)
         result, errors = self.validate(kwargs)
         if errors:
@@ -302,6 +306,7 @@ class SpecContract(NullContract):
         return result
 
     def check_success_statement(self, method, ctx, ns):
+        __tracebackhide__ = True
         super(SpecContract, self).check_success_statement(method, ctx, ns)
         unknown = self.identify(ns)
         if unknown:
@@ -330,6 +335,7 @@ class SpecContract(NullContract):
         return unknown
 
     def validate(self, ns):
+        __tracebackhide__ = True
         result, errors, seen, conflict = {}, {}, [], {}
         for key, value in ns.items():
             if key in self.spec:
