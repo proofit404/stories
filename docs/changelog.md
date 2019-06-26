@@ -3,7 +3,7 @@
 Versions follow [0ver](https://0ver.org/) without a strict backward
 compatibility policy. We still try to figure some things out.
 
-## 0.11 (2019-00-00)
+## 0.11.dev (unreleased)
 
 * Add context contract to the story. `Success` keyword arguments can
   be validated by contract definition in the story.
