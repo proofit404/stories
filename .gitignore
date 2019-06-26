@@ -13,4 +13,7 @@ __pycache__/
 build/
 dist/
 htmlcov/
+node_modules/
+package-lock.json
 pip-wheel-metadata/
+site/
