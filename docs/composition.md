@@ -8,8 +8,8 @@ steps into a sub-story for readability.
 There are several ways to do it.
 
 !!! note
-    [Failure protocol](failure_protocol.html) of the story composition is
-    [composition itself](failure_protocol.html#composition). It will use all
+    [Failure protocol](failure_protocol.md) of the story composition is
+    [composition itself](failure_protocol.md#composition). It will use all
     reasons for all protocols of all stories used in the composition.
 
 ## Class methods
