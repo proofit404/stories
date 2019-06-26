@@ -88,7 +88,7 @@ But it does not tell us:
 We need to keep framework documentation close to the sources to figure
 this out.
 
-![image](/static/method-flowchart.png)
+![REST Framework Method Flowchart](https://raw.githubusercontent.com/dry-python/dry-python.github.io/develop/slides/pics/method-flowchart.png)
 
 After a few hours of digging, we will figure out there are about 17
 different ways to interact with this view.
@@ -236,15 +236,15 @@ Context:
 Wouldn't it be nice to know which business scenario was executed by
 every line in the tests?
 
-![image](/static/pytest.png)
+![Py.Test Report](https://raw.githubusercontent.com/dry-python/dry-python.github.io/develop/slides/pics/pytest.png)
 
 Wouldn't it be nice to see the same details in the debug toolbar?
 
-![image](/static/debug-toolbar.png)
+![Django Debug Toolbar](https://raw.githubusercontent.com/dry-python/dry-python.github.io/develop/slides/pics/debug-toolbar.png)
 
 Wouldn't it be nice to have it when production fails?
 
-![image](/static/sentry.png)
+![Sentry Breadcrumbs](https://raw.githubusercontent.com/dry-python/dry-python.github.io/develop/slides/pics/sentry.png)
 
 Interesting, isn't it? Check out [Definition](definition.md) guide to
 learn more.

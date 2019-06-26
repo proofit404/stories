@@ -1,6 +1,6 @@
 # Py.Test contrib
 
-![image](/static/pytest.png)
+![Py.Test Report](https://raw.githubusercontent.com/dry-python/dry-python.github.io/develop/slides/pics/pytest.png)
 
 Py.test plugin provides an additional report for failed tests. It
 contains:

@@ -3,7 +3,7 @@
 This is a picture of the execution path and context variables of the
 business object shown in the error report breadcrumbs section:
 
-![image](/static/sentry.png)
+![Sentry Breadcrumbs](https://raw.githubusercontent.com/dry-python/dry-python.github.io/develop/slides/pics/sentry.png)
 
 ## Settings
 

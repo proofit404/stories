@@ -29,7 +29,7 @@ DEBUG_TOOLBAR_PANELS = PANELS_DEFAULTS + [
 
 You should see `stories` panel in your debug toolbar:
 
-![image](/static/debug-toolbar.png)
+![Django Debug Toolbar](https://raw.githubusercontent.com/dry-python/dry-python.github.io/develop/slides/pics/debug-toolbar.png)
 
 ## Flask contrib
 
