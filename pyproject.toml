@@ -3,7 +3,7 @@ name = "stories"
 version = "0.10.1"
 
 description = "Define a user story in the business transaction DSL"
-readme = "README.rst"
+readme = "README.md"
 license = "BSD-2-Clause"
 
 homepage = "https://dry-python.org/"
