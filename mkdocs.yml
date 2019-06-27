@@ -1,3 +1,4 @@
+strict: true
 site_name: stories
 site_description: Define a user story in the business transaction DSL.
 theme:
