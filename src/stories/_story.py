@@ -14,6 +14,7 @@ class Story(object):
         self.failures(None)
 
     def __get__(self, obj, cls):
+        __tracebackhide__ = True
         if obj is None:
             return ClassMountedStory(
                 cls, self.name, self.collected, self.contract, self.failures

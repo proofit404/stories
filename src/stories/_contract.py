@@ -172,6 +172,7 @@ def disassemble_raw(spec):
 
 
 def make_contract(cls_name, name, arguments, spec):
+    __tracebackhide__ = True
     if spec is None:
         return NullContract(cls_name, name, arguments)
     elif isinstance(spec, PydanticSpec):
@@ -187,6 +188,7 @@ def make_contract(cls_name, name, arguments, spec):
 
 
 def check_arguments_definitions(cls_name, name, arguments, spec):
+    __tracebackhide__ = True
     undefined = set(arguments) - set(spec)
     if undefined:
         message = undefined_argument_template.format(

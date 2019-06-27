@@ -5,6 +5,7 @@ from ._mounted import MountedStory
 
 
 def wrap_story(arguments, collected, cls_name, story_name, obj, spec, failures):
+    __tracebackhide__ = True
 
     contract = make_contract(cls_name, story_name, arguments, spec)
     protocol = make_exec_protocol(failures)
