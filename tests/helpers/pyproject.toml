@@ -5,7 +5,11 @@ authors = []
 packages = [
     { include = "helpers.py" },
     { include = "examples" },
+    { include = "mddoctest.py"},
 ]
+
+[tool.poetry.scripts]
+mddoctest = "mddoctest:main"
 
 [build-system]
 requires = ["poetry>=0.12"]
