@@ -11,7 +11,7 @@ theme:
     /dry-python/brand/master/logo/dry-python.png"
   # FIXME: Favicon.
   language: 'en'
-repo_name: stories
+repo_name: dry-python/stories
 repo_url: 'https://github.com/dry-python/stories'
 edit_uri: ''
 extra:
