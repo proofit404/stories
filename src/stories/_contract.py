@@ -1,5 +1,6 @@
 from inspect import isclass
 from operator import itemgetter
+from typing import Union
 
 from ._compat import (
     CerberusSpec,
@@ -9,6 +10,7 @@ from ._compat import (
     PydanticSpec,
     pydantic_display,
 )
+from ._types import Arguments, ContextContract
 from .exceptions import ContextContractError
 
 
@@ -180,6 +182,7 @@ def disassemble_raw(spec):
 
 
 def make_contract(cls_name, name, arguments, spec):
+    # type: (str, str, Arguments, ContextContract) -> ExecContract
     __tracebackhide__ = True
     if spec is None:
         return NullContract(cls_name, name, arguments)
@@ -441,6 +444,9 @@ class SpecContract(NullContract):
                 "  %s: %s  # Variable in %s.%s" % (variable, field_name, cls_name, name)
             )
         return "\n".join(lines)
+
+
+ExecContract = Union[NullContract, SpecContract]
 
 
 def format_violations(ns, errors):

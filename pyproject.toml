@@ -33,6 +33,7 @@ classifiers = [
 python = "~2.7 || ^3.4"
 mkdocs = { version = "*", optional = true }
 mkdocs-material = { version = "*", optional = true }
+typing = { version = "*", python = "~2.7 || ~3.4" }
 
 [tool.poetry.extras]
 mkdocs = ["mkdocs", "mkdocs-material"]
