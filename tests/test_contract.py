@@ -532,7 +532,8 @@ Contract:
 
     # Substory inheritance.
 
-    expected = """
+    expected = (
+        """
 These variables violates context contract: 'bar', 'foo'
 
 Function returned value: Q.one
@@ -550,8 +551,9 @@ foo:
 Contract:
   bar: {list_of_int_field_repr}  # Variable in Q.x
   foo: {int_field_repr}  # Variable in Q.x
-    """.strip().format(
-        **m.representations
+    """.strip()
+        .format(**m.representations)
+        .format("foo")
     )
 
     with pytest.raises(ContextContractError) as exc_info:
@@ -564,7 +566,8 @@ Contract:
 
     # Substory DI.
 
-    expected = """
+    expected = (
+        """
 These variables violates context contract: 'bar', 'foo'
 
 Function returned value: T.one
@@ -582,8 +585,9 @@ foo:
 Contract:
   bar: {list_of_int_field_repr}  # Variable in T.x
   foo: {int_field_repr}  # Variable in T.x
-    """.strip().format(
-        **m.representations
+    """.strip()
+        .format(**m.representations)
+        .format("foo")
     )
 
     with pytest.raises(ContextContractError) as exc_info:
@@ -651,7 +655,8 @@ Contract:
 
     # Substory inheritance.
 
-    expected = """
+    expected = (
+        """
 These arguments violates context contract: 'eggs', 'ham'
 
 Story method: Q.a
@@ -669,8 +674,9 @@ ham:
 Contract:
   eggs: {int_field_repr}  # Argument of Q.a
   ham: {int_field_repr}  # Argument of Q.a
-    """.strip().format(
-        **m.representations
+    """.strip()
+        .format(**m.representations)
+        .format("eggs", "ham")
     )
 
     with pytest.raises(ContextContractError) as exc_info:
@@ -683,7 +689,8 @@ Contract:
 
     # Substory DI.
 
-    expected = """
+    expected = (
+        """
 These arguments violates context contract: 'eggs', 'ham'
 
 Story method: J.a
@@ -701,8 +708,9 @@ ham:
 Contract:
   eggs: {int_field_repr}  # Argument of J.a
   ham: {int_field_repr}  # Argument of J.a
-    """.strip().format(
-        **m.representations
+    """.strip()
+        .format(**m.representations)
+        .format("eggs", "ham")
     )
 
     with pytest.raises(ContextContractError) as exc_info:
@@ -772,7 +780,8 @@ Contract:
 
     # Substory DI.
 
-    expected = """
+    expected = (
+        """
 These arguments violates context contract: 'foo'
 
 Story method: F.i
@@ -785,8 +794,9 @@ foo:
 
 Contract:
   foo: {int_field_repr}  # Argument of T.x
-    """.strip().format(
-        **m.representations
+    """.strip()
+        .format(**m.representations)
+        .format("foo")
     )
 
     with pytest.raises(ContextContractError) as exc_info:
