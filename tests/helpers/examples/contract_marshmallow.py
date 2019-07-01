@@ -12,8 +12,10 @@ utils.text_type = str
 
 
 representations = {
-    "int_error": "...",
-    "list_of_int_error": "...",
+    "int_error": "Not a valid integer.",
+    "list_of_int_error": """0:
+    Not a valid integer.
+    """.strip(),
     "int_field_repr": "Integer",
     "str_field_repr": "String",
     "list_of_int_field_repr": "List",
