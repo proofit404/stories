@@ -37,22 +37,22 @@ from .exceptions import ContextContractError
 #     multiple times at one argument in the contract representation.
 #
 #     defaults:
-#       typing.Union[typing.Dict[str, str], NoneType]  # Argument of ProcessImages.process
-#       typing.Union[typing.Dict[str, str], NoneType]  # Argument of ProcessImages.process
-#       typing.Union[typing.Dict[str, str], NoneType]  # Argument of ProcessImages.process
+#       typing.Union[typing.Dict[str, str], NoneType]  # Argument of ProcessImages.process  # noqa: E501
+#       typing.Union[typing.Dict[str, str], NoneType]  # Argument of ProcessImages.process  # noqa: E501
+#       typing.Union[typing.Dict[str, str], NoneType]  # Argument of ProcessImages.process  # noqa: E501
 #     raw_urls:
 #       str  # Argument of FetchURLPreviews.fetch
 #       str  # Argument of FetchURLPreviews.fetch
 #     files:
-#       typing.Dict[str, typing.Union[str, int, typing.Any]]  # Argument of ProcessVideos.process
-#       typing.Dict[str, typing.Union[str, int, typing.Any]]  # Argument of ProcessImages.process
-#       typing.Dict[str, typing.Union[str, int, typing.Any]]  # Argument of ProcessImages.process
-#       typing.Dict[str, typing.Union[str, int, typing.Any]]  # Argument of ProcessImages.process
+#       typing.Dict[str, typing.Union[str, int, typing.Any]]  # Argument of ProcessVideos.process  # noqa: E501
+#       typing.Dict[str, typing.Union[str, int, typing.Any]]  # Argument of ProcessImages.process  # noqa: E501
+#       typing.Dict[str, typing.Union[str, int, typing.Any]]  # Argument of ProcessImages.process  # noqa: E501
+#       typing.Dict[str, typing.Union[str, int, typing.Any]]  # Argument of ProcessImages.process  # noqa: E501
 #
 # [ ] Fix pydantic error messages.
 #
 #     In [1]: class Context(pydantic.BaseModel):
-#        ...:     files: typing.Dict[str, typing.Dict[str, typing.Union[str, int, typing.BinaryIO]]]
+#        ...:     files: typing.Dict[str, typing.Dict[str, typing.Union[str, int, typing.BinaryIO]]]  # noqa: E501
 #        ...:
 #
 #     In [2]: Context(files={"a": {'name': B(name='test'), 'size': 1}})
@@ -63,10 +63,14 @@ from .exceptions import ContextContractError
 #     files -> a -> name
 #       value is not a valid integer (type=type_error.integer)
 #     files -> a -> name
-#       instance of BinaryIO expected (type=type_error.arbitrary_type; expected_arbitrary_type=BinaryIO)
+#       instance of BinaryIO expected (type=type_error.arbitrary_type; expected_arbitrary_type=BinaryIO)  # noqa: E501
 #
 # [ ] Test all field representation for all supported libraries.
 #     I.e. Dict, List, Tuple, Integer, String, etc.
+#
+# NOTE:
+#
+# * `noqa` comments are not part of the program output.
 
 
 # Validators.
