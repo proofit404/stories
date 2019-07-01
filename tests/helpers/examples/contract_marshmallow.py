@@ -14,10 +14,10 @@ utils.text_type = str
 representations = {
     "int_error": "...",
     "list_of_int_error": "...",
-    "int_field_repr": "...",
-    "str_field_repr": "...",
-    "list_of_int_field_repr": "...",
-    "list_of_str_field_repr": "...",
+    "int_field_repr": "Integer",
+    "str_field_repr": "String",
+    "list_of_int_field_repr": "List",
+    "list_of_str_field_repr": "List",  # FIXME: Should show child schema.
     "contract_class_repr": "<class 'marshmallow.schema.Schema'>",
 }
 
