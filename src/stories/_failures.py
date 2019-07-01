@@ -1,4 +1,7 @@
+from typing import Union
+
 from ._compat import Enum, EnumMeta
+from ._types import FailureProtocol
 from .exceptions import FailureProtocolError
 
 
@@ -47,7 +50,7 @@ def enumeration_compare(a, b):
 
 
 def make_exec_protocol(failures):
-
+    # type: (FailureProtocol) -> ExecProtocol
     if isinstance(failures, EnumMeta):
         return NotNullExecProtocol(failures, enumeration_contains)
     elif isinstance(failures, (list, tuple, set, frozenset)):
@@ -98,6 +101,9 @@ class NotNullExecProtocol(object):
                 method=method.__name__,
             )
             raise FailureProtocolError(message)
+
+
+ExecProtocol = Union[NullExecProtocol, NotNullExecProtocol]
 
 
 # Run.
