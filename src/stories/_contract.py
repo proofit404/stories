@@ -123,7 +123,11 @@ class CerberusValidator(object):
         return validated.document.get(self.field), validated.errors.get(self.field)
 
     def __repr__(self):
-        return repr(self.spec.schema.schema[self.field])
+        schema = self.spec.schema.schema[self.field]
+        field_type = schema["type"]
+        if "schema" in schema and "type" in schema["schema"]:
+            field_type += "[" + schema["schema"]["type"] + "]"
+        return field_type
 
 
 class RawValidator(object):
