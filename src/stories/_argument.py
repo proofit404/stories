@@ -5,7 +5,7 @@ from .exceptions import StoryDefinitionError
 
 
 def arguments(*names):
-    # type: (*str) -> Callable
+    # type: (*str) -> Callable[[Spec], Spec]
     if not names:
         raise StoryDefinitionError("Story arguments can not be an empty list")
 

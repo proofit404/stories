@@ -5,7 +5,7 @@
 # `https://github.com/python/mypy/issues/1106`,
 # `https://github.com/python/mypy/issues/1107`.
 
-from typing import Any, Callable, Type
+from typing import Callable, Type
 
 
 try:
@@ -36,7 +36,7 @@ except ImportError:
         pass
 
     def pydantic_display(v):
-        # type: (Type[Any]) -> str
+        # type: (Type) -> str
         pass
 
 
