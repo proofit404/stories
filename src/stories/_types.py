@@ -1,23 +1,22 @@
-from typing import Any, Callable, Dict, List, NewType, Type
+from typing import Any, Callable, Dict, List, Type, Union
 
 from ._compat import CerberusSpec, Enum, MarshmallowSpec, PydanticSpec
 
 
-ClassWithSpec = NewType("ClassWithSpec", Any)
+ClassWithSpec = Any
 
-Spec = NewType("Spec", Callable)
+Spec = Callable
 
-Arguments = NewType("Arguments", List[str])
+Arguments = List[str]
 
-Collected = NewType("Collected", List[str])
+Collected = List[str]
 
-ContextContract = NewType(
-    "ContextContract",
-    (PydanticSpec, MarshmallowSpec, CerberusSpec, Dict[str, Callable], None),
-)
+ContextContract = Union[
+    PydanticSpec, MarshmallowSpec, CerberusSpec, Dict[str, Callable], None
+]
 
-FailureProtocol = NewType("FailureProtocol", (List[str], Type[Enum], None))
+FailureProtocol = Union[List[str], Type[Enum], None]
 
-ValueVariant = NewType("ValueVariant", Any)
+ValueVariant = Any
 
-FailureVariant = NewType("FailureVariant", (str, Enum))
+FailureVariant = Union[str, Enum]
