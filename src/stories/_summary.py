@@ -1,4 +1,7 @@
-class FailureSummary(object):
+from ._types import AbstractSummary, FailureVariant
+
+
+class FailureSummary(AbstractSummary):
     def __init__(self, protocol, ctx, failed_method, reason):
         self.__protocol = protocol
         self.is_success = False
@@ -8,9 +11,11 @@ class FailureSummary(object):
         self.__failure_reason = reason
 
     def failed_on(self, method_name):
+        # type: (str) -> bool
         return method_name == self.__failed_method
 
     def failed_because(self, reason):
+        # type: (FailureVariant) -> bool
         self.__protocol.check_failed_because_argument(reason)
         return self.__protocol.compare_failed_because_argument(
             reason, self.__failure_reason
@@ -24,7 +29,7 @@ class FailureSummary(object):
         return "Failure()"
 
 
-class SuccessSummary(object):
+class SuccessSummary(AbstractSummary):
     def __init__(self, protocol, value):
         self.__protocol = protocol
         self.is_success = True
@@ -32,9 +37,11 @@ class SuccessSummary(object):
         self.value = value
 
     def failed_on(self, method_name):
+        # type: (str) -> bool
         return False
 
     def failed_because(self, reason):
+        # type: (FailureVariant) -> bool
         self.__protocol.check_failed_because_argument(reason)
         return False
 
