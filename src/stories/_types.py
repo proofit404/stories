@@ -17,6 +17,8 @@ Namespace = Dict[str, Any]
 
 class AbstractContext(ABC):
     _Context__ns = None  # type: Namespace
+    _Context__history = None  # type: AbstractHistory
+    _Context__lines = None  # type: List[str]
 
 
 ContextContract = Union[
@@ -91,6 +93,8 @@ class AbstractSummary(ABC):
 
 
 class AbstractHistory(ABC):
+    lines = None  # type: List[str]
+
     @abstractmethod
     def before_call(self, method_name):
         # type: (str) -> None
