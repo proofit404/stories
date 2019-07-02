@@ -14,6 +14,7 @@ def arguments(*names):
         raise StoryDefinitionError(message)
 
     def decorator(f):
+        # type: (Spec) -> Spec
         f.arguments = list(names)
         return f
 
