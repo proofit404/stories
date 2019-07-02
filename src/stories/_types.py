@@ -88,3 +88,40 @@ class AbstractSummary(ABC):
     def failed_because(self, reason):
         # type: (FailureVariant) -> bool
         pass
+
+
+class AbstractHistory(ABC):
+    @abstractmethod
+    def before_call(self, method_name):
+        # type: (str) -> None
+        pass
+
+    @abstractmethod
+    def on_result(self, value):
+        # type: (ValueVariant) -> None
+        pass
+
+    @abstractmethod
+    def on_failure(self, reason):
+        # type: (FailureVariant) -> None
+        pass
+
+    @abstractmethod
+    def on_skip(self):
+        # type: () -> None
+        pass
+
+    @abstractmethod
+    def on_error(self, error_name):
+        # type: (str) -> None
+        pass
+
+    @abstractmethod
+    def on_substory_start(self):
+        # type: () -> None
+        pass
+
+    @abstractmethod
+    def on_substory_end(self):
+        # type: () -> None
+        pass
