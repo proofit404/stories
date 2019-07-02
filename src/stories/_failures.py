@@ -1,7 +1,7 @@
-from typing import Union
+from typing import Callable, Optional
 
 from ._compat import Enum, EnumMeta
-from ._types import FailureProtocol
+from ._types import ExecProtocol, FailureProtocol, FailureVariant
 from .exceptions import FailureProtocolError
 
 
@@ -59,8 +59,9 @@ def make_exec_protocol(failures):
         return NullExecProtocol()
 
 
-class NullExecProtocol(object):
+class NullExecProtocol(ExecProtocol):
     def check_return_statement(self, method, reason):
+        # type: (Callable, Optional[FailureVariant]) -> None
         if reason:
             message = null_protocol_template.format(
                 reason=reason,
@@ -72,6 +73,7 @@ class NullExecProtocol(object):
 
 class DisabledNullExecProtocol(NullExecProtocol):
     def check_return_statement(self, method, reason):
+        # type: (Callable, Optional[FailureVariant]) -> None
         if not reason:
             message = disabled_null_template.format(
                 cls=method.__self__.__class__.__name__, method=method.__name__
@@ -80,12 +82,14 @@ class DisabledNullExecProtocol(NullExecProtocol):
         super(DisabledNullExecProtocol, self).check_return_statement(method, reason)
 
 
-class NotNullExecProtocol(object):
+class NotNullExecProtocol(ExecProtocol):
     def __init__(self, failures, contains_func):
+        # type: (FailureProtocol, Callable) -> None
         self.failures = failures
         self.contains_func = contains_func
 
     def check_return_statement(self, method, reason):
+        # type: (Callable, Optional[FailureVariant]) -> None
         if not reason:
             message = null_reason_template.format(
                 available=failures_representation(self.failures),
@@ -101,9 +105,6 @@ class NotNullExecProtocol(object):
                 method=method.__name__,
             )
             raise FailureProtocolError(message)
-
-
-ExecProtocol = Union[NullExecProtocol, NotNullExecProtocol]
 
 
 # Run.

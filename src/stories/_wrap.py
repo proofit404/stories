@@ -1,13 +1,15 @@
 from ._contract import combine_contract, make_contract, maybe_extend_downstream_argsets
 from ._failures import combine_failures, make_exec_protocol, maybe_disable_null_protocol
 from ._marker import BeginningOfStory, EndOfStory
-from ._mounted import Methods, MountedStory, Wrapped
+from ._mounted import MountedStory
 from ._types import (
     Arguments,
     ClassWithSpec,
     Collected,
     ContextContract,
     FailureProtocol,
+    Methods,
+    Wrapped,
 )
 
 

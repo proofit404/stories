@@ -2,6 +2,7 @@ from collections import OrderedDict
 from decimal import Decimal
 
 from ._compat import indent
+from ._types import AbstractContext
 from .exceptions import MutationError
 
 
@@ -20,7 +21,7 @@ def make_context(contract, kwargs, history):
     return ctx
 
 
-class Context(object):
+class Context(AbstractContext):
     def __getattr__(self, name):
         return self.__ns[name]
 

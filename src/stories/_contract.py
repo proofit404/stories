@@ -1,6 +1,6 @@
 from inspect import isclass
 from operator import itemgetter
-from typing import Union
+from typing import Callable
 
 from ._compat import (
     CerberusSpec,
@@ -10,7 +10,7 @@ from ._compat import (
     PydanticSpec,
     pydantic_display,
 )
-from ._types import Arguments, ContextContract
+from ._types import AbstractContext, Arguments, ContextContract, ExecContract, Namespace
 from .exceptions import ContextContractError
 
 
@@ -211,7 +211,7 @@ def check_arguments_definitions(cls_name, name, arguments, spec):
         raise ContextContractError(message)
 
 
-class NullContract(object):
+class NullContract(ExecContract):
     def __init__(self, cls_name, name, arguments):
         self.cls_name = cls_name
         self.name = name
@@ -238,6 +238,7 @@ class NullContract(object):
         return kwargs
 
     def check_substory_call(self, ctx):
+        # type: (AbstractContext) -> None
         __tracebackhide__ = True
         missed = set(self.arguments) - set(ctx._Context__ns)
         if missed:
@@ -251,6 +252,7 @@ class NullContract(object):
             raise ContextContractError(message)
 
     def check_success_statement(self, method, ctx, ns):
+        # type: (Callable, AbstractContext, Namespace) -> Namespace
         __tracebackhide__ = True
         tries_to_override = set(ctx._Context__ns) & set(ns)
         if tries_to_override:
@@ -304,6 +306,7 @@ class SpecContract(NullContract):
         )
 
     def check_story_call(self, kwargs):
+        # type: (Namespace) -> Namespace
         __tracebackhide__ = True
         super(SpecContract, self).check_story_call(kwargs)
         result, errors = self.validate(kwargs)
@@ -319,6 +322,7 @@ class SpecContract(NullContract):
         return result
 
     def check_success_statement(self, method, ctx, ns):
+        # type: (Callable, AbstractContext, Namespace) -> Namespace
         __tracebackhide__ = True
         super(SpecContract, self).check_success_statement(method, ctx, ns)
         unknown = self.identify(ns)
@@ -444,9 +448,6 @@ class SpecContract(NullContract):
                 "  %s: %s  # Variable in %s.%s" % (variable, field_name, cls_name, name)
             )
         return "\n".join(lines)
-
-
-ExecContract = Union[NullContract, SpecContract]
 
 
 def format_violations(ns, errors):
