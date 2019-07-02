@@ -84,13 +84,12 @@ class MountedStory(object):
         result = []
         indent = 0
         for method, contract, protocol in self.methods:
-            method_type = type(method)
-            if method_type is EndOfStory:
+            if isinstance(method, EndOfStory):
                 if method.is_empty:
                     result.append("  " * indent + "<empty>")
                 indent -= 1
             else:
                 result.append("  " * indent + method.__name__)
-                if method_type is BeginningOfStory:
+                if isinstance(method, BeginningOfStory):
                     indent += 1
         return "\n".join(result)
