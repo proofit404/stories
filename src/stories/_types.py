@@ -59,3 +59,32 @@ Method = Callable
 Methods = List[Tuple[Method, ExecContract, ExecProtocol]]
 
 Wrapped = Tuple[Methods, ExecContract, FailureProtocol]
+
+
+class AbstractRunner(ABC):
+    @abstractmethod
+    def got_failure(self, ctx, method_name, reason):
+        # type: (AbstractContext, str, FailureVariant) -> Any
+        pass
+
+    @abstractmethod
+    def got_result(self, value):
+        # type: (ValueVariant) -> Any
+        pass
+
+    @abstractmethod
+    def finished(self):
+        # type: () -> Any
+        pass
+
+
+class AbstractSummary(ABC):
+    @abstractmethod
+    def failed_on(self, method_name):
+        # type: (str) -> bool
+        pass
+
+    @abstractmethod
+    def failed_because(self, reason):
+        # type: (FailureVariant) -> bool
+        pass
