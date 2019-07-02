@@ -3,6 +3,7 @@ from ._types import AbstractHistory, FailureVariant, ValueVariant
 
 class History(AbstractHistory):
     def __init__(self):
+        # type: () -> None
         self.indent = 0
         self.lines = []
 

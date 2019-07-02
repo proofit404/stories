@@ -1,7 +1,6 @@
 from typing import Callable, Type, Union
 
 from ._context import make_context
-from ._contract import ExecContract
 from ._exec import function
 from ._failures import make_run_protocol
 from ._history import History
@@ -12,6 +11,8 @@ from ._types import (
     Arguments,
     ClassWithSpec,
     Collected,
+    ContextContract,
+    ExecContract,
     FailureProtocol,
     Methods,
     ValueVariant,
@@ -19,8 +20,15 @@ from ._types import (
 
 
 class ClassMountedStory(object):
-    def __init__(self, cls, name, collected, contract, failures):
-        # type: (Type[ClassWithSpec], str, Collected, Callable, Callable) -> None
+    def __init__(
+        self,
+        cls,  # type: Type[ClassWithSpec]
+        name,  # type: str
+        collected,  # type: Collected
+        contract,  # type: Callable[[ContextContract], ContextContract]
+        failures,  # type: Callable[[FailureProtocol], FailureProtocol]
+    ):
+        # type: (...) -> None
         self.cls = cls
         self.name = name
         self.collected = collected
