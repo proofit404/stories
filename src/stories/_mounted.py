@@ -1,15 +1,19 @@
-from typing import Callable, Type, Union
+from typing import Callable, List, Tuple, Type, Union
 
 from ._context import make_context
 from ._contract import ExecContract
 from ._exec import function
-from ._failures import make_run_protocol
+from ._failures import ExecProtocol, make_run_protocol
 from ._history import History
 from ._marker import BeginningOfStory, EndOfStory
 from ._run import Call, Run
 from ._summary import FailureSummary, SuccessSummary
 from ._types import Arguments, ClassWithSpec, Collected, FailureProtocol, ValueVariant
-from ._wrap import Methods
+
+
+Method = Union[BeginningOfStory, EndOfStory, Callable]
+Methods = List[Tuple[Method, ExecContract, ExecProtocol]]
+Wrapped = Tuple[Methods, ExecContract, FailureProtocol]
 
 
 class ClassMountedStory(object):

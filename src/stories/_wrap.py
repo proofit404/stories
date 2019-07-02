@@ -1,19 +1,7 @@
-from typing import Callable, List, Tuple, Union
-
-from ._contract import (
-    ExecContract,
-    combine_contract,
-    make_contract,
-    maybe_extend_downstream_argsets,
-)
-from ._failures import (
-    ExecProtocol,
-    combine_failures,
-    make_exec_protocol,
-    maybe_disable_null_protocol,
-)
+from ._contract import combine_contract, make_contract, maybe_extend_downstream_argsets
+from ._failures import combine_failures, make_exec_protocol, maybe_disable_null_protocol
 from ._marker import BeginningOfStory, EndOfStory
-from ._mounted import MountedStory
+from ._mounted import MountedStory, Wrapped
 from ._types import (
     Arguments,
     ClassWithSpec,
@@ -21,11 +9,6 @@ from ._types import (
     ContextContract,
     FailureProtocol,
 )
-
-
-Method = Union[BeginningOfStory, EndOfStory, Callable]
-Methods = List[Tuple[Method, ExecContract, ExecProtocol]]
-Wrapped = Tuple[Methods, ExecContract, FailureProtocol]
 
 
 def wrap_story(
