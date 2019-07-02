@@ -1,5 +1,15 @@
+# NOTE: Every type ignore in this module is necessary due to
+# false-positive bugs in mypy.  Feel free to remove them as they'll be
+# fixed.  See GitHub issues for more info:
+# `https://github.com/python/mypy/issues/1105`,
+# `https://github.com/python/mypy/issues/1106`,
+# `https://github.com/python/mypy/issues/1107`.
+
+from typing import Any, Callable, Type
+
+
 try:
-    from enum import Enum, EnumMeta
+    from enum import Enum, EnumMeta  # type: ignore
 except ImportError:
     # We are on Python 2.7 and enum34 package is not installed.
     class Enum(object):
@@ -10,8 +20,8 @@ except ImportError:
 
 
 try:
-    from pydantic.error_wrappers import ErrorWrapper as PydanticError
-    from pydantic.fields import Shape as PydanticShape
+    from pydantic.error_wrappers import ErrorWrapper as PydanticError  # type: ignore
+    from pydantic.fields import Shape as PydanticShape  # type: ignore
     from pydantic.main import MetaModel as PydanticSpec
     from pydantic.utils import display_as_type as pydantic_display
 except ImportError:
@@ -25,7 +35,8 @@ except ImportError:
     class PydanticShape(object):
         pass
 
-    def pydantic_display(t):
+    def pydantic_display(v):
+        # type: (Type[Any]) -> str
         pass
 
 
@@ -49,7 +60,8 @@ try:
     from textwrap import indent
 except ImportError:
     # We are on Python 2.7
-    def indent(text, prefix):
+    def indent(text, prefix, predicate=lambda x: True):
+        # type: (str, str, Callable[[str], bool]) -> str
         return "".join(map(lambda l: prefix + l, text.splitlines(True)))
 
 
