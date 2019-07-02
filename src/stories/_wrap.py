@@ -1,7 +1,7 @@
 from ._contract import combine_contract, make_contract, maybe_extend_downstream_argsets
 from ._failures import combine_failures, make_exec_protocol, maybe_disable_null_protocol
 from ._marker import BeginningOfStory, EndOfStory
-from ._mounted import MountedStory, Wrapped
+from ._mounted import Methods, MountedStory, Wrapped
 from ._types import (
     Arguments,
     ClassWithSpec,
@@ -26,7 +26,9 @@ def wrap_story(
     contract = make_contract(cls_name, story_name, arguments, spec)
     protocol = make_exec_protocol(failures)
 
-    methods = [(BeginningOfStory(cls_name, story_name), contract, protocol)]
+    methods = [
+        (BeginningOfStory(cls_name, story_name), contract, protocol)
+    ]  # type: Methods
 
     for name in collected:
 
