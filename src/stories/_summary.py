@@ -1,7 +1,7 @@
-from ._types import AbstractSummary, FailureVariant
+from ._types import FailureVariant
 
 
-class FailureSummary(AbstractSummary):
+class FailureSummary(object):
     def __init__(self, protocol, ctx, failed_method, reason):
         self.__protocol = protocol
         self.is_success = False
@@ -29,7 +29,7 @@ class FailureSummary(AbstractSummary):
         return "Failure()"
 
 
-class SuccessSummary(AbstractSummary):
+class SuccessSummary(object):
     def __init__(self, protocol, value):
         self.__protocol = protocol
         self.is_success = True

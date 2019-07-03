@@ -59,7 +59,7 @@ def make_exec_protocol(failures):
         return NullExecProtocol()
 
 
-class NullExecProtocol(ExecProtocol):
+class NullExecProtocol(object):
     def check_return_statement(self, method, reason):
         # type: (Callable, Optional[FailureVariant]) -> None
         if reason:
@@ -82,7 +82,7 @@ class DisabledNullExecProtocol(NullExecProtocol):
         super(DisabledNullExecProtocol, self).check_return_statement(method, reason)
 
 
-class NotNullExecProtocol(ExecProtocol):
+class NotNullExecProtocol(object):
     def __init__(self, failures, contains_func):
         # type: (FailureProtocol, Callable) -> None
         self.failures = failures

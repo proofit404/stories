@@ -1,5 +1,6 @@
-from abc import ABC, abstractmethod
 from typing import Any, Callable, Dict, List, Tuple, Type, Union
+
+from typing_extensions import Protocol
 
 from ._compat import CerberusSpec, Enum, MarshmallowSpec, PydanticSpec
 
@@ -15,7 +16,7 @@ Collected = List[str]
 Namespace = Dict[str, Any]
 
 
-class AbstractContext(ABC):
+class AbstractContext(Protocol):
     _Context__ns = None  # type: Namespace
     _Context__history = None  # type: AbstractHistory
     _Context__lines = None  # type: List[str]
@@ -32,25 +33,21 @@ ValueVariant = Any
 FailureVariant = Union[str, Enum]
 
 
-class ExecContract(ABC):
-    @abstractmethod
+class ExecContract(Protocol):
     def check_story_call(self, kwargs):
         # type: (Namespace) -> Namespace
         pass
 
-    @abstractmethod
     def check_substory_call(self, ctx):
         # type: (AbstractContext) -> None
         pass
 
-    @abstractmethod
     def check_success_statement(self, method, ctx, ns):
         # type: (Callable, AbstractContext, Namespace) -> Namespace
         pass
 
 
-class ExecProtocol(ABC):
-    @abstractmethod
+class ExecProtocol(Protocol):
     def check_return_statement(self, method, reason):
         # type: (Callable, FailureVariant) -> None
         pass
@@ -63,69 +60,57 @@ Methods = List[Tuple[Method, ExecContract, ExecProtocol]]
 Wrapped = Tuple[Methods, ExecContract, FailureProtocol]
 
 
-class AbstractRunner(ABC):
-    @abstractmethod
+class AbstractRunner(Protocol):
     def got_failure(self, ctx, method_name, reason):
         # type: (AbstractContext, str, FailureVariant) -> Any
         pass
 
-    @abstractmethod
     def got_result(self, value):
         # type: (ValueVariant) -> Any
         pass
 
-    @abstractmethod
     def finished(self):
         # type: () -> Any
         pass
 
 
-class AbstractSummary(ABC):
-    @abstractmethod
+class AbstractSummary(Protocol):
     def failed_on(self, method_name):
         # type: (str) -> bool
         pass
 
-    @abstractmethod
     def failed_because(self, reason):
         # type: (FailureVariant) -> bool
         pass
 
 
-class AbstractHistory(ABC):
+class AbstractHistory(Protocol):
     lines = None  # type: List[str]
 
-    @abstractmethod
     def before_call(self, method_name):
         # type: (str) -> None
         pass
 
-    @abstractmethod
     def on_result(self, value):
         # type: (ValueVariant) -> None
         pass
 
-    @abstractmethod
     def on_failure(self, reason):
         # type: (FailureVariant) -> None
         pass
 
-    @abstractmethod
     def on_skip(self):
         # type: () -> None
         pass
 
-    @abstractmethod
     def on_error(self, error_name):
         # type: (str) -> None
         pass
 
-    @abstractmethod
     def on_substory_start(self):
         # type: () -> None
         pass
 
-    @abstractmethod
     def on_substory_end(self):
         # type: () -> None
         pass

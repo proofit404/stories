@@ -29,7 +29,7 @@ def make_context(contract, kwargs, history):
     return ctx
 
 
-class Context(AbstractContext):
+class Context(object):
     def __getattr__(self, name):
         # type: (str) -> ValueVariant
         return self.__ns[name]

@@ -211,7 +211,7 @@ def check_arguments_definitions(cls_name, name, arguments, spec):
         raise ContextContractError(message)
 
 
-class NullContract(ExecContract):
+class NullContract(object):
     def __init__(self, cls_name, name, arguments):
         self.cls_name = cls_name
         self.name = name

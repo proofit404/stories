@@ -1,11 +1,13 @@
-from ._types import AbstractHistory, FailureVariant, ValueVariant
+from typing import List
+
+from ._types import FailureVariant, ValueVariant
 
 
-class History(AbstractHistory):
+class History(object):
     def __init__(self):
         # type: () -> None
         self.indent = 0
-        self.lines = []
+        self.lines = []  # type: List[str]
 
     def before_call(self, method_name):
         # type: (str) -> None

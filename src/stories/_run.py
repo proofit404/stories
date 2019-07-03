@@ -1,17 +1,11 @@
 from typing import NoReturn
 
 from ._summary import FailureSummary, SuccessSummary
-from ._types import (
-    AbstractContext,
-    AbstractRunner,
-    AbstractSummary,
-    FailureVariant,
-    ValueVariant,
-)
+from ._types import AbstractContext, AbstractSummary, FailureVariant, ValueVariant
 from .exceptions import FailureError
 
 
-class Call(AbstractRunner):
+class Call(object):
     def got_failure(self, ctx, method_name, reason):
         # type: (AbstractContext, str, FailureVariant) -> NoReturn
         raise FailureError(reason)
@@ -25,7 +19,7 @@ class Call(AbstractRunner):
         pass
 
 
-class Run(AbstractRunner):
+class Run(object):
     def __init__(self, protocol):
         self.protocol = protocol
 
