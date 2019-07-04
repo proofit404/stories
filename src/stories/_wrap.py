@@ -20,14 +20,13 @@ def wrap_story(arguments, collected, cls_name, story_name, obj, spec, failures):
         attr = getattr(obj, name)
 
         if type(attr) is not MountedStory:
-            executor = get_executor(attr, executor, cls_name)
+            executor = get_executor(attr, executor, cls_name, story_name)
             methods.append((attr, contract, protocol))
             continue
 
         if executor is not attr.executor:
-
-            message = composition_template.format(
-                cls=cls_name, method_name=attr.name
+            message = composition_error_template.format(
+                cls=cls_name, story_name=story_name, method_name=attr.name
             )
             raise StoryDefinitionError(message)
 
@@ -52,6 +51,6 @@ def wrap_story(arguments, collected, cls_name, story_name, obj, spec, failures):
 
     return methods, contract, failures, executor
 
-composition_template = """
-Class {cls} have composition error with {method_name} method
+composition_error_template = """
+{cls}.{story_name} expects coroutine methods but {cls}.{method_name} consist of function methods.
 """.strip()
