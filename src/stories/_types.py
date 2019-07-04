@@ -1,4 +1,4 @@
-from typing import Any, Callable, Dict, List, Tuple, Type, Union
+from typing import Any, Callable, Dict, List, NoReturn, Tuple, Type, Union
 
 from typing_extensions import Protocol
 
@@ -53,7 +53,27 @@ class ExecProtocol(Protocol):
         pass
 
 
-Method = Callable
+class RunProtocol(Protocol):
+    def check_failed_because_argument(self, reason):
+        # type: (FailureVariant) -> NoReturn
+        pass
+
+    def compare_failed_because_argument(self, argument, failure_reason):
+        # type: (FailureVariant, FailureVariant) -> bool
+        pass
+
+
+class SupportsKwargs(Protocol):
+    kwargs = None  # type: Namespace
+
+
+class SupportsValue(Protocol):
+    value = None  # type: ValueVariant
+
+
+MethodResult = Union[SupportsKwargs, SupportsValue]
+
+Method = Callable[[AbstractContext], MethodResult]
 
 Methods = List[Tuple[Method, ExecContract, ExecProtocol]]
 

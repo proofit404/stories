@@ -8,6 +8,8 @@ This module contains errors definitions user can handle.
 :license: BSD, see LICENSE for more details.
 """
 
+from ._types import FailureVariant
+
 
 class StoryError(Exception):
     pass
@@ -19,10 +21,12 @@ class StoryDefinitionError(StoryError):
 
 class FailureError(StoryError):
     def __init__(self, reason):
+        # type: (FailureVariant) -> None
         self.__reason = reason
         super(FailureError, self).__init__()
 
     def __repr__(self):
+        # type: () -> str
         reason = repr(self.__reason) if self.__reason else ""
         return "FailureError(" + reason + ")"
 
