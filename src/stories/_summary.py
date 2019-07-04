@@ -1,8 +1,9 @@
-from ._types import FailureVariant
+from ._types import AbstractContext, FailureVariant, NoReturn, RunProtocol, ValueVariant
 
 
 class FailureSummary(object):
     def __init__(self, protocol, ctx, failed_method, reason):
+        # type: (RunProtocol, AbstractContext, str, FailureVariant) -> None
         self.__protocol = protocol
         self.is_success = False
         self.is_failure = True
@@ -23,14 +24,17 @@ class FailureSummary(object):
 
     @property
     def value(self):
+        # type: () -> NoReturn
         raise AssertionError
 
     def __repr__(self):
+        # type: () -> str
         return "Failure()"
 
 
 class SuccessSummary(object):
     def __init__(self, protocol, value):
+        # type: (RunProtocol, ValueVariant) -> None
         self.__protocol = protocol
         self.is_success = True
         self.is_failure = False
@@ -46,4 +50,5 @@ class SuccessSummary(object):
         return False
 
     def __repr__(self):
+        # type: () -> str
         return "Success()"

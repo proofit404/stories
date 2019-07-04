@@ -1,4 +1,4 @@
-from typing import Callable, Optional
+from typing import Callable, NoReturn, Optional
 
 from ._compat import Enum, EnumMeta
 from ._types import ExecProtocol, FailureProtocol, FailureVariant
@@ -130,6 +130,7 @@ class NullRunProtocol(object):
         self.method_name = method_name
 
     def check_failed_because_argument(self, reason):
+        # type: (FailureVariant) -> NoReturn
         message = null_summary_template.format(
             cls=self.cls_name, method=self.method_name
         )
@@ -145,6 +146,7 @@ class NotNullRunProtocol(object):
         self.compare_func = compare_func
 
     def check_failed_because_argument(self, reason):
+        # type: (FailureVariant) -> NoReturn
         if not self.contains_func(reason, self.failures):
             message = wrong_summary_template.format(
                 reason=reason,
@@ -155,6 +157,7 @@ class NotNullRunProtocol(object):
             raise FailureProtocolError(message)
 
     def compare_failed_because_argument(self, argument, failure_reason):
+        # type: (FailureVariant, FailureVariant) -> bool
         return self.compare_func(argument, failure_reason)
 
 

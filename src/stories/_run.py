@@ -1,7 +1,13 @@
 from typing import NoReturn
 
 from ._summary import FailureSummary, SuccessSummary
-from ._types import AbstractContext, AbstractSummary, FailureVariant, ValueVariant
+from ._types import (
+    AbstractContext,
+    AbstractSummary,
+    FailureVariant,
+    RunProtocol,
+    ValueVariant,
+)
 from .exceptions import FailureError
 
 
@@ -21,6 +27,7 @@ class Call(object):
 
 class Run(object):
     def __init__(self, protocol):
+        # type: (RunProtocol) -> None
         self.protocol = protocol
 
     def got_failure(self, ctx, method_name, reason):
