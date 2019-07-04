@@ -57,5 +57,5 @@ class Story(object):
     def failures(self, failures):
         # type: (FailureProtocol) -> FailureProtocol
         check_data_type(failures)
-        self.__failures = failures
+        self.__failures = failures  # type: FailureProtocol
         return failures

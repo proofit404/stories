@@ -49,7 +49,7 @@ class ExecContract(Protocol):
 
 class ExecProtocol(Protocol):
     def check_return_statement(self, method, reason):
-        # type: (Callable, FailureVariant) -> None
+        # type: (Method, FailureVariant) -> None
         pass
 
 
