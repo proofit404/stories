@@ -5,9 +5,9 @@ from typing_extensions import Protocol
 from ._compat import CerberusSpec, Enum, MarshmallowSpec, PydanticSpec
 
 
-ClassWithSpec = Any
+ClassWithSpec = Type[object]
 
-Spec = Callable
+Spec = Callable[[object], None]
 
 Arguments = List[str]
 
@@ -71,7 +71,11 @@ class SupportsValue(Protocol):
     value = None  # type: ValueVariant
 
 
-MethodResult = Union[SupportsKwargs, SupportsValue]
+class SupportsReason(Protocol):
+    reason = None  # type: FailureVariant
+
+
+MethodResult = Union[SupportsKwargs, SupportsValue, SupportsReason]
 
 Method = Callable[[AbstractContext], MethodResult]
 
