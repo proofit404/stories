@@ -8,8 +8,10 @@ This module contains integration with Sentry.
 :license: BSD, see LICENSE for more details.
 """
 
-import stories._context
 from raven.breadcrumbs import libraryhook, record
+
+import stories._context
+from stories._types import AbstractContext
 
 
 origin_context_init = stories._context.Context.__init__
@@ -17,7 +19,9 @@ origin_context_init = stories._context.Context.__init__
 
 @libraryhook("stories")
 def track_context():
+    # type: () -> None
     def wrapper(ctx):
+        # type: (AbstractContext) -> None
         origin_context_init(ctx)
         record(
             processor=lambda data: data.update(
