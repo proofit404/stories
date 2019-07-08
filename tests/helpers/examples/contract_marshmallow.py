@@ -172,9 +172,15 @@ class ChildAlias(object):
 
     @x.contract
     class Contract(Schema):
-        foo = fields.Dict(keys=fields.Str(), values=fields.Str())
-        bar = fields.Dict(keys=fields.Str(), values=fields.Str())
-        baz = fields.Dict(keys=fields.Str(), values=fields.Integer())
+        class _DictOfStr(Schema):
+            key = fields.Str()
+
+        class _DictOfInteger(Schema):
+            key = fields.Integer()
+
+        foo = fields.Nested(_DictOfStr)
+        bar = fields.Nested(_DictOfStr)
+        baz = fields.Nested(_DictOfInteger)
 
 
 class ParamChild(object):
@@ -216,9 +222,15 @@ class ParamChildAlias(object):
 
     @x.contract
     class Contract(Schema):
-        foo = fields.Dict(keys=fields.Str(), values=fields.Str())
-        bar = fields.Dict(keys=fields.Str(), values=fields.Str())
-        baz = fields.Dict(keys=fields.Str(), values=fields.Integer())
+        class _DictOfStr(Schema):
+            key = fields.Str()
+
+        class _DictOfInteger(Schema):
+            key = fields.Integer()
+
+        foo = fields.Nested(_DictOfStr)
+        bar = fields.Nested(_DictOfStr)
+        baz = fields.Nested(_DictOfInteger)
 
 
 # Next child base classes.
