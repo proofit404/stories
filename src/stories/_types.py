@@ -63,19 +63,11 @@ class RunProtocol(Protocol):
         pass
 
 
-class SupportsKwargs(Protocol):
+class MethodResult(Protocol):
     kwargs = None  # type: Namespace
-
-
-class SupportsValue(Protocol):
+    reason = None  # type: FailureVariant
     value = None  # type: ValueVariant
 
-
-class SupportsReason(Protocol):
-    reason = None  # type: FailureVariant
-
-
-MethodResult = Union[SupportsKwargs, SupportsValue, SupportsReason]
 
 Method = Callable[[AbstractContext], MethodResult]
 

@@ -266,6 +266,7 @@ class NullContract(object):
         return ns
 
     def __repr__(self):
+        # type: () -> str
         return self.format_contract_fields(self.argset)
 
     def format_contract_fields(self, *fieldset):
@@ -420,6 +421,7 @@ class SpecContract(NullContract):
         seen.append((key, value))
 
     def __repr__(self):
+        # type: () -> str
         return self.format_contract_fields(self.argset, self.declared)
 
     def format_contract_fields(self, *fieldset):
