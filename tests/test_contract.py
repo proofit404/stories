@@ -1810,6 +1810,8 @@ def test_story_variable_alias_normalization_store_same_object(m):
     assert getter().foo is getter().bar
     assert getter().foo == {"key": "1"}
     assert getter().bar == {"key": "1"}
+    assert getter().foo is not getter().baz
+    assert getter().bar is not getter().baz
     assert getter().baz == {"key": 1}
 
     getter = make_collector()
@@ -1817,6 +1819,8 @@ def test_story_variable_alias_normalization_store_same_object(m):
     assert getter().foo is getter().bar
     assert getter().foo == {"key": "1"}
     assert getter().bar == {"key": "1"}
+    assert getter().foo is not getter().baz
+    assert getter().bar is not getter().baz
     assert getter().baz == {"key": 1}
 
     # FIXME: Substory inheritance.
@@ -1843,6 +1847,8 @@ def test_story_argument_alias_normalization_store_same_object(m):
     assert getter().foo is getter().bar
     assert getter().foo == {"key": "1"}
     assert getter().bar == {"key": "1"}
+    assert getter().foo is not getter().baz
+    assert getter().bar is not getter().baz
     assert getter().baz == {"key": 1}
 
     getter = make_collector()
@@ -1850,6 +1856,8 @@ def test_story_argument_alias_normalization_store_same_object(m):
     assert getter().foo is getter().bar
     assert getter().foo == {"key": "1"}
     assert getter().bar == {"key": "1"}
+    assert getter().foo is not getter().baz
+    assert getter().bar is not getter().baz
     assert getter().baz == {"key": 1}
 
     # FIXME: Substory inheritance.
