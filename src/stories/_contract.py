@@ -10,7 +10,14 @@ from ._compat import (
     PydanticSpec,
     pydantic_display,
 )
-from ._types import AbstractContext, Arguments, ContextContract, ExecContract, Namespace
+from ._types import (
+    AbstractContext,
+    Arguments,
+    ContextContract,
+    ExecContract,
+    Methods,
+    Namespace,
+)
 from .exceptions import ContextContractError
 
 
@@ -495,6 +502,7 @@ def format_violations(ns, errors):
 
 
 def combine_contract(parent, child):
+    # type: (ExecContract, ExecContract) -> None
     if type(parent) is NullContract and type(child) is NullContract:
         combine_argsets(parent, child)
         return
@@ -565,6 +573,7 @@ def format_contract(contract):
 
 
 def maybe_extend_downstream_argsets(methods, root):
+    # type: (Methods, ExecContract) -> None
     if type(root) is NullContract:
         return
     for method, contract, protocol in methods:
