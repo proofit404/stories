@@ -14,7 +14,7 @@ representations = {
     "str_field_repr": "string",
     "list_of_int_field_repr": "list_of(integer)",
     "list_of_str_field_repr": "list_of(string)",
-    "contract_class_repr": "<class 'dict'>",
+    "contract_class_repr": repr(dict),
 }
 
 
