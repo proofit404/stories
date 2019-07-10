@@ -1,4 +1,4 @@
-from typing import Any, Callable, Dict, List, NoReturn, Tuple, Type, Union
+from typing import Any, Callable, Dict, List, Tuple, Type, Union
 
 from typing_extensions import Protocol
 
@@ -55,7 +55,7 @@ class ExecProtocol(Protocol):
 
 class RunProtocol(Protocol):
     def check_failed_because_argument(self, reason):
-        # type: (FailureVariant) -> NoReturn
+        # type: (FailureVariant) -> None
         pass
 
     def compare_failed_because_argument(self, argument, failure_reason):
