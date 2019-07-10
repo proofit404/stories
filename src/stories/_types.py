@@ -69,9 +69,19 @@ class MethodResult(Protocol):
     value = None  # type: ValueVariant
 
 
-Method = Callable[[AbstractContext], MethodResult]
+Marker = Callable[[AbstractContext], MethodResult]
 
-Methods = List[Tuple[Method, ExecContract, ExecProtocol]]
+
+class Method(Protocol):
+    __self__ = None  # type: Type[object]
+    __name__ = None  # type: str
+
+    def __call__(self, ctx):
+        # type: (AbstractContext) -> MethodResult
+        pass
+
+
+Methods = List[Tuple[Union[Marker, Method], ExecContract, ExecProtocol]]
 
 Wrapped = Tuple[Methods, ExecContract, FailureProtocol]
 
