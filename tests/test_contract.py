@@ -44,8 +44,8 @@ T.x
   one
 
 Context:
-  foo: 1    # Story argument
   bar: [2]  # Story argument
+  foo: 1    # Story argument
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
