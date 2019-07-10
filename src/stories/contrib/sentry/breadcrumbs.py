@@ -29,4 +29,4 @@ def track_context():
             )
         )
 
-    stories._context.Context.__init__ = wrapper
+    stories._context.Context.__init__ = wrapper  # type: ignore

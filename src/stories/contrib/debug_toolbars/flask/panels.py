@@ -81,8 +81,8 @@ class StoriesPanel(DebugPanel):
 
     def enable_instrumentation(self):
         # type: () -> None
-        stories._context.Context.__init__ = track_context(self.storage)
+        stories._context.Context.__init__ = track_context(self.storage)  # type: ignore
 
     def disable_instrumentation(self):
         # type: () -> None
-        stories._context.Context.__init__ = original_context_init
+        stories._context.Context.__init__ = original_context_init  # type: ignore
