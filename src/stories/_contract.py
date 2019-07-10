@@ -94,6 +94,7 @@ class PydanticValidator(object):
         return self.field.validate(value, {}, loc=self.field.alias, cls=self.spec)
 
     def __repr__(self):
+        # type: () -> str
         if self.field.shape is PydanticShape.SINGLETON:
             template = "%s"
         elif self.field.shape is PydanticShape.LIST:
@@ -121,6 +122,7 @@ class MarshmallowValidator(object):
         return values.get(self.field), errors.get(self.field)
 
     def __repr__(self):
+        # type: () -> str
         field = self.spec._declared_fields[self.field]
         return field.__class__.__name__
 
@@ -136,6 +138,7 @@ class CerberusValidator(object):
         return validated.document.get(self.field), validated.errors.get(self.field)
 
     def __repr__(self):
+        # type: () -> str
         schema = self.spec.schema.schema[self.field]
         field_type = schema["type"]
         if "schema" in schema and "type" in schema["schema"]:
@@ -151,6 +154,7 @@ class RawValidator(object):
         return self.validator(value)
 
     def __repr__(self):
+        # type: () -> str
         return self.validator.__name__
 
 
