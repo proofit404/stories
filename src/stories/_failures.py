@@ -1,4 +1,4 @@
-from typing import Callable, NoReturn, Optional, Sequence, Type, Union
+from typing import Callable, Optional, Sequence, Type, Union
 
 from ._compat import Enum, EnumMeta
 from ._types import ExecProtocol, FailureProtocol, FailureVariant, Methods, RunProtocol
@@ -149,7 +149,7 @@ class NullRunProtocol(object):
         self.method_name = method_name
 
     def check_failed_because_argument(self, reason):
-        # type: (FailureVariant) -> NoReturn
+        # type: (FailureVariant) -> None
         message = null_summary_template.format(
             cls=self.cls_name, method=self.method_name
         )

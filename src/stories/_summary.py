@@ -1,4 +1,6 @@
-from ._types import AbstractContext, FailureVariant, NoReturn, RunProtocol, ValueVariant
+from typing import NoReturn
+
+from ._types import AbstractContext, FailureVariant, RunProtocol, ValueVariant
 
 
 class FailureSummary(object):
