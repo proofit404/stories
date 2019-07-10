@@ -1,7 +1,14 @@
 from typing import Callable, Optional, Sequence, Type, Union
 
 from ._compat import Enum, EnumMeta
-from ._types import ExecProtocol, FailureProtocol, FailureVariant, Methods, RunProtocol
+from ._types import (
+    ExecProtocol,
+    FailureProtocol,
+    FailureVariant,
+    Method,
+    Methods,
+    RunProtocol,
+)
 from .exceptions import FailureProtocolError
 
 
@@ -77,7 +84,7 @@ def make_exec_protocol(failures):
 
 class NullExecProtocol(object):
     def check_return_statement(self, method, reason):
-        # type: (Callable, Optional[FailureVariant]) -> None
+        # type: (Method, Optional[FailureVariant]) -> None
         if reason:
             message = null_protocol_template.format(
                 reason=reason,
@@ -89,7 +96,7 @@ class NullExecProtocol(object):
 
 class DisabledNullExecProtocol(NullExecProtocol):
     def check_return_statement(self, method, reason):
-        # type: (Callable, Optional[FailureVariant]) -> None
+        # type: (Method, Optional[FailureVariant]) -> None
         if not reason:
             message = disabled_null_template.format(
                 cls=method.__self__.__class__.__name__, method=method.__name__
@@ -105,7 +112,7 @@ class NotNullExecProtocol(object):
         self.contains_func = contains_func
 
     def check_return_statement(self, method, reason):
-        # type: (Callable, Optional[FailureVariant]) -> None
+        # type: (Method, Optional[FailureVariant]) -> None
         if not reason:
             message = null_reason_template.format(
                 available=failures_representation(self.failures),

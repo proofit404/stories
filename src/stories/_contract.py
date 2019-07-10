@@ -15,6 +15,7 @@ from ._types import (
     Arguments,
     ContextContract,
     ExecContract,
+    Method,
     Methods,
     Namespace,
 )
@@ -263,7 +264,7 @@ class NullContract(object):
             raise ContextContractError(message)
 
     def check_success_statement(self, method, ctx, ns):
-        # type: (Callable, AbstractContext, Namespace) -> Namespace
+        # type: (Method, AbstractContext, Namespace) -> Namespace
         __tracebackhide__ = True
         tries_to_override = set(ctx._Context__ns) & set(ns)
         if tries_to_override:

@@ -7,6 +7,7 @@ from ._types import (
     AbstractContext,
     AbstractHistory,
     ExecContract,
+    Method,
     Namespace,
     ValueVariant,
 )
@@ -68,7 +69,7 @@ class Context(object):
 
 
 def assign_namespace(ctx, method, kwargs):
-    # type: (AbstractContext, Callable, Namespace) -> None
+    # type: (AbstractContext, Method, Namespace) -> None
     ctx._Context__ns.update((arg, kwargs[arg]) for arg in sorted(kwargs))
     line = "Set by %s.%s" % (method.__self__.__class__.__name__, method.__name__)
     ctx._Context__lines.extend([line] * len(kwargs))
