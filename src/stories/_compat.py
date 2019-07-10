@@ -12,11 +12,11 @@ try:
     from enum import Enum, EnumMeta  # type: ignore
 except ImportError:
     # We are on Python 2.7 and enum34 package is not installed.
-    class Enum(object):
+    class Enum(object):  # type: ignore
         name = None  # type: str
         __members__ = None  # type: Dict[str, Enum]
 
-    class EnumMeta(object):
+    class EnumMeta(object):  # type: ignore
         pass
 
 
@@ -27,13 +27,13 @@ try:
     from pydantic.utils import display_as_type as pydantic_display
 except ImportError:
     # Pydantic package is not installed.
-    class PydanticSpec(object):
+    class PydanticSpec(object):  # type: ignore
         pass
 
-    class PydanticError(object):
+    class PydanticError(object):  # type: ignore
         pass
 
-    class PydanticShape(object):
+    class PydanticShape(object):  # type: ignore
         pass
 
     def pydantic_display(v):
@@ -42,18 +42,18 @@ except ImportError:
 
 
 try:
-    from marshmallow.schema import SchemaMeta as MarshmallowSpec
+    from marshmallow.schema import SchemaMeta as MarshmallowSpec  # type: ignore
 except ImportError:
     # Marshmallow package is not installed.
-    class MarshmallowSpec(object):
+    class MarshmallowSpec(object):  # type: ignore
         pass
 
 
 try:
-    from cerberus import Validator as CerberusSpec
+    from cerberus import Validator as CerberusSpec  # type: ignore
 except ImportError:
     # Cerberus package is not installed.
-    class CerberusSpec(object):
+    class CerberusSpec(object):  # type: ignore
         pass
 
 
