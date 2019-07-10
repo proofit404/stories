@@ -70,11 +70,11 @@ class StoriesPanel(Panel):
 
     def enable_instrumentation(self):
         # type: () -> None
-        stories._context.Context.__init__ = track_context(self.storage)
+        stories._context.Context.__init__ = track_context(self.storage)  # type: ignore
 
     def disable_instrumentation(self):
         # type: () -> None
-        stories._context.Context.__init__ = origin_context_init
+        stories._context.Context.__init__ = origin_context_init  # type: ignore
 
     def generate_stats(self, request, response):
         # type: (HttpRequest, HttpResponse) -> None
