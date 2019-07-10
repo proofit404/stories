@@ -1,4 +1,7 @@
 ---
+trigger:
+  - master
+
 jobs:
   - job: 'Test'
     pool:
