@@ -5,7 +5,7 @@
 # `https://github.com/python/mypy/issues/1106`,
 # `https://github.com/python/mypy/issues/1107`.
 
-from typing import Callable, Type
+from typing import Callable, Dict, Type
 
 
 try:
@@ -13,7 +13,8 @@ try:
 except ImportError:
     # We are on Python 2.7 and enum34 package is not installed.
     class Enum(object):
-        pass
+        name = None  # type: str
+        __members__ = None  # type: Dict[str, Enum]
 
     class EnumMeta(object):
         pass
