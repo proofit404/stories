@@ -30,6 +30,8 @@ def failures_representation(failures):
         return ", ".join(map(repr, failures))
     elif failures is None:
         return "None"
+    else:
+        raise RuntimeError  # pragma: no cover
 
 
 def collection_contains(reason, failures):
@@ -69,6 +71,8 @@ def make_exec_protocol(failures):
         return NotNullExecProtocol(failures, collection_contains)
     elif failures is None:
         return NullExecProtocol()
+    else:
+        raise RuntimeError  # pragma: no cover
 
 
 class NullExecProtocol(object):
@@ -134,6 +138,8 @@ def make_run_protocol(failures, cls_name, method_name):
         )
     elif failures is None:
         return NullRunProtocol(cls_name, method_name)
+    else:
+        raise RuntimeError  # pragma: no cover
 
 
 class NullRunProtocol(object):
@@ -167,7 +173,7 @@ class NotNullRunProtocol(object):
         self.compare_func = compare_func
 
     def check_failed_because_argument(self, reason):
-        # type: (FailureVariant) -> NoReturn
+        # type: (FailureVariant) -> None
         if not self.contains_func(reason, self.failures):
             message = wrong_summary_template.format(
                 reason=reason,
