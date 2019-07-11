@@ -1,13 +1,17 @@
-from typing import Any  # FIXME: Should executor be rather a generic type?
-
 from .._context import assign_namespace
 from .._marker import BeginningOfStory, EndOfStory
 from .._return import Failure, Result, Skip, Success
-from .._types import AbstractContext, AbstractHistory, AbstractRunner, Methods
+from .._types import (
+    AbstractContext,
+    AbstractHistory,
+    AbstractRunner,
+    ExecResult,
+    Methods,
+)
 
 
 def execute(runner, ctx, history, methods):
-    # type: (AbstractRunner, AbstractContext, AbstractHistory, Methods) -> Any
+    # type: (AbstractRunner, AbstractContext, AbstractHistory, Methods) -> ExecResult
     __tracebackhide__ = True
 
     skipped = 0

@@ -137,3 +137,6 @@ class AbstractHistory(Protocol):
     def on_substory_end(self):
         # type: () -> None
         pass
+
+
+ExecResult = Union[ValueVariant, AbstractSummary]
