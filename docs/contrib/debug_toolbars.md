@@ -8,23 +8,25 @@ business objects triggered by the framework handler.
 
 Add this lines to your developer's settings:
 
-```python
-from debug_toolbar.settings import PANELS_DEFAULTS
+```pycon
 
-INSTALLED_APPS = [
-    "debug_toolbar",
-    "stories.contrib.debug_toolbars.django",
-    ...,
-]
+>>> from debug_toolbar.settings import PANELS_DEFAULTS
 
-MIDDLEWARE = [
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
-    ...,
-]
+>>> INSTALLED_APPS = [
+...     "debug_toolbar",
+...     "stories.contrib.debug_toolbars.django",
+...     ...,
+... ]
 
-DEBUG_TOOLBAR_PANELS = PANELS_DEFAULTS + [
-    "stories.contrib.debug_toolbars.django.panels.StoriesPanel"
-]
+>>> MIDDLEWARE = [
+...     "debug_toolbar.middleware.DebugToolbarMiddleware",
+...     ...,
+... ]
+
+>>> DEBUG_TOOLBAR_PANELS = PANELS_DEFAULTS + [
+...     "stories.contrib.debug_toolbars.django.panels.StoriesPanel"
+... ]
+
 ```
 
 You should see `stories` panel in your debug toolbar:
@@ -37,15 +39,20 @@ To show a stories panel in flask_debugtoolbar, add the panel to the
 DEBUG_TB_PANELS config variable before initializing
 `DebugToolbarExtension`:
 
-```python
-from flask import Flask
-from flask_debugtoolbar import DebugToolbarExtension
+```pycon
 
-app = Flask(__name__)
-app.config['DEBUG_TB_PANELS'] = (
-    'flask_debugtoolbar.panels.versions.VersionDebugPanel',
-    # ...
-    'stories.contrib.debug_toolbars.flask.panels.StoriesPanel'
-)
-debug_toolbar = DebugToolbarExtension(app)
+>>> from flask import Flask
+
+>>> from flask_debugtoolbar import DebugToolbarExtension
+
+>>> app = Flask(__name__)
+
+>>> app.config['DEBUG_TB_PANELS'] = (
+...     'flask_debugtoolbar.panels.versions.VersionDebugPanel',
+...     ...,
+...     'stories.contrib.debug_toolbars.flask.panels.StoriesPanel'
+... )
+
+>>> debug_toolbar = DebugToolbarExtension(app)
+
 ```

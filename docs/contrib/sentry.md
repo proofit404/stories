@@ -9,8 +9,10 @@ business object shown in the error report breadcrumbs section:
 
 Import this module **before** import any Sentry related stuff:
 
-```python
-import stories.contrib.sentry.breadcrumbs
+```pycon
+
+>>> import stories.contrib.sentry.breadcrumbs
+
 ```
 
 ## Django Settings
@@ -18,6 +20,8 @@ import stories.contrib.sentry.breadcrumbs
 If you use Django, you should add this section to your project config
 instead of the import statement documented above:
 
-```python
-SENTRY_CLIENT = "stories.contrib.sentry.django.DjangoClient"
+```pycon
+
+>>> SENTRY_CLIENT = "stories.contrib.sentry.django.DjangoClient"
+
 ```

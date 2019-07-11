@@ -23,13 +23,15 @@ There is a lot of complexity in it.
 
 Let's consider following view function.
 
-```python
-85 @app.route('/subscriptions/')
-86 def buy_subscription(page):
-...
-121     if props[-1].endswith('$'):
-122 ->      props[-1] = props[-1][:-1]
-123
+```pycon
+
+>>> @app.route('/subscriptions/')        # 85
+... def buy_subscription(page):          # 86
+...                                      # ...
+...      if props[-1].endswith('$'):     # 121
+...         props[-1] = props[-1][:-1]   # 122 <-
+...                                      # 123
+
 ```
 
 We do not have any information about this strange comparison expression.
@@ -43,7 +45,7 @@ Of course, we test all possible scenarios we can imagine.
 
 But after some time this error would happen in the production:
 
-```python
+```pytb
 Traceback (most recent call last):
   File "views.py", line 1027, in buy_subscription
 ZeroDivisionError: division by zero
@@ -69,12 +71,14 @@ This approach also has its own cost.
 
 Let's consider this view:
 
-```python
-class SubscriptionViewSet(viewsets.ModelViewSet):
-    queryset = Subscription.objects.all()
-    serializer_class = SubscriptionSerializer
-    permission_classes = (CanSubscribe,)
-    filter_class = SubscriptionFilter
+```pycon
+
+>>> class SubscriptionViewSet(viewsets.ModelViewSet):
+...     queryset = Subscription.objects.all()
+...     serializer_class = SubscriptionSerializer
+...     permission_classes = (CanSubscribe,)
+...     filter_class = SubscriptionFilter
+
 ```
 
 The only thing we have clue about - it is somehow related to the
@@ -98,23 +102,27 @@ a mapping of fields from the database model to the JSON object.
 
 And we actually do.
 
-```python
-class SubscriptionSerializer(Serializer):
-    category_id = IntegerField()
-    price_id = IntegerField()
+```pycon
+
+>>> class SubscriptionSerializer(Serializer):
+...     category_id = IntegerField()
+...     price_id = IntegerField()
+
 ```
 
 But in addition we see this method:
 
-```python
-def recreate_nested_writable_fields(self, instance):
-    for field, values in self.writable_fields_to_recreate():
-        related_manager = getattr(instance, field)
-        related_manager.all().delete()
-        for data in values:
-            obj = related_manager.model.objects.create(
-                to=instance, **data)
-            related_manager.add(obj)
+```pycon
+
+>>> def recreate_nested_writable_fields(self, instance):
+...     for field, values in self.writable_fields_to_recreate():
+...         related_manager = getattr(instance, field)
+...         related_manager.all().delete()
+...         for data in values:
+...             obj = related_manager.model.objects.create(
+...                 to=instance, **data)
+...             related_manager.add(obj)
+
 ```
 
 Once again we have no idea...
@@ -148,19 +156,21 @@ abstractions for decision making.
 Usually, our first thought will be moving our business logic from the
 view into a function.
 
-```python
-def buy_subscription(category_id, price_id, user):
+```pycon
 
-    category = find_category(category_id)
-    price = find_price(price_id)
-    profile = find_profile(user)
-    if profile.balance < price.cost:
-        raise ValueError
-    decrease_balance(profile, price.cost)
-    save_profile(profile)
-    expires = calculate_period(price.period)
-    subscription = create_subscription(profile, category, expires)
-    notification = send_notification('subscribe', profile, category)
+>>> def buy_subscription(category_id, price_id, user):
+...
+...     category = find_category(category_id)
+...     price = find_price(price_id)
+...     profile = find_profile(user)
+...     if profile.balance < price.cost:
+...         raise ValueError
+...     decrease_balance(profile, price.cost)
+...     save_profile(profile)
+...     expires = calculate_period(price.period)
+...     subscription = create_subscription(profile, category, expires)
+...     notification = send_notification('subscribe', profile, category)
+
 ```
 
 The author definitely has a few good points to write code this way.
@@ -196,27 +206,30 @@ There is a better way.
 Wouldn't it be nice if we can just read business logic as it was
 intended?
 
-```python
-from stories import story, arguments
+```pycon
 
-class Subscription:
+>>> from stories import story, arguments
 
-    @story
-    @arguments("category_id", "price_id")
-    def buy(I):
+>>> class Subscription:
+...
+...     @story
+...     @arguments("category_id", "price_id")
+...     def buy(I):
+...
+...         I.find_category
+...         I.find_price
+...         I.find_profile
+...         I.check_balance
+...         I.persist_payment
+...         I.persist_subscription
+...         I.send_subscription_notification
 
-        I.find_category
-        I.find_price
-        I.find_profile
-        I.check_balance
-        I.persist_payment
-        I.persist_subscription
-        I.send_subscription_notification
 ```
 
 Wouldn't it be nice to have a clear understandable state?
 
-```python
+```pycon
+
 >>> ctx
 Subscription.buy:
   find_category
@@ -230,7 +243,7 @@ Context:
   category_id = 1318           # Story argument
   user = <User: 3292>          # Story argument
   category = <Category: 1318>  # Set by Subscription.find_category
->>> _
+
 ```
 
 Wouldn't it be nice to know which business scenario was executed by
