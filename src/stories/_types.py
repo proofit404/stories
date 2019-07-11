@@ -69,9 +69,6 @@ class MethodResult(Protocol):
     value = None  # type: ValueVariant
 
 
-Marker = Callable[[AbstractContext], MethodResult]
-
-
 class Method(Protocol):
     __self__ = None  # type: Type[object]
     __name__ = None  # type: str
@@ -81,7 +78,7 @@ class Method(Protocol):
         pass
 
 
-Methods = List[Tuple[Union[Marker, Method], ExecContract, ExecProtocol]]
+Methods = List[Tuple[Method, ExecContract, ExecProtocol]]
 
 Wrapped = Tuple[Methods, ExecContract, FailureProtocol]
 
