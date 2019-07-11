@@ -10,77 +10,79 @@ Here is the technique we use to debug our own code written with
 Our regular story looks like this. [You can read more on this topic
 here](composition.md#delegate-implementation).
 
-```python
-class ApplyPromoCode:
-    """Calculate actual product discount, apply it to the price."""
+```pycon
 
-    @story
-    @arguments("category_id")
-    def apply(I):
+>>> class ApplyPromoCode:
+...     """Calculate actual product discount, apply it to the price."""
+...
+...     @story
+...     @arguments("category_id")
+...     def apply(I):
+...
+...         I.find_category
+...         I.find_promo_code
+...         I.check_expiration
+...         I.calculate_discount
+...         I.show_final_price
+...
+...     # Steps.
+...
+...     def find_category(self, ctx):
+...
+...         category = self.load_category(ctx.category_id)
+...         return Success(category=category)
+...
+...     def find_promo_code(self, ctx):
+...
+...         promo_code = self.load_promo_code(ctx.category)
+...         return Success(promo_code=promo_code)
+...
+...     def check_expiration(self, ctx):
+...
+...         if ctx.promo_code.is_expired():
+...             return Skip()
+...         else:
+...             return Success()
+...
+...     def calculate_discount(self, ctx):
+...
+...         discount = ctx.promo_code.apply_discount(ctx.category.price)
+...         return Success(discount=discount)
+...
+...     def show_final_price(self, ctx):
+...
+...         return Result(ctx.category.price - ctx.discount)
+...
+...     # Dependencies.
+...
+...     def __init__(self, load_category, load_promo_code):
+...
+...         self.load_category = load_category
+...         self.load_promo_code = load_promo_code
 
-        I.find_category
-        I.find_promo_code
-        I.check_expiration
-        I.calculate_discount
-        I.show_final_price
+>>> class Category:
+...
+...     def __init__(self, price=None, name=None, **kwargs):
+...
+...         self.price = price
+...         self.name = name
+...         for k, v in kwargs.items():
+...             setattr(self, k, v)
 
-    # Steps.
+>>> class PromoCode:
+...
+...     def __init__(self, percent):
+...
+...         self.fraction = percent / 100
+...
+...     def is_expired(self):
+...
+...         return False
+...
+...     def apply_discount(self, price):
+...
+...         return price * self.fraction
 
-    def find_category(self, ctx):
-
-        category = self.load_category(ctx.category_id)
-        return Success(category=category)
-
-    def find_promo_code(self, ctx):
-
-        promo_code = self.load_promo_code(ctx.category)
-        return Success(promo_code=promo_code)
-
-    def check_expiration(self, ctx):
-
-        if ctx.promo_code.is_expired():
-            return Skip()
-        else:
-            return Success()
-
-    def calculate_discount(self, ctx):
-
-        discount = ctx.promo_code.apply_discount(ctx.category.price)
-        return Success(discount=discount)
-
-    def show_final_price(self, ctx):
-
-        return Result(ctx.category.price - ctx.discount)
-
-    # Dependencies.
-
-    def __init__(self, load_category, load_promo_code):
-
-        self.load_category = load_category
-        self.load_promo_code = load_promo_code
-
-class Category:
-
-    def __init__(self, price=None, name=None, **kwargs):
-
-        self.price = price
-        self.name = name
-        for k, v in kwargs.items():
-            setattr(self, k, v)
-
-class PromoCode:
-
-    def __init__(self, percent):
-
-        self.fraction = percent / 100
-
-    def is_expired(self):
-
-        return False
-
-    def apply_discount(self, price):
-
-        return price * self.fraction
 ```
 
 It defines top-level logic without any implementation detail written in
@@ -88,14 +90,14 @@ story methods.
 
 We provide an implementation in a separate set of functions.
 
-```python
-def load_category(category_id):
+```pycon
 
-    return Category(orice=715, category_id=category_id)
+>>> def load_category(category_id):
+...     return Category(orice=715, category_id=category_id)
 
-def load_promo_code(category):
+>>> def load_promo_code(category):
+...     return PromoCode(percent=5)
 
-    return PromoCode(percent=5)
 ```
 
 ## The first run
@@ -103,8 +105,9 @@ def load_promo_code(category):
 Looks good at the first view. Isn't it? Let's try to run this code.
 
 ```pycon
->>> from example import *
+
 >>> promo_code = ApplyPromoCode(load_category, load_promo_code)
+
 >>> result = promo_code.apply(category_id=1024)
 Traceback (most recent call last):
   File "<stdin>", line 1, in <module>
@@ -117,7 +120,7 @@ Traceback (most recent call last):
   File "example.py", line 73, in apply_discount
     return price * self.fraction
 TypeError: unsupported operand type(s) for *: 'NoneType' and 'float'
->>> _
+
 ```
 
 Oops... It's broken...
@@ -130,8 +133,10 @@ meticulously.
 But let’s try to use a debugger instead! Type this in the same console
 right after traceback.
 
-```python
+```pycon
+
 >>> import pdb
+
 >>> pdb.pm()
 > example.py(73)apply_discount()
 -> return price * self.fraction
@@ -142,22 +147,24 @@ right after traceback.
 (Pdb) args
 self = <example.PromoCode>
 price = None
-(Pdb) _
+
 ```
 
 It's clear it isn't our fault. Someone passes a wrong value to us. We'll
 go one frame upper in the call stack and look who does it.
 
-```python
+```pycon
+
 (Pdb) up
 > example.py(38)calculate_discount()
 -> discount = ctx.promo_code.apply_discount(ctx.category.price)
+
 (Pdb) ll
  36      def calculate_discount(self, ctx):
  37
  38  ->      discount = ctx.promo_code.apply_discount(ctx.category.price)
  39          return Success(discount=discount)
-(Pdb) _
+
 ```
 
 We can clearly see that the `price` attribute of the `category` context
@@ -173,7 +180,8 @@ support of the introspection.
 
 Let's print story context at the moment of the failure.
 
-```python
+```pycon
+
 (Pdb) p ctx
 ApplyPromoCode.apply
   find_category
@@ -185,36 +193,40 @@ Context:
   category_id = 1024                # Story argument
   category = <example.Category>     # Set by ApplyPromoCode.find_category
   promo_code = <example.PromoCode>  # Set by ApplyPromoCode.find_promo_code
-(Pdb) _
+
 ```
 
 We can tell that `category` was defined by `find_category` step. Let's
 take a closer look at it.
 
-```python
-def find_category(self, ctx):
+```pycon
 
-    category = self.load_category(ctx.category_id)
-    return Success(category=category)
+>>> def find_category(self, ctx):
+...     category = self.load_category(ctx.category_id)
+...     return Success(category=category)
+
 ```
 
 What are the `load_category` stands for?
 
-```python
+```pycon
+
 (Pdb) p self.load_category
 <function load_category>
+
 (Pdb) p dir(ctx.category)
 ['category_id', 'name', 'orice', 'price']
-(Pdb) _
+
 ```
 
 These `orice` and `price` attribute looks suspicious.
 
-```python
-def load_category(category_id):
+```pycon
 
-    return Category(orice=715, category_id=category_id)
-    #               `---- Root of all evil.
+>>> def load_category(category_id):
+...     return Category(orice=715, category_id=category_id)
+...     #               `---- Root of all evil.
+
 ```
 
 So we can quickly find mistyped argument name in the `Category`
@@ -224,21 +236,24 @@ constructor.
 
 Let's fix it.
 
-```python
-def load_category(category_id):
+```pycon
 
-    return Category(price=715, category_id=category_id)
+>>> def load_category(category_id):
+...     return Category(price=715, category_id=category_id)
+
 ```
 
 And re-run our program.
 
 ```pycon
->>> from example import *
+
 >>> promo_code = ApplyPromoCode(load_category, load_promo_code)
+
 >>> result = promo_code.apply(category_id=1024)
+
 >>> result
 679.25
->>> _
+
 ```
 
 Hooray! It works.

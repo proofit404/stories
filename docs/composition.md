@@ -20,35 +20,38 @@ parent story step.
 If you want the parent story to provide some context variables, use
 `@arguments` decorator on the sub-story definition.
 
-```python
-class Subscription:
+```pycon
 
-    @story
-    @arguments("category_id", "price_id", "user_id")
-    def buy(I):
+>>> class Subscription:
+...
+...     @story
+...     @arguments("category_id", "price_id", "user_id")
+...     def buy(I):
+...
+...         I.find_category
+...         I.find_price
+...         I.find_promo_code
+...         I.find_profile
+...         I.check_balance
+...         I.persist_payment
+...         I.persist_subscription
+...         I.send_subscription_notification
+...         I.show_category
+...
+...     @story
+...     @arguments("category", "price")
+...     def find_promo_code(I):
+...
+...         I.find_token
+...         I.check_expiration
+...         I.calculate_discount
 
-        I.find_category
-        I.find_price
-        I.find_promo_code
-        I.find_profile
-        I.check_balance
-        I.persist_payment
-        I.persist_subscription
-        I.send_subscription_notification
-        I.show_category
-
-    @story
-    @arguments("category", "price")
-    def find_promo_code(I):
-
-        I.find_token
-        I.check_expiration
-        I.calculate_discount
 ```
 
 You can see final composition in the class result representation:
 
 ```pycon
+
 >>> Subscription.buy
 Subscription.buy:
   find_category
@@ -63,7 +66,7 @@ Subscription.buy:
   persist_subscription
   send_subscription_notification
   show_category
->>> _
+
 ```
 
 ## Instance attributes
@@ -76,42 +79,45 @@ for it. The key point here: you can add story steps directly to the
 instance with attribute assignment. No matter where these steps come
 from, constructor or not.
 
-```python
-class Subscription:
+```pycon
 
-    @story
-    @arguments("category_id", "price_id", "user_id")
-    def buy(I):
+>>> class Subscription:
+...
+...     @story
+...     @arguments("category_id", "price_id", "user_id")
+...     def buy(I):
+...
+...         I.find_category
+...         I.find_price
+...         I.find_promo_code
+...         I.find_profile
+...         I.check_balance
+...         I.persist_payment
+...         I.persist_subscription
+...         I.send_subscription_notification
+...         I.show_category
+...
+...     def __init__(self, find_promo_code):
+...
+...         self.find_promo_code = find_promo_code
 
-        I.find_category
-        I.find_price
-        I.find_promo_code
-        I.find_profile
-        I.check_balance
-        I.persist_payment
-        I.persist_subscription
-        I.send_subscription_notification
-        I.show_category
+>>> class PromoCode:
+...
+...     @story
+...     @arguments("category", "price")
+...     def find(I):
+...
+...         I.find_token
+...         I.check_expiration
+...         I.calculate_discount
 
-    def __init__(self, find_promo_code):
-
-        self.find_promo_code = find_promo_code
-
-class PromoCode:
-
-    @story
-    @arguments("category", "price")
-    def find(I):
-
-        I.find_token
-        I.check_expiration
-        I.calculate_discount
 ```
 
 At this moment, story definition does not know what `find_promo_code`
 step should be.
 
 ```pycon
+
 >>> Subscription.buy
 Subscription.buy:
   find_category
@@ -123,7 +129,7 @@ Subscription.buy:
   persist_subscription
   send_subscription_notification
   show_category
->>> _
+
 ```
 
 And when we create an instance of the class we will specify this
@@ -131,6 +137,7 @@ explicitly. Representation of the instance attribute will show us the
 complete story.
 
 ```pycon
+
 >>> Subscription(PromoCode().find).buy
 Subscription.buy:
   find_category
@@ -145,7 +152,7 @@ Subscription.buy:
   persist_subscription
   send_subscription_notification
   show_category
->>> _
+
 ```
 
 ## Delegate implementation
@@ -167,38 +174,40 @@ We use simple rules to write our steps.
 
 Here are some examples:
 
-```python
-class Subscription:
+```pycon
 
-    @story
-    @arguments("user_id", "price_id")
-    def buy(I):
+>>> class Subscription:
+...
+...     @story
+...     @arguments("user_id", "price_id")
+...     def buy(I):
+...
+...         I.find_profile
+...         I.find_price
+...         I.check_balance
+...
+...     def find_profile(self, ctx):
+...
+...         profile = self.load_profile(ctx.user_id)
+...         return Success(profile=profile)
+...
+...     def find_price(self, ctx):
+...
+...         price = self.load_price(ctx.price_id)
+...         return Success(price=price)
+...
+...     def check_balance(self, ctx):
+...
+...         if ctx.profile.has_enough_balance(ctx.price):
+...             return Success()
+...         else:
+...             return Failure()
+...
+...     def __init__(self, load_profile, load_price):
+...
+...         self.load_profile = load_profile
+...         self.load_price = load_price
 
-        I.find_profile
-        I.find_price
-        I.check_balance
-
-    def find_profile(self, ctx):
-
-        profile = self.load_profile(ctx.user_id)
-        return Success(profile=profile)
-
-    def find_price(self, ctx):
-
-        price = self.load_price(ctx.price_id)
-        return Success(price=price)
-
-    def check_balance(self, ctx):
-
-        if ctx.profile.has_enough_balance(ctx.price):
-            return Success()
-        else:
-            return Failure()
-
-    def __init__(self, load_profile, load_price):
-
-        self.load_profile = load_profile
-        self.load_price = load_price
 ```
 
 This way you decouple your business logic from relation mapper models or
@@ -206,28 +215,31 @@ networking library! There is no more vendor lock on a certain framework
 or database! Welcome to the good architecture utopia.
 
 ```pycon
+
 >>> def load_profile(user_id):
 ...     return Profile.objects.get(user_id=user_id)
 ...
+
 >>> def load_price(price_id):
 ...     return Price.objects.get(pk=price_id)
 ...
+
 >>> Subscription(load_profile, load_price).buy(user_id=1, price_id=7)
->>> _
+
 ```
 
 You can group delegates into a single object to avoid complex
 constructors and names duplication.
 
-```python
-def find_price(self, ctx):
+```pycon
 
-    price = self.impl.find_price(ctx.price_id)
-    return Success(price=price)
+>>> def find_price(self, ctx):
+...     price = self.impl.find_price(ctx.price_id)
+...     return Success(price=price)
 
-def __init__(self, impl):
+>>> def __init__(self, impl):
+...     self.impl = impl
 
-    self.impl = impl
 ```
 
 If you follow our mantra "decouple everything", you definitely should

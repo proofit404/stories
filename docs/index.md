@@ -39,53 +39,56 @@ capturing and returning errors from any step in the transaction.
 `stories` provide a simple way to define a complex business scenario
 that include many processing steps.
 
-```python
-from stories import story, arguments, Success, Failure, Result
+```pycon
 
-class Subscribe:
+>>> from stories import story, arguments, Success, Failure, Result
 
-    @story
-    @arguments('category_id', 'user_id')
-    def buy(I):
+>>> class Subscribe:
+...
+...     @story
+...     @arguments('category_id', 'user_id')
+...     def buy(I):
+...
+...         I.find_category
+...         I.find_profile
+...         I.check_balance
+...         I.persist_subscription
+...         I.show_subscription
+...
+...     def find_category(self, ctx):
+...
+...         category = Category.objects.get(id=ctx.category_id)
+...         return Success(category=category)
+...
+...     def find_profile(self, ctx):
+...
+...         profile = Profile.objects.get(user_id=ctx.user_id)
+...         return Success(profile=profile)
+...
+...     def check_balance(self, ctx):
+...
+...         if ctx.category.cost < ctx.profile.balance:
+...             return Success()
+...         else:
+...             return Failure()
+...
+...     def persist_subscription(self, ctx):
+...
+...         subscription = Subscription(ctx.category, ctx.profile)
+...         subscription.save()
+...         return Success(subscription=subscription)
+...
+...     def show_subscription(self, ctx):
+...
+...         return Result(ctx.subscription)
 
-        I.find_category
-        I.find_profile
-        I.check_balance
-        I.persist_subscription
-        I.show_subscription
-
-    def find_category(self, ctx):
-
-        category = Category.objects.get(id=ctx.category_id)
-        return Success(category=category)
-
-    def find_profile(self, ctx):
-
-        profile = Profile.objects.get(user_id=ctx.user_id)
-        return Success(profile=profile)
-
-    def check_balance(self, ctx):
-
-        if ctx.category.cost < ctx.profile.balance:
-            return Success()
-        else:
-            return Failure()
-
-    def persist_subscription(self, ctx):
-
-        subscription = Subscription(ctx.category, ctx.profile)
-        subscription.save()
-        return Success(subscription=subscription)
-
-    def show_subscription(self, ctx):
-
-        return Result(ctx.subscription)
 ```
 
 ```pycon
+
 >>> Subscribe().buy(category_id=1, user_id=1)
 <Subscription object>
->>> _
+
 ```
 
 This code style allow you clearly separate actual business scenario from
