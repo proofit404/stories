@@ -19,6 +19,8 @@ continues from the next step.
 
 ```pycon
 
+>>> from stories import story, Success
+
 >>> class Action:
 ...
 ...     @story
@@ -58,6 +60,8 @@ If sub-story last method returns `Success`, the execution continues in
 the next method of the parent story.
 
 ```pycon
+
+>>> from stories import story, Success
 
 >>> class Action:
 ...
@@ -111,6 +115,8 @@ variables for future methods.
 
 ```pycon
 
+>>> from stories import story, Success
+
 >>> class Action:
 ...
 ...     @story
@@ -146,6 +152,8 @@ Execution stops at this point.
 
 ```pycon
 
+>>> from stories import story, Success, Failure
+
 >>> class Action:
 ...
 ...     @story
@@ -168,23 +176,19 @@ Execution stops at this point.
 
 ```pycon
 
->>> Action().do()
+>>> result = Action().do.run()
 one
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-  File "stories/_wrapper.py", line 23, in __call__
-    return function.execute(runner, ctx, methods)
-  File "stories/_exec/function.py", line 33, in execute
-    return runner.got_failure(ctx, method.__name__, result.reason)
-  File "stories/_run.py", line 7, in got_failure
-    raise FailureError(reason)
-stories.exceptions.FailureError()
+
+>>> result.is_failure
+True
 
 ```
 
 `Failure` of the sub-story will fail the whole story.
 
 ```pycon
+
+>>> from stories import story, Success, Failure
 
 >>> class Action:
 ...
@@ -225,18 +229,12 @@ stories.exceptions.FailureError()
 
 ```pycon
 
->>> Action().do()
+>>> result = Action().do.run()
 one
 two
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-  File "stories/_wrapper.py", line 23, in __call__
-    return function.execute(runner, ctx, methods)
-  File "stories/_exec/function.py", line 33, in execute
-    return runner.got_failure(ctx, method.__name__, result.reason)
-  File "stories/_run.py", line 7, in got_failure
-    raise FailureError(reason)
-stories.exceptions.FailureError()
+
+>>> result.is_failure
+True
 
 ```
 
@@ -250,6 +248,8 @@ optional argument passed to the `Result` constructor will be the return
 value of the story call.
 
 ```pycon
+
+>>> from stories import story, Success, Result
 
 >>> class Action:
 ...
@@ -291,6 +291,8 @@ The `Result` of the sub-story will be the result of the whole story. The
 execution stops after the method returned `Result`.
 
 ```pycon
+
+>>> from stories import story, Success, Result
 
 >>> class Action:
 ...
@@ -347,6 +349,8 @@ form the next method of the caller story.
 
 ```pycon
 
+>>> from stories import story, Success, Skip
+
 >>> class Action:
 ...
 ...     @story
@@ -396,6 +400,8 @@ four
 If the topmost story returns `Skip` result, execution will end.
 
 ```pycon
+
+>>> from stories import story, Success, Skip
 
 >>> class Action:
 ...
