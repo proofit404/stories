@@ -1,4 +1,4 @@
-from typing import Callable, Optional, Sequence, Type, Union
+from typing import Callable, NoReturn, Optional, Sequence, Type, Union
 
 from ._compat import Enum, EnumMeta
 from ._types import (
@@ -161,6 +161,10 @@ class NullRunProtocol(object):
             cls=self.cls_name, method=self.method_name
         )
         raise FailureProtocolError(message)
+
+    def compare_failed_because_argument(self, argument, failure_reason):
+        # type: (FailureVariant, FailureVariant) -> NoReturn
+        raise RuntimeError  # pragma: no cover
 
 
 class NotNullRunProtocol(object):
