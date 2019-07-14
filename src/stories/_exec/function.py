@@ -10,6 +10,15 @@ from .._types import (
 )
 
 
+# TODO: This file has bunch of type ignore statements.  Success,
+# Failure and other result types has different set of attributes.
+# They are incompatible on type level.  We'll refactor this function
+# to the method calls of result types.  Also, we will process a chain
+# object instead of list of methods, so Skip will be processed
+# directly, instead of iteration over all methods of skipped story.
+# This will be implemented as part of the rollback feature.
+
+
 def execute(runner, ctx, history, methods):
     # type: (AbstractRunner, AbstractContext, AbstractHistory, Methods) -> ExecResult
     __tracebackhide__ = True
@@ -40,16 +49,18 @@ def execute(runner, ctx, history, methods):
 
         if restype is Failure:
             try:
-                protocol.check_return_statement(method, result.reason)
+                protocol.check_return_statement(method, result.reason)  # type: ignore
             except Exception as error:
                 history.on_error(error.__class__.__name__)
                 raise
-            history.on_failure(result.reason)
-            return runner.got_failure(ctx, method.__name__, result.reason)
+            history.on_failure(result.reason)  # type: ignore
+            return runner.got_failure(
+                ctx, method.__name__, result.reason  # type: ignore
+            )
 
         if restype is Result:
-            history.on_result(result.value)
-            return runner.got_result(result.value)
+            history.on_result(result.value)  # type: ignore
+            return runner.got_result(result.value)  # type: ignore
 
         if restype is Skip:
             history.on_skip()
@@ -70,7 +81,9 @@ def execute(runner, ctx, history, methods):
             continue
 
         try:
-            kwargs = contract.check_success_statement(method, ctx, result.kwargs)
+            kwargs = contract.check_success_statement(
+                method, ctx, result.kwargs  # type: ignore
+            )
         except Exception as error:
             history.on_error(error.__class__.__name__)
             raise

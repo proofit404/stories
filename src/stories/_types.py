@@ -64,9 +64,7 @@ class RunProtocol(Protocol):
 
 
 class MethodResult(Protocol):
-    kwargs = None  # type: Namespace
-    reason = None  # type: FailureVariant
-    value = None  # type: ValueVariant
+    pass
 
 
 class Method(Protocol):
