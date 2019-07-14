@@ -1,12 +1,17 @@
+from typing import overload
+
 from .._context import assign_namespace
 from .._marker import BeginningOfStory, EndOfStory
 from .._return import Failure, Result, Skip, Success
+from .._run import Call, Run
 from .._types import (
     AbstractContext,
     AbstractHistory,
     AbstractRunner,
+    AbstractSummary,
     ExecResult,
     Methods,
+    ValueVariant,
 )
 
 
@@ -17,6 +22,18 @@ from .._types import (
 # object instead of list of methods, so Skip will be processed
 # directly, instead of iteration over all methods of skipped story.
 # This will be implemented as part of the rollback feature.
+
+
+@overload
+def execute(runner, ctx, history, methods):
+    # type: (Call, AbstractContext, AbstractHistory, Methods) -> ValueVariant
+    pass
+
+
+@overload
+def execute(runner, ctx, history, methods):
+    # type: (Run, AbstractContext, AbstractHistory, Methods) -> AbstractSummary
+    pass
 
 
 def execute(runner, ctx, history, methods):
