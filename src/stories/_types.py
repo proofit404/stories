@@ -43,7 +43,7 @@ class ExecContract(Protocol):
         pass
 
     def check_success_statement(self, method, ctx, ns):
-        # type: (Callable, AbstractContext, Namespace) -> Namespace
+        # type: (Method, AbstractContext, Namespace) -> Namespace
         pass
 
 
