@@ -34,6 +34,9 @@ FailureVariant = Union[str, Enum]
 
 
 class ExecContract(Protocol):
+    cls_name = None  # type: str
+    name = None  # type: str
+
     def check_story_call(self, kwargs):
         # type: (Namespace) -> Namespace
         pass

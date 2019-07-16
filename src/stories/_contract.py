@@ -1,6 +1,6 @@
 from inspect import isclass
 from operator import itemgetter
-from typing import Callable
+from typing import Dict, List, Optional, Type, Union
 
 from ._compat import (
     CerberusSpec,
@@ -225,17 +225,20 @@ def check_arguments_definitions(cls_name, name, arguments, spec):
 
 class NullContract(object):
     def __init__(self, cls_name, name, arguments):
+        # type: (str, str, Arguments) -> None
         self.cls_name = cls_name
         self.name = name
         self.arguments = arguments
         self.make_argset()
 
     def make_argset(self):
+        # type: () -> None
         self.argset = dict(
             (arg, {(None, self.cls_name, self.name)}) for arg in self.arguments
         )
 
     def check_story_call(self, kwargs):
+        # type: (Namespace) -> Namespace
         __tracebackhide__ = True
         # FIXME: Check required arguments here.
         unknown_arguments = set(kwargs) - set(self.argset)
@@ -307,12 +310,14 @@ class SpecContract(NullContract):
         self.make_declared()
 
     def make_argset(self):
+        # type: () -> None
         self.argset = {}
         for arg in self.arguments:
             self.argset[arg] = {(self.spec[arg], self.cls_name, self.name)}
             del self.spec[arg]
 
     def make_declared(self):
+        # type: () -> None
         self.declared = dict(
             (variable, (self.cls_name, self.name, repr(validator)))
             for variable, validator in self.spec.items()
@@ -464,10 +469,15 @@ class SpecContract(NullContract):
         return "\n".join(lines)
 
 
+Errors = Union[Dict, List, PydanticError, str]
+
+
 def format_violations(ns, errors):
+    # type: (Namespace, Dict[str, Errors]) -> str
     result = []
 
     def normalize(value, indent, list_item=False, dict_value=False):
+        # type: (Errors, int, bool, bool) -> None
         if isinstance(value, dict):
             normalize_dict(value, indent + 2)
         elif isinstance(value, list):
@@ -480,6 +490,7 @@ def format_violations(ns, errors):
             normalize_str(value, indent)
 
     def normalize_dict(value, indent, sep=None):
+        # type: (Dict[str, Errors], int, Optional[str]) -> None
         for key in sorted(value):
             normalize(str(key) + ":", indent)
             if sep is not None:
@@ -489,13 +500,16 @@ def format_violations(ns, errors):
                 normalize_str(sep, 0)
 
     def normalize_list(value, indent):
+        # type: (List[Errors], int) -> None
         for elem in value:
             normalize(elem, indent, list_item=True)
 
     def normalize_pydantic(value, indent):
+        # type: (PydanticError, int) -> None
         normalize_str(value.msg, indent)
 
     def normalize_str(value, indent):
+        # type: (str, int) -> None
         result.append(" " * indent + value)
 
     normalize_dict(errors, 0, "")
@@ -508,19 +522,19 @@ def format_violations(ns, errors):
 
 def combine_contract(parent, child):
     # type: (ExecContract, ExecContract) -> None
-    if type(parent) is NullContract and type(child) is NullContract:
+    if isinstance(parent, NullContract) and isinstance(child, NullContract):
         combine_argsets(parent, child)
         return
     elif (
-        type(parent) is SpecContract
-        and type(child) is SpecContract
+        isinstance(parent, SpecContract)
+        and isinstance(child, SpecContract)
         and parent.origin is child.origin
     ):
         combine_argsets(parent, child)
         return
     elif (
-        type(parent) is SpecContract
-        and type(child) is SpecContract
+        isinstance(parent, SpecContract)
+        and isinstance(child, SpecContract)
         and any(
             isinstance(parent.origin, spec_type) and isinstance(child.origin, spec_type)
             for spec_type in [PydanticSpec, MarshmallowSpec, CerberusSpec, dict]
@@ -554,6 +568,7 @@ def combine_contract(parent, child):
 
 
 def combine_argsets(parent, child):
+    # type: (ExecContract, ExecContract) -> None
     for key in set(parent.argset) & set(child.argset):
         parent.argset[key].update(child.argset[key])
         child.argset[key].update(parent.argset[key])
@@ -564,11 +579,13 @@ def combine_argsets(parent, child):
 
 
 def combine_declared(parent, child):
+    # type: (SpecContract, SpecContract) -> None
     parent.declared.update(child.declared)
 
 
 def format_contract(contract):
-    if type(contract) is SpecContract:
+    # type: (ExecContract) -> Optional[Type[object]]
+    if isinstance(contract, SpecContract):
         if isclass(contract.origin):
             return contract.origin.__bases__[0]
         else:
