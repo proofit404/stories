@@ -22,65 +22,92 @@ from ._types import (
 from .exceptions import ContextContractError
 
 
-# FIXME:
+# FIXME: Handle protocol extension.  There should be way to say in the
+# substory contract "this variable should be an integer" and in
+# addition in the story "this integer should be greater then 7".  This
+# way we also can require a certain substory to declare context
+# variable for parent story.
 #
-# [ ] Handle protocol extension.  There should be way to say in the
-#     substory contract "this variable should be an integer" and in
-#     addition in the story "this integer should be greater then 7".
-#     This way we also can require a certain substory to declare
-#     context variable for parent story.
+# FIXME: Add fix suggestion to the bottom of the error message.
 #
-# [ ] Add fix suggestion to the bottom of the error message.
+# FIXME: Support custom validation of complex relationships.  For
+# example, `@pydantic.validator` of `password2` depends on
+# `password1`.
 #
-# [ ] Support custom validation of complex relationships.  For
-#     example, `@pydantic.validator` of `password2` depends on
-#     `password1`.
+# FIXME: Check that contracts collisions are checked in the situation:
 #
-# [ ] Check that contracts collisions are checked in the situation:
+# story
+#   substory
+#     substory with variable declaration
+#   substory with this variable as an argument
 #
-#     story
-#       substory
-#         substory with variable declaration
-#       substory with this variable as an argument
+# FIXME: Depending of the level of nesting the same substory can
+# occurred multiple times at one argument in the contract
+# representation.
 #
-# [ ] Depending of the level of nesting the same substory can occurred
-#     multiple times at one argument in the contract representation.
+# defaults:
+#   typing.Union[typing.Dict[str, str], NoneType]  # Argument of ProcessImages.process
+#   typing.Union[typing.Dict[str, str], NoneType]  # Argument of ProcessImages.process
+#   typing.Union[typing.Dict[str, str], NoneType]  # Argument of ProcessImages.process
+# raw_urls:
+#   str  # Argument of FetchURLPreviews.fetch
+#   str  # Argument of FetchURLPreviews.fetch
+# files:
+#   typing.Dict[str, typing.Union[str, int, typing.Any]]  # Argument of ProcessVideos.process  # noqa: E501
+#   typing.Dict[str, typing.Union[str, int, typing.Any]]  # Argument of ProcessImages.process  # noqa: E501
+#   typing.Dict[str, typing.Union[str, int, typing.Any]]  # Argument of ProcessImages.process  # noqa: E501
+#   typing.Dict[str, typing.Union[str, int, typing.Any]]  # Argument of ProcessImages.process  # noqa: E501
 #
-#     defaults:
-#       typing.Union[typing.Dict[str, str], NoneType]  # Argument of ProcessImages.process  # noqa: E501
-#       typing.Union[typing.Dict[str, str], NoneType]  # Argument of ProcessImages.process  # noqa: E501
-#       typing.Union[typing.Dict[str, str], NoneType]  # Argument of ProcessImages.process  # noqa: E501
-#     raw_urls:
-#       str  # Argument of FetchURLPreviews.fetch
-#       str  # Argument of FetchURLPreviews.fetch
-#     files:
-#       typing.Dict[str, typing.Union[str, int, typing.Any]]  # Argument of ProcessVideos.process  # noqa: E501
-#       typing.Dict[str, typing.Union[str, int, typing.Any]]  # Argument of ProcessImages.process  # noqa: E501
-#       typing.Dict[str, typing.Union[str, int, typing.Any]]  # Argument of ProcessImages.process  # noqa: E501
-#       typing.Dict[str, typing.Union[str, int, typing.Any]]  # Argument of ProcessImages.process  # noqa: E501
+# FIXME: Fix pydantic error messages.
 #
-# [ ] Fix pydantic error messages.
+# In [1]: class Context(pydantic.BaseModel):
+#    ...:     files: typing.Dict[str, typing.Dict[str, typing.Union[str, int, typing.BinaryIO]]]  # noqa: E501
+#    ...:
 #
-#     In [1]: class Context(pydantic.BaseModel):
-#        ...:     files: typing.Dict[str, typing.Dict[str, typing.Union[str, int, typing.BinaryIO]]]  # noqa: E501
-#        ...:
+# In [2]: Context(files={"a": {'name': B(name='test'), 'size': 1}})
+# ---------------------------------------------------------------------------
+# ValidationError: 3 validation errors
+# files -> a -> name
+#   str type expected (type=type_error.str)
+# files -> a -> name
+#   value is not a valid integer (type=type_error.integer)
+# files -> a -> name
+#   instance of BinaryIO expected (type=type_error.arbitrary_type; expected_arbitrary_type=BinaryIO)  # noqa: E501
 #
-#     In [2]: Context(files={"a": {'name': B(name='test'), 'size': 1}})
-#     ---------------------------------------------------------------------------
-#     ValidationError: 3 validation errors
-#     files -> a -> name
-#       str type expected (type=type_error.str)
-#     files -> a -> name
-#       value is not a valid integer (type=type_error.integer)
-#     files -> a -> name
-#       instance of BinaryIO expected (type=type_error.arbitrary_type; expected_arbitrary_type=BinaryIO)  # noqa: E501
+# FIXME: Test all field representation for all supported libraries.
+# I.e. Dict, List, Tuple, Integer, String, etc.
 #
-# [ ] Test all field representation for all supported libraries.
-#     I.e. Dict, List, Tuple, Integer, String, etc.
+# FIXME: Alias validation creates new object for each alias.  So they
+# became not aliases.
 #
-# NOTE:
+# FIXME: Parent story can't define an argument, if child story already
+# defined variable with the same name.
 #
-# * `noqa` comments are not part of the program output.
+# FIXME: When Success argument is broken we should show validator of
+# what argument of what substory is broken.  Because it's really hard
+# to track down it in a deep story composition.
+#
+# FIXME: Nested collision detector doesn't support identity check for
+# neighbor substories.  Only parent-child for now.
+#
+# class Subs
+#   @story
+#   def foo(I):
+#
+#   @story
+#   def bar(I):
+#
+#   @contract_in(Subs)
+#   class Context:
+#     bar: int
+#
+# class Parent:
+#   @story
+#   def quiz(I):
+#     I.foo
+#     I.bar   <--- `bar` will be treated as repeated variable.
+#
+# NOTE: `noqa` comments are not part of the program output.
 
 
 # Validators.

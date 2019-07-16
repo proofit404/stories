@@ -4,15 +4,27 @@ from helpers import make_collector
 from stories.exceptions import ContextContractError
 
 
-# TODO:
+# TODO: Show collected arguments of the story composition in the error
+# messages.
 #
-# [ ] Show collected arguments of the story composition in the error
-#     messages.
+# TODO: Show violation values in validation error messages.
 #
-# [ ] Show violation values in validation error messages.
+# TODO: Write correct and verbose docstrings for each test in this
+# module.
 #
-# [ ] Write correct and verbose docstrings for each test in this
-#     module.
+# TODO: Document test class names in the contribution guide.
+#
+# J.a    <---      T.x                   E.y     --->     S.b
+#     composition                             composition
+#                   |     inheritance     |
+#                   V                     V
+#
+# F.i    <---      Q.a                   V.b
+#     composition
+#                   |     inheritance
+#                   V
+#
+#                  R.i
 
 
 def test_assign_existed_variables(m):
