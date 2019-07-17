@@ -6,6 +6,7 @@ from ._compat import (
     CerberusSpec,
     MarshmallowSpec,
     PydanticError,
+    PydanticField,
     PydanticShape,
     PydanticSpec,
     pydantic_display,
@@ -119,6 +120,7 @@ from .exceptions import ContextContractError
 
 class PydanticValidator(object):
     def __init__(self, spec, field):
+        # type: (PydanticSpec, PydanticField) -> None
         self.spec = spec
         self.field = field
 
@@ -201,6 +203,7 @@ class RawValidator(object):
 
 
 def disassemble_pydantic(spec):
+    # type: (PydanticSpec) -> Disassembled
     result = {}
     for name, field in spec.__fields__.items():
         result[name] = PydanticValidator(spec, field)
@@ -417,6 +420,7 @@ class SpecContract(NullContract):
         return unknown
 
     def validate(self, ns):
+        # type: (Namespace) -> Tuple[Namespace, Dict[str, Errors]]
         __tracebackhide__ = True
         result, errors, seen, conflict = {}, {}, [], {}
         for key, value in ns.items():
@@ -445,13 +449,23 @@ class SpecContract(NullContract):
         return result, errors
 
     def validate_spec(self, result, errors, seen, key, value):
+        # type: (Namespace, Dict[str, Errors], List[str], str, ValueVariant) -> None
         new_value, error = self.spec[key](value)
         if error:
             errors[key] = error
         else:
             self.assign_result(result, seen, key, value, new_value)
 
-    def validate_argset(self, result, errors, seen, conflict, key, value):
+    def validate_argset(
+        self,
+        result,  # type: Namespace
+        errors,  # type: Dict[str, Errors]
+        seen,  # type: List[str]
+        conflict,  # type: Dict
+        key,  # type: str
+        value,  # type: ValueVariant
+    ):
+        # type: (...) -> None
         new_values, has_error = [], False
         for validator, cls_name, name in self.argset[key]:
             new_value, error = validator(value)
@@ -472,6 +486,7 @@ class SpecContract(NullContract):
             self.assign_result(result, seen, key, value, new_value)
 
     def assign_result(self, result, seen, key, value, new_value):
+        # type: (Namespace, List[str], str, ValueVariant, ValueVariant) -> None
         for seen_key, seen_value in seen:
             if value is seen_value:
                 seen_new_value = result[seen_key]
