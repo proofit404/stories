@@ -1,6 +1,6 @@
 from inspect import isclass
 from operator import itemgetter
-from typing import Dict, List, Optional, Type, Union
+from typing import Callable, Dict, List, Optional, Set, Tuple, Type, Union
 
 from ._compat import (
     CerberusSpec,
@@ -12,12 +12,16 @@ from ._compat import (
 )
 from ._types import (
     AbstractContext,
+    Argset,
     Arguments,
     ContextContract,
+    Disassembled,
+    ErrorVariant,
     ExecContract,
     Method,
     Methods,
     Namespace,
+    ValueVariant,
 )
 from .exceptions import ContextContractError
 
@@ -119,6 +123,7 @@ class PydanticValidator(object):
         self.field = field
 
     def __call__(self, value):
+        # type: (ValueVariant) -> Tuple[ValueVariant, ErrorVariant]
         return self.field.validate(value, {}, loc=self.field.alias, cls=self.spec)
 
     def __repr__(self):
@@ -142,10 +147,12 @@ class PydanticValidator(object):
 
 class MarshmallowValidator(object):
     def __init__(self, spec, field):
+        # type: (MarshmallowSpec, str) -> None
         self.spec = spec
         self.field = field
 
     def __call__(self, value):
+        # type: (ValueVariant) -> Tuple[ValueVariant, ErrorVariant]
         values, errors = self.spec().load({self.field: value})
         return values.get(self.field), errors.get(self.field)
 
@@ -157,10 +164,12 @@ class MarshmallowValidator(object):
 
 class CerberusValidator(object):
     def __init__(self, spec, field):
+        # type: (CerberusSpec, str) -> None
         self.spec = spec
         self.field = field
 
     def __call__(self, value):
+        # type: (ValueVariant) -> Tuple[ValueVariant, ErrorVariant]
         validated = CerberusSpec()
         validated.validate({self.field: value}, self.spec.schema.schema)
         return validated.document.get(self.field), validated.errors.get(self.field)
@@ -176,9 +185,11 @@ class CerberusValidator(object):
 
 class RawValidator(object):
     def __init__(self, validator):
+        # type: (Callable[[ValueVariant], Tuple[ValueVariant, ErrorVariant]]) -> None
         self.validator = validator
 
     def __call__(self, value):
+        # type: (ValueVariant) -> Tuple[ValueVariant, ErrorVariant]
         return self.validator(value)
 
     def __repr__(self):
@@ -197,6 +208,7 @@ def disassemble_pydantic(spec):
 
 
 def disassemble_marshmallow(spec):
+    # type: (MarshmallowSpec) -> Disassembled
     result = {}
     for name in spec._declared_fields:
         result[name] = MarshmallowValidator(spec, name)
@@ -204,13 +216,17 @@ def disassemble_marshmallow(spec):
 
 
 def disassemble_cerberus(spec):
+    # type: (CerberusSpec) -> Disassembled
     result = {}
     for name in spec.schema:
         result[name] = CerberusValidator(spec, name)
     return result
 
 
-def disassemble_raw(spec):
+def disassemble_raw(
+    spec  # type: Dict[str, Callable[[ValueVariant], Tuple[ValueVariant, ErrorVariant]]]
+):
+    # type: (...) -> Disassembled
     result = {}
     for name, validator in spec.items():
         result[name] = RawValidator(validator)
@@ -238,6 +254,7 @@ def make_contract(cls_name, name, arguments, spec):
 
 
 def check_arguments_definitions(cls_name, name, arguments, spec):
+    # type: (str, str, Arguments, Disassembled) -> None
     __tracebackhide__ = True
     undefined = set(arguments) - set(spec)
     if undefined:
@@ -262,7 +279,7 @@ class NullContract(object):
         # type: () -> None
         self.argset = dict(
             (arg, {(None, self.cls_name, self.name)}) for arg in self.arguments
-        )
+        )  # type: Argset
 
     def check_story_call(self, kwargs):
         # type: (Namespace) -> Namespace
@@ -312,6 +329,7 @@ class NullContract(object):
         return self.format_contract_fields(self.argset)
 
     def format_contract_fields(self, *fieldset):
+        # type: (*Argset) -> str
         if not self.argset:
             return "Contract()"
         lines = ["Contract:"]
@@ -331,6 +349,7 @@ class SpecContract(NullContract):
     # should replace `NullContract` with empty `SpecContract`
     # ourselves.
     def __init__(self, cls_name, name, arguments, spec, origin):
+        # type: (str, str, Arguments, Disassembled, ContextContract) -> None
         self.spec = spec
         self.origin = origin
         super(SpecContract, self).__init__(cls_name, name, arguments)
@@ -392,6 +411,7 @@ class SpecContract(NullContract):
         return kwargs
 
     def identify(self, ns):
+        # type: (Namespace) -> Set[str]
         available = set(self.spec) | set(self.argset)
         unknown = set(ns) - available
         return unknown
@@ -469,6 +489,7 @@ class SpecContract(NullContract):
         return self.format_contract_fields(self.argset, self.declared)
 
     def format_contract_fields(self, *fieldset):
+        # type: (*Argset) -> str
         lines = ["Contract:"]
         arguments = sorted(
             [field for fields in fieldset for field in fields if field in self.argset]
