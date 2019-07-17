@@ -1,4 +1,4 @@
-from typing import Any, Callable, Dict, List, Tuple, Type, Union
+from typing import Any, Callable, Dict, List, Optional, Set, Tuple, Type, Union
 
 from typing_extensions import Protocol
 
@@ -33,9 +33,23 @@ ValueVariant = Any
 FailureVariant = Union[str, Enum]
 
 
+class Validator(Protocol):
+    def __call__(self, value):
+        # type: (ValueVariant) -> Tuple[ValueVariant, ErrorVariant]
+        pass
+
+
+ErrorVariant = Union[Dict, List, str]
+
+Argset = Dict[str, Set[Tuple[Optional[Validator], str, str]]]
+
+Disassembled = Dict[str, Validator]
+
+
 class ExecContract(Protocol):
     cls_name = None  # type: str
     name = None  # type: str
+    argset = None  # type: Argset
 
     def check_story_call(self, kwargs):
         # type: (Namespace) -> Namespace
