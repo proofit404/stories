@@ -26,7 +26,7 @@ ContextContract = Union[
     PydanticSpec, MarshmallowSpec, CerberusSpec, Dict[str, Callable], None
 ]
 
-FailureProtocol = Union[List[str], Type[Enum], None]
+FailureProtocol = Union[List[str], Enum, None]
 
 ValueVariant = Any
 
