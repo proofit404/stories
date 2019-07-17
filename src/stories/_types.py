@@ -1,6 +1,6 @@
 from typing import Any, Callable, Dict, List, Optional, Set, Tuple, Type, Union
 
-from typing_extensions import Protocol
+from typing_extensions import Protocol, runtime_checkable
 
 from ._compat import CerberusSpec, Enum, MarshmallowSpec, PydanticSpec
 
@@ -33,6 +33,7 @@ ValueVariant = Any
 FailureVariant = Union[str, Enum]
 
 
+@runtime_checkable
 class Validator(Protocol):
     def __call__(self, value):
         # type: (ValueVariant) -> Tuple[ValueVariant, ErrorVariant]
