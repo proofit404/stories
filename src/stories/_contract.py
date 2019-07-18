@@ -277,6 +277,11 @@ class NullContract(object):
         self.name = name
         self.arguments = arguments
         self.make_argset()
+        self.set_null()
+
+    def set_null(self):
+        # type: () -> None
+        self.is_null = True
 
     def make_argset(self):
         # type: () -> None
@@ -357,6 +362,10 @@ class SpecContract(NullContract):
         self.origin = origin
         super(SpecContract, self).__init__(cls_name, name, arguments)
         self.make_declared()
+
+    def set_null(self):
+        # type: () -> None
+        self.is_null = False
 
     def make_argset(self):
         # type: () -> None
@@ -585,19 +594,15 @@ def format_violations(ns, errors):
 
 def combine_contract(parent, child):
     # type: (ExecContract, ExecContract) -> None
-    if isinstance(parent, NullContract) and isinstance(child, NullContract):
+    if parent.is_null and child.is_null:
+        combine_argsets(parent, child)
+        return
+    elif not parent.is_null and not child.is_null and parent.origin is child.origin:
         combine_argsets(parent, child)
         return
     elif (
-        isinstance(parent, SpecContract)
-        and isinstance(child, SpecContract)
-        and parent.origin is child.origin
-    ):
-        combine_argsets(parent, child)
-        return
-    elif (
-        isinstance(parent, SpecContract)
-        and isinstance(child, SpecContract)
+        not parent.is_null
+        and not child.is_null
         and any(
             isinstance(parent.origin, spec_type) and isinstance(child.origin, spec_type)
             for spec_type in [PydanticSpec, MarshmallowSpec, CerberusSpec, dict]
@@ -659,7 +664,7 @@ def format_contract(contract):
 
 def maybe_extend_downstream_argsets(methods, root):
     # type: (Methods, ExecContract) -> None
-    if type(root) is NullContract:
+    if root.is_null:
         return
     for method, contract, protocol in methods:
         combine_argsets(root, contract)

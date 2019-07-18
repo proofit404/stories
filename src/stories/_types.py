@@ -51,6 +51,7 @@ class ExecContract(Protocol):
     cls_name = None  # type: str
     name = None  # type: str
     argset = None  # type: Argset
+    is_null = None  # type: bool
 
     def check_story_call(self, kwargs):
         # type: (Namespace) -> Namespace
