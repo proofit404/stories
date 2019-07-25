@@ -6,6 +6,7 @@ packages = [
     { include = "helpers.py" },
     { include = "examples" },
     { include = "mddoctest.py"},
+    { include = "app" }
 ]
 
 [tool.poetry.scripts]

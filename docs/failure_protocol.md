@@ -30,6 +30,8 @@ strings.
 
 ```pycon
 
+>>> from stories import story, arguments, Success, Failure
+
 >>> class ApplyPromoCode:
 ...     """Calculate actual product discount, apply it to the price."""
 ...
@@ -61,10 +63,17 @@ strings.
 ...             return Failure("expired")
 ...         else:
 ...             return Success()
+...
+...     # Dependencies.
+...
+...     def __init__(self, load_promo_code):
+...
+...         self.load_promo_code = load_promo_code
 
 >>> # Protocol definition.
 
 >>> ApplyPromoCode.apply.failures(["not_found", "expired"])
+['not_found', 'expired']
 
 ```
 
@@ -73,7 +82,10 @@ different way.
 
 ```pycon
 
->>> promo_code = ApplyPromoCode()
+>>> from app.entities import Category
+>>> from app.repositories import load_promo_code
+
+>>> promo_code = ApplyPromoCode(load_promo_code=load_promo_code)
 
 >>> result = promo_code.apply.run(category=Category(177))
 
@@ -128,6 +140,12 @@ should be [enum](https://docs.python.org/3/library/enum.html) subclass.
 ...             return Failure(Errors.expired)
 ...         else:
 ...             return Success()
+...
+...     # Dependencies.
+...
+...     def __init__(self, load_promo_code):
+...
+...         self.load_promo_code = load_promo_code
 
 >>> # Protocol definition.
 
@@ -149,7 +167,7 @@ members to process different failures in a different way.
 
 ```pycon
 
->>> promo_code = ApplyPromoCode()
+>>> promo_code = ApplyPromoCode(load_promo_code=load_promo_code)
 
 >>> result = promo_code.apply.run(category=Category(177))
 
@@ -194,12 +212,21 @@ something about high-level business rules violation.
 ...
 ...     # Steps.
 ...
-...     def check_balance(self, ctx: "Context"):
+...     def check_balance(self, ctx):
 ...
 ...         if ctx.user.balance < ctx.category.price:
 ...             return Failure(self.Errors.low_balance)
 ...         else:
 ...             return Success()
+...
+...     def persist_payment(self, ctx):
+...
+...         self.create_payment(ctx.user, ctx.category)
+...         return Success()
+...
+...     def show_category(self, ctx):
+...
+...         return Result(ctx.category)
 ...
 ...     # Protocols.
 ...
@@ -225,12 +252,22 @@ something about high-level business rules violation.
 ...
 ...     # Steps.
 ...
-...     def check_expiration(self, ctx: "Context"):
+...     def find_token(self, ctx):
+...
+...         token = self.load_token()
+...         return Success(token=token)
+...
+...     def check_expiration(self, ctx):
 ...
 ...         if ctx.token.is_expired():
 ...             return Failure(self.Errors.expired)
 ...         else:
 ...             return Success()
+...
+...     def calculate_discount(self, ctx):
+...
+...         discount = ctx.token.get_discount()
+...         return Success(discount=discount)
 ...
 ...     # Protocols.
 ...
@@ -238,6 +275,12 @@ something about high-level business rules violation.
 ...     class Errors(Enum):
 ...
 ...         expired = auto()
+...
+...     # Dependencies.
+...
+...     def __init__(self, load_token):
+...
+...         self.load_token = load_token
 
 ```
 
@@ -247,15 +290,19 @@ property will contain protocols composition. A new `enum` class.
 
 ```pycon
 
->>> buy_subscription = Subscription(PromoCode().find).buy
+>>> from app.repositories import load_token
 
->>> result = buy_subscription.run()
+>>> promo_code = PromoCode(load_token)
+
+>>> subscription = Subscription(promo_code.find)
+
+>>> result = subscription.buy.run()
 
 >>> if result.is_success:
 ...     print("Subscribed")
-... elif result.failed_because(buy_subscription.failures.low_balance):
+... elif result.failed_because(subscription.buy.failures.low_balance):
 ...     print("Low balance")
-... elif result.failed_because(buy_subscription.failures.expired):
+... elif result.failed_because(subscription.buy.failures.expired):
 ...     print("Promo code expired")
 Promo code expired
 
@@ -316,6 +363,7 @@ This one if you're using a list of strings.
 >>> from stories.shortcuts import failures_in
 
 >>> failures_in(Subscription, ["forbidden", "not_found"])
+['forbidden', 'not_found']
 
 ```
 
