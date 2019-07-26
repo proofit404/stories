@@ -31,6 +31,10 @@ class Objects:
     def get(self, **kwargs):
         return self.cls(**kwargs)
 
+    def all(self):
+        pass
+
 
 Category.objects = Objects(Category)
 Profile.objects = Objects(Profile)
+Subscription.objects = Objects(Subscription)
