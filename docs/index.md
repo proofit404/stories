@@ -42,6 +42,7 @@ that include many processing steps.
 ```pycon
 
 >>> from stories import story, arguments, Success, Failure, Result
+>>> from app.models import Category, Profile, Subscription
 
 >>> class Subscribe:
 ...
@@ -87,7 +88,7 @@ that include many processing steps.
 ```pycon
 
 >>> Subscribe().buy(category_id=1, user_id=1)
-<Subscription object>
+<Subscription object (1)>
 
 ```
 
