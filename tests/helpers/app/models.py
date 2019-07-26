@@ -18,7 +18,7 @@ class Subscription:
         self.profile = profile
 
     def __repr__(self):
-        return '<Subscription object (1)>'
+        return "<Subscription object (1)>"
 
     def save(self):
         pass

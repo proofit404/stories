@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import NewType
 
 
-CategoryId = NewType('CategoryId', int)
+CategoryId = NewType("CategoryId", int)
 
 
 @dataclass
