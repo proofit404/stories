@@ -25,6 +25,9 @@ Let's consider following view function.
 
 ```pycon
 
+>>> from flask import Flask
+>>> app = Flask('app')
+
 >>> @app.route('/subscriptions/')        # 85
 ... def buy_subscription(page):          # 86
 ...                                      # ...
@@ -73,6 +76,12 @@ Let's consider this view:
 
 ```pycon
 
+>>> from rest_framework import viewsets
+>>> from app.filters import SubscriptionFilter
+>>> from app.models import Subscription
+>>> from app.permissions import CanSubscribe
+>>> from app.serializers import SubscriptionSerializer
+
 >>> class SubscriptionViewSet(viewsets.ModelViewSet):
 ...     queryset = Subscription.objects.all()
 ...     serializer_class = SubscriptionSerializer
@@ -103,6 +112,9 @@ a mapping of fields from the database model to the JSON object.
 And we actually do.
 
 ```pycon
+
+>>> from rest_framework.fields import IntegerField
+>>> from rest_framework.serializers import Serializer
 
 >>> class SubscriptionSerializer(Serializer):
 ...     category_id = IntegerField()
