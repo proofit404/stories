@@ -22,6 +22,7 @@ If you want the parent story to provide some context variables, use
 
 ```pycon
 
+>>> from stories import arguments, story
 >>> class Subscription:
 ...
 ...     @story
@@ -81,6 +82,7 @@ from, constructor or not.
 
 ```pycon
 
+>>> from stories import arguments, story
 >>> class Subscription:
 ...
 ...     @story
@@ -176,6 +178,7 @@ Here are some examples:
 
 ```pycon
 
+>>> from stories import Failure, Success, arguments, story
 >>> class Subscription:
 ...
 ...     @story
