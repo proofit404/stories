@@ -22,7 +22,6 @@ If you want the parent story to provide some context variables, use
 
 ```pycon
 
->>> from stories import arguments, story
 >>> class Subscription:
 ...
 ...     @story
@@ -82,7 +81,6 @@ from, constructor or not.
 
 ```pycon
 
->>> from stories import arguments, story
 >>> class Subscription:
 ...
 ...     @story
@@ -102,6 +100,40 @@ from, constructor or not.
 ...     def __init__(self, find_promo_code):
 ...
 ...         self.find_promo_code = find_promo_code
+...
+...
+...     def find_category(self, ctx):
+...       return Success()
+...
+...     def find_price(self, ctx):
+...       return Success()
+...
+...     def find_profile(self, ctx):
+...       return Success()
+...
+...     def check_balance(self, ctx):
+...       return Success()
+...
+...     def persist_payment(self, ctx):
+...       return Success()
+...
+...     def persist_subscription(self, ctx):
+...       return Success()
+...
+...     def send_subscription_notification(self, ctx):
+...       return Success()
+...
+...     def show_category(self, ctx):
+...       return Success()
+...
+...     def find_token(self, ctx):
+...       return Success()
+...
+...     def check_expiration(self, ctx):
+...       return Success()
+...
+...     def calculate_discount(self, ctx):
+...       return Success()
 
 >>> class PromoCode:
 ...
@@ -112,6 +144,15 @@ from, constructor or not.
 ...         I.find_token
 ...         I.check_expiration
 ...         I.calculate_discount
+...
+...     def find_token(self, ctx):
+...       return Success()
+...
+...     def check_expiration(self, ctx):
+...       return Success()
+...
+...     def calculate_discount(self, ctx):
+...       return Success()
 
 ```
 
@@ -178,7 +219,6 @@ Here are some examples:
 
 ```pycon
 
->>> from stories import Failure, Success, arguments, story
 >>> class Subscription:
 ...
 ...     @story
