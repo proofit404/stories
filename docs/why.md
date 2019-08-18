@@ -77,10 +77,10 @@ Let's consider this view:
 ```pycon
 
 >>> from rest_framework import viewsets
->>> from app.filters import SubscriptionFilter
->>> from app.models import Subscription
->>> from app.permissions import CanSubscribe
->>> from app.serializers import SubscriptionSerializer
+>>> from django_project.filters import SubscriptionFilter
+>>> from django_project.models import Subscription
+>>> from django_project.permissions import CanSubscribe
+>>> from django_project.serializers import SubscriptionSerializer
 
 >>> class SubscriptionViewSet(viewsets.ModelViewSet):
 ...     queryset = Subscription.objects.all()

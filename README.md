@@ -33,7 +33,7 @@ that include many processing steps.
 ```pycon
 
 >>> from stories import story, arguments, Success, Failure, Result
->>> from app.models import Category, Profile, Subscription
+>>> from django_project.models import Category, Profile, Subscription
 
 >>> class Subscribe:
 ...

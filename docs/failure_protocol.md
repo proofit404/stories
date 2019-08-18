@@ -82,8 +82,8 @@ different way.
 
 ```pycon
 
->>> from app.entities import Category
->>> from app.repositories import load_promo_code
+>>> from django_project.entities import Category
+>>> from django_project.repositories import load_promo_code
 
 >>> promo_code = ApplyPromoCode(load_promo_code=load_promo_code)
 
@@ -290,7 +290,7 @@ property will contain protocols composition. A new `enum` class.
 
 ```pycon
 
->>> from app.repositories import load_token
+>>> from django_project.repositories import load_token
 
 >>> promo_code = PromoCode(load_token)
 
