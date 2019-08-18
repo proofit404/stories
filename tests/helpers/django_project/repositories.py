@@ -1,4 +1,4 @@
-from app.entities import Token
+from django_project.entities import Token
 
 
 def load_promo_code(category):
