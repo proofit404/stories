@@ -1,40 +1,18 @@
-class Category:
-    cost = 7
-
-    def __init__(self, id):
-        self.id = id
+from django.db import models
 
 
-class Profile:
-    balance = 8
-
-    def __init__(self, user_id):
-        self.user_id = user_id
+class Category(models.Model):
+    cost = models.IntegerField()
 
 
-class Subscription:
-    def __init__(self, category, profile):
-        self.category = category
-        self.profile = profile
-
-    def __repr__(self):
-        return "<Subscription object (1)>"
-
-    def save(self):
-        pass
+class Profile(models.Model):
+    balance = models.IntegerField()
 
 
-class Objects:
-    def __init__(self, cls):
-        self.cls = cls
-
-    def get(self, **kwargs):
-        return self.cls(**kwargs)
-
-    def all(self):
-        pass
-
-
-Category.objects = Objects(Category)
-Profile.objects = Objects(Profile)
-Subscription.objects = Objects(Subscription)
+class Subscription(models.Model):
+    category = models.ForeignKey(
+        Category, related_name="subscriptions", on_delete=models.CASCADE
+    )
+    profile = models.ForeignKey(
+        Profile, related_name="subscriptions", on_delete=models.CASCADE
+    )

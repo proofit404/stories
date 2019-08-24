@@ -1,0 +1,9 @@
+---
+- model: django_project.category
+  pk: 1
+  fields:
+    cost: 7
+- model: django_project.profile
+  pk: 1
+  fields:
+    balance: 8
