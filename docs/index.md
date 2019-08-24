@@ -47,7 +47,7 @@ that include many processing steps.
 >>> class Subscribe:
 ...
 ...     @story
-...     @arguments('category_id', 'user_id')
+...     @arguments('category_id', 'profile_id')
 ...     def buy(I):
 ...
 ...         I.find_category
@@ -58,12 +58,12 @@ that include many processing steps.
 ...
 ...     def find_category(self, ctx):
 ...
-...         category = Category.objects.get(id=ctx.category_id)
+...         category = Category.objects.get(pk=ctx.category_id)
 ...         return Success(category=category)
 ...
 ...     def find_profile(self, ctx):
 ...
-...         profile = Profile.objects.get(user_id=ctx.user_id)
+...         profile = Profile.objects.get(pk=ctx.profile_id)
 ...         return Success(profile=profile)
 ...
 ...     def check_balance(self, ctx):
@@ -75,7 +75,7 @@ that include many processing steps.
 ...
 ...     def persist_subscription(self, ctx):
 ...
-...         subscription = Subscription(ctx.category, ctx.profile)
+...         subscription = Subscription(category=ctx.category, profile=ctx.profile)
 ...         subscription.save()
 ...         return Success(subscription=subscription)
 ...
@@ -87,8 +87,8 @@ that include many processing steps.
 
 ```pycon
 
->>> Subscribe().buy(category_id=1, user_id=1)
-<Subscription object (1)>
+>>> Subscribe().buy(category_id=1, profile_id=1)
+<Subscription: Subscription object (2)>
 
 ```
 
