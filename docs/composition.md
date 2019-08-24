@@ -20,9 +20,17 @@ parent story step.
 If you want the parent story to provide some context variables, use
 `@arguments` decorator on the sub-story definition.
 
+!!! note
+    We advise all users to define step definition methods in the same
+    class with stories which use them.  We use inheritance from
+    `MethodDefinitions` base class for brevity.
+
 ```pycon
 
->>> class Subscription:
+>>> from stories import story, arguments, Success, Failure
+>>> from django_project.services import MethodDefinitions
+
+>>> class Subscription(MethodDefinitions):
 ...
 ...     @story
 ...     @arguments("category_id", "price_id", "user_id")
@@ -53,7 +61,7 @@ You can see final composition in the class result representation:
 ```pycon
 
 >>> Subscription.buy
-Subscription.buy:
+Subscription.buy
   find_category
   find_price
   find_promo_code
@@ -81,7 +89,7 @@ from, constructor or not.
 
 ```pycon
 
->>> class Subscription:
+>>> class Subscription(MethodDefinitions):
 ...
 ...     @story
 ...     @arguments("category_id", "price_id", "user_id")
@@ -101,7 +109,7 @@ from, constructor or not.
 ...
 ...         self.find_promo_code = find_promo_code
 
->>> class PromoCode:
+>>> class PromoCode(MethodDefinitions):
 ...
 ...     @story
 ...     @arguments("category", "price")
@@ -119,7 +127,7 @@ step should be.
 ```pycon
 
 >>> Subscription.buy
-Subscription.buy:
+Subscription.buy
   find_category
   find_price
   find_promo_code ??
@@ -139,7 +147,7 @@ complete story.
 ```pycon
 
 >>> Subscription(PromoCode().find).buy
-Subscription.buy:
+Subscription.buy
   find_category
   find_price
   find_promo_code (PromoCode.find)
@@ -215,6 +223,8 @@ networking library! There is no more vendor lock on a certain framework
 or database! Welcome to the good architecture utopia.
 
 ```pycon
+
+>>> from django_project.models import Profile, Price
 
 >>> def load_profile(user_id):
 ...     return Profile.objects.get(user_id=user_id)
