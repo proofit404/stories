@@ -242,7 +242,7 @@ Wouldn't it be nice to have a clear understandable state?
 
 ```pycon
 
->>> ctx
+(Pdb) ctx
 Subscription.buy:
   find_category
   check_price
