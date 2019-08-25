@@ -24,16 +24,10 @@ The story was executed successfully. It returns an object we put into
 
 ```pycon
 
->>> Subscription().buy(category_id=2, price_id=2, user_id=1)
+>>> Subscription().buy(category_id=2, price_id=2, profile_id=1)  # doctest: +ELLIPSIS
 Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-  File "stories/_wrapper.py", line 23, in __call__
-    return function.execute(runner, ctx, methods)
-  File "stories/_exec/function.py", line 36, in execute
-    return runner.got_failure(ctx, method.__name__, result.reason)
-  File "stories/_run.py", line 7, in got_failure
-    raise FailureError(reason)
-stories.exceptions.FailureError()
+  ...
+stories.exceptions.FailureError
 
 ```
 
@@ -53,7 +47,9 @@ summary of the business object execution.
 
 ```pycon
 
->>> result = ShowCategory().show.run(category_id=1, user_id=1)
+>>> from django_project.services import ShowCategory
+
+>>> result = ShowCategory().show.run(category_id=1, profile_id=1)
 
 >>> result.is_success
 True
@@ -70,7 +66,7 @@ available in the `value` attribute.
 
 ```pycon
 
->>> result = ShowCategory().show.run(category_id=2, user_id=1)
+>>> result = ShowCategory().show.run(category_id=2, profile_id=1)
 
 >>> result.is_failure
 True
@@ -85,17 +81,17 @@ True
 ShowCategory.show
   find_subscription
   check_expiration (failed: <Errors.forbidden: 1>)
-
+<BLANKLINE>
 Context:
-  category_id = 2                                         # Story argument
-  user_id = 1                                             # Story argument
-  subscription = <Subscription: Subscription object (7)>  # Set by ShowCategory.find_subscription
+  category_id: 2                                         # Story argument
+  profile_id: 1                                          # Story argument
+  subscription: <Subscription: Subscription object (7)>  # Set by ShowCategory.find_subscription
 
 >>> result.ctx.subscription.is_expired()
 True
 
 >>> result.ctx.subscription.created
-datetime.datetime(1990, 1, 1, 0, 0)
+datetime.date(2019, 1, 1)
 
 ```
 

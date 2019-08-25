@@ -79,7 +79,7 @@ that include many processing steps.
 ```pycon
 
 >>> Subscribe().buy(category_id=1, profile_id=1)
-<Subscription: Subscription object (1)>
+<Subscription: Subscription object (8)>
 
 ```
 
