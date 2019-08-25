@@ -31,7 +31,7 @@ class Subscription:
     """Buy subscription for certain category."""
 
     @story
-    @arguments("category_id", "price_id", "user_id")
+    @arguments("category_id", "price_id", "profile_id")
     def buy(I):
 
         I.find_category
@@ -55,7 +55,7 @@ class Subscription:
 
     def find_profile(self, ctx):
 
-        profile = load_profile(ctx.user_id)
+        profile = load_profile(ctx.profile_id)
         return Success(profile=profile)
 
     def check_balance(self, ctx):
@@ -91,7 +91,7 @@ class ShowCategory:
     """Show category entries."""
 
     @story
-    @arguments("category_id", "user_id")
+    @arguments("category_id", "profile_id")
     def show(I):
 
         I.find_subscription
@@ -101,7 +101,7 @@ class ShowCategory:
 
     def find_subscription(self, ctx):
 
-        subscription = load_subscription(ctx.category_id, ctx.user_id)
+        subscription = load_subscription(ctx.category_id, ctx.profile_id)
         if subscription:
             return Success(subscription=subscription)
         else:
