@@ -12,6 +12,8 @@ here](composition.md#delegate-implementation).
 
 ```pycon
 
+>>> from stories import story, arguments, Success, Skip, Result
+
 >>> class ApplyPromoCode:
 ...     """Calculate actual product discount, apply it to the price."""
 ...
