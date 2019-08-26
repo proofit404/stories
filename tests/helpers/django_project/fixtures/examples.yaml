@@ -28,6 +28,10 @@
   pk: 1
   fields:
     balance: 8
+- model: django_project.profile
+  pk: 2
+  fields:
+    balance: 8
 - model: django_project.subscription
   pk: 7
   fields:
