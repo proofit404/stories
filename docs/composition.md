@@ -33,7 +33,7 @@ If you want the parent story to provide some context variables, use
 >>> class Subscription(MethodDefinitions):
 ...
 ...     @story
-...     @arguments("category_id", "price_id", "user_id")
+...     @arguments("category_id", "price_id", "profile_id")
 ...     def buy(I):
 ...
 ...         I.find_category
@@ -92,7 +92,7 @@ from, constructor or not.
 >>> class Subscription(MethodDefinitions):
 ...
 ...     @story
-...     @arguments("category_id", "price_id", "user_id")
+...     @arguments("category_id", "price_id", "profile_id")
 ...     def buy(I):
 ...
 ...         I.find_category
@@ -187,7 +187,7 @@ Here are some examples:
 >>> class Subscription:
 ...
 ...     @story
-...     @arguments("user_id", "price_id")
+...     @arguments("profile_id", "price_id")
 ...     def buy(I):
 ...
 ...         I.find_profile
@@ -196,7 +196,7 @@ Here are some examples:
 ...
 ...     def find_profile(self, ctx):
 ...
-...         profile = self.load_profile(ctx.user_id)
+...         profile = self.load_profile(ctx.profile_id)
 ...         return Success(profile=profile)
 ...
 ...     def find_price(self, ctx):
@@ -226,15 +226,15 @@ or database! Welcome to the good architecture utopia.
 
 >>> from django_project.models import Profile, Price
 
->>> def load_profile(user_id):
-...     return Profile.objects.get(user_id=user_id)
+>>> def load_profile(profile_id):
+...     return Profile.objects.get(pk=profile_id)
 ...
 
 >>> def load_price(price_id):
 ...     return Price.objects.get(pk=price_id)
 ...
 
->>> Subscription(load_profile, load_price).buy(user_id=1, price_id=7)
+>>> Subscription(load_profile, load_price).buy(profile_id=1, price_id=7)
 
 ```
 

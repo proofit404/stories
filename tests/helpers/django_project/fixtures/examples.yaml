@@ -19,6 +19,11 @@
   fields:
     cost: 17
     period: 30
+- model: django_project.price
+  pk: 7
+  fields:
+    cost: 199
+    period: 90
 - model: django_project.profile
   pk: 1
   fields:
