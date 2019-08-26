@@ -18,11 +18,13 @@ from stories import Failure, Result, Success, arguments, story
 class MethodDefinitionsType(type):
     def __new__(cls, class_name, bases, namespace):
         def getattribute(self, name):
-            method = lambda self, ctx: Success()
+            def method(self, ctx):
+                return Success()
+
             method.__name__ = name
             return method
 
-        namespace['__getattr__'] = getattribute
+        namespace["__getattr__"] = getattribute
         return type.__new__(cls, class_name, bases, namespace)
 
     def __getattr__(cls, attrname):
