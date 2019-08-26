@@ -110,15 +110,7 @@ Looks good at the first view. Isn't it? Let's try to run this code.
 
 >>> result = promo_code.apply(category_id=1024)
 Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-  File "stories/_mounted.py", line 46, in __call__
-    return function.execute(runner, ctx, history, self.methods)
-  File "stories/_exec/function.py", line 24, in execute
-    result = method(ctx)
-  File "example.py", line 38, in calculate_discount
-    discount = ctx.promo_code.apply_discount(ctx.category.price)
-  File "example.py", line 73, in apply_discount
-    return price * self.fraction
+  ...
 TypeError: unsupported operand type(s) for *: 'NoneType' and 'float'
 
 ```
