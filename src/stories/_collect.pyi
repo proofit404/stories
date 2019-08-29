@@ -1,0 +1,3 @@
+from typing import Callable, List
+
+def collect_story(f: Callable) -> List[str]: ...

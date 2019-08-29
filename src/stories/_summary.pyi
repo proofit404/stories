@@ -1,0 +1,29 @@
+from enum import Enum
+from typing import List, Optional, Union
+
+from stories._context import Context
+from stories._failures import NotNullRunProtocol, NullRunProtocol
+
+class FailureSummary:
+    def __init__(
+        self,
+        protocol: Union[NotNullRunProtocol, NullRunProtocol],
+        ctx: Context,
+        failed_method: str,
+        reason: Optional[Union[Enum, str]],
+    ) -> None: ...
+    def __repr__(self) -> str: ...
+    def failed_because(self, reason: Union[Enum, str]) -> bool: ...
+    def failed_on(self, method_name: str) -> bool: ...
+    @property
+    def value(self): ...
+
+class SuccessSummary:
+    def __init__(
+        self,
+        protocol: Union[NotNullRunProtocol, NullRunProtocol],
+        value: Optional[Union[List[str], int]],
+    ) -> None: ...
+    def __repr__(self) -> str: ...
+    def failed_because(self, reason: str) -> bool: ...
+    def failed_on(self, method_name: str) -> bool: ...
