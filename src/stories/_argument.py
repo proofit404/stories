@@ -1,11 +1,7 @@
-from typing import Callable
-
-from ._types import Arguments, Spec
 from .exceptions import StoryDefinitionError
 
 
 def arguments(*names):
-    # type: (*str) -> Callable[[Spec], Spec]
     if not names:
         raise StoryDefinitionError("Story arguments can not be an empty list")
 
@@ -14,7 +10,6 @@ def arguments(*names):
         raise StoryDefinitionError(message)
 
     def decorator(f):
-        # type: (Spec) -> Spec
         f.arguments = list(names)
         return f
 
@@ -22,5 +17,4 @@ def arguments(*names):
 
 
 def get_arguments(f):
-    # type: (Spec) -> Arguments
     return getattr(f, "arguments", [])

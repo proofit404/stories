@@ -1,19 +1,8 @@
-from typing import Callable, Type, Union
-
 from ._mounted import ClassMountedStory
-from ._types import ClassWithSpec, ContextContract, FailureProtocol
 
 
-ContractIn = Union[ContextContract, Callable[[ContextContract], ContextContract]]
-
-
-def contract_in(
-    cls,  # type: Type[ClassWithSpec]
-    *args  # type: ContextContract
-):
-    # type: (...) -> ContractIn
+def contract_in(cls, *args):
     def setter(contract):
-        # type: (ContextContract) -> ContextContract
         for attrname in dir(cls):
             attribute = getattr(cls, attrname)
             if type(attribute) is ClassMountedStory:
@@ -26,16 +15,8 @@ def contract_in(
         return setter
 
 
-FailuresIn = Union[FailureProtocol, Callable[[FailureProtocol], FailureProtocol]]
-
-
-def failures_in(
-    cls,  # type: Type[ClassWithSpec]
-    *args  # type: FailureProtocol
-):
-    # type: (...) -> FailuresIn
+def failures_in(cls, *args):
     def setter(failures):
-        # type: (FailureProtocol) -> FailureProtocol
         for attrname in dir(cls):
             attribute = getattr(cls, attrname)
             if type(attribute) is ClassMountedStory:

@@ -1,18 +1,6 @@
-from typing import overload
-
 from .._context import assign_namespace
 from .._marker import BeginningOfStory, EndOfStory
 from .._return import Failure, Result, Skip, Success
-from .._run import Call, Run
-from .._types import (
-    AbstractContext,
-    AbstractHistory,
-    AbstractRunner,
-    AbstractSummary,
-    ExecResult,
-    Methods,
-    ValueVariant,
-)
 
 
 # TODO: This file has bunch of type ignore statements.  Success,
@@ -24,20 +12,7 @@ from .._types import (
 # This will be implemented as part of the rollback feature.
 
 
-@overload
 def execute(runner, ctx, history, methods):
-    # type: (Call, AbstractContext, AbstractHistory, Methods) -> ValueVariant
-    pass
-
-
-@overload
-def execute(runner, ctx, history, methods):
-    # type: (Run, AbstractContext, AbstractHistory, Methods) -> AbstractSummary
-    pass
-
-
-def execute(runner, ctx, history, methods):
-    # type: (AbstractRunner, AbstractContext, AbstractHistory, Methods) -> ExecResult
     __tracebackhide__ = True
 
     skipped = 0
@@ -66,18 +41,16 @@ def execute(runner, ctx, history, methods):
 
         if restype is Failure:
             try:
-                protocol.check_return_statement(method, result.reason)  # type: ignore
+                protocol.check_return_statement(method, result.reason)
             except Exception as error:
                 history.on_error(error.__class__.__name__)
                 raise
-            history.on_failure(result.reason)  # type: ignore
-            return runner.got_failure(
-                ctx, method.__name__, result.reason  # type: ignore
-            )
+            history.on_failure(result.reason)
+            return runner.got_failure(ctx, method.__name__, result.reason)
 
         if restype is Result:
-            history.on_result(result.value)  # type: ignore
-            return runner.got_result(result.value)  # type: ignore
+            history.on_result(result.value)
+            return runner.got_result(result.value)
 
         if restype is Skip:
             history.on_skip()
@@ -98,9 +71,7 @@ def execute(runner, ctx, history, methods):
             continue
 
         try:
-            kwargs = contract.check_success_statement(
-                method, ctx, result.kwargs  # type: ignore
-            )
+            kwargs = contract.check_success_statement(method, ctx, result.kwargs)
         except Exception as error:
             history.on_error(error.__class__.__name__)
             raise

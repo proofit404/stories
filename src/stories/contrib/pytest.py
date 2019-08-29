@@ -11,23 +11,18 @@ This module contains integration with PyTest framework.
 import linecache
 import sys
 import textwrap
-from typing import Callable, Iterable, List, Tuple
 
 from _pytest.config import hookimpl
-from _pytest.nodes import Item
 
 import stories._compat
 import stories._context
-from stories._types import AbstractContext
 
 
 origin_context_init = stories._context.Context.__init__
 
 
 def track_context(storage):
-    # type: (List[Tuple[str, AbstractContext]]) -> Callable[[AbstractContext], None]
     def wrapper(ctx):
-        # type: (AbstractContext) -> None
         origin_context_init(ctx)
         storage.append((get_test_source(*get_test_call()), ctx))
 
@@ -35,7 +30,6 @@ def track_context(storage):
 
 
 def get_test_call():
-    # type: () -> Tuple[str, int]
     f = sys._getframe()
 
     while True:
@@ -52,7 +46,6 @@ def get_test_call():
 
 
 def get_test_source(filename, lineno):
-    # type: (str, int) -> str
     start = max(1, lineno - 3)
     end = lineno + 3
     adjust_to = len(str(end))
@@ -70,8 +63,7 @@ def get_test_source(filename, lineno):
 
 @hookimpl(hookwrapper=True)
 def pytest_runtest_call(item):
-    # type: (Item) -> Iterable[None]
-    storage = []  # type: List[Tuple[str, AbstractContext]]
+    storage = []
     stories._context.Context.__init__ = track_context(storage)  # type: ignore
     yield
     stories._context.Context.__init__ = origin_context_init  # type: ignore

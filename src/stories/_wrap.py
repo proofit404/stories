@@ -2,35 +2,15 @@ from ._contract import combine_contract, make_contract, maybe_extend_downstream_
 from ._failures import combine_failures, make_exec_protocol, maybe_disable_null_protocol
 from ._marker import BeginningOfStory, EndOfStory
 from ._mounted import MountedStory
-from ._types import (
-    Arguments,
-    ClassWithSpec,
-    Collected,
-    ContextContract,
-    FailureProtocol,
-    Methods,
-    Wrapped,
-)
 
 
-def wrap_story(
-    arguments,  # type: Arguments
-    collected,  # type: Collected
-    cls_name,  # type: str
-    story_name,  # type: str
-    obj,  # type: ClassWithSpec
-    spec,  # type: ContextContract
-    failures,  # type: FailureProtocol
-):
-    # type: (...) -> Wrapped
+def wrap_story(arguments, collected, cls_name, story_name, obj, spec, failures):
     __tracebackhide__ = True
 
     contract = make_contract(cls_name, story_name, arguments, spec)
     protocol = make_exec_protocol(failures)
 
-    methods = [
-        (BeginningOfStory(cls_name, story_name), contract, protocol)
-    ]  # type: Methods
+    methods = [(BeginningOfStory(cls_name, story_name), contract, protocol)]
 
     for name in collected:
 

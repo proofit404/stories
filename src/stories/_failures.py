@@ -1,14 +1,4 @@
-from typing import Callable, NoReturn, Optional, Sequence, Type, Union
-
 from ._compat import Enum, EnumMeta
-from ._types import (
-    ExecProtocol,
-    FailureProtocol,
-    FailureVariant,
-    Method,
-    Methods,
-    RunProtocol,
-)
 from .exceptions import FailureProtocolError
 
 
@@ -16,7 +6,6 @@ from .exceptions import FailureProtocolError
 
 
 def check_data_type(failures):
-    # type: (FailureProtocol) -> None
     if failures is None:
         return
     if isinstance(failures, EnumMeta):
@@ -30,7 +19,6 @@ def check_data_type(failures):
 
 
 def failures_representation(failures):
-    # type: (FailureProtocol) -> str
     if isinstance(failures, EnumMeta):
         return ", ".join(map(repr, failures.__members__.values()))
     elif isinstance(failures, (list, tuple, set, frozenset)):
@@ -42,36 +30,25 @@ def failures_representation(failures):
 
 
 def collection_contains(reason, failures):
-    # type: (str, Sequence[str]) -> bool
     return reason in failures
 
 
 def collection_compare(a, b):
-    # type: (str, str) -> bool
     return a == b
 
 
 def enumeration_contains(reason, failures):
-    # type: (Enum, Type[Enum]) -> bool
     return isinstance(reason, Enum) and reason.name in failures.__members__
 
 
 def enumeration_compare(a, b):
-    # type: (Enum, Enum) -> bool
     return a.name == b.name
-
-
-ContainsFunc = Union[
-    Callable[[str, Sequence[str]], bool], Callable[[Enum, Type[Enum]], bool]
-]
-CompareFunc = Union[Callable[[str, str], bool], Callable[[Enum, Enum], bool]]
 
 
 # Execute.
 
 
 def make_exec_protocol(failures):
-    # type: (FailureProtocol) -> ExecProtocol
     if isinstance(failures, EnumMeta):
         return NotNullExecProtocol(failures, enumeration_contains)
     elif isinstance(failures, (list, tuple, set, frozenset)):
@@ -84,7 +61,6 @@ def make_exec_protocol(failures):
 
 class NullExecProtocol(object):
     def check_return_statement(self, method, reason):
-        # type: (Method, Optional[FailureVariant]) -> None
         if reason:
             message = null_protocol_template.format(
                 reason=reason,
@@ -96,7 +72,6 @@ class NullExecProtocol(object):
 
 class DisabledNullExecProtocol(NullExecProtocol):
     def check_return_statement(self, method, reason):
-        # type: (Method, Optional[FailureVariant]) -> None
         if not reason:
             message = disabled_null_template.format(
                 cls=method.__self__.__class__.__name__, method=method.__name__
@@ -107,12 +82,10 @@ class DisabledNullExecProtocol(NullExecProtocol):
 
 class NotNullExecProtocol(object):
     def __init__(self, failures, contains_func):
-        # type: (FailureProtocol, ContainsFunc) -> None
         self.failures = failures
         self.contains_func = contains_func
 
     def check_return_statement(self, method, reason):
-        # type: (Method, Optional[FailureVariant]) -> None
         if not reason:
             message = null_reason_template.format(
                 available=failures_representation(self.failures),
@@ -134,7 +107,6 @@ class NotNullExecProtocol(object):
 
 
 def make_run_protocol(failures, cls_name, method_name):
-    # type: (FailureProtocol, str, str) -> RunProtocol
     if isinstance(failures, EnumMeta):
         return NotNullRunProtocol(
             cls_name, method_name, failures, enumeration_contains, enumeration_compare
@@ -151,32 +123,21 @@ def make_run_protocol(failures, cls_name, method_name):
 
 class NullRunProtocol(object):
     def __init__(self, cls_name, method_name):
-        # type: (str, str) -> None
         self.cls_name = cls_name
         self.method_name = method_name
 
     def check_failed_because_argument(self, reason):
-        # type: (FailureVariant) -> None
         message = null_summary_template.format(
             cls=self.cls_name, method=self.method_name
         )
         raise FailureProtocolError(message)
 
     def compare_failed_because_argument(self, argument, failure_reason):
-        # type: (FailureVariant, FailureVariant) -> NoReturn
         raise RuntimeError  # pragma: no cover
 
 
 class NotNullRunProtocol(object):
-    def __init__(
-        self,
-        cls_name,  # type: str
-        method_name,  # type: str
-        failures,  # type: FailureProtocol
-        contains_func,  # type: ContainsFunc
-        compare_func,  # type: CompareFunc
-    ):
-        # type: (...) -> None
+    def __init__(self, cls_name, method_name, failures, contains_func, compare_func):
         self.cls_name = cls_name
         self.method_name = method_name
         self.failures = failures
@@ -184,7 +145,6 @@ class NotNullRunProtocol(object):
         self.compare_func = compare_func
 
     def check_failed_because_argument(self, reason):
-        # type: (FailureVariant) -> None
         if not self.contains_func(reason, self.failures):
             message = wrong_summary_template.format(
                 reason=reason,
@@ -195,7 +155,6 @@ class NotNullRunProtocol(object):
             raise FailureProtocolError(message)
 
     def compare_failed_because_argument(self, argument, failure_reason):
-        # type: (FailureVariant, FailureVariant) -> bool
         return self.compare_func(argument, failure_reason)
 
 
@@ -203,14 +162,13 @@ class NotNullRunProtocol(object):
 
 
 def combine_failures(
-    first_failures,  # type: FailureProtocol
-    first_cls_name,  # type: str
-    first_method_name,  # type: str
-    second_failures,  # type: FailureProtocol
-    second_cls_name,  # type: str
-    second_method_name,  # type: str
+    first_failures,
+    first_cls_name,
+    first_method_name,
+    second_failures,
+    second_cls_name,
+    second_method_name,
 ):
-    # type: (...) -> FailureProtocol
     if first_failures is None:
         return second_failures
     elif second_failures is None:
@@ -246,7 +204,6 @@ def combine_failures(
 
 
 def maybe_disable_null_protocol(methods, reasons):
-    # type: (Methods, FailureProtocol) -> Methods
     if reasons is None:
         return methods
     disabled = DisabledNullExecProtocol()

@@ -5,16 +5,13 @@
 # `https://github.com/python/mypy/issues/1106`,
 # `https://github.com/python/mypy/issues/1107`.
 
-from typing import Callable, Dict, Type
-
 
 try:
     from enum import Enum, EnumMeta
 except ImportError:
     # We are on Python 2.7 and enum34 package is not installed.
     class Enum(object):  # type: ignore
-        name = None  # type: str
-        __members__ = None  # type: Dict[str, Enum]
+        pass
 
     class EnumMeta(object):  # type: ignore
         pass
@@ -39,8 +36,7 @@ except ImportError:
     class PydanticShape(object):  # type: ignore
         pass
 
-    def pydantic_display(v):
-        # type: (Type) -> str
+    def pydantic_display(v):  # type: ignore
         pass
 
 
@@ -65,7 +61,6 @@ try:
 except ImportError:
     # We are on Python 2.7
     def indent(text, prefix, predicate=lambda x: True):
-        # type: (str, str, Callable[[str], bool]) -> str
         return "".join(map(lambda l: prefix + l, text.splitlines(True)))
 
 

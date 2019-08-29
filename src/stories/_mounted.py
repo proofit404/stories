@@ -1,34 +1,13 @@
-from typing import Callable, Type
-
 from ._context import make_context
 from ._exec import function
 from ._failures import make_run_protocol
 from ._history import History
 from ._marker import BeginningOfStory, EndOfStory
 from ._run import Call, Run
-from ._types import (
-    AbstractSummary,
-    Arguments,
-    ClassWithSpec,
-    Collected,
-    ContextContract,
-    ExecContract,
-    FailureProtocol,
-    Methods,
-    ValueVariant,
-)
 
 
 class ClassMountedStory(object):
-    def __init__(
-        self,
-        cls,  # type: Type[ClassWithSpec]
-        name,  # type: str
-        collected,  # type: Collected
-        contract,  # type: Callable[[ContextContract], ContextContract]
-        failures,  # type: Callable[[FailureProtocol], FailureProtocol]
-    ):
-        # type: (...) -> None
+    def __init__(self, cls, name, collected, contract, failures):
         self.cls = cls
         self.name = name
         self.collected = collected
@@ -36,7 +15,6 @@ class ClassMountedStory(object):
         self.failures = failures
 
     def __repr__(self):
-        # type: () -> str
         result = [self.cls.__name__ + "." + self.name]
         if self.collected:
             for name in self.collected:
@@ -53,17 +31,7 @@ class ClassMountedStory(object):
 
 
 class MountedStory(object):
-    def __init__(
-        self,
-        obj,  # type: ClassWithSpec
-        cls_name,  # type: str
-        name,  # type: str
-        arguments,  # type: Arguments
-        methods,  # type: Methods
-        contract,  # type: ExecContract
-        failures,  # type: FailureProtocol
-    ):
-        # type: (...) -> None
+    def __init__(self, obj, cls_name, name, arguments, methods, contract, failures):
         self.obj = obj
         self.cls_name = cls_name
         self.name = name
@@ -73,7 +41,6 @@ class MountedStory(object):
         self.failures = failures
 
     def __call__(self, **kwargs):
-        # type: (**ValueVariant) -> ValueVariant
         __tracebackhide__ = True
         history = History()
         ctx = make_context(self.methods[0][1], kwargs, history)
@@ -81,7 +48,6 @@ class MountedStory(object):
         return function.execute(runner, ctx, history, self.methods)
 
     def run(self, **kwargs):
-        # type: (**ValueVariant) -> AbstractSummary
         __tracebackhide__ = True
         history = History()
         ctx = make_context(self.methods[0][1], kwargs, history)
@@ -90,7 +56,6 @@ class MountedStory(object):
         return function.execute(runner, ctx, history, self.methods)
 
     def __repr__(self):
-        # type: () -> str
         result = []
         indent = 0
         for method, contract, protocol in self.methods:

@@ -1,21 +1,11 @@
 from collections import OrderedDict
 from decimal import Decimal
-from typing import Callable, List, NoReturn, Tuple
 
 from ._compat import indent
-from ._types import (
-    AbstractContext,
-    AbstractHistory,
-    ExecContract,
-    Method,
-    Namespace,
-    ValueVariant,
-)
 from .exceptions import MutationError
 
 
 def make_context(contract, kwargs, history):
-    # type: (ExecContract, Namespace, AbstractHistory) -> AbstractContext
     kwargs = contract.check_story_call(kwargs)
     ns = OrderedDict(
         # FIXME: We should be able to remove `if` statement here.
@@ -32,23 +22,18 @@ def make_context(contract, kwargs, history):
 
 class Context(object):
     def __getattr__(self, name):
-        # type: (str) -> ValueVariant
         return self.__ns[name]
 
     def __setattr__(self, name, value):
-        # type: (str, ValueVariant) -> NoReturn
         raise MutationError(assign_attribute_message)
 
     def __delattr__(self, name):
-        # type: (str) -> NoReturn
         raise MutationError(delete_attribute_message)
 
     def __repr__(self):
-        # type: () -> str
         return history_representation(self) + "\n\n" + context_representation(self)
 
     def __dir__(self):
-        # type: () -> List[str]
         spec = type("Context", (object,), {})
         parent = set(dir(spec()))
         current = set(self.__dict__) - {
@@ -61,7 +46,6 @@ class Context(object):
         return attributes
 
     def __bool__(self):
-        # type: () -> NoReturn
         message = comparison_template.format(available=", ".join(map(repr, self.__ns)))
         raise MutationError(message)
 
@@ -69,23 +53,20 @@ class Context(object):
 
 
 def assign_namespace(ctx, method, kwargs):
-    # type: (AbstractContext, Method, Namespace) -> None
     ctx._Context__ns.update((arg, kwargs[arg]) for arg in sorted(kwargs))
     line = "Set by %s.%s" % (method.__self__.__class__.__name__, method.__name__)
     ctx._Context__lines.extend([line] * len(kwargs))
 
 
 def history_representation(ctx):
-    # type: (AbstractContext) -> str
     result = "\n".join(ctx._Context__history.lines)
     return result
 
 
 def context_representation(ctx, repr_func=repr):
-    # type: (AbstractContext, Callable[[ValueVariant], str]) -> str
     if not ctx._Context__lines:
         return "Context()"
-    seen = []  # type: List[Tuple[str, ValueVariant]]
+    seen = []
     items = []
     longest = 0
     for key, value in ctx._Context__ns.items():
