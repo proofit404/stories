@@ -60,7 +60,7 @@ try:
     from textwrap import indent
 except ImportError:
     # We are on Python 2.7
-    def indent(text, prefix, predicate=lambda x: True):
+    def indent(text, prefix):  # type: ignore
         return "".join(map(lambda l: prefix + l, text.splitlines(True)))
 
 
