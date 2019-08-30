@@ -16,6 +16,7 @@ from marshmallow.schema import Schema
 from pydantic.error_wrappers import ErrorWrapper
 from pydantic.fields import Field
 from pydantic.main import BaseModel
+from typing_extensions import Literal
 
 from stories._context import Context
 from stories._failures import NotNullExecProtocol, NullExecProtocol
@@ -69,19 +70,19 @@ def disassemble_raw(spec: Dict[str, Callable]) -> Dict[str, RawValidator]: ...
 
 @overload
 def make_contract(
-    cls_name: str, name: str, arguments: List[str], spec: None
+    cls_name: str, name: str, arguments: List[str], spec: Literal[None]
 ) -> NullContract: ...
 
 
 @overload
 def make_contract(
-    cls_name: str, name: str, arguments: List[str], spec: BaseModel
+    cls_name: str, name: str, arguments: List[str], spec: Type[BaseModel]
 ) -> SpecContract: ...
 
 
 @overload
 def make_contract(
-    cls_name: str, name: str, arguments: List[str], spec: Schema
+    cls_name: str, name: str, arguments: List[str], spec: Type[Schema]
 ) -> SpecContract: ...
 
 

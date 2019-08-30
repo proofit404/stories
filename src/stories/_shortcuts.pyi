@@ -10,7 +10,9 @@ _T = TypeVar("_T")
 
 
 @overload
-def contract_in(cls: _T) -> Callable[[Union[BaseModel, Schema]], _T]: ...
+def contract_in(
+    cls: _T, *args: Tuple[()]
+) -> Callable[[Union[BaseModel, Schema]], _T]: ...
 
 
 @overload
@@ -22,7 +24,7 @@ def contract_in(cls: _T, *args: Tuple[Validator]) -> Validator: ...
 
 
 @overload
-def failures_in(cls: _T) -> Callable[[Type[Enum]], _T]: ...
+def failures_in(cls: _T, *args: Tuple[()]) -> Callable[[Type[Enum]], _T]: ...
 
 
 @overload
