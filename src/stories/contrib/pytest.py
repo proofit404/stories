@@ -1,3 +1,4 @@
+# type: ignore
 """
 stories.contrib.pytest
 ----------------------
@@ -16,6 +17,11 @@ from _pytest.config import hookimpl
 
 import stories._compat
 import stories._context
+
+
+# FIXME: Test me.
+#
+# FIXME: Type me.
 
 
 origin_context_init = stories._context.Context.__init__
@@ -64,9 +70,9 @@ def get_test_source(filename, lineno):
 @hookimpl(hookwrapper=True)
 def pytest_runtest_call(item):
     storage = []
-    stories._context.Context.__init__ = track_context(storage)  # type: ignore
+    stories._context.Context.__init__ = track_context(storage)
     yield
-    stories._context.Context.__init__ = origin_context_init  # type: ignore
+    stories._context.Context.__init__ = origin_context_init
     for i, (src, ctx) in enumerate(storage, 1):
         output = "\n\n".join(
             [

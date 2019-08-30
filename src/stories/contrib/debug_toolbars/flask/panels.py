@@ -1,3 +1,4 @@
+# type: ignore
 """
 stories.contrib.debug_toolbars.flask.panels
 -------------------------------------------
@@ -12,6 +13,11 @@ from flask import render_template
 from flask_debugtoolbar.panels import DebugPanel
 
 import stories._context
+
+
+# FIXME: Test me.
+#
+# FIXME: Type me.
 
 
 original_context_init = stories._context.Context.__init__
@@ -63,7 +69,7 @@ class StoriesPanel(DebugPanel):
         )
 
     def enable_instrumentation(self):
-        stories._context.Context.__init__ = track_context(self.storage)  # type: ignore
+        stories._context.Context.__init__ = track_context(self.storage)
 
     def disable_instrumentation(self):
-        stories._context.Context.__init__ = original_context_init  # type: ignore
+        stories._context.Context.__init__ = original_context_init

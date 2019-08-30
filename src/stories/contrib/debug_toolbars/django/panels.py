@@ -1,3 +1,4 @@
+# type: ignore
 """
 stories.contrib.debug_toolbars.django.panels
 --------------------------------------------
@@ -13,6 +14,11 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy as __
 
 import stories._context
+
+
+# FIXME: Test me.
+#
+# FIXME: Type me.
 
 
 origin_context_init = stories._context.Context.__init__
@@ -55,10 +61,10 @@ class StoriesPanel(Panel):
         self.storage = []
 
     def enable_instrumentation(self):
-        stories._context.Context.__init__ = track_context(self.storage)  # type: ignore
+        stories._context.Context.__init__ = track_context(self.storage)
 
     def disable_instrumentation(self):
-        stories._context.Context.__init__ = origin_context_init  # type: ignore
+        stories._context.Context.__init__ = origin_context_init
 
     def generate_stats(self, request, response):
         self.record_stats({"stories": self.storage})

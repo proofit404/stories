@@ -1,3 +1,4 @@
+# type: ignore
 """
 stories.contrib.sentry.breadcrumbs
 ----------------------------------
@@ -13,6 +14,11 @@ from raven.breadcrumbs import libraryhook, record
 import stories._context
 
 
+# FIXME: Test me.
+#
+# FIXME: Type me.
+
+
 origin_context_init = stories._context.Context.__init__
 
 
@@ -26,4 +32,4 @@ def track_context():
             )
         )
 
-    stories._context.Context.__init__ = wrapper  # type: ignore
+    stories._context.Context.__init__ = wrapper
