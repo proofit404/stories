@@ -1,3 +1,4 @@
+# type: ignore
 """
 stories.contrib.pytest
 ----------------------
@@ -16,6 +17,11 @@ from _pytest.config import hookimpl
 
 import stories._compat
 import stories._context
+
+
+# FIXME: Test me.
+#
+# FIXME: Type me.
 
 
 origin_context_init = stories._context.Context.__init__
@@ -58,6 +64,7 @@ def get_test_source(filename, lineno):
     for num, line in zip(range(start, end), text.splitlines()):
         sep = "->" if num == lineno else "  "
         src.append((" %s %s %s" % (str(num).rjust(adjust_to), sep, line)).rstrip())
+
     src = "\n".join(src)
 
     return src

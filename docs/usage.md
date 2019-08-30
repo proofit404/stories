@@ -11,9 +11,12 @@ method.
 ### Result
 
 ```pycon
->>> Subscription().buy(category_id=1, price_id=1, user_id=1)
+
+>>> from django_project.services import Subscription
+
+>>> Subscription().buy(category_id=1, price_id=1, profile_id=1)
 <Category: Category object (1)>
->>> _
+
 ```
 
 The story was executed successfully. It returns an object we put into
@@ -22,17 +25,12 @@ The story was executed successfully. It returns an object we put into
 ### Failure
 
 ```pycon
->>> Subscription().buy(category_id=2, price_id=2, user_id=1)
+
+>>> Subscription().buy(category_id=2, price_id=2, profile_id=1)
 Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-  File "stories/_wrapper.py", line 23, in __call__
-    return function.execute(runner, ctx, methods)
-  File "stories/_exec/function.py", line 36, in execute
-    return runner.got_failure(ctx, method.__name__, result.reason)
-  File "stories/_run.py", line 7, in got_failure
-    raise FailureError(reason)
-stories.exceptions.FailureError()
->>> _
+  ...
+stories.exceptions.FailureError
+
 ```
 
 Story failed. The user does not have enough money to complete this
@@ -50,12 +48,17 @@ summary of the business object execution.
 ### Result
 
 ```pycon
->>> result = ShowCategory().show.run(category_id=1, user_id=1)
+
+>>> from django_project.services import ShowCategory
+
+>>> result = ShowCategory().show.run(category_id=1, profile_id=1)
+
 >>> result.is_success
 True
+
 >>> result.value
 <Category: Category object (1)>
->>> _
+
 ```
 
 If the story was executed successfully, its actual result will be
@@ -64,27 +67,34 @@ available in the `value` attribute.
 ### Failure
 
 ```pycon
->>> result = ShowCategory().show.run(category_id=2, user_id=1)
+
+>>> result = ShowCategory().show.run(category_id=2, profile_id=1)
+
 >>> result.is_failure
 True
+
 >>> result.failed_on("check_expiration")
 True
+
 >>> result.failed_because(ShowCategory().show.failures.forbidden)
 True
+
 >>> result.ctx
 ShowCategory.show
   find_subscription
   check_expiration (failed: <Errors.forbidden: 1>)
-
+<BLANKLINE>
 Context:
-  category_id = 2                                         # Story argument
-  user_id = 1                                             # Story argument
-  subscription = <Subscription: Subscription object (7)>  # Set by ShowCategory.find_subscription
+  category_id: 2                                         # Story argument
+  profile_id: 1                                          # Story argument
+  subscription: <Subscription: Subscription object (7)>  # Set by ShowCategory.find_subscription
+
 >>> result.ctx.subscription.is_expired()
 True
+
 >>> result.ctx.subscription.created
-datetime.datetime(1990, 1, 1, 0, 0)
->>> _
+datetime.date(2019, 1, 1)
+
 ```
 
 `run` does not raise an error. Even if the story returns `Failure`

@@ -8,32 +8,7 @@ This module contains convenient functions to reduce boilerplate code.
 :license: BSD, see LICENSE for more details.
 """
 
-from ._mounted import ClassMountedStory
+from ._shortcuts import contract_in, failures_in
 
 
-def contract_in(cls, *args):
-    def setter(contract):
-        for attrname in dir(cls):
-            attribute = getattr(cls, attrname)
-            if type(attribute) is ClassMountedStory:
-                attribute.contract(contract)
-        return contract
-
-    if args:
-        return setter(*args)
-    else:
-        return setter
-
-
-def failures_in(cls, *args):
-    def setter(failures):
-        for attrname in dir(cls):
-            attribute = getattr(cls, attrname)
-            if type(attribute) is ClassMountedStory:
-                attribute.failures(failures)
-        return failures
-
-    if args:
-        return setter(*args)
-    else:
-        return setter
+__all__ = ["contract_in", "failures_in"]

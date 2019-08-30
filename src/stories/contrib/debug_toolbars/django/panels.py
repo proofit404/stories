@@ -1,3 +1,4 @@
+# type: ignore
 """
 stories.contrib.debug_toolbars.django.panels
 --------------------------------------------
@@ -8,10 +9,16 @@ This module contains integration with Django Debug Toolbar.
 :license: BSD, see LICENSE for more details.
 """
 
-import stories._context
 from debug_toolbar.panels import Panel
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy as __
+
+import stories._context
+
+
+# FIXME: Test me.
+#
+# FIXME: Type me.
 
 
 origin_context_init = stories._context.Context.__init__

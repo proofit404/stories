@@ -1,3 +1,4 @@
+# type: ignore
 """
 stories.contrib.sentry.breadcrumbs
 ----------------------------------
@@ -8,8 +9,14 @@ This module contains integration with Sentry.
 :license: BSD, see LICENSE for more details.
 """
 
-import stories._context
 from raven.breadcrumbs import libraryhook, record
+
+import stories._context
+
+
+# FIXME: Test me.
+#
+# FIXME: Type me.
 
 
 origin_context_init = stories._context.Context.__init__

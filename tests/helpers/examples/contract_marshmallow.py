@@ -12,12 +12,14 @@ utils.text_type = str
 
 
 representations = {
-    "int_error": "...",
-    "list_of_int_error": "...",
-    "int_field_repr": "...",
-    "str_field_repr": "...",
-    "list_of_int_field_repr": "...",
-    "list_of_str_field_repr": "...",
+    "int_error": "Not a valid integer.",
+    "list_of_int_error": """0:
+    Not a valid integer.
+    """.strip(),
+    "int_field_repr": "Integer",
+    "str_field_repr": "String",
+    "list_of_int_field_repr": "List",
+    "list_of_str_field_repr": "List",  # FIXME: Should show child schema.
     "contract_class_repr": "<class 'marshmallow.schema.Schema'>",
 }
 
@@ -170,9 +172,15 @@ class ChildAlias(object):
 
     @x.contract
     class Contract(Schema):
-        foo = fields.Dict(keys=fields.Str(), values=fields.Str())
-        bar = fields.Dict(keys=fields.Str(), values=fields.Str())
-        baz = fields.Dict(keys=fields.Str(), values=fields.Integer())
+        class _DictOfStr(Schema):
+            key = fields.Str()
+
+        class _DictOfInteger(Schema):
+            key = fields.Integer()
+
+        foo = fields.Nested(_DictOfStr)
+        bar = fields.Nested(_DictOfStr)
+        baz = fields.Nested(_DictOfInteger)
 
 
 class ParamChild(object):
@@ -214,9 +222,15 @@ class ParamChildAlias(object):
 
     @x.contract
     class Contract(Schema):
-        foo = fields.Dict(keys=fields.Str(), values=fields.Str())
-        bar = fields.Dict(keys=fields.Str(), values=fields.Str())
-        baz = fields.Dict(keys=fields.Str(), values=fields.Integer())
+        class _DictOfStr(Schema):
+            key = fields.Str()
+
+        class _DictOfInteger(Schema):
+            key = fields.Integer()
+
+        foo = fields.Nested(_DictOfStr)
+        bar = fields.Nested(_DictOfStr)
+        baz = fields.Nested(_DictOfInteger)
 
 
 # Next child base classes.

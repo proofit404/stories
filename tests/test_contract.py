@@ -4,15 +4,27 @@ from helpers import make_collector
 from stories.exceptions import ContextContractError
 
 
-# TODO:
+# TODO: Show collected arguments of the story composition in the error
+# messages.
 #
-# [ ] Show collected arguments of the story composition in the error
-#     messages.
+# TODO: Show violation values in validation error messages.
 #
-# [ ] Show violation values in validation error messages.
+# TODO: Write correct and verbose docstrings for each test in this
+# module.
 #
-# [ ] Write correct and verbose docstrings for each test in this
-#     module.
+# TODO: Document test class names in the contribution guide.
+#
+# J.a    <---      T.x                   E.y     --->     S.b
+#     composition                             composition
+#                   |     inheritance     |
+#                   V                     V
+#
+# F.i    <---      Q.a                   V.b
+#     composition
+#                   |     inheritance
+#                   V
+#
+#                  R.i
 
 
 def test_assign_existed_variables(m):
@@ -44,8 +56,8 @@ T.x
   one
 
 Context:
-  foo: 1    # Story argument
   bar: [2]  # Story argument
+  foo: 1    # Story argument
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
@@ -532,7 +544,8 @@ Contract:
 
     # Substory inheritance.
 
-    expected = """
+    expected = (
+        """
 These variables violates context contract: 'bar', 'foo'
 
 Function returned value: Q.one
@@ -550,8 +563,9 @@ foo:
 Contract:
   bar: {list_of_int_field_repr}  # Variable in Q.x
   foo: {int_field_repr}  # Variable in Q.x
-    """.strip().format(
-        **m.representations
+    """.strip()
+        .format(**m.representations)
+        .format("foo")
     )
 
     with pytest.raises(ContextContractError) as exc_info:
@@ -564,7 +578,8 @@ Contract:
 
     # Substory DI.
 
-    expected = """
+    expected = (
+        """
 These variables violates context contract: 'bar', 'foo'
 
 Function returned value: T.one
@@ -582,8 +597,9 @@ foo:
 Contract:
   bar: {list_of_int_field_repr}  # Variable in T.x
   foo: {int_field_repr}  # Variable in T.x
-    """.strip().format(
-        **m.representations
+    """.strip()
+        .format(**m.representations)
+        .format("foo")
     )
 
     with pytest.raises(ContextContractError) as exc_info:
@@ -651,7 +667,8 @@ Contract:
 
     # Substory inheritance.
 
-    expected = """
+    expected = (
+        """
 These arguments violates context contract: 'eggs', 'ham'
 
 Story method: Q.a
@@ -669,8 +686,9 @@ ham:
 Contract:
   eggs: {int_field_repr}  # Argument of Q.a
   ham: {int_field_repr}  # Argument of Q.a
-    """.strip().format(
-        **m.representations
+    """.strip()
+        .format(**m.representations)
+        .format("eggs", "ham")
     )
 
     with pytest.raises(ContextContractError) as exc_info:
@@ -683,7 +701,8 @@ Contract:
 
     # Substory DI.
 
-    expected = """
+    expected = (
+        """
 These arguments violates context contract: 'eggs', 'ham'
 
 Story method: J.a
@@ -701,8 +720,9 @@ ham:
 Contract:
   eggs: {int_field_repr}  # Argument of J.a
   ham: {int_field_repr}  # Argument of J.a
-    """.strip().format(
-        **m.representations
+    """.strip()
+        .format(**m.representations)
+        .format("eggs", "ham")
     )
 
     with pytest.raises(ContextContractError) as exc_info:
@@ -772,7 +792,8 @@ Contract:
 
     # Substory DI.
 
-    expected = """
+    expected = (
+        """
 These arguments violates context contract: 'foo'
 
 Story method: F.i
@@ -785,8 +806,9 @@ foo:
 
 Contract:
   foo: {int_field_repr}  # Argument of T.x
-    """.strip().format(
-        **m.representations
+    """.strip()
+        .format(**m.representations)
+        .format("foo")
     )
 
     with pytest.raises(ContextContractError) as exc_info:
@@ -1800,6 +1822,8 @@ def test_story_variable_alias_normalization_store_same_object(m):
     assert getter().foo is getter().bar
     assert getter().foo == {"key": "1"}
     assert getter().bar == {"key": "1"}
+    assert getter().foo is not getter().baz
+    assert getter().bar is not getter().baz
     assert getter().baz == {"key": 1}
 
     getter = make_collector()
@@ -1807,6 +1831,8 @@ def test_story_variable_alias_normalization_store_same_object(m):
     assert getter().foo is getter().bar
     assert getter().foo == {"key": "1"}
     assert getter().bar == {"key": "1"}
+    assert getter().foo is not getter().baz
+    assert getter().bar is not getter().baz
     assert getter().baz == {"key": 1}
 
     # FIXME: Substory inheritance.
@@ -1833,6 +1859,8 @@ def test_story_argument_alias_normalization_store_same_object(m):
     assert getter().foo is getter().bar
     assert getter().foo == {"key": "1"}
     assert getter().bar == {"key": "1"}
+    assert getter().foo is not getter().baz
+    assert getter().bar is not getter().baz
     assert getter().baz == {"key": 1}
 
     getter = make_collector()
@@ -1840,6 +1868,8 @@ def test_story_argument_alias_normalization_store_same_object(m):
     assert getter().foo is getter().bar
     assert getter().foo == {"key": "1"}
     assert getter().bar == {"key": "1"}
+    assert getter().foo is not getter().baz
+    assert getter().bar is not getter().baz
     assert getter().baz == {"key": 1}
 
     # FIXME: Substory inheritance.

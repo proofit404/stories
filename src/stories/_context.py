@@ -10,7 +10,7 @@ def make_context(contract, kwargs, history):
     ns = OrderedDict(
         # FIXME: We should be able to remove `if` statement here.
         (arg, kwargs[arg])
-        for arg in contract.argset
+        for arg in sorted(contract.argset)
         if arg in kwargs
     )
     ctx = Context()

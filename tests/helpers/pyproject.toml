@@ -3,8 +3,9 @@ name = "helpers"
 version = "0"
 authors = []
 packages = [
-    { include = "helpers.py" },
+    { include = "django_project" },
     { include = "examples" },
+    { include = "helpers.py" },
     { include = "mddoctest.py"},
 ]
 

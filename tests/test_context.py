@@ -271,8 +271,8 @@ Simple.x
   two (failed)
 
 Context:
-  foo: 3  # Story argument
   bar: 2  # Story argument
+  foo: 3  # Story argument
     """.strip()
 
     getter = make_collector()
@@ -480,8 +480,8 @@ Simple.x
   three (returned: -1)
 
 Context:
-  foo: 1  # Story argument
   bar: 3  # Story argument
+  foo: 1  # Story argument
   baz: 4  # Set by Simple.two
     """.strip()
 
@@ -574,8 +574,8 @@ Simple.x
   two (skipped)
 
 Context:
-  foo: 1   # Story argument
   bar: -1  # Story argument
+  foo: 1   # Story argument
     """.strip()
 
     getter = make_collector()
@@ -716,8 +716,8 @@ T.x
   one (errored: ContextContractError)
 
 Context:
-  foo: 1  # Story argument
   bar: 2  # Story argument
+  foo: 1  # Story argument
     """.strip()
 
     getter = make_collector()
@@ -739,8 +739,8 @@ Q.a
     one (errored: ContextContractError)
 
 Context:
-  ham: 1      # Story argument
   eggs: 2     # Story argument
+  ham: 1      # Story argument
   bar: ['2']  # Set by Q.before
   foo: '1'    # Set by Q.before
     """.strip()
@@ -764,8 +764,8 @@ J.a
     one (errored: ContextContractError)
 
 Context:
-  ham: 1      # Story argument
   eggs: 2     # Story argument
+  ham: 1      # Story argument
   bar: ['2']  # Set by J.before
   foo: '1'    # Set by J.before
     """.strip()
@@ -862,8 +862,8 @@ Simple.x
   three (returned: -1)
 
 Context:
-  foo: 1  # Story argument
   bar: 3  # Story argument
+  foo: 1  # Story argument
   baz: 4  # Set by Simple.two
     """.strip()
 

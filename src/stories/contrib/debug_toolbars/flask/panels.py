@@ -1,3 +1,4 @@
+# type: ignore
 """
 stories.contrib.debug_toolbars.flask.panels
 -------------------------------------------
@@ -8,17 +9,23 @@ This module contains integration with flask-debugtoolbar.
 :license: BSD, see LICENSE for more details.
 """
 
-import stories._context
 from flask import render_template
 from flask_debugtoolbar.panels import DebugPanel
+
+import stories._context
+
+
+# FIXME: Test me.
+#
+# FIXME: Type me.
 
 
 original_context_init = stories._context.Context.__init__
 
 
 def track_context(storage):
-    def wrapper(ctx, *args, **kwargs):
-        original_context_init(ctx, *args, **kwargs)
+    def wrapper(ctx):
+        original_context_init(ctx)
         storage.append(ctx)
 
     return wrapper
@@ -38,7 +45,7 @@ class StoriesPanel(DebugPanel):
     has_content = True
 
     def __init__(self, *args, **kwargs):
-        DebugPanel.__init__(self, *args, **kwargs)
+        super(StoriesPanel, self).__init__(*args, **kwargs)
         self.storage = []
         self.enable_instrumentation()
 

@@ -28,50 +28,67 @@ You can use string literals to mark the exact reason for the failure. In
 this case, failure protocol should be a collection of all allowed
 strings.
 
-```python
-class ApplyPromoCode:
-    """Calculate actual product discount, apply it to the price."""
+```pycon
 
-    @story
-    @arguments("category")
-    def apply(I):
+>>> from stories import story, arguments, Success, Failure
 
-        I.find_promo_code
-        I.check_promo_code_exists
-        I.check_expiration
+>>> class ApplyPromoCode:
+...     """Calculate actual product discount, apply it to the price."""
+...
+...     @story
+...     @arguments("category")
+...     def apply(I):
+...
+...         I.find_promo_code
+...         I.check_promo_code_exists
+...         I.check_expiration
+...
+...     # Steps.
+...
+...     def find_promo_code(self, ctx):
+...
+...         promo_code = self.load_promo_code(ctx.category)
+...         return Success(promo_code=promo_code)
+...
+...     def check_promo_code_exists(self, ctx):
+...
+...         if ctx.promo_code is None:
+...             return Failure("not_found")
+...         else:
+...             return Success()
+...
+...     def check_expiration(self, ctx):
+...
+...         if ctx.promo_code.is_expired():
+...             return Failure("expired")
+...         else:
+...             return Success()
+...
+...     # Dependencies.
+...
+...     def __init__(self, load_promo_code):
+...
+...         self.load_promo_code = load_promo_code
 
-    # Steps.
+>>> # Protocol definition.
 
-    def find_promo_code(self, ctx):
+>>> ApplyPromoCode.apply.failures(["not_found", "expired"])
+['not_found', 'expired']
 
-        promo_code = self.load_promo_code(ctx.category)
-        return Success(promo_code=promo_code)
-
-    def check_promo_code_exists(self, ctx):
-
-        if ctx.promo_code is None:
-            return Failure("not_found")
-        else:
-            return Success()
-
-    def check_expiration(self, ctx):
-
-        if ctx.promo_code.is_expired():
-            return Failure("expired")
-        else:
-            return Success()
-
-# Protocol definition.
-
-ApplyPromoCode.apply.failures(["not_found", "expired"])
 ```
 
 Now you can use these string literals to process different failures in a
 different way.
 
 ```pycon
->>> promo_code = ApplyPromoCode()
+
+>>> from django_project.entities import Category
+>>> from django_project.repositories import load_promo_code
+
+>>> promo_code = ApplyPromoCode(load_promo_code=load_promo_code)
+
 >>> result = promo_code.apply.run(category=Category(177))
+
 >>> if result.is_success:
 ...     print("Promo code applied")
 ... elif result.failed_because("not_found"):
@@ -79,7 +96,7 @@ different way.
 ... elif result.failed_because("expired"):
 ...     print("Promo code expired")
 Promo code not found
->>> _
+
 ```
 
 ## Enum
@@ -88,48 +105,56 @@ You can use [enum](https://docs.python.org/3/library/enum.html) members
 to mark the exact reason for the failure. In this case, failure protocol
 should be [enum](https://docs.python.org/3/library/enum.html) subclass.
 
-```python
-from enum import Enum, auto
+```pycon
 
-class ApplyPromoCode:
-    """Calculate actual product discount, apply it to the price."""
+>>> from enum import Enum, auto
 
-    @story
-    @arguments("category")
-    def apply(I):
+>>> class ApplyPromoCode:
+...     """Calculate actual product discount, apply it to the price."""
+...
+...     @story
+...     @arguments("category")
+...     def apply(I):
+...
+...         I.find_promo_code
+...         I.check_promo_code_exists
+...         I.check_expiration
+...
+...     # Steps.
+...
+...     def find_promo_code(self, ctx):
+...
+...         promo_code = self.load_promo_code(ctx.category)
+...         return Success(promo_code=promo_code)
+...
+...     def check_promo_code_exists(self, ctx):
+...
+...         if ctx.promo_code is None:
+...             return Failure(Errors.not_found)
+...         else:
+...             return Success()
+...
+...     def check_expiration(self, ctx):
+...
+...         if ctx.promo_code.is_expired():
+...             return Failure(Errors.expired)
+...         else:
+...             return Success()
+...
+...     # Dependencies.
+...
+...     def __init__(self, load_promo_code):
+...
+...         self.load_promo_code = load_promo_code
 
-        I.find_promo_code
-        I.check_promo_code_exists
-        I.check_expiration
+>>> # Protocol definition.
 
-    # Steps.
+>>> @ApplyPromoCode.apply.failures
+... class Errors(Enum):
+...
+...     not_found = auto()
+...     expired = auto()
 
-    def find_promo_code(self, ctx):
-
-        promo_code = self.load_promo_code(ctx.category)
-        return Success(promo_code=promo_code)
-
-    def check_promo_code_exists(self, ctx):
-
-        if ctx.promo_code is None:
-            return Failure(Errors.not_found)
-        else:
-            return Success()
-
-    def check_expiration(self, ctx):
-
-        if ctx.promo_code.is_expired():
-            return Failure(Errors.expired)
-        else:
-            return Success()
-
-# Protocol definition.
-
-@ApplyPromoCode.apply.failures
-class Errors(Enum):
-
-    not_found = auto()
-    expired = auto()
 ```
 
 On Python 2 you can use [enum34](https://pypi.org/project/enum34/)
@@ -141,8 +166,11 @@ Now you can use [enum](https://docs.python.org/3/library/enum.html)
 members to process different failures in a different way.
 
 ```pycon
->>> promo_code = ApplyPromoCode()
+
+>>> promo_code = ApplyPromoCode(load_promo_code=load_promo_code)
+
 >>> result = promo_code.apply.run(category=Category(177))
+
 >>> if result.is_success:
 ...     print("Promo code applied")
 ... elif result.failed_because(promo_code.apply.failures.not_found):
@@ -150,7 +178,7 @@ members to process different failures in a different way.
 ... elif result.failed_because(promo_code.apply.failures.expired):
 ...     print("Promo code expired")
 Promo code not found
->>> _
+
 ```
 
 When you [run the story method](usage.md#run) the actual failure
@@ -170,63 +198,90 @@ something about high-level business rules violation.
     A story in the composition can return failures with only reasons match
     its own protocol.
 
-```python
-class Subscription:
+```pycon
 
-    @story
-    def buy(I):
+>>> class Subscription:
+...
+...     @story
+...     def buy(I):
+...
+...         I.find_promo_code
+...         I.check_balance
+...         I.persist_payment
+...         I.show_category
+...
+...     # Steps.
+...
+...     def check_balance(self, ctx):
+...
+...         if ctx.user.balance < ctx.category.price:
+...             return Failure(self.Errors.low_balance)
+...         else:
+...             return Success()
+...
+...     def persist_payment(self, ctx):
+...
+...         self.create_payment(ctx.user, ctx.category)
+...         return Success()
+...
+...     def show_category(self, ctx):
+...
+...         return Result(ctx.category)
+...
+...     # Protocols.
+...
+...     @buy.failures
+...     class Errors(Enum):
+...
+...         low_balance = auto()
+...
+...     # Dependencies.
+...
+...     def __init__(self, find_promo_code):
+...
+...         self.find_promo_code = find_promo_code
 
-        I.find_promo_code
-        I.check_balance
-        I.persist_payment
-        I.show_category
+>>> class PromoCode:
+...
+...     @story
+...     def find(I):
+...
+...         I.find_token
+...         I.check_expiration
+...         I.calculate_discount
+...
+...     # Steps.
+...
+...     def find_token(self, ctx):
+...
+...         token = self.load_token()
+...         return Success(token=token)
+...
+...     def check_expiration(self, ctx):
+...
+...         if ctx.token.is_expired():
+...             return Failure(self.Errors.expired)
+...         else:
+...             return Success()
+...
+...     def calculate_discount(self, ctx):
+...
+...         discount = ctx.token.get_discount()
+...         return Success(discount=discount)
+...
+...     # Protocols.
+...
+...     @find.failures
+...     class Errors(Enum):
+...
+...         expired = auto()
+...
+...     # Dependencies.
+...
+...     def __init__(self, load_token):
+...
+...         self.load_token = load_token
 
-    # Steps.
-
-    def check_balance(self, ctx: "Context"):
-
-        if ctx.user.balance < ctx.category.price:
-            return Failure(self.Errors.low_balance)
-        else:
-            return Success()
-
-    # Protocols.
-
-    @buy.failures
-    class Errors(Enum):
-
-        low_balance = auto()
-
-    # Dependencies.
-
-    def __init__(self, find_promo_code):
-
-        self.find_promo_code = find_promo_code
-
-class PromoCode:
-
-    @story
-    def find(I):
-
-        I.find_token
-        I.check_expiration
-        I.calculate_discount
-
-    # Steps.
-
-    def check_expiration(self, ctx: "Context"):
-
-        if ctx.token.is_expired():
-            return Failure(self.Errors.expired)
-        else:
-            return Success()
-
-    # Protocols.
-
-    @find.failures
-    class Errors(Enum):
-
-        expired = auto()
 ```
 
 A composition of these two stories can fail both because of
@@ -234,16 +289,23 @@ A composition of these two stories can fail both because of
 property will contain protocols composition. A new `enum` class.
 
 ```pycon
->>> buy_subscription = Subscription(PromoCode().find).buy
->>> result = buy_subscription.run()
+
+>>> from django_project.repositories import load_token
+
+>>> promo_code = PromoCode(load_token)
+
+>>> subscription = Subscription(promo_code.find)
+
+>>> result = subscription.buy.run()
+
 >>> if result.is_success:
 ...     print("Subscribed")
-... elif result.failed_because(buy_subscription.failures.low_balance):
+... elif result.failed_because(subscription.buy.failures.low_balance):
 ...     print("Low balance")
-... elif result.failed_because(buy_subscription.failures.expired):
+... elif result.failed_because(subscription.buy.failures.expired):
 ...     print("Promo code expired")
 Promo code expired
->>> _
+
 ```
 
 This composition rule works both for [class
@@ -257,55 +319,64 @@ If you use [sub-stories with
 inheritance](composition.md#class-methods), your class will usually
 contain multiple story definitions.
 
-```python
-class Subscription:
+```pycon
 
-    @story
-    @arguments("category_id", "price_id", "user_id")
-    def buy(I):
+>>> class Subscription:
+...
+...     @story
+...     @arguments("category_id", "price_id", "user_id")
+...     def buy(I):
+...
+...         I.find_category
+...         I.find_promo_code
+...         I.check_balance
+...
+...     @story
+...     @arguments("category", "price")
+...     def find_promo_code(I):
+...
+...         I.find_token
+...         I.check_expiration
+...         I.calculate_discount
 
-        I.find_category
-        I.find_promo_code
-        I.check_balance
-
-    @story
-    @arguments("category", "price")
-    def find_promo_code(I):
-
-        I.find_token
-        I.check_expiration
-        I.calculate_discount
 ```
 
 You can specify failure protocol for each story using a stack of
 decorators.
 
-```python
-@Subscription.buy.failures
-@Subscription.find_promo_code.failures
-class Errors(Enum):
+```pycon
 
-    forbidden = auto()
-    not_found = auto()
+>>> @Subscription.buy.failures
+... @Subscription.find_promo_code.failures
+... class Errors(Enum):
+...
+...     forbidden = auto()
+...     not_found = auto()
+
 ```
 
 But instead of this, we encourage you to use a simple shortcut function.
 This one if you're using a list of strings.
 
-```python
-from stories.shortcuts import failures_in
+```pycon
 
-failures_in(Subscription, ["forbidden", "not_found"])
+>>> from stories.shortcuts import failures_in
+
+>>> failures_in(Subscription, ["forbidden", "not_found"])
+['forbidden', 'not_found']
+
 ```
 
 And this one if you are using an Enum subclass.
 
-```python
-from stories.shortcuts import failures_in
+```pycon
 
-@failures_in(Subscription)
-class Errors(Enum):
+>>> from stories.shortcuts import failures_in
 
-    forbidden = auto()
-    not_found = auto()
+>>> @failures_in(Subscription)
+... class Errors(Enum):
+...
+...     forbidden = auto()
+...     not_found = auto()
+
 ```

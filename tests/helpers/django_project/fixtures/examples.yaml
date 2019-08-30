@@ -1,0 +1,40 @@
+---
+- model: django_project.category
+  pk: 1
+  fields:
+    name: foo
+    cost: 7
+- model: django_project.category
+  pk: 2
+  fields:
+    name: bar
+    cost: 17
+- model: django_project.price
+  pk: 1
+  fields:
+    cost: 7
+    period: 30
+- model: django_project.price
+  pk: 2
+  fields:
+    cost: 17
+    period: 30
+- model: django_project.price
+  pk: 7
+  fields:
+    cost: 199
+    period: 90
+- model: django_project.profile
+  pk: 1
+  fields:
+    balance: 8
+- model: django_project.profile
+  pk: 2
+  fields:
+    balance: 8
+- model: django_project.subscription
+  pk: 7
+  fields:
+    created: 2019-01-01
+    category_id: 2
+    profile_id: 1
