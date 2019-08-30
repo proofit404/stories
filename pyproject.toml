@@ -48,8 +48,11 @@ build-backend = "poetry.masonry.api"
 
 [tool.black]
 exclude = '''
-/(
-    .tox
-  | migrations
-)/
+(
+  /(
+      .tox
+    | migrations
+  )/
+  | \.pyi$
+)
 '''
