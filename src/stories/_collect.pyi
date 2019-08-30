@@ -1,3 +1,4 @@
-from typing import Callable, List
+from typing import Any, Callable, List
 
-def collect_story(f: Callable) -> List[str]: ...
+
+def collect_story(f: Callable[[Any], None]) -> List[str]: ...

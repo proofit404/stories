@@ -243,7 +243,7 @@ class NullContract(object):
         self.make_argset()
         self.set_null()
 
-    def set_null(self):
+    def set_null(self):  # FIXME: Drop this method, it's was required by typing.
         self.is_null = True
 
     def make_argset(self):

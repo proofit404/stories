@@ -132,9 +132,6 @@ class NullRunProtocol(object):
         )
         raise FailureProtocolError(message)
 
-    def compare_failed_because_argument(self, argument, failure_reason):
-        raise RuntimeError  # pragma: no cover
-
 
 class NotNullRunProtocol(object):
     def __init__(self, cls_name, method_name, failures, contains_func, compare_func):
