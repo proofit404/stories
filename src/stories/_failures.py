@@ -25,8 +25,6 @@ def failures_representation(failures):
         return ", ".join(map(repr, failures))
     elif failures is None:
         return "None"
-    else:
-        raise RuntimeError  # pragma: no cover
 
 
 def collection_contains(reason, failures):
@@ -49,14 +47,13 @@ def enumeration_compare(a, b):
 
 
 def make_exec_protocol(failures):
+
     if isinstance(failures, EnumMeta):
         return NotNullExecProtocol(failures, enumeration_contains)
     elif isinstance(failures, (list, tuple, set, frozenset)):
         return NotNullExecProtocol(failures, collection_contains)
     elif failures is None:
         return NullExecProtocol()
-    else:
-        raise RuntimeError  # pragma: no cover
 
 
 class NullExecProtocol(object):
@@ -107,6 +104,7 @@ class NotNullExecProtocol(object):
 
 
 def make_run_protocol(failures, cls_name, method_name):
+
     if isinstance(failures, EnumMeta):
         return NotNullRunProtocol(
             cls_name, method_name, failures, enumeration_contains, enumeration_compare
@@ -117,8 +115,6 @@ def make_run_protocol(failures, cls_name, method_name):
         )
     elif failures is None:
         return NullRunProtocol(cls_name, method_name)
-    else:
-        raise RuntimeError  # pragma: no cover
 
 
 class NullRunProtocol(object):
@@ -201,6 +197,7 @@ def combine_failures(
 
 
 def maybe_disable_null_protocol(methods, reasons):
+
     if reasons is None:
         return methods
     disabled = DisabledNullExecProtocol()

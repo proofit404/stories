@@ -3,15 +3,6 @@ from .._marker import BeginningOfStory, EndOfStory
 from .._return import Failure, Result, Skip, Success
 
 
-# TODO: This file has bunch of type ignore statements.  Success,
-# Failure and other result types has different set of attributes.
-# They are incompatible on type level.  We'll refactor this function
-# to the method calls of result types.  Also, we will process a chain
-# object instead of list of methods, so Skip will be processed
-# directly, instead of iteration over all methods of skipped story.
-# This will be implemented as part of the rollback feature.
-
-
 def execute(runner, ctx, history, methods):
     __tracebackhide__ = True
 

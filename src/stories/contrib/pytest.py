@@ -52,6 +52,7 @@ def get_test_call():
 
 
 def get_test_source(filename, lineno):
+
     start = max(1, lineno - 3)
     end = lineno + 3
     adjust_to = len(str(end))
@@ -64,7 +65,9 @@ def get_test_source(filename, lineno):
         sep = "->" if num == lineno else "  "
         src.append((" %s %s %s" % (str(num).rjust(adjust_to), sep, line)).rstrip())
 
-    return "\n".join(src)
+    src = "\n".join(src)
+
+    return src
 
 
 @hookimpl(hookwrapper=True)

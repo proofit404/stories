@@ -241,10 +241,6 @@ class NullContract(object):
         self.name = name
         self.arguments = arguments
         self.make_argset()
-        self.set_null()
-
-    def set_null(self):  # FIXME: Drop this method, it's was required by typing.
-        self.is_null = True
 
     def make_argset(self):
         self.argset = dict(
@@ -318,9 +314,6 @@ class SpecContract(NullContract):
         self.origin = origin
         super(SpecContract, self).__init__(cls_name, name, arguments)
         self.make_declared()
-
-    def set_null(self):
-        self.is_null = False
 
     def make_argset(self):
         self.argset = {}
@@ -520,15 +513,19 @@ def format_violations(ns, errors):
 
 
 def combine_contract(parent, child):
-    if parent.is_null and child.is_null:
-        combine_argsets(parent, child)
-        return
-    elif not parent.is_null and not child.is_null and parent.origin is child.origin:
+    if type(parent) is NullContract and type(child) is NullContract:
         combine_argsets(parent, child)
         return
     elif (
-        not parent.is_null
-        and not child.is_null
+        type(parent) is SpecContract
+        and type(child) is SpecContract
+        and parent.origin is child.origin
+    ):
+        combine_argsets(parent, child)
+        return
+    elif (
+        type(parent) is SpecContract
+        and type(child) is SpecContract
         and any(
             isinstance(parent.origin, spec_type) and isinstance(child.origin, spec_type)
             for spec_type in [PydanticSpec, MarshmallowSpec, CerberusSpec, dict]
@@ -576,7 +573,7 @@ def combine_declared(parent, child):
 
 
 def format_contract(contract):
-    if isinstance(contract, SpecContract):
+    if type(contract) is SpecContract:
         if isclass(contract.origin):
             return contract.origin.__bases__[0]
         else:
@@ -586,7 +583,7 @@ def format_contract(contract):
 
 
 def maybe_extend_downstream_argsets(methods, root):
-    if root.is_null:
+    if type(root) is NullContract:
         return
     for method, contract, protocol in methods:
         combine_argsets(root, contract)

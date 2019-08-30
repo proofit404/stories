@@ -1,4 +1,5 @@
 def collect_story(f):
+
     calls = []
 
     class Collector(object):
