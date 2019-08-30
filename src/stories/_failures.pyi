@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any, Callable, List, Optional, Tuple, Type, Union, overload
+from typing import Any, Callable, List, NoReturn, Optional, Tuple, Type, Union, overload
 
 from stories._contract import NullContract, SpecContract
 from stories._marker import BeginningOfStory, EndOfStory
@@ -80,7 +80,7 @@ def make_run_protocol(
 class NullRunProtocol:
     def __init__(self, cls_name: str, method_name: str) -> None: ...
 
-    def check_failed_because_argument(self, reason: str): ...
+    def check_failed_because_argument(self, reason: str) -> NoReturn: ...
 
 
 class NotNullRunProtocol:  # FIXME: Generic.

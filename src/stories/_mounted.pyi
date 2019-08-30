@@ -35,7 +35,7 @@ class MountedStory:
             ],
         ],
         contract: NullContract,
-        failures: Optional[List[str], Enum],
+        failures: Optional[Union[List[str], Type[Enum]]],
     ) -> None: ...
 
     def __call__(self, **kwargs: Dict[str, Any]) -> Optional[Union[List[str], int]]: ...
