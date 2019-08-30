@@ -1,4 +1,4 @@
-from typing import Callable, List, Optional, Tuple, Union
+from typing import Any, Callable, List, Tuple, Union, overload
 
 from stories._context import Context
 from stories._contract import NullContract, SpecContract
@@ -9,51 +9,44 @@ from stories._failures import (
 )
 from stories._history import History
 from stories._marker import BeginningOfStory, EndOfStory
+from stories._return import Failure, Result, Skip, Success
 from stories._run import Call, Run
 from stories._summary import FailureSummary, SuccessSummary
 
 
+@overload
 def execute(
-    runner: Union[Call, Run],
+    runner: Call,
     ctx: Context,
     history: History,
-    methods: Union[
-        List[
+    methods: List[
+        Tuple[
             Union[
-                Tuple[BeginningOfStory, SpecContract, NullExecProtocol],
-                Tuple[Callable, SpecContract, NullExecProtocol],
-                Tuple[EndOfStory, SpecContract, NullExecProtocol],
-            ]
-        ],
-        List[
-            Union[
-                Tuple[BeginningOfStory, NullContract, NotNullExecProtocol],
-                Tuple[Callable, NullContract, NotNullExecProtocol],
-                Tuple[BeginningOfStory, NullContract, DisabledNullExecProtocol],
-                Tuple[Callable, NullContract, DisabledNullExecProtocol],
-                Tuple[EndOfStory, NullContract, DisabledNullExecProtocol],
-                Tuple[EndOfStory, NullContract, NotNullExecProtocol],
-            ]
-        ],
-        List[
-            Union[
-                Tuple[BeginningOfStory, NullContract, NotNullExecProtocol],
-                Tuple[Callable, NullContract, NotNullExecProtocol],
-                Tuple[EndOfStory, NullContract, NotNullExecProtocol],
-            ]
-        ],
-        List[
-            Union[
-                Tuple[BeginningOfStory, NullContract, NullExecProtocol],
-                Tuple[EndOfStory, NullContract, NullExecProtocol],
-            ]
-        ],
-        List[
-            Union[
-                Tuple[BeginningOfStory, NullContract, NullExecProtocol],
-                Tuple[Callable, NullContract, NullExecProtocol],
-                Tuple[EndOfStory, NullContract, NullExecProtocol],
-            ]
+                BeginningOfStory,
+                Callable[[Context], Union[Result, Success, Failure, Skip]],
+                EndOfStory,
+            ],
+            Union[NullContract, SpecContract],
+            Union[NullExecProtocol, DisabledNullExecProtocol, NotNullExecProtocol],
         ],
     ],
-) -> Optional[Union[List[str], SuccessSummary, FailureSummary, int]]: ...
+) -> Any: ...
+
+
+@overload
+def execute(
+    runner: Run,
+    ctx: Context,
+    history: History,
+    methods: List[
+        Tuple[
+            Union[
+                BeginningOfStory,
+                Callable[[Context], Union[Result, Success, Failure, Skip]],
+                EndOfStory,
+            ],
+            Union[NullContract, SpecContract],
+            Union[NullExecProtocol, DisabledNullExecProtocol, NotNullExecProtocol],
+        ],
+    ],
+) -> Union[SuccessSummary, FailureSummary]: ...
