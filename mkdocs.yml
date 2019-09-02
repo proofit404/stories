@@ -38,6 +38,7 @@ nav:
       - 'Debug toolbars': contrib/debug_toolbars.md
       - 'Sentry': contrib/sentry.md
   - 'FAQ': faq.md
+  - 'Development': development.md
   - 'Changelog': changelog.md
   # A UI hack to split Table of Content into two visual parts.
   - '': '/'
