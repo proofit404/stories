@@ -1,8 +1,18 @@
+import textwrap
 from collections import OrderedDict
 from decimal import Decimal
 
 from ._compat import indent
 from .exceptions import MutationError
+
+
+ATTRIBUTE_ERROR_MSG = textwrap.dedent(
+    """
+    '{obj}' object has no attribute {attr}
+
+    {ctx!r}
+    """
+).strip()
 
 
 def make_context(contract, kwargs, history):
@@ -22,7 +32,12 @@ def make_context(contract, kwargs, history):
 
 class Context(object):
     def __getattr__(self, name):
-        return self.__ns[name]
+        try:
+            return self.__ns[name]
+        except KeyError:
+            raise AttributeError(
+                ATTRIBUTE_ERROR_MSG.format(obj="Context", attr=name, ctx=self)
+            )
 
     def __setattr__(self, name, value):
         raise MutationError(assign_attribute_message)
