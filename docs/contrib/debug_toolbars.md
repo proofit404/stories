@@ -24,7 +24,7 @@ Add this lines to your developer's settings:
 ... ]
 
 >>> DEBUG_TOOLBAR_PANELS = PANELS_DEFAULTS + [
-...     "stories.contrib.debug_toolbars.django.panels.StoriesPanel"
+...     "stories.contrib.debug_toolbars.django.StoriesPanel"
 ... ]
 
 ```
@@ -50,7 +50,7 @@ DEBUG_TB_PANELS config variable before initializing
 >>> app.config['DEBUG_TB_PANELS'] = (
 ...     'flask_debugtoolbar.panels.versions.VersionDebugPanel',
 ...     ...,
-...     'stories.contrib.debug_toolbars.flask.panels.StoriesPanel'
+...     'stories.contrib.debug_toolbars.flask.StoriesPanel'
 ... )
 
 >>> debug_toolbar = DebugToolbarExtension(app)

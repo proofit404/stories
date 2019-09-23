@@ -1,0 +1,28 @@
+from enum import Enum
+from typing import Optional, Union
+
+
+class StoryError:
+    ...
+
+
+class StoryDefinitionError:
+    ...
+
+
+class FailureError:
+    def __init__(self, reason: Optional[Union[str, Enum]]) -> None: ...
+
+    def __repr__(self) -> str: ...
+
+
+class FailureProtocolError:
+    ...
+
+
+class ContextContractError:
+    ...
+
+
+class MutationError:
+    ...

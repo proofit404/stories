@@ -29,6 +29,11 @@ classifiers = [
     "Topic :: Software Development",
 ]
 
+packages = [
+    { include = "_stories", from = "src" },
+    { include = "stories", from = "src" },
+]
+
 [tool.poetry.dependencies]
 python = "~2.7 || ^3.4"
 mkdocs = { version = "*", optional = true }
