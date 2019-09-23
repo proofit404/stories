@@ -11,7 +11,7 @@ Import this module **before** import any Sentry related stuff:
 
 ```pycon
 
->>> import stories.contrib.sentry.breadcrumbs
+>>> import stories.contrib.sentry
 
 ```
 

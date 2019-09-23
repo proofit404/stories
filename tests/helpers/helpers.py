@@ -1,4 +1,4 @@
-import stories._context
+import _stories.context
 
 
 def make_collector():
@@ -7,13 +7,13 @@ def make_collector():
 
     storage = []
 
-    origin_context_init = stories._context.Context.__init__
+    origin_context_init = _stories.context.Context.__init__
 
     def wrapper(ctx):
         origin_context_init(ctx)
         storage.append(ctx)
 
-    stories._context.Context.__init__ = wrapper
+    _stories.context.Context.__init__ = wrapper
 
     def getter():
         length = len(storage)

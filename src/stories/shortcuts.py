@@ -8,7 +8,7 @@ This module contains convenient functions to reduce boilerplate code.
 :license: BSD, see LICENSE for more details.
 """
 
-from ._shortcuts import contract_in, failures_in
+from _stories.shortcuts import contract_in, failures_in
 
 
 __all__ = ["contract_in", "failures_in"]
