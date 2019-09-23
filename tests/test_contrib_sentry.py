@@ -2,6 +2,6 @@ import pytest
 
 
 pytest.importorskip("foo")
-from stories.contrib.sentry.django import (  # isort:skip  # pragma: no cover  # noqa
+from stories.contrib.sentry.django import (  # FIXME: # isort:skip  # pragma: no cover  # noqa
     DjangoClient,
 )
