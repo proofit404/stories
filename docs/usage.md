@@ -29,7 +29,7 @@ The story was executed successfully. It returns an object we put into
 >>> Subscription().buy(category_id=2, price_id=2, profile_id=1)
 Traceback (most recent call last):
   ...
-stories.exceptions.FailureError
+_stories.exceptions.FailureError
 
 ```
 

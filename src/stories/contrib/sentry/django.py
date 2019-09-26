@@ -1,3 +1,14 @@
-from raven.contrib.django.client import DjangoClient  # noqa
+"""
+stories.contrib.sentry.django
+-----------------------------
 
-import stories.contrib.sentry.breadcrumbs  # noqa
+This module contains integration with Sentry for Django framework.
+
+:copyright: (c) 2018-2019 dry-python team.
+:license: BSD, see LICENSE for more details.
+"""
+
+from raven.contrib.django.client import DjangoClient
+
+
+__all__ = ["DjangoClient"]
