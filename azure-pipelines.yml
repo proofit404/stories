@@ -49,6 +49,9 @@ jobs:
         yamllint:
           python.version: "3.8"
           tox.env: yamllint
+        jscpd:
+          python.version: "3.8"
+          tox.env: jscpd
         commitlint:
           python.version: "3.8"
           tox.env: commitlint
@@ -62,7 +65,7 @@ jobs:
       - task: NodeTool@0
         inputs:
           versionSpec: "10.x"
-        condition: in(variables['tox.env'], 'remarklint')
+        condition: in(variables['tox.env'], 'remarklint', 'jscpd')
         displayName: Install NodeJS.
       - script: |
           git remote set-branches origin master
