@@ -28,7 +28,8 @@ def execute(runner, ctx, history, methods):
             raise
 
         restype = type(result)
-        assert restype in (Result, Success, Failure, Skip)
+        if restype not in (Result, Success, Failure, Skip):
+            raise AssertionError
 
         if restype is Failure:
             try:
