@@ -585,7 +585,7 @@ def format_contract(contract):
 def maybe_extend_downstream_argsets(methods, root):
     if type(root) is NullContract:
         return
-    for method, contract, protocol in methods:
+    for _method, contract, _protocol in methods:
         combine_argsets(root, contract)
 
 
