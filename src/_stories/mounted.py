@@ -58,7 +58,7 @@ class MountedStory(object):
     def __repr__(self):
         result = []
         indent = 0
-        for method, contract, protocol in self.methods:
+        for method, _contract, _protocol in self.methods:
             method_type = type(method)
             if method_type is EndOfStory:
                 if method.is_empty:

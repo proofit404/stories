@@ -33,14 +33,14 @@ def contracts():
 # Fixtures.
 
 
-@pytest.fixture
+@pytest.fixture()
 def c():
     import examples.context
 
     return examples.context
 
 
-@pytest.fixture
+@pytest.fixture()
 def f():
     import examples.failure_reasons
 
