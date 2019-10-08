@@ -1,5 +1,6 @@
 from _stories.exceptions import FailureError
-from _stories.summary import FailureSummary, SuccessSummary
+from _stories.summary import FailureSummary
+from _stories.summary import SuccessSummary
 
 
 class Call(object):

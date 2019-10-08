@@ -1,6 +1,8 @@
 from cerberus import Validator
 
-from stories import Success, arguments, story
+from stories import arguments
+from stories import story
+from stories import Success
 from stories.shortcuts import contract_in
 
 

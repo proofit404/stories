@@ -1,6 +1,8 @@
 from operator import itemgetter
 
-from stories import Success, arguments, story
+from stories import arguments
+from stories import story
+from stories import Success
 from stories.shortcuts import contract_in
 
 

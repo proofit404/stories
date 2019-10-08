@@ -1,5 +1,8 @@
 import examples
-from stories import Failure, Result, Skip, Success
+from stories import Failure
+from stories import Result
+from stories import Skip
+from stories import Success
 
 
 def test_result_representation():

@@ -1,7 +1,8 @@
 from _stories.argument import get_arguments
 from _stories.collect import collect_story
 from _stories.failures import check_data_type
-from _stories.mounted import ClassMountedStory, MountedStory
+from _stories.mounted import ClassMountedStory
+from _stories.mounted import MountedStory
 from _stories.wrap import wrap_story
 
 
