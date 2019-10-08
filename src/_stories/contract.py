@@ -1,14 +1,12 @@
 from inspect import isclass
 from operator import itemgetter
 
-from _stories.compat import (
-    CerberusSpec,
-    MarshmallowSpec,
-    PydanticError,
-    PydanticShape,
-    PydanticSpec,
-    pydantic_display,
-)
+from _stories.compat import CerberusSpec
+from _stories.compat import MarshmallowSpec
+from _stories.compat import pydantic_display
+from _stories.compat import PydanticError
+from _stories.compat import PydanticShape
+from _stories.compat import PydanticSpec
 from _stories.exceptions import ContextContractError
 
 

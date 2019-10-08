@@ -1,5 +1,8 @@
 from django_project.entities import Token
-from django_project.models import Category, Price, Profile, Subscription
+from django_project.models import Category
+from django_project.models import Price
+from django_project.models import Profile
+from django_project.models import Subscription
 
 
 def load_promo_code(category):

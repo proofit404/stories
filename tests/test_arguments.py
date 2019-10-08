@@ -1,6 +1,7 @@
 import pytest
 
-from stories import arguments, story
+from stories import arguments
+from stories import story
 from stories.exceptions import StoryDefinitionError
 
 
