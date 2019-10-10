@@ -1,5 +1,6 @@
 # type: ignore
-from raven.breadcrumbs import libraryhook, record
+from raven.breadcrumbs import libraryhook
+from raven.breadcrumbs import record
 
 import _stories.context
 

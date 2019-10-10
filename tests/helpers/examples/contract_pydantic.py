@@ -1,8 +1,11 @@
-from typing import Dict, List
+from typing import Dict
+from typing import List
 
 from pydantic import BaseModel
 
-from stories import Success, arguments, story
+from stories import arguments
+from stories import story
+from stories import Success
 from stories.shortcuts import contract_in
 
 

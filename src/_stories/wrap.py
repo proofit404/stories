@@ -1,14 +1,11 @@
-from _stories.contract import (
-    combine_contract,
-    make_contract,
-    maybe_extend_downstream_argsets,
-)
-from _stories.failures import (
-    combine_failures,
-    make_exec_protocol,
-    maybe_disable_null_protocol,
-)
-from _stories.marker import BeginningOfStory, EndOfStory
+from _stories.contract import combine_contract
+from _stories.contract import make_contract
+from _stories.contract import maybe_extend_downstream_argsets
+from _stories.failures import combine_failures
+from _stories.failures import make_exec_protocol
+from _stories.failures import maybe_disable_null_protocol
+from _stories.marker import BeginningOfStory
+from _stories.marker import EndOfStory
 from _stories.mounted import MountedStory
 
 
