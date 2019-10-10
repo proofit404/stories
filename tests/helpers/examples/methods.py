@@ -1,4 +1,9 @@
-from stories import Failure, Result, Skip, Success, arguments, story
+from stories import arguments
+from stories import Failure
+from stories import Result
+from stories import Skip
+from stories import story
+from stories import Success
 
 
 # Empty story.

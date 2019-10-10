@@ -1,6 +1,8 @@
 from enum import Enum
 
-from stories import Failure, Success, story
+from stories import Failure
+from stories import story
+from stories import Success
 from stories.shortcuts import failures_in
 
 

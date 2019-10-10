@@ -4,12 +4,10 @@ import pytest
 
 import examples
 from helpers import make_collector
-from stories.exceptions import (
-    ContextContractError,
-    FailureError,
-    FailureProtocolError,
-    MutationError,
-)
+from stories.exceptions import ContextContractError
+from stories.exceptions import FailureError
+from stories.exceptions import FailureProtocolError
+from stories.exceptions import MutationError
 
 
 def test_context_dir(c):

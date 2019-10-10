@@ -1,6 +1,10 @@
-from marshmallow import Schema, fields, utils
+from marshmallow import fields
+from marshmallow import Schema
+from marshmallow import utils
 
-from stories import Success, arguments, story
+from stories import arguments
+from stories import story
+from stories import Success
 from stories.shortcuts import contract_in
 
 

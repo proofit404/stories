@@ -1,18 +1,21 @@
-from enum import Enum, auto
+from enum import auto
+from enum import Enum
 from inspect import getfullargspec
 
-from django_project.repositories import (
-    calculate_period,
-    create_subscription,
-    decrease_balance,
-    load_category,
-    load_price,
-    load_profile,
-    load_subscription,
-    save_profile,
-    send_notification,
-)
-from stories import Failure, Result, Success, arguments, story
+from django_project.repositories import calculate_period
+from django_project.repositories import create_subscription
+from django_project.repositories import decrease_balance
+from django_project.repositories import load_category
+from django_project.repositories import load_price
+from django_project.repositories import load_profile
+from django_project.repositories import load_subscription
+from django_project.repositories import save_profile
+from django_project.repositories import send_notification
+from stories import arguments
+from stories import Failure
+from stories import Result
+from stories import story
+from stories import Success
 
 
 class MethodDefinitionsType(type):
