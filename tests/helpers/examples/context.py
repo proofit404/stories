@@ -1,4 +1,7 @@
-from stories import Result, Success, arguments, story
+from stories import arguments
+from stories import Result
+from stories import story
+from stories import Success
 
 
 # Mixins.

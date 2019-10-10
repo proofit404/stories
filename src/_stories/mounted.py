@@ -2,8 +2,10 @@ from _stories.context import make_context
 from _stories.execute import function
 from _stories.failures import make_run_protocol
 from _stories.history import History
-from _stories.marker import BeginningOfStory, EndOfStory
-from _stories.run import Call, Run
+from _stories.marker import BeginningOfStory
+from _stories.marker import EndOfStory
+from _stories.run import Call
+from _stories.run import Run
 
 
 class ClassMountedStory(object):
@@ -58,7 +60,7 @@ class MountedStory(object):
     def __repr__(self):
         result = []
         indent = 0
-        for method, contract, protocol in self.methods:
+        for method, _contract, _protocol in self.methods:
             method_type = type(method)
             if method_type is EndOfStory:
                 if method.is_empty:

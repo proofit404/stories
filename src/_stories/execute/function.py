@@ -1,6 +1,10 @@
 from _stories.context import assign_namespace
-from _stories.marker import BeginningOfStory, EndOfStory
-from _stories.returned import Failure, Result, Skip, Success
+from _stories.marker import BeginningOfStory
+from _stories.marker import EndOfStory
+from _stories.returned import Failure
+from _stories.returned import Result
+from _stories.returned import Skip
+from _stories.returned import Success
 
 
 def execute(runner, ctx, history, methods):
@@ -28,7 +32,8 @@ def execute(runner, ctx, history, methods):
             raise
 
         restype = type(result)
-        assert restype in (Result, Success, Failure, Skip)
+        if restype not in (Result, Success, Failure, Skip):
+            raise AssertionError
 
         if restype is Failure:
             try:

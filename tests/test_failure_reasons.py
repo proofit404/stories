@@ -3,7 +3,8 @@ import enum
 import pytest
 
 from stories import story
-from stories.exceptions import FailureError, FailureProtocolError
+from stories.exceptions import FailureError
+from stories.exceptions import FailureProtocolError
 
 
 # Story definition.

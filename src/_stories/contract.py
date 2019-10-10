@@ -1,14 +1,12 @@
 from inspect import isclass
 from operator import itemgetter
 
-from _stories.compat import (
-    CerberusSpec,
-    MarshmallowSpec,
-    PydanticError,
-    PydanticShape,
-    PydanticSpec,
-    pydantic_display,
-)
+from _stories.compat import CerberusSpec
+from _stories.compat import MarshmallowSpec
+from _stories.compat import pydantic_display
+from _stories.compat import PydanticError
+from _stories.compat import PydanticShape
+from _stories.compat import PydanticSpec
 from _stories.exceptions import ContextContractError
 
 
@@ -243,9 +241,9 @@ class NullContract(object):
         self.make_argset()
 
     def make_argset(self):
-        self.argset = dict(
-            (arg, {(None, self.cls_name, self.name)}) for arg in self.arguments
-        )
+        self.argset = {
+            arg: {(None, self.cls_name, self.name)} for arg in self.arguments
+        }
 
     def check_story_call(self, kwargs):
         __tracebackhide__ = True
@@ -322,10 +320,10 @@ class SpecContract(NullContract):
             del self.spec[arg]
 
     def make_declared(self):
-        self.declared = dict(
-            (variable, (self.cls_name, self.name, repr(validator)))
+        self.declared = {
+            variable: (self.cls_name, self.name, repr(validator))
             for variable, validator in self.spec.items()
-        )
+        }
 
     def check_story_call(self, kwargs):
         __tracebackhide__ = True
@@ -380,7 +378,7 @@ class SpecContract(NullContract):
             else:
                 self.validate_argset(result, errors, seen, conflict, key, value)
         if conflict:
-            conflict_vars = sorted(set(j for i in conflict.values() for j in i))
+            conflict_vars = sorted({j for i in conflict.values() for j in i})
             message = normalization_conflict_template.format(
                 conflict=", ".join(map(repr, conflict_vars)),
                 results="\n\n".join(
@@ -585,7 +583,7 @@ def format_contract(contract):
 def maybe_extend_downstream_argsets(methods, root):
     if type(root) is NullContract:
         return
-    for method, contract, protocol in methods:
+    for _method, contract, _protocol in methods:
         combine_argsets(root, contract)
 
 
