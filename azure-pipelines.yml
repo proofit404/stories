@@ -7,6 +7,9 @@ jobs:
       vmImage: 'ubuntu-latest'
     strategy:
       matrix:
+        precommit:
+          python.version: '3.7'
+          tox.env: precommit
         py27:
           python.version: '2.7'
           tox.env: py27
@@ -22,9 +25,6 @@ jobs:
         py37:
           python.version: '3.7'
           tox.env: py37
-        precommit:
-          python.version: '3.7'
-          tox.env: precommit
         flake8:
           python.version: '3.7'
           tox.env: flake8
