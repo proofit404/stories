@@ -1,5 +1,7 @@
+import configparser
 import subprocess
 
+import tomlkit
 import yaml
 
 
@@ -20,3 +22,30 @@ def test_tox_environments_equal_azure_tasks():
     ]
 
     assert tox_environments == azure_tasks
+
+
+def test_coverage_include_all_packages():
+    """
+    Coverage source should include packages:
+
+    * from the main pyproject.toml,
+    * from test helpers pyproject.toml,
+    * the tests package
+    """
+
+    ini_parser = configparser.ConfigParser()
+    ini_parser.read("setup.cfg")
+    coverage_sources = ini_parser["coverage:run"]["source"].strip().splitlines()
+
+    pyproject_toml = tomlkit.loads(open("pyproject.toml").read())
+    package = [
+        p["include"].rstrip(".py") for p in pyproject_toml["tool"]["poetry"]["packages"]
+    ]
+
+    test_pyproject_toml = tomlkit.loads(open("tests/helpers/pyproject.toml").read())
+    helpers = [
+        p["include"].rstrip(".py")
+        for p in test_pyproject_toml["tool"]["poetry"]["packages"]
+    ]
+
+    assert coverage_sources == package + helpers + ["tests"]
