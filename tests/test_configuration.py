@@ -3,6 +3,12 @@ import subprocess
 
 import pytest
 
+# This is a little bit a workaround of the PyYaml library limitations.
+# It doesn't preserve the order of keys of the parsed dict.  It works
+# on recent Python versions where the order of keys is guaranteed by
+# dict implementation.  We do not install necessary libraries for the
+# test, so it does not fail because it does not run.  See
+# https://github.com/yaml/pyyaml/issues/110 for more info.
 tomlkit = pytest.importorskip("tomlkit")
 yaml = pytest.importorskip("yaml")
 
