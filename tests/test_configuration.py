@@ -1,8 +1,10 @@
 import configparser
 import subprocess
 
-import tomlkit
-import yaml
+import pytest
+
+tomlkit = pytest.importorskip("tomlkit")
+yaml = pytest.importorskip("yaml")
 
 
 def test_tox_environments_equal_azure_tasks():
