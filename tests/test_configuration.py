@@ -32,6 +32,21 @@ def test_tox_environments_equal_azure_tasks():
     assert tox_environments == azure_tasks
 
 
+def test_packages_are_ordered():
+    """
+    Packages section of all pyproject.toml files should be in
+    alphabetical order.
+    """
+
+    for pyproject_toml in ["pyproject.toml", "tests/helpers/pyproject.toml"]:
+        pyproject_toml = tomlkit.loads(open(pyproject_toml).read())
+        packages = [
+            p["include"].rstrip(".py")
+            for p in pyproject_toml["tool"]["poetry"]["packages"]
+        ]
+        assert packages == sorted(packages)
+
+
 def test_coverage_include_all_packages():
     """
     Coverage source should include packages:
@@ -46,14 +61,13 @@ def test_coverage_include_all_packages():
     coverage_sources = ini_parser["coverage:run"]["source"].strip().splitlines()
 
     pyproject_toml = tomlkit.loads(open("pyproject.toml").read())
-    package = [
+    packages = [
         p["include"].rstrip(".py") for p in pyproject_toml["tool"]["poetry"]["packages"]
     ]
 
-    test_pyproject_toml = tomlkit.loads(open("tests/helpers/pyproject.toml").read())
+    pyproject_toml = tomlkit.loads(open("tests/helpers/pyproject.toml").read())
     helpers = [
-        p["include"].rstrip(".py")
-        for p in test_pyproject_toml["tool"]["poetry"]["packages"]
+        p["include"].rstrip(".py") for p in pyproject_toml["tool"]["poetry"]["packages"]
     ]
 
-    assert coverage_sources == package + helpers + ["tests"]
+    assert coverage_sources == packages + helpers + ["tests"]
