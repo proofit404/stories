@@ -32,10 +32,32 @@ def test_tox_environments_equal_azure_tasks():
     assert tox_environments == azure_tasks
 
 
+def test_tox_deps_are_ordered():
+    """
+    Dependencies section of all tox environments should be in alphabetical order.
+    """
+
+    ini_parser = configparser.ConfigParser()
+    ini_parser.read("tox.ini")
+    for section in ini_parser:
+        if "deps" in ini_parser[section]:
+            deps = ini_parser[section]["deps"].strip().splitlines()
+            ordered = [
+                deps[l[-1]]
+                for l in sorted(
+                    [
+                        (*map(lambda x: x.strip().lower(), reversed(d.split(":"))), i)
+                        for i, d in enumerate(deps)
+                    ],
+                    key=lambda key: (key[0], key[1]),
+                )
+            ]
+            assert deps == ordered
+
+
 def test_packages_are_ordered():
     """
-    Packages section of all pyproject.toml files should be in
-    alphabetical order.
+    Packages section of all pyproject.toml files should be in alphabetical order.
     """
 
     for pyproject_toml in ["pyproject.toml", "tests/helpers/pyproject.toml"]:
