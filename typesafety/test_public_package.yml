@@ -1,0 +1,12 @@
+---
+- case: stubs_available
+  disable_cache: true
+  main: |
+    from stories import *
+    from stories.exceptions import *
+    from stories.shortcuts import *
+    from stories.contrib.debug_toolbars.django import *
+    from stories.contrib.debug_toolbars.flask import *
+    from stories.contrib.pytest import *
+    from stories.contrib.sentry import *
+    from stories.contrib.sentry.django import *
