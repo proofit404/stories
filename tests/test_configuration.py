@@ -1,4 +1,5 @@
 import configparser
+import json
 import subprocess
 
 import pytest
@@ -53,6 +54,16 @@ def test_tox_deps_are_ordered():
                 )
             ]
             assert deps == ordered
+
+
+def test_nodejs_deps_are_ordered():
+    """
+    Development dependencies of the package.json should be in alphabetical order.
+    """
+
+    package_json = json.load(open("package.json"))
+    deps = list(package_json["devDependencies"].keys())
+    assert deps == sorted(deps)
 
 
 def test_packages_are_ordered():
