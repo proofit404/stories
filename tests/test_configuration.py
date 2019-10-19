@@ -108,6 +108,16 @@ def test_coverage_include_all_packages():
     assert coverage_sources == packages + helpers + ["tests"]
 
 
+def test_lock_files_not_committed():
+    """
+    Lock files should not be committed to the git repository.
+    """
+
+    git_files = subprocess.check_output(["git", "ls-files"]).decode().splitlines()
+    for lock_file in ["poetry.lock", "tests/helpers/poetry.lock", "package-lock.json"]:
+        assert lock_file not in git_files
+
+
 def test_license_year():
     """
     The year in the license notes should be the current year.
