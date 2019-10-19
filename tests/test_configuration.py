@@ -27,7 +27,7 @@ def test_tox_environments_order():
     tox_ini = open("tox.ini").read()
 
     offsets = [
-        tox_ini.find("testenv{}".format("" if re.match(r"py\d+", e) else ":" + e))
+        (tox_ini.find("testenv{}".format("" if re.match(r"py\d+", e) else ":" + e)), e)
         for e in tox_environments
     ]
 
