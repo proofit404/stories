@@ -1,5 +1,6 @@
 import configparser
 import datetime
+import itertools
 import json
 import re
 import subprocess
@@ -16,6 +17,27 @@ tomlkit = pytest.importorskip("tomlkit")
 yaml = pytest.importorskip("yaml")
 
 
+def test_tox_environments_includes_python_versions():
+    """
+    All versions from pyenv lock file should be included into Tox environments.
+    """
+
+    tox_environments = set(
+        itertools.chain.from_iterable(
+            e.split("-")
+            for e in subprocess.check_output(["tox", "-l"]).decode().splitlines()
+        )
+    )
+
+    pyenv_versions = [
+        "py{}{}".format(*v.split(".")[0:2])
+        for v in open(".python-version").read().splitlines()
+    ]
+
+    for version in pyenv_versions:
+        assert version in tox_environments
+
+
 def test_tox_environments_equal_azure_tasks():
     """
     Every tox environment should be precent in the Azure Pipeline task list.
@@ -23,9 +45,7 @@ def test_tox_environments_equal_azure_tasks():
     The order should be preserved.
     """
 
-    tox_environments = [
-        l.decode() for l in subprocess.check_output(["tox", "-l"]).splitlines()
-    ]
+    tox_environments = subprocess.check_output(["tox", "-l"]).decode().splitlines()
 
     azure_pipelines = yaml.safe_load(open("azure-pipelines.yml").read())
     azure_tasks = [
@@ -125,10 +145,10 @@ def test_license_year():
 
     current_year = datetime.date.today().year
     lines = [
-        l.decode().split(":", 1)
-        for l in subprocess.check_output(
-            ["git", "grep", "-i", "copyright"]
-        ).splitlines()
+        l.split(":", 1)
+        for l in subprocess.check_output(["git", "grep", "-i", "copyright"])
+        .decode()
+        .splitlines()
     ]
     for _filename, line in lines:
         found = re.findall(r"\b\d{4}\b", line)
