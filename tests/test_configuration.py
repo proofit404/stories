@@ -1,5 +1,7 @@
 import configparser
+import datetime
 import json
+import re
 import subprocess
 
 import pytest
@@ -104,3 +106,22 @@ def test_coverage_include_all_packages():
     ]
 
     assert coverage_sources == packages + helpers + ["tests"]
+
+
+def test_license_year():
+    """
+    The year in the license notes should be the current year.
+    """
+
+    current_year = datetime.date.today().year
+    lines = [
+        l.decode().split(":", 1)
+        for l in subprocess.check_output(
+            ["git", "grep", "-i", "copyright"]
+        ).splitlines()
+    ]
+    for _filename, line in lines:
+        found = re.findall(r"\b\d{4}\b", line)
+        if found:
+            year = int(found[-1])
+            assert year == current_year
