@@ -119,6 +119,16 @@ def test_packages_are_ordered():
         assert packages == sorted(packages)
 
 
+def test_nodejs_deps_not_pinned():
+    """
+    Development dependencies of the package.json should not have version specified.
+    """
+
+    package_json = json.load(open("package.json"))
+    versions = list(package_json["devDependencies"].values())
+    assert all(v == "*" for v in versions)
+
+
 def test_coverage_include_all_packages():
     """
     Coverage source should include packages:
