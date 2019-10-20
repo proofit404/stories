@@ -129,6 +129,21 @@ def test_nodejs_deps_not_pinned():
     assert all(v == "*" for v in versions)
 
 
+def test_packages_not_pinned():
+    """
+    Dependencies section of all pyproject.toml files should not have version specified.
+    """
+
+    for pyproject_toml in ["pyproject.toml", "tests/helpers/pyproject.toml"]:
+        pyproject_toml = tomlkit.loads(open(pyproject_toml).read())
+        versions = [
+            d.get("version")
+            for d in pyproject_toml["tool"]["poetry"].get("dependencies", {}).values()
+            if isinstance(d, dict)
+        ]
+        assert all(v == "*" for v in versions)
+
+
 def test_coverage_include_all_packages():
     """
     Coverage source should include packages:
