@@ -1,3 +1,4 @@
+import collections
 import configparser
 import datetime
 import itertools
@@ -6,6 +7,8 @@ import re
 import subprocess
 
 import pytest
+
+import helpers
 
 # This is a little bit a workaround of the PyYaml library limitations.
 # It doesn't preserve the order of keys of the parsed dict.  It works
@@ -77,22 +80,18 @@ def test_tox_deps_are_ordered():
     Dependencies section of all tox environments should be in alphabetical order.
     """
 
-    ini_parser = configparser.ConfigParser()
-    ini_parser.read("tox.ini")
-    for section in ini_parser:
-        if "deps" in ini_parser[section]:
-            deps = ini_parser[section]["deps"].strip().splitlines()
-            ordered = [
-                deps[l[-1]]
-                for l in sorted(
-                    [
-                        (*map(lambda x: x.strip().lower(), reversed(d.split(":"))), i)
-                        for i, d in enumerate(deps)
-                    ],
-                    key=lambda key: (key[0], key[1]),
-                )
-            ]
-            assert deps == ordered
+    for deps in helpers.get_tox_deps():
+        ordered = [
+            deps[l[-1]]
+            for l in sorted(
+                [
+                    (*map(lambda x: x.strip().lower(), reversed(d.split(":"))), i)
+                    for i, d in enumerate(deps)
+                ],
+                key=lambda key: (key[0], key[1]),
+            )
+        ]
+        assert deps == ordered
 
 
 def test_nodejs_deps_are_ordered():
@@ -117,6 +116,21 @@ def test_packages_are_ordered():
             for p in pyproject_toml["tool"]["poetry"]["packages"]
         ]
         assert packages == sorted(packages)
+
+
+@pytest.mark.xfail(reason="https://github.com/dry-python/stories/issues/213")
+def test_tox_deps_not_pinned():
+    """
+    Dependencies section of all tox environments should not have version specified.
+    """
+
+    for deps in helpers.get_tox_deps():
+        deps = [d.split(":")[-1].strip().split("==") for d in deps]
+        versions = collections.defaultdict(list)
+        for d in deps:
+            versions[d[0]].extend(d[1:])
+        for _package, v in versions.items():
+            assert not v or len(v) >= 2
 
 
 def test_nodejs_deps_not_pinned():

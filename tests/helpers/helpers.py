@@ -1,3 +1,5 @@
+import configparser
+
 import _stories.context
 
 
@@ -22,3 +24,12 @@ def make_collector():
         return storage[0]
 
     return getter
+
+
+def get_tox_deps():
+    ini_parser = configparser.ConfigParser()
+    ini_parser.read("tox.ini")
+    for section in ini_parser:
+        if "deps" in ini_parser[section]:
+            deps = ini_parser[section]["deps"].strip().splitlines()
+            yield deps
