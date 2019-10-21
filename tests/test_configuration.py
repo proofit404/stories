@@ -85,7 +85,12 @@ def test_tox_deps_are_ordered():
             deps[l[-1]]
             for l in sorted(
                 [
-                    (*map(lambda x: x.strip().lower(), reversed(d.split(":"))), i)
+                    tuple(
+                        itertools.chain(
+                            map(lambda x: x.strip().lower(), reversed(d.split(":"))),
+                            [i],
+                        )
+                    )
                     for i, d in enumerate(deps)
                 ],
                 key=lambda key: (key[0], key[1]),
