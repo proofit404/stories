@@ -80,7 +80,8 @@ def test_tox_deps_are_ordered():
     Dependencies section of all tox environments should be in alphabetical order.
     """
 
-    for deps in helpers.get_tox_deps():
+    for deps in helpers.tox_info("deps"):
+        deps = deps.splitlines()
         ordered = [
             deps[l[-1]]
             for l in sorted(
@@ -129,7 +130,8 @@ def test_tox_deps_not_pinned():
     Dependencies section of all tox environments should not have version specified.
     """
 
-    for deps in helpers.get_tox_deps():  # pragma: no cover
+    for deps in helpers.tox_info("deps"):  # pragma: no cover
+        deps = deps.splitlines()
         deps = [d.split(":")[-1].strip().split("==") for d in deps]
         versions = collections.defaultdict(list)
         for d in deps:
