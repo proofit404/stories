@@ -34,7 +34,7 @@ def test_tox_environments_order():
         for e in tox_environments
     ]
 
-    assert offsets == sorted(offsets)
+    assert offsets == sorted(offsets, key=lambda key: key[0])
 
 
 def test_tox_environments_includes_python_versions():
@@ -100,7 +100,7 @@ def test_tox_deps_are_ordered():
     """
 
     for _env, deps in helpers.tox_info("deps"):
-        deps = deps.splitlines()
+        deps = [d.split("==")[0] for d in deps.splitlines()]
         ordered = [
             deps[l[-1]]
             for l in sorted(
@@ -154,9 +154,9 @@ def test_tox_deps_not_pinned():
         deps = [d.split(":")[-1].strip().split("==") for d in deps]
         versions = collections.defaultdict(list)
         for d in deps:
-            versions[d[0]].extend(d[1:])
+            versions[d[0]].append(d[-1] if d[1:] else "*")
         for _package, v in versions.items():
-            assert not v or len(v) >= 2
+            assert v == ["*"] or len(v) >= 2
 
 
 def test_nodejs_deps_not_pinned():
