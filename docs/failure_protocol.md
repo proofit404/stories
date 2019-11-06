@@ -16,6 +16,7 @@ we're making an API call. We want to process `401` and `403` error
 codes differently. This is where `failed_on` method can't help.
 
 !!! note
+
     `Failure protocol` is the way to allow a certain set of values to be
     used as an argument to the `Failure` result.
 
@@ -195,6 +196,7 @@ low-level error. And the failure of the parent story usually tells us
 something about high-level business rules violation.
 
 !!! note
+
     A story in the composition can return failures with only reasons match
     its own protocol.
 

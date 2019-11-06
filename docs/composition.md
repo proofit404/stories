@@ -8,6 +8,7 @@ steps into a sub-story for readability.
 There are several ways to do it.
 
 !!! note
+
     [Failure protocol](failure_protocol.md) of the story composition is
     [composition itself](failure_protocol.md#composition). It will use all
     reasons for all protocols of all stories used in the composition.
@@ -21,6 +22,7 @@ If you want the parent story to provide some context variables, use
 `@arguments` decorator on the sub-story definition.
 
 !!! note
+
     We advise all users to define step definition methods in the same
     class with stories which use them.  We use inheritance from
     `MethodDefinitions` base class for brevity.
@@ -255,6 +257,6 @@ constructors and names duplication.
 If you follow our mantra "decouple everything", you definitely should
 check the following libraries:
 
-* [dependencies](https://dependencies.readthedocs.io/)
-* [attrs](https://www.attrs.org/)
-* [dataclasses](https://docs.python.org/3/library/dataclasses.html)
+- [dependencies](https://dependencies.readthedocs.io/)
+- [attrs](https://www.attrs.org/)
+- [dataclasses](https://docs.python.org/3/library/dataclasses.html)
