@@ -2,14 +2,14 @@
 
 `stories` follow this executing rules to run:
 
-* Methods of the class will be called in the order as they were
+- Methods of the class will be called in the order as they were
   written in the story
-* If the story calls another story in its body, methods of this
+- If the story calls another story in its body, methods of this
   sub-story add to the caller in the order they occur in sub-story
   body.
-* Each story method should return an instance of `Success`, `Failure`,
+- Each story method should return an instance of `Success`, `Failure`,
   `Result` or `Skip` classes.
-* The execution of the story will change according to the type of the
+- The execution of the story will change according to the type of the
   return value.
 
 ## Success
