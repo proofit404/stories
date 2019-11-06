@@ -7,14 +7,14 @@
 [![pypi](https://img.shields.io/pypi/v/stories.svg)](https://pypi.python.org/pypi/stories/)
 [![black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
------
+---
 
 # The business transaction DSL
 
-* [Source Code](https://github.com/dry-python/stories)
-* [Issue Tracker](https://github.com/dry-python/stories/issues)
-* [Documentation](https://stories.readthedocs.io/en/latest/)
-* [Discussion](https://gitter.im/dry-python/stories)
+- [Source Code](https://github.com/dry-python/stories)
+- [Issue Tracker](https://github.com/dry-python/stories/issues)
+- [Documentation](https://stories.readthedocs.io/en/latest/)
+- [Discussion](https://gitter.im/dry-python/stories)
 
 ## Installation
 

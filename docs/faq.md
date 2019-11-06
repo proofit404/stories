@@ -5,6 +5,7 @@ Here we'll try to explain some reasons behind our decisions.
 ## Why do we need a DSL?
 
 !!! note
+
     You can ignore convention. You can't ignore the tool.
 
 A DSL with lots of possibilities is hard to reason about and maintain. A
@@ -29,6 +30,7 @@ improve developer experience a lot.
 This is what `stories` try very hard.
 
 !!! note
+
     Our goal is bringing the maximum value to your process while keeping
     magic at the lowest possible minimum.
 

@@ -7,7 +7,7 @@
 [![pypi](https://img.shields.io/pypi/v/stories.svg)](https://pypi.python.org/pypi/stories/)
 [![black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
------
+---
 
 # The business transaction DSL
 
@@ -20,18 +20,18 @@ capturing and returning errors from any step in the transaction.
 
 `stories` is based on the following ideas:
 
-* A business transaction is a series of operations where any can fail
+- A business transaction is a series of operations where any can fail
   and stop the processing.
-* A business transaction can describe its steps on an abstract level
+- A business transaction can describe its steps on an abstract level
   without being coupled to any details about how individual operations
   work.
-* A business transaction doesn’t have any state.
-* Each operation shouldn’t accumulate state, instead it should receive
+- A business transaction doesn’t have any state.
+- Each operation shouldn’t accumulate state, instead it should receive
   an input and return an output without causing any side-effects.
-* The only interface of an operation is `ctx`.
-* Each operation provides a meaningful piece of functionality and can
+- The only interface of an operation is `ctx`.
+- Each operation provides a meaningful piece of functionality and can
   be reused.
-* Errors in any operation should be easily caught and handled as part
+- Errors in any operation should be easily caught and handled as part
   of the normal application flow.
 
 # Example
@@ -96,5 +96,6 @@ This code style allow you clearly separate actual business scenario from
 implementation details.
 
 !!! note
+
     `stories` library was heavily inspired by
     [dry-transaction](http://dry-rb.org/gems/dry-transaction/) ruby gem.
