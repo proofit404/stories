@@ -9,14 +9,5 @@
   },
   "scripts": {
     "lint:md": "remark --frail ."
-  },
-  "remarkConfig": {
-    "plugins": [
-      "remark-preset-lint-recommended",
-      [
-        "remark-lint-list-item-indent",
-        "space"
-      ]
-    ]
   }
 }
