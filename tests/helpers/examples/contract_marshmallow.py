@@ -305,8 +305,8 @@ class ParentWithSame(object):
         I.after
 
 
-@ParentWithSame.a.contract  # noqa: F811
-class Contract(Schema):
+@ParentWithSame.a.contract
+class Contract(Schema):  # noqa: F811
     foo = fields.Integer()
     bar = fields.List(fields.Integer())
     baz = fields.Integer()
@@ -320,9 +320,9 @@ class ParentReuse(object):
         I.after
 
 
-@ChildReuse.x.contract  # noqa: F811
+@ChildReuse.x.contract
 @ParentReuse.a.contract
-class Contract(Schema):
+class Contract(Schema):  # noqa: F811
     foo = fields.Integer()
     bar = fields.List(fields.Integer())
     baz = fields.Integer()
@@ -350,8 +350,8 @@ class ParamParent(object):
         I.after
 
 
-@ParamParent.a.contract  # noqa: F811
-class Contract(Schema):
+@ParamParent.a.contract
+class Contract(Schema):  # noqa: F811
     ham = fields.Integer()
     eggs = fields.Integer()
     beans = fields.Integer()
@@ -374,8 +374,8 @@ class ParamParentWithSame(object):
         I.after
 
 
-@ParamParentWithSame.a.contract  # noqa: F811
-class Contract(Schema):
+@ParamParentWithSame.a.contract
+class Contract(Schema):  # noqa: F811
     foo = fields.Integer()
     bar = fields.List(fields.Integer())
     baz = fields.Integer()
@@ -390,8 +390,8 @@ class ParamParentWithSameWithString(object):
         I.after
 
 
-@ParamParentWithSameWithString.a.contract  # noqa: F811
-class Contract(Schema):
+@ParamParentWithSameWithString.a.contract
+class Contract(Schema):  # noqa: F811
     foo = fields.String()
     bar = fields.List(fields.String())
 
@@ -408,9 +408,9 @@ class NextParamParentReuse(object):
         I.after
 
 
-@NextParamChildReuse.y.contract  # noqa: F811
+@NextParamChildReuse.y.contract
 @NextParamParentReuse.b.contract
-class Contract(Schema):
+class Contract(Schema):  # noqa: F811
     foo = fields.Integer()
     bar = fields.List(fields.Integer())
     baz = fields.Integer()
@@ -427,8 +427,8 @@ class Root(object):
         I.finish
 
 
-@contract_in(Root)  # noqa: F811
-class Contract(Schema):
+@contract_in(Root)
+class Contract(Schema):  # noqa: F811
     fizz = fields.Integer()
     buzz = fields.Integer()
 
@@ -441,8 +441,8 @@ class RootWithSame(object):
         I.finish
 
 
-@contract_in(RootWithSame)  # noqa: F811
-class Contract(Schema):
+@contract_in(RootWithSame)
+class Contract(Schema):  # noqa: F811
     foo = fields.Integer()
     bar = fields.List(fields.Integer())
     baz = fields.Integer()
@@ -457,8 +457,8 @@ class SequentialRoot(object):
         I.finish
 
 
-@contract_in(SequentialRoot)  # noqa: F811
-class Contract(Schema):
+@contract_in(SequentialRoot)
+class Contract(Schema):  # noqa: F811
     fizz = fields.Integer()
     buzz = fields.Integer()
 
@@ -472,7 +472,7 @@ class ParamRoot(object):
         I.finish
 
 
-@contract_in(ParamRoot)  # noqa: F811
-class Contract(Schema):
+@contract_in(ParamRoot)
+class Contract(Schema):  # noqa: F811
     fizz = fields.Integer()
     buzz = fields.Integer()
