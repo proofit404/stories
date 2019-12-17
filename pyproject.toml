@@ -46,5 +46,5 @@ mkdocs = ["mkdocs", "mkdocs-material"]
 stories = "stories.contrib.pytest"
 
 [build-system]
-requires = ["poetry>=0.12"]
+requires = ["poetry"]
 build-backend = "poetry.masonry.api"
