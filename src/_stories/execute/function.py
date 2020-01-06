@@ -1,6 +1,7 @@
 from _stories.context import assign_namespace
 from _stories.marker import BeginningOfStory
 from _stories.marker import EndOfStory
+from _stories.rescue import get_rescues
 from _stories.returned import Failure
 from _stories.returned import Result
 from _stories.returned import Skip
@@ -41,8 +42,19 @@ def execute(runner, ctx, history, methods):
             except Exception as error:
                 history.on_error(error.__class__.__name__)
                 raise
-            history.on_failure(result.reason)
-            return runner.got_failure(ctx, method.__name__, result.reason)
+
+            rescue = get_rescues(method).get(result.reason)
+            if rescue is not None:
+                result = rescue(method.__self__, ctx)
+                restype = type(result)
+                if restype not in (Result, Success, Failure, Skip):
+                    raise AssertionError
+                if restype is Failure:
+                    history.on_failure(result.reason)
+                    return runner.got_failure(ctx, method.__name__, result.reason)
+            else:
+                history.on_failure(result.reason)
+                return runner.got_failure(ctx, method.__name__, result.reason)
 
         if restype is Result:
             history.on_result(result.value)
