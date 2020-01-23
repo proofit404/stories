@@ -28,10 +28,7 @@ from stories.exceptions import ContextContractError
 
 
 def test_assign_existed_variables(m):
-    """
-    We can not write a variable with the same name to the context
-    twice.
-    """
+    """We can not write a variable with the same name to the context twice."""
 
     class T(m.ParamChildWithNull, m.StringMethod):
         pass
@@ -124,10 +121,11 @@ Context:
 
 
 def test_context_variables_normalization(m):
-    """
-    We apply normalization to the context variables, if story defines
-    context contract.  If story step returns a string holding a
-    number, we should store a number in the context.
+    """We apply normalization to the context variables, if story defines
+    context contract.
+
+    If story step returns a string holding a number, we should store a
+    number in the context.
     """
 
     class T(m.Child, m.StringMethod):
@@ -178,8 +176,8 @@ def test_context_variables_normalization(m):
 
 
 def test_context_variables_normalization_conflict(m):
-    """
-    More than one substory can declare an argument with the same name.
+    """More than one substory can declare an argument with the same name.
+
     This means validators of both substories should return the same
     result.
     """
@@ -269,10 +267,11 @@ Contract:
 
 
 def test_story_arguments_normalization(m):
-    """
-    We apply normalization to the story arguments, if story defines
-    context contract.  If story was called with a string argument
-    holding a number, we should store a number in the context.
+    """We apply normalization to the story arguments, if story defines context
+    contract.
+
+    If story was called with a string argument holding a number, we
+    should store a number in the context.
     """
 
     class T(m.ParamChild, m.NormalMethod):
@@ -323,10 +322,8 @@ def test_story_arguments_normalization(m):
 
 
 def test_story_arguments_normalization_many_levels(m):
-    """
-    We apply normalization to the story arguments on any levels of
-    story composition.
-    """
+    """We apply normalization to the story arguments on any levels of story
+    composition."""
 
     class T(m.ParamChild, m.NormalMethod):
         pass
@@ -411,10 +408,11 @@ def test_story_arguments_normalization_many_levels(m):
 
 
 def test_story_arguments_normalization_conflict(m):
-    """
-    Story and substory can have an argument with the same name.  They
-    both will define validators for this argument.  If normalization
-    result of both contracts will mismatch we should raise an error.
+    """Story and substory can have an argument with the same name.
+
+    They both will define validators for this argument.  If
+    normalization result of both contracts will mismatch we should raise
+    an error.
     """
 
     class T(m.ParamChild, m.NormalMethod):
@@ -493,10 +491,8 @@ Contract:
 
 
 def test_context_variables_validation(m):
-    """
-    We apply validators to the context variables, if story defines
-    context contract.
-    """
+    """We apply validators to the context variables, if story defines context
+    contract."""
 
     class T(m.Child, m.WrongMethod):
         pass
@@ -612,10 +608,10 @@ Contract:
 
 
 def test_story_arguments_validation(m):
-    """
-    We apply validators to the story arguments, if story defines
-    context contract.  This is check performed during story call, not
-    execution.
+    """We apply validators to the story arguments, if story defines context
+    contract.
+
+    This is check performed during story call, not execution.
     """
 
     class T(m.ParamChild, m.ExceptionMethod):
@@ -735,10 +731,8 @@ Contract:
 
 
 def test_story_arguments_validation_many_levels(m):
-    """
-    We apply contract validation to the story arguments on any levels
-    of story composition.
-    """
+    """We apply contract validation to the story arguments on any levels of
+    story composition."""
 
     class T(m.ParamChild, m.NormalMethod):
         pass
@@ -821,10 +815,7 @@ Contract:
 
 
 def test_composition_contract_variable_conflict(m):
-    """
-    Story and substory contracts can not declare the same variable
-    twice.
-    """
+    """Story and substory contracts can not declare the same variable twice."""
 
     class T(m.Child, m.NormalMethod):
         pass
@@ -874,10 +865,7 @@ Use variables with different names.
 
 
 def test_composition_contract_variable_conflict_many_levels(m):
-    """
-    Story and substory contracts can not declare the same variable
-    twice.
-    """
+    """Story and substory contracts can not declare the same variable twice."""
 
     class T(m.Child, m.NormalMethod):
         pass
@@ -934,10 +922,7 @@ Use variables with different names.
 
 
 def test_composition_contract_variable_conflict_sequential(m):
-    """
-    Story and substory contracts can not declare the same variable
-    twice.
-    """
+    """Story and substory contracts can not declare the same variable twice."""
 
     class T(m.Child, m.NormalMethod):
         pass
@@ -991,10 +976,10 @@ Use variables with different names.
 
 
 def test_composition_contract_variable_conflict_sequential_reuse(m):
-    """
-    Story and substory can reuse the same contract.  Substory can have
-    more arguments than story.  Another sequential substory can have
-    the same arguments as previous substory.
+    """Story and substory can reuse the same contract.
+
+    Substory can have more arguments than story.  Another sequential
+    substory can have the same arguments as previous substory.
     """
 
     class E(m.NextParamChildReuse, m.NormalMethod):
@@ -1084,11 +1069,11 @@ Substory context contract: {contract_class_repr}
 
 
 def test_composition_use_same_contract_instance(m):
-    """
-    The same contract class or instance can be used in story and a
-    substory.  This should not lead to the incompatible contract
-    composition error.  Variable declared there can be assigned in one
-    of the story.  And it will be declared once within the contract.
+    """The same contract class or instance can be used in story and a substory.
+
+    This should not lead to the incompatible contract composition error.
+    Variable declared there can be assigned in one of the story.  And it
+    will be declared once within the contract.
     """
 
     class T(m.ChildReuse, m.NormalMethod):
@@ -1111,10 +1096,8 @@ def test_composition_use_same_contract_instance(m):
 
 
 def test_unknown_context_variable(m):
-    """
-    Step can't use Success argument name which was not specified in
-    the contract.
-    """
+    """Step can't use Success argument name which was not specified in the
+    contract."""
 
     class T(m.Child, m.UnknownMethod):
         pass
@@ -1203,9 +1186,7 @@ Contract:
 
 
 def test_unknown_story_arguments_with_null(m):
-    """
-    Allow to pass known only story and substory arguments to the call.
-    """
+    """Allow to pass known only story and substory arguments to the call."""
 
     class T(m.ParamChildWithNull, m.NormalMethod):
         pass
@@ -1284,9 +1265,7 @@ Contract:
 
 
 def test_unknown_story_arguments(m):
-    """
-    Allow to pass known only story and substory arguments to the call.
-    """
+    """Allow to pass known only story and substory arguments to the call."""
 
     class T(m.ParamChild, m.NormalMethod):
         pass
@@ -1378,10 +1357,8 @@ Contract:
 
 
 def test_unknown_story_arguments_with_empty_with_null(m):
-    """
-    Deny any arguments in the call, if story and substory has no
-    arguments specified.
-    """
+    """Deny any arguments in the call, if story and substory has no arguments
+    specified."""
 
     class T(m.ChildWithNull, m.NormalMethod):
         pass
@@ -1449,10 +1426,8 @@ Contract()
 
 
 def test_unknown_story_arguments_with_empty(m):
-    """
-    Deny any arguments in the call, if story and substory has no
-    arguments specified.
-    """
+    """Deny any arguments in the call, if story and substory has no arguments
+    specified."""
 
     class T(m.Child, m.NormalMethod):
         pass
@@ -1625,10 +1600,8 @@ Context()
 
 
 def test_parent_steps_set_story_arguments(m):
-    """
-    Steps of parent stories should be able to set child stories
-    arguments with `Success` marker keyword arguments.
-    """
+    """Steps of parent stories should be able to set child stories arguments
+    with `Success` marker keyword arguments."""
 
     class T(m.ParamChild, m.NormalMethod):
         pass
@@ -1697,10 +1670,10 @@ def test_parent_steps_set_story_arguments(m):
 
 
 def test_sequential_story_steps_set_story_arguments(m):
-    """
-    There are a few sequential substories with one common parent
-    story.  One substory should be able to set variable to provide an
-    argument to the next sequential story.
+    """There are a few sequential substories with one common parent story.
+
+    One substory should be able to set variable to provide an argument
+    to the next sequential story.
     """
 
     class T(m.ChildWithShrink, m.StringMethod):
@@ -1743,10 +1716,8 @@ def test_sequential_story_steps_set_story_arguments(m):
 
 
 def test_arguments_should_be_declared_in_contract(m):
-    """
-    We should require all story arguments to be declared in the
-    context contract.
-    """
+    """We should require all story arguments to be declared in the context
+    contract."""
 
     class T(m.ParamChildWithShrink, m.NormalMethod):
         pass
@@ -1805,11 +1776,11 @@ Story arguments: foo, bar, baz
 
 
 def test_story_variable_alias_normalization_store_same_object(m):
-    """
-    When story step sets a set of variables some of them are aliases
-    of each other.  If the type and the value of alias are equal to
-    the origin value, we should preserve the same reference to the
-    value.
+    """When story step sets a set of variables some of them are aliases of each
+    other.
+
+    If the type and the value of alias are equal to the origin value, we
+    should preserve the same reference to the value.
     """
 
     class T(m.ChildAlias, m.AliasMethod):
@@ -1841,10 +1812,11 @@ def test_story_variable_alias_normalization_store_same_object(m):
 
 
 def test_story_argument_alias_normalization_store_same_object(m):
-    """
-    When story has a set of arguments some of them are aliases of each
-    other.  If the type and the value of alias are equal to the origin
-    value, we should preserve the same reference to the value.
+    """When story has a set of arguments some of them are aliases of each
+    other.
+
+    If the type and the value of alias are equal to the origin value, we
+    should preserve the same reference to the value.
     """
 
     class T(m.ParamChildAlias, m.NormalMethod):
@@ -1881,10 +1853,7 @@ def test_story_argument_alias_normalization_store_same_object(m):
 
 
 def test_story_contract_representation_with_spec(m):
-    """
-    Show collected story composition contract as mounted story
-    attribute.
-    """
+    """Show collected story composition contract as mounted story attribute."""
 
     class T(m.Child, m.StringMethod):
         pass
@@ -1982,9 +1951,9 @@ Contract:
 
 
 def test_story_contract_representation_with_spec_with_args(m):
-    """
-    Show collected story composition contract as mounted story
-    attribute.  We show each story arguments.
+    """Show collected story composition contract as mounted story attribute.
+
+    We show each story arguments.
     """
 
     class T(m.ParamChild, m.StringMethod):
@@ -2083,10 +2052,10 @@ Contract:
 
 
 def test_story_contract_representation_with_spec_with_args_conflict(m):
-    """
-    Show collected story composition contract as mounted story
-    attribute.  We show each story arguments in multiline mode if the
-    same name was declared in multiple substories.
+    """Show collected story composition contract as mounted story attribute.
+
+    We show each story arguments in multiline mode if the same name was
+    declared in multiple substories.
     """
 
     class T(m.ParamChild, m.NormalMethod):

@@ -57,9 +57,7 @@ def test_context_dir(c):
 
 
 def test_deny_context_attribute_assignment(c):
-    """
-    We can't use attribute assignment with `Context` object.
-    """
+    """We can't use attribute assignment with `Context` object."""
 
     class T(c.Child, c.AssignMethod):
         pass
@@ -109,9 +107,7 @@ Use Success() keyword arguments to expand its scope.
 
 
 def test_deny_context_attribute_deletion(c):
-    """
-    We can't use attribute deletion with `Context` object.
-    """
+    """We can't use attribute deletion with `Context` object."""
 
     class T(c.Child, c.DeleteMethod):
         pass
