@@ -31,13 +31,13 @@ here](composition.md#delegate-implementation).
 ...
 ...     def find_category(self, ctx):
 ...
-...         category = self.load_category(ctx.category_id)
-...         return Success(category=category)
+...         ctx.category = self.load_category(ctx.category_id)
+...         return Success()
 ...
 ...     def find_promo_code(self, ctx):
 ...
-...         promo_code = self.load_promo_code(ctx.category)
-...         return Success(promo_code=promo_code)
+...         ctx.promo_code = self.load_promo_code(ctx.category)
+...         return Success()
 ...
 ...     def check_expiration(self, ctx):
 ...
@@ -48,8 +48,8 @@ here](composition.md#delegate-implementation).
 ...
 ...     def calculate_discount(self, ctx):
 ...
-...         discount = ctx.promo_code.apply_discount(ctx.category.price)
-...         return Success(discount=discount)
+...         ctx.discount = ctx.promo_code.apply_discount(ctx.category.price)
+...         return Success()
 ...
 ...     def show_final_price(self, ctx):
 ...
@@ -156,8 +156,8 @@ go one frame upper in the call stack and look who does it.
 (Pdb) ll
  36      def calculate_discount(self, ctx):
  37
- 38  ->      discount = ctx.promo_code.apply_discount(ctx.category.price)
- 39          return Success(discount=discount)
+ 38  ->      ctx.discount = ctx.promo_code.apply_discount(ctx.category.price)
+ 39          return Success()
 
 ```
 
@@ -196,8 +196,8 @@ take a closer look at it.
 ```pycon
 
 >>> def find_category(self, ctx):
-...     category = self.load_category(ctx.category_id)
-...     return Success(category=category)
+...     ctx.category = self.load_category(ctx.category_id)
+...     return Success()
 
 ```
 

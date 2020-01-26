@@ -198,13 +198,13 @@ Here are some examples:
 ...
 ...     def find_profile(self, ctx):
 ...
-...         profile = self.load_profile(ctx.profile_id)
-...         return Success(profile=profile)
+...         ctx.profile = self.load_profile(ctx.profile_id)
+...         return Success()
 ...
 ...     def find_price(self, ctx):
 ...
-...         price = self.load_price(ctx.price_id)
-...         return Success(price=price)
+...         ctx.price = self.load_price(ctx.price_id)
+...         return Success()
 ...
 ...     def check_balance(self, ctx):
 ...
@@ -234,13 +234,13 @@ Here are some examples:
 ...
 ...     async def find_profile(self, ctx):
 ...
-...         profile = await self.load_profile(ctx.profile_id)
-...         return Success(profile=profile)
+...         ctx.profile = await self.load_profile(ctx.profile_id)
+...         return Success()
 ...
 ...     async def find_price(self, ctx):
 ...
-...         price = await self.load_price(ctx.price_id)
-...         return Success(price=price)
+...         ctx.price = await self.load_price(ctx.price_id)
+...         return Success()
 ...
 ...     async def check_balance(self, ctx):
 ...
@@ -298,8 +298,8 @@ constructors and names duplication.
 ```pycon tab="sync"
 
 >>> def find_price(self, ctx):
-...     price = self.impl.find_price(ctx.price_id)
-...     return Success(price=price)
+...     ctx.price = self.impl.find_price(ctx.price_id)
+...     return Success()
 
 >>> def __init__(self, impl):
 ...     self.impl = impl
@@ -309,8 +309,8 @@ constructors and names duplication.
 ```pycon tab="async"
 
 >>> async def find_price(self, ctx):
-...     price = await self.impl.find_price(ctx.price_id)
-...     return Success(price=price)
+...     ctx.price = await self.impl.find_price(ctx.price_id)
+...     return Success()
 
 >>> def __init__(self, impl):
 ...     self.impl = impl

@@ -184,7 +184,7 @@ four
 
 ```
 
-Story method can use `Success` keyword arguments to set some context
+Story method can assign attributes to the context to set some
 variables for future methods.
 
 ```pycon tab="sync"
@@ -201,7 +201,9 @@ variables for future methods.
 ...
 ...     def one(self, ctx):
 ...
-...         return Success(var_a=1, var_b=2)
+...         ctx.var_a = 1
+...         ctx.var_b = 2
+...         return Success()
 ...
 ...     def two(self, ctx):
 ...
@@ -229,7 +231,9 @@ variables for future methods.
 ...
 ...     async def one(self, ctx):
 ...
-...         return Success(var_a=1, var_b=2)
+...         ctx.var_a = 1
+...         ctx.var_b = 2
+...         return Success()
 ...
 ...     async def two(self, ctx):
 ...
@@ -242,6 +246,16 @@ variables for future methods.
 2
 
 ```
+
+!!! note
+
+    A previous version of the stories library implemented the same
+    behavior with `Success()` marker keyword arguments.  If you need
+    to migrate source files where outdated version of the library was
+    used, please have a look at the
+    [editors](https://github.com/dry-python/editors#stories-upgrade)
+    project.  It will refactory all your codebase properly within a
+    single command.
 
 ## Failure
 
