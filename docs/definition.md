@@ -39,18 +39,18 @@ it is a business process of the subscription to our service.
 ...
 ...     def find_category(self, ctx):
 ...
-...         category = load_category(ctx.category_id)
-...         return Success(category=category)
+...         ctx.category = load_category(ctx.category_id)
+...         return Success()
 ...
 ...     def find_price(self, ctx):
 ...
-...         price = load_price(ctx.price_id)
-...         return Success(price=price)
+...         ctx.price = load_price(ctx.price_id)
+...         return Success()
 ...
 ...     def find_profile(self, ctx):
 ...
-...         profile = load_profile(ctx.user_id)
-...         return Success(profile=profile)
+...         ctx.profile = load_profile(ctx.user_id)
+...         return Success()
 ...
 ...     def check_balance(self, ctx):
 ...
@@ -68,17 +68,17 @@ it is a business process of the subscription to our service.
 ...     def persist_subscription(self, ctx):
 ...
 ...         expires = calculate_period(ctx.price.period)
-...         subscription = create_subscription(
+...         ctx.subscription = create_subscription(
 ...             ctx.profile, ctx.category, expires
 ...         )
-...         return Success(subscription=subscription)
+...         return Success()
 ...
 ...     def send_subscription_notification(self, ctx):
 ...
-...         notification = send_notification(
+...         ctx.notification = send_notification(
 ...             "subscription", ctx.profile, ctx.category.name
 ...         )
-...         return Success(notification=notification)
+...         return Success()
 ...
 ...     def show_category(self, ctx):
 ...
@@ -108,18 +108,18 @@ it is a business process of the subscription to our service.
 ...
 ...     async def find_category(self, ctx):
 ...
-...         category = await load_category(ctx.category_id)
-...         return Success(category=category)
+...         ctx.category = await load_category(ctx.category_id)
+...         return Success()
 ...
 ...     async def find_price(self, ctx):
 ...
-...         price = await load_price(ctx.price_id)
-...         return Success(price=price)
+...         ctx.price = await load_price(ctx.price_id)
+...         return Success()
 ...
 ...     async def find_profile(self, ctx):
 ...
-...         profile = await load_profile(ctx.user_id)
-...         return Success(profile=profile)
+...         ctx.profile = await load_profile(ctx.user_id)
+...         return Success()
 ...
 ...     async def check_balance(self, ctx):
 ...
@@ -137,17 +137,17 @@ it is a business process of the subscription to our service.
 ...     async def persist_subscription(self, ctx):
 ...
 ...         expires = await calculate_period(ctx.price.period)
-...         subscription = await create_subscription(
+...         ctx.subscription = await create_subscription(
 ...             ctx.profile, ctx.category, expires
 ...         )
-...         return Success(subscription=subscription)
+...         return Success()
 ...
 ...     async def send_subscription_notification(self, ctx):
 ...
-...         notification = await send_notification(
+...         ctx.notification = await send_notification(
 ...             "subscription", ctx.profile, ctx.category.name
 ...         )
-...         return Success(notification=notification)
+...         return Success()
 ...
 ...     async def show_category(self, ctx):
 ...
@@ -459,7 +459,8 @@ To make failure handling a more manageable process we can define a
 ...
 ...         subscription = load_subscription(ctx.category_id, ctx.user_id)
 ...         if subscription:
-...             return Success(subscription=subscription)
+...             ctx.subscription = subscription
+...             return Success()
 ...         else:
 ...             return Failure(Errors.forbidden)
 ...
@@ -474,7 +475,8 @@ To make failure handling a more manageable process we can define a
 ...
 ...         category = load_category(ctx.category_id)
 ...         if category:
-...             return Success(category=category)
+...             ctx.category = category
+...             return Success()
 ...         else:
 ...             return Failure(Errors.not_found)
 ...
@@ -511,7 +513,8 @@ To make failure handling a more manageable process we can define a
 ...
 ...         subscription = await load_subscription(ctx.category_id, ctx.user_id)
 ...         if subscription:
-...             return Success(subscription=subscription)
+...             ctx.subscription = subscription
+...             return Success()
 ...         else:
 ...             return Failure(Errors.forbidden)
 ...
@@ -526,7 +529,8 @@ To make failure handling a more manageable process we can define a
 ...
 ...         category = await load_category(ctx.category_id)
 ...         if category:
-...             return Success(category=category)
+...             ctx.category = category
+...             return Success()
 ...         else:
 ...             return Failure(Errors.not_found)
 ...

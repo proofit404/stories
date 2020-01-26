@@ -49,13 +49,13 @@ that include many processing steps.
 ...
 ...     def find_category(self, ctx):
 ...
-...         category = Category.objects.get(pk=ctx.category_id)
-...         return Success(category=category)
+...         ctx.category = Category.objects.get(pk=ctx.category_id)
+...         return Success()
 ...
 ...     def find_profile(self, ctx):
 ...
-...         profile = Profile.objects.get(pk=ctx.profile_id)
-...         return Success(profile=profile)
+...         ctx.profile = Profile.objects.get(pk=ctx.profile_id)
+...         return Success()
 ...
 ...     def check_balance(self, ctx):
 ...
@@ -66,17 +66,13 @@ that include many processing steps.
 ...
 ...     def persist_subscription(self, ctx):
 ...
-...         subscription = Subscription(category=ctx.category, profile=ctx.profile)
-...         subscription.save()
-...         return Success(subscription=subscription)
+...         ctx.subscription = Subscription(category=ctx.category, profile=ctx.profile)
+...         ctx.subscription.save()
+...         return Success()
 ...
 ...     def show_subscription(self, ctx):
 ...
 ...         return Result(ctx.subscription)
-
-```
-
-```pycon
 
 >>> Subscribe().buy(category_id=1, profile_id=1)
 <Subscription: Subscription object (8)>
