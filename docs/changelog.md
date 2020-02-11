@@ -1,3 +1,9 @@
+## [0.10.2](https://github.com/dry-python/stories/compare/0.10.1...0.10.2) (2020-02-11)
+
+### Bug Fixes
+
+- prevent generated changelog from style guide violation ([7d4047d](https://github.com/dry-python/stories/commit/7d4047d10e4dacc10ec356700b1fc35161efa4c0))
+
 # Changelog
 
 Versions follow [0ver](https://0ver.org/) without a strict backward
