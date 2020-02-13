@@ -12,7 +12,7 @@ from typing import Union
 from cerberus.validator import Validator
 from marshmallow.schema import Schema
 from pydantic.error_wrappers import ErrorWrapper
-from pydantic.fields import Field
+from pydantic.fields import ModelField
 from pydantic.main import BaseModel
 from typing_extensions import Literal
 
@@ -27,7 +27,7 @@ from _stories.returned import Skip
 from _stories.returned import Success
 
 class PydanticValidator:
-    def __init__(self, spec: BaseModel, field: Field) -> None: ...
+    def __init__(self, spec: BaseModel, field: ModelField) -> None: ...
     def __call__(self, value: Any) -> Any: ...
     def __repr__(self) -> str: ...
 

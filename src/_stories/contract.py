@@ -3,9 +3,7 @@ from operator import itemgetter
 
 from _stories.compat import CerberusSpec
 from _stories.compat import MarshmallowSpec
-from _stories.compat import pydantic_display
 from _stories.compat import PydanticError
-from _stories.compat import PydanticShape
 from _stories.compat import PydanticSpec
 from _stories.exceptions import ContextContractError
 
@@ -110,21 +108,7 @@ class PydanticValidator(object):
         return self.field.validate(value, {}, loc=self.field.alias, cls=self.spec)
 
     def __repr__(self):
-        if self.field.shape is PydanticShape.SINGLETON:
-            template = "%s"
-        elif self.field.shape is PydanticShape.LIST:
-            template = "List[%s]"
-        elif self.field.shape is PydanticShape.SET:
-            template = "Set[%s]"
-        elif self.field.shape is PydanticShape.MAPPING:
-            template = "Mapping[%s]"
-        elif self.field.shape is PydanticShape.TUPLE:
-            template = "Tuple[%s]"
-        elif self.field.shape is PydanticShape.TUPLE_ELLIPS:
-            template = "Tuple[%s, ...]"
-        elif self.field.shape is PydanticShape.SEQUENCE:
-            template = "Sequence[%s]"
-        return template % (pydantic_display(self.field.type_),)
+        return self.field._type_display()
 
 
 class MarshmallowValidator(object):
@@ -497,7 +481,7 @@ def format_violations(ns, errors):
             normalize(elem, indent, list_item=True)
 
     def normalize_pydantic(value, indent):
-        normalize_str(value.msg, indent)
+        normalize_str(str(value.exc), indent)
 
     def normalize_str(value, indent):
         result.append(" " * indent + value)
