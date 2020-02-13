@@ -19,21 +19,13 @@ except ImportError:
 
 try:
     from pydantic.error_wrappers import ErrorWrapper as PydanticError
-    from pydantic.fields import Shape as PydanticShape
-    from pydantic.main import MetaModel as PydanticSpec
-    from pydantic.utils import display_as_type as pydantic_display
+    from pydantic.main import ModelMetaclass as PydanticSpec
 except ImportError:
     # Pydantic package is not installed.
     class PydanticSpec(object):  # type: ignore
         pass
 
     class PydanticError(object):  # type: ignore
-        pass
-
-    class PydanticShape(object):  # type: ignore
-        pass
-
-    def pydantic_display(v):  # type: ignore
         pass
 
 
