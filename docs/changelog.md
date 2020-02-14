@@ -1,3 +1,9 @@
+# [0.11.0](https://github.com/dry-python/stories/compare/0.10.2...0.11.0) (2020-02-14)
+
+### Features
+
+- migrate to pydantic v1.x ([9049eae](https://github.com/dry-python/stories/commit/9049eae43c7b8db36708fc019a671a53bf4b578d))
+
 ## [0.10.2](https://github.com/dry-python/stories/compare/0.10.1...0.10.2) (2020-02-11)
 
 ### Bug Fixes
