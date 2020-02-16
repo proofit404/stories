@@ -1,15 +1,10 @@
 # -*- coding: utf-8 -*-
 from marshmallow import fields
 from marshmallow import Schema
-from marshmallow import utils
 
 from stories import arguments
 from stories import story
 from stories.shortcuts import contract_in
-
-
-# We don't want to convert strings to unicode on Python 2.
-utils.text_type = str
 
 
 # Constants.

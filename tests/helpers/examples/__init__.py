@@ -3,7 +3,7 @@ import sys
 
 import pytest
 
-import examples.methods  # noqa: F401
+import helpers
 
 
 def runners():
@@ -14,10 +14,14 @@ def runners():
 
 def contracts():
     yield "examples.contract.raw"
-    if sys.version_info[:2] > (3, 5):
+    if helpers.is_installed("pydantic"):
         yield "examples.contract.pydantic"
-    yield "examples.contract.marshmallow"
-    yield "examples.contract.cerberus"
+    if helpers.is_installed("marshmallow", 2):
+        yield "examples.contract.marshmallow2"
+    if helpers.is_installed("marshmallow", 3):
+        yield "examples.contract.marshmallow3"
+    if helpers.is_installed("cerberus"):
+        yield "examples.contract.cerberus"
 
 
 # Fixtures.

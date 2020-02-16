@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import configparser
+import importlib
 import textwrap
 
 import _stories.context
@@ -29,6 +30,17 @@ def make_collector():
         return storage[0]
 
     return getter
+
+
+def is_installed(module, version=None):
+    try:
+        library = importlib.import_module(module)
+        if version is not None and library.__version_info__[0] != version:
+            return False
+    except ImportError:
+        return False
+    else:
+        return True
 
 
 def tox_info(var):

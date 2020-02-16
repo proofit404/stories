@@ -25,10 +25,32 @@ except ImportError:
 
 
 try:
-    from marshmallow.schema import SchemaMeta as MarshmallowSpec
+    import marshmallow
+
+    if marshmallow.__version_info__[0] != 3:
+        raise ImportError
+
+    from marshmallow.schema import SchemaMeta as Marshmallow3Spec
+    from marshmallow.exceptions import ValidationError as Marshmallow3Error
 except ImportError:
-    # Marshmallow package is not installed.
-    class MarshmallowSpec(object):
+    # Marshmallow 3 package is not installed.
+    class Marshmallow3Spec(object):
+        pass
+
+    class Marshmallow3Error(object):
+        pass
+
+
+try:
+    import marshmallow
+
+    if marshmallow.__version_info__[0] != 2:
+        raise ImportError
+
+    from marshmallow.schema import SchemaMeta as Marshmallow2Spec
+except ImportError:
+    # Marshmallow 2 package is not installed.
+    class Marshmallow2Spec(object):
         pass
 
 

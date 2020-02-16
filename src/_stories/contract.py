@@ -3,7 +3,9 @@ from inspect import isclass
 from operator import itemgetter
 
 from _stories.compat import CerberusSpec
-from _stories.compat import MarshmallowSpec
+from _stories.compat import Marshmallow2Spec
+from _stories.compat import Marshmallow3Error
+from _stories.compat import Marshmallow3Spec
 from _stories.compat import PydanticError
 from _stories.compat import PydanticSpec
 from _stories.exceptions import ContextContractError
@@ -112,18 +114,26 @@ class PydanticValidator(object):
         return self.field._type_display()
 
 
-class MarshmallowValidator(object):
+class Marshmallow3Validator(object):
     def __init__(self, spec, field):
         self.spec = spec
         self.field = field
 
     def __call__(self, value):
-        values, errors = self.spec().load({self.field: value})
-        return values.get(self.field), errors.get(self.field)
+        try:
+            return self.spec().load({self.field: value}).get(self.field), None
+        except Marshmallow3Error as error:
+            return None, error.messages[self.field]
 
     def __repr__(self):
         field = self.spec._declared_fields[self.field]
         return field.__class__.__name__
+
+
+class Marshmallow2Validator(Marshmallow3Validator):
+    def __call__(self, value):
+        values, errors = self.spec().load({self.field: value})
+        return values.get(self.field), errors.get(self.field)
 
 
 class CerberusValidator(object):
@@ -165,10 +175,18 @@ def disassemble_pydantic(spec):
     return result
 
 
-def disassemble_marshmallow(spec):
+def disassemble_marshmallow3(spec):
+    return disassemble_marshmallow(spec, Marshmallow3Validator)
+
+
+def disassemble_marshmallow2(spec):
+    return disassemble_marshmallow(spec, Marshmallow2Validator)
+
+
+def disassemble_marshmallow(spec, validator):
     result = {}
     for name in spec._declared_fields:
-        result[name] = MarshmallowValidator(spec, name)
+        result[name] = validator(spec, name)
     return result
 
 
@@ -195,8 +213,10 @@ def make_contract(cls_name, name, arguments, spec):
         return NullContract(cls_name, name, arguments)
     elif isinstance(spec, PydanticSpec):
         disassembled = disassemble_pydantic(spec)
-    elif isinstance(spec, MarshmallowSpec):
-        disassembled = disassemble_marshmallow(spec)
+    elif isinstance(spec, Marshmallow3Spec):
+        disassembled = disassemble_marshmallow3(spec)
+    elif isinstance(spec, Marshmallow2Spec):
+        disassembled = disassemble_marshmallow2(spec)
     elif isinstance(spec, CerberusSpec):
         disassembled = disassemble_cerberus(spec)
     elif isinstance(spec, dict):
@@ -520,7 +540,13 @@ def combine_contract(parent, child):
         and type(child) is SpecContract
         and any(
             isinstance(parent.origin, spec_type) and isinstance(child.origin, spec_type)
-            for spec_type in [PydanticSpec, MarshmallowSpec, CerberusSpec, dict]
+            for spec_type in [
+                PydanticSpec,
+                Marshmallow3Spec,
+                Marshmallow2Spec,
+                CerberusSpec,
+                dict,
+            ]
         )
     ):
         repeated = set(parent.declared) & set(child.declared)
