@@ -2,21 +2,6 @@
 
 ### Features
 
-- migrate to pydantic v1.x ([9049eae](https://github.com/dry-python/stories/commit/9049eae43c7b8db36708fc019a671a53bf4b578d))
-
-## [0.10.2](https://github.com/dry-python/stories/compare/0.10.1...0.10.2) (2020-02-11)
-
-### Bug Fixes
-
-- prevent generated changelog from style guide violation ([7d4047d](https://github.com/dry-python/stories/commit/7d4047d10e4dacc10ec356700b1fc35161efa4c0))
-
-# Changelog
-
-Versions follow [0ver](https://0ver.org/) without a strict backward
-compatibility policy. We still try to figure some things out.
-
-## 0.11.dev (unreleased)
-
 - Add context contract to the story. `Success` keyword arguments can
   be validated by contract definition in the story.
 - Raise `MutationError` when some story method tries to set or delete
@@ -24,6 +9,13 @@ compatibility policy. We still try to figure some things out.
 - Only keyword arguments are allowed to `call` and `run` the story.
 - Raise `StoryDefinitionError` when `arguments` decorator is used
   incorrectly.
+- migrate to pydantic v1.x ([9049eae](https://github.com/dry-python/stories/commit/9049eae43c7b8db36708fc019a671a53bf4b578d))
+
+## [0.10.2](https://github.com/dry-python/stories/compare/0.10.1...0.10.2) (2020-02-11)
+
+### Bug Fixes
+
+- prevent generated changelog from style guide violation ([7d4047d](https://github.com/dry-python/stories/commit/7d4047d10e4dacc10ec356700b1fc35161efa4c0))
 
 ## 0.10.1 (2019-05-31)
 
