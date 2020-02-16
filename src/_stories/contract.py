@@ -283,7 +283,7 @@ class NullContract(object):
             # FIXME: This does not work for story composition when
             # many stories has the same argument.
             ((validator, cls_name, name),) = self.argset[argument]
-            lines.append("  %s  # Argument of %s.%s" % (argument, cls_name, name))
+            lines.append("  {}  # Argument of {}.{}".format(argument, cls_name, name))
         return "\n".join(lines)
 
 
@@ -370,7 +370,9 @@ class SpecContract(NullContract):
                     % (
                         cls,
                         method,
-                        "\n".join(" - %s: %r" % (i, result[i]) for i in sorted(result)),
+                        "\n".join(
+                            " - {}: {!r}".format(i, result[i]) for i in sorted(result)
+                        ),
                     )
                     for (cls, method), result in (
                         (i, conflict[i]) for i in sorted(conflict)
@@ -438,7 +440,7 @@ class SpecContract(NullContract):
                     % (argument, validator, cls_name, name)
                 )
             else:
-                lines.append("  %s:" % (argument,))
+                lines.append("  {}:".format(argument))
                 for validator in sorted(validators, key=itemgetter(1, 2)):
                     lines.append("    %r  # Argument of %s.%s" % validator)
         variables = sorted(
@@ -447,7 +449,9 @@ class SpecContract(NullContract):
         for variable in variables:
             cls_name, name, field_name = self.declared[variable]
             lines.append(
-                "  %s: %s  # Variable in %s.%s" % (variable, field_name, cls_name, name)
+                "  {}: {}  # Variable in {}.{}".format(
+                    variable, field_name, cls_name, name
+                )
             )
         return "\n".join(lines)
 

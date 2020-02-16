@@ -69,7 +69,7 @@ class Context(object):
 
 def assign_namespace(ctx, method, kwargs):
     ctx._Context__ns.update((arg, kwargs[arg]) for arg in sorted(kwargs))
-    line = "Set by %s.%s" % (method.__self__.__class__.__name__, method.__name__)
+    line = "Set by {}.{}".format(method.__self__.__class__.__name__, method.__name__)
     ctx._Context__lines.extend([line] * len(kwargs))
 
 
@@ -87,7 +87,7 @@ def context_representation(ctx, repr_func=repr):
     for key, value in ctx._Context__ns.items():
         for seen_key, seen_value in seen:
             if value is seen_value:
-                item = "`%s` alias" % (seen_key,)
+                item = "`{}` alias".format(seen_key)
                 break
         else:
             item = repr_func(value)
@@ -97,7 +97,7 @@ def context_representation(ctx, repr_func=repr):
             head = key + ":"
             tail = "\n" + indent(item, "    ")
         else:
-            head = "%s: %s" % (key, item)
+            head = "{}: {}".format(key, item)
             tail = ""
         if type(value) not in [type(None), bool, int, float, Decimal]:
             seen.append((key, value))
@@ -106,7 +106,7 @@ def context_representation(ctx, repr_func=repr):
         if head_length > longest:
             longest = head_length
     lines = [
-        "  %s  # %s%s" % (head.ljust(longest), line, tail)
+        "  {}  # {}{}".format(head.ljust(longest), line, tail)
         for (head, tail), line in zip(items, ctx._Context__lines)
     ]
     return "\n".join(["Context:"] + lines)
