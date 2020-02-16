@@ -53,7 +53,7 @@ def get_test_source(filename, lineno):
     src = []
     for num, line in zip(range(start, end), text.splitlines()):
         sep = "->" if num == lineno else "  "
-        src.append((" %s %s %s" % (str(num).rjust(adjust_to), sep, line)).rstrip())
+        src.append((" {} {} {}".format(str(num).rjust(adjust_to), sep, line)).rstrip())
 
     src = "\n".join(src)
 
