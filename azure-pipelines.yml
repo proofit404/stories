@@ -10,21 +10,57 @@ jobs:
         precommit:
           python.version: "3.8"
           tox.env: precommit
-        py27:
+        py27-cerberus:
           python.version: "2.7"
-          tox.env: py27
-        py35:
+          tox.env: py27-cerberus
+        py35-cerberus:
           python.version: "3.5"
-          tox.env: py35
-        py36:
+          tox.env: py35-cerberus
+        py36-cerberus:
           python.version: "3.6"
-          tox.env: py36
-        py37:
+          tox.env: py36-cerberus
+        py37-cerberus:
           python.version: "3.7"
-          tox.env: py37
-        py38:
+          tox.env: py37-cerberus
+        py38-cerberus:
           python.version: "3.8"
-          tox.env: py38
+          tox.env: py38-cerberus
+        py27-marshmallow2:
+          python.version: "2.7"
+          tox.env: py27-marshmallow2
+        py35-marshmallow2:
+          python.version: "3.5"
+          tox.env: py35-marshmallow2
+        py36-marshmallow2:
+          python.version: "3.6"
+          tox.env: py36-marshmallow2
+        py37-marshmallow2:
+          python.version: "3.7"
+          tox.env: py37-marshmallow2
+        py38-marshmallow2:
+          python.version: "3.8"
+          tox.env: py38-marshmallow2
+        py35-marshmallow3:
+          python.version: "3.5"
+          tox.env: py35-marshmallow3
+        py36-marshmallow3:
+          python.version: "3.6"
+          tox.env: py36-marshmallow3
+        py37-marshmallow3:
+          python.version: "3.7"
+          tox.env: py37-marshmallow3
+        py38-marshmallow3:
+          python.version: "3.8"
+          tox.env: py38-marshmallow3
+        py36-pydantic:
+          python.version: "3.6"
+          tox.env: py36-pydantic
+        py37-pydantic:
+          python.version: "3.7"
+          tox.env: py37-pydantic
+        py38-pydantic:
+          python.version: "3.8"
+          tox.env: py38-pydantic
         flake8:
           python.version: "3.8"
           tox.env: flake8

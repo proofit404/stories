@@ -363,10 +363,9 @@ def test_pre_commit_hooks_avoid_additional_dependencies():
 # Version pinning.
 
 
-@pytest.mark.xfail(reason="https://github.com/dry-python/stories/issues/213")
 def test_tox_deps_not_pinned():
     """Dependencies of tox environments should not have versions."""
-    for _env, deps in helpers.tox_info("deps"):  # pragma: no cover
+    for _env, deps in helpers.tox_info("deps"):
         deps = deps.splitlines()
         deps = [d.split(":")[-1].strip().split("==") for d in deps]
         versions = collections.defaultdict(list)
