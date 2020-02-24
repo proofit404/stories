@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from _stories.context import assign_namespace
 from _stories.marker import BeginningOfStory
 from _stories.marker import EndOfStory

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # NOTE: Every type ignore in this module is necessary due to
 # false-positive bugs in mypy.  Feel free to remove them as they'll be
 # fixed.  See GitHub issues for more info:

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from cerberus import Validator
 
 from stories import arguments

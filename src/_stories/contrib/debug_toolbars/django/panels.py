@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # type: ignore
 from debug_toolbar.panels import Panel
 from django.utils.translation import ugettext_lazy as _

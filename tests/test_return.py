@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import examples
 from stories import Failure
 from stories import Result

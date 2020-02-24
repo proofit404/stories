@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from _stories.context import make_context
 from _stories.execute import function
 from _stories.failures import make_run_protocol

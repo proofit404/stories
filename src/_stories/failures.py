@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from _stories.compat import Enum
 from _stories.compat import EnumMeta
 from _stories.exceptions import FailureProtocolError

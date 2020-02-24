@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from _stories.argument import get_arguments
 from _stories.collect import collect_story
 from _stories.failures import check_data_type

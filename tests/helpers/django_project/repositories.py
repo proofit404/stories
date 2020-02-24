@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django_project.entities import Token
 from django_project.models import Category
 from django_project.models import Price
