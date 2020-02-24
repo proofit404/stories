@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # type: ignore
 from raven.breadcrumbs import libraryhook
 from raven.breadcrumbs import record

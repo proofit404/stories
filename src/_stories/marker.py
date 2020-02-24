@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from _stories.returned import Success
 
 

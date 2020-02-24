@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # type: ignore
 from flask import render_template
 from flask_debugtoolbar.panels import DebugPanel

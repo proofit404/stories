@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class History(object):
     def __init__(self):
         self.indent = 0

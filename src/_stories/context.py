@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import textwrap
 from collections import OrderedDict
 from decimal import Decimal
