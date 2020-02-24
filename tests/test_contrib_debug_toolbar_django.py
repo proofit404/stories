@@ -1,7 +1,6 @@
 import pytest
 
 
-pytest.importorskip("foo")
-from stories.contrib.debug_toolbars.django import (  # FIXME: isort:skip  # pragma: no cover  # noqa
-    StoriesPanel,
-)
+@pytest.mark.xfail
+def test_contrib_is_available():
+    from stories.contrib.debug_toolbars.django import StoriesPanel  # noqa: F401
