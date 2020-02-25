@@ -1,4 +1,8 @@
-from stories import Result, Success, arguments, story
+# -*- coding: utf-8 -*-
+from stories import arguments
+from stories import Result
+from stories import story
+from stories import Success
 
 
 # Mixins.

@@ -1,6 +1,11 @@
-from marshmallow import Schema, fields, utils
+# -*- coding: utf-8 -*-
+from marshmallow import fields
+from marshmallow import Schema
+from marshmallow import utils
 
-from stories import Success, arguments, story
+from stories import arguments
+from stories import story
+from stories import Success
 from stories.shortcuts import contract_in
 
 
@@ -12,12 +17,14 @@ utils.text_type = str
 
 
 representations = {
-    "int_error": "...",
-    "list_of_int_error": "...",
-    "int_field_repr": "...",
-    "str_field_repr": "...",
-    "list_of_int_field_repr": "...",
-    "list_of_str_field_repr": "...",
+    "int_error": "Not a valid integer.",
+    "list_of_int_error": """0:
+    Not a valid integer.
+    """.strip(),
+    "int_field_repr": "Integer",
+    "str_field_repr": "String",
+    "list_of_int_field_repr": "List",
+    "list_of_str_field_repr": "List",  # FIXME: Should show child schema.
     "contract_class_repr": "<class 'marshmallow.schema.Schema'>",
 }
 
@@ -170,9 +177,15 @@ class ChildAlias(object):
 
     @x.contract
     class Contract(Schema):
-        foo = fields.Dict(keys=fields.Str(), values=fields.Str())
-        bar = fields.Dict(keys=fields.Str(), values=fields.Str())
-        baz = fields.Dict(keys=fields.Str(), values=fields.Integer())
+        class _DictOfStr(Schema):
+            key = fields.Str()
+
+        class _DictOfInteger(Schema):
+            key = fields.Integer()
+
+        foo = fields.Nested(_DictOfStr)
+        bar = fields.Nested(_DictOfStr)
+        baz = fields.Nested(_DictOfInteger)
 
 
 class ParamChild(object):
@@ -214,9 +227,15 @@ class ParamChildAlias(object):
 
     @x.contract
     class Contract(Schema):
-        foo = fields.Dict(keys=fields.Str(), values=fields.Str())
-        bar = fields.Dict(keys=fields.Str(), values=fields.Str())
-        baz = fields.Dict(keys=fields.Str(), values=fields.Integer())
+        class _DictOfStr(Schema):
+            key = fields.Str()
+
+        class _DictOfInteger(Schema):
+            key = fields.Integer()
+
+        foo = fields.Nested(_DictOfStr)
+        bar = fields.Nested(_DictOfStr)
+        baz = fields.Nested(_DictOfInteger)
 
 
 # Next child base classes.
@@ -287,8 +306,8 @@ class ParentWithSame(object):
         I.after
 
 
-@ParentWithSame.a.contract  # noqa: F811
-class Contract(Schema):
+@ParentWithSame.a.contract
+class Contract(Schema):  # noqa: F811
     foo = fields.Integer()
     bar = fields.List(fields.Integer())
     baz = fields.Integer()
@@ -302,9 +321,9 @@ class ParentReuse(object):
         I.after
 
 
-@ChildReuse.x.contract  # noqa: F811
+@ChildReuse.x.contract
 @ParentReuse.a.contract
-class Contract(Schema):
+class Contract(Schema):  # noqa: F811
     foo = fields.Integer()
     bar = fields.List(fields.Integer())
     baz = fields.Integer()
@@ -332,8 +351,8 @@ class ParamParent(object):
         I.after
 
 
-@ParamParent.a.contract  # noqa: F811
-class Contract(Schema):
+@ParamParent.a.contract
+class Contract(Schema):  # noqa: F811
     ham = fields.Integer()
     eggs = fields.Integer()
     beans = fields.Integer()
@@ -356,8 +375,8 @@ class ParamParentWithSame(object):
         I.after
 
 
-@ParamParentWithSame.a.contract  # noqa: F811
-class Contract(Schema):
+@ParamParentWithSame.a.contract
+class Contract(Schema):  # noqa: F811
     foo = fields.Integer()
     bar = fields.List(fields.Integer())
     baz = fields.Integer()
@@ -372,8 +391,8 @@ class ParamParentWithSameWithString(object):
         I.after
 
 
-@ParamParentWithSameWithString.a.contract  # noqa: F811
-class Contract(Schema):
+@ParamParentWithSameWithString.a.contract
+class Contract(Schema):  # noqa: F811
     foo = fields.String()
     bar = fields.List(fields.String())
 
@@ -390,9 +409,9 @@ class NextParamParentReuse(object):
         I.after
 
 
-@NextParamChildReuse.y.contract  # noqa: F811
+@NextParamChildReuse.y.contract
 @NextParamParentReuse.b.contract
-class Contract(Schema):
+class Contract(Schema):  # noqa: F811
     foo = fields.Integer()
     bar = fields.List(fields.Integer())
     baz = fields.Integer()
@@ -409,8 +428,8 @@ class Root(object):
         I.finish
 
 
-@contract_in(Root)  # noqa: F811
-class Contract(Schema):
+@contract_in(Root)
+class Contract(Schema):  # noqa: F811
     fizz = fields.Integer()
     buzz = fields.Integer()
 
@@ -423,8 +442,8 @@ class RootWithSame(object):
         I.finish
 
 
-@contract_in(RootWithSame)  # noqa: F811
-class Contract(Schema):
+@contract_in(RootWithSame)
+class Contract(Schema):  # noqa: F811
     foo = fields.Integer()
     bar = fields.List(fields.Integer())
     baz = fields.Integer()
@@ -439,8 +458,8 @@ class SequentialRoot(object):
         I.finish
 
 
-@contract_in(SequentialRoot)  # noqa: F811
-class Contract(Schema):
+@contract_in(SequentialRoot)
+class Contract(Schema):  # noqa: F811
     fizz = fields.Integer()
     buzz = fields.Integer()
 
@@ -454,7 +473,7 @@ class ParamRoot(object):
         I.finish
 
 
-@contract_in(ParamRoot)  # noqa: F811
-class Contract(Schema):
+@contract_in(ParamRoot)
+class Contract(Schema):  # noqa: F811
     fizz = fields.Integer()
     buzz = fields.Integer()

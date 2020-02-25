@@ -1,15 +1,14 @@
+# -*- coding: utf-8 -*-
 import decimal
 
 import pytest
 
 import examples
 from helpers import make_collector
-from stories.exceptions import (
-    ContextContractError,
-    FailureError,
-    FailureProtocolError,
-    MutationError,
-)
+from stories.exceptions import ContextContractError
+from stories.exceptions import FailureError
+from stories.exceptions import FailureProtocolError
+from stories.exceptions import MutationError
 
 
 def test_context_dir(c):
@@ -59,9 +58,7 @@ def test_context_dir(c):
 
 
 def test_deny_context_attribute_assignment(c):
-    """
-    We can't use attribute assignment with `Context` object.
-    """
+    """We can't use attribute assignment with `Context` object."""
 
     class T(c.Child, c.AssignMethod):
         pass
@@ -111,9 +108,7 @@ Use Success() keyword arguments to expand its scope.
 
 
 def test_deny_context_attribute_deletion(c):
-    """
-    We can't use attribute deletion with `Context` object.
-    """
+    """We can't use attribute deletion with `Context` object."""
 
     class T(c.Child, c.DeleteMethod):
         pass
@@ -263,6 +258,53 @@ Context:
     assert repr(getter()) == expected
 
 
+def test_context_proper_getattr_behavior():
+    expected = """
+Branch.show_content
+  age_lt_18
+  age_gte_18
+  load_content (returned: 'allowed')
+
+Context:
+  age: 18               # Story argument
+  access_allowed: True  # Set by Branch.age_gte_18
+    """.strip()
+    getter = make_collector()
+    examples.methods.Branch().show_content(age=18)
+    result = repr(getter())
+    assert result == expected
+
+    expected = """
+Branch.show_content
+  age_lt_18
+  age_gte_18
+  load_content (returned: 'denied')
+
+Context:
+  age: 1                 # Story argument
+  access_allowed: False  # Set by Branch.age_lt_18
+    """.strip()
+    getter = make_collector()
+    examples.methods.Branch().show_content(age=1)
+    result = repr(getter())
+    assert result == expected
+
+
+def test_context_attribute_error():
+    expected = """
+'Context' object has no attribute x
+
+AttributeAccessError.x
+  one
+
+Context()
+    """.strip()
+    with pytest.raises(AttributeError) as err:
+        examples.methods.AttributeAccessError().x()
+    result = str(err.value)
+    assert result == expected
+
+
 def test_context_representation_with_failure():
 
     expected = """
@@ -271,8 +313,8 @@ Simple.x
   two (failed)
 
 Context:
-  foo: 3  # Story argument
   bar: 2  # Story argument
+  foo: 3  # Story argument
     """.strip()
 
     getter = make_collector()
@@ -480,8 +522,8 @@ Simple.x
   three (returned: -1)
 
 Context:
-  foo: 1  # Story argument
   bar: 3  # Story argument
+  foo: 1  # Story argument
   baz: 4  # Set by Simple.two
     """.strip()
 
@@ -574,8 +616,8 @@ Simple.x
   two (skipped)
 
 Context:
-  foo: 1   # Story argument
   bar: -1  # Story argument
+  foo: 1   # Story argument
     """.strip()
 
     getter = make_collector()
@@ -716,8 +758,8 @@ T.x
   one (errored: ContextContractError)
 
 Context:
-  foo: 1  # Story argument
   bar: 2  # Story argument
+  foo: 1  # Story argument
     """.strip()
 
     getter = make_collector()
@@ -739,8 +781,8 @@ Q.a
     one (errored: ContextContractError)
 
 Context:
-  ham: 1      # Story argument
   eggs: 2     # Story argument
+  ham: 1      # Story argument
   bar: ['2']  # Set by Q.before
   foo: '1'    # Set by Q.before
     """.strip()
@@ -764,8 +806,8 @@ J.a
     one (errored: ContextContractError)
 
 Context:
-  ham: 1      # Story argument
   eggs: 2     # Story argument
+  ham: 1      # Story argument
   bar: ['2']  # Set by J.before
   foo: '1'    # Set by J.before
     """.strip()
@@ -862,8 +904,8 @@ Simple.x
   three (returned: -1)
 
 Context:
-  foo: 1  # Story argument
   bar: 3  # Story argument
+  foo: 1  # Story argument
   baz: 4  # Set by Simple.two
     """.strip()
 

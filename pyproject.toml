@@ -1,9 +1,9 @@
 [tool.poetry]
 name = "stories"
-version = "0.10"
+version = "0.11.0"
 
 description = "Define a user story in the business transaction DSL"
-readme = "README.rst"
+readme = "README.md"
 license = "BSD-2-Clause"
 
 homepage = "https://dry-python.org/"
@@ -29,12 +29,22 @@ classifiers = [
     "Topic :: Software Development",
 ]
 
+packages = [
+    { include = "_stories", from = "src" },
+    { include = "stories", from = "src" },
+]
+
 [tool.poetry.dependencies]
-python = "~2.7 || ^3.4"
+python = "~2.7 || ^3.5"
+mkdocs = { version = "*", optional = true }
+mkdocs-material = { version = "*", optional = true }
+
+[tool.poetry.extras]
+mkdocs = ["mkdocs", "mkdocs-material"]
 
 [tool.poetry.plugins."pytest11"]
 stories = "stories.contrib.pytest"
 
 [build-system]
-requires = ["poetry>=0.12"]
+requires = ["poetry"]
 build-backend = "poetry.masonry.api"

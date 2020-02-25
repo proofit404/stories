@@ -1,8 +1,12 @@
-from typing import Dict, List
+# -*- coding: utf-8 -*-
+from typing import Dict
+from typing import List
 
 from pydantic import BaseModel
 
-from stories import Success, arguments, story
+from stories import arguments
+from stories import story
+from stories import Success
 from stories.shortcuts import contract_in
 
 
@@ -285,8 +289,8 @@ class ParentWithSame(object):
         I.after
 
 
-@ParentWithSame.a.contract  # noqa: F811
-class Contract(BaseModel):
+@ParentWithSame.a.contract
+class Contract(BaseModel):  # noqa: F811
     foo: int
     bar: List[int]
     baz: int
@@ -300,9 +304,9 @@ class ParentReuse(object):
         I.after
 
 
-@ChildReuse.x.contract  # noqa: F811
+@ChildReuse.x.contract
 @ParentReuse.a.contract
-class Contract(BaseModel):
+class Contract(BaseModel):  # noqa: F811
     foo: int
     bar: List[int]
     baz: int
@@ -330,8 +334,8 @@ class ParamParent(object):
         I.after
 
 
-@ParamParent.a.contract  # noqa: F811
-class Contract(BaseModel):
+@ParamParent.a.contract
+class Contract(BaseModel):  # noqa: F811
     ham: int
     eggs: int
     beans: int
@@ -354,8 +358,8 @@ class ParamParentWithSame(object):
         I.after
 
 
-@ParamParentWithSame.a.contract  # noqa: F811
-class Contract(BaseModel):
+@ParamParentWithSame.a.contract
+class Contract(BaseModel):  # noqa: F811
     foo: int
     bar: List[int]
     baz: int
@@ -370,8 +374,8 @@ class ParamParentWithSameWithString(object):
         I.after
 
 
-@ParamParentWithSameWithString.a.contract  # noqa: F811
-class Contract(BaseModel):
+@ParamParentWithSameWithString.a.contract
+class Contract(BaseModel):  # noqa: F811
     foo: str
     bar: List[str]
 
@@ -388,9 +392,9 @@ class NextParamParentReuse(object):
         I.after
 
 
-@NextParamChildReuse.y.contract  # noqa: F811
+@NextParamChildReuse.y.contract
 @NextParamParentReuse.b.contract
-class Contract(BaseModel):
+class Contract(BaseModel):  # noqa: F811
     foo: int
     bar: List[int]
     baz: int
@@ -407,8 +411,8 @@ class Root(object):
         I.finish
 
 
-@contract_in(Root)  # noqa: F811
-class Contract(BaseModel):
+@contract_in(Root)
+class Contract(BaseModel):  # noqa: F811
     fizz: int
     buzz: int
 
@@ -421,8 +425,8 @@ class RootWithSame(object):
         I.finish
 
 
-@contract_in(RootWithSame)  # noqa: F811
-class Contract(BaseModel):
+@contract_in(RootWithSame)
+class Contract(BaseModel):  # noqa: F811
     foo: int
     bar: List[int]
     baz: int
@@ -437,8 +441,8 @@ class SequentialRoot(object):
         I.finish
 
 
-@contract_in(SequentialRoot)  # noqa: F811
-class Contract(BaseModel):
+@contract_in(SequentialRoot)
+class Contract(BaseModel):  # noqa: F811
     fizz: int
     buzz: int
 
@@ -452,7 +456,7 @@ class ParamRoot(object):
         I.finish
 
 
-@contract_in(ParamRoot)  # noqa: F811
-class Contract(BaseModel):
+@contract_in(ParamRoot)
+class Contract(BaseModel):  # noqa: F811
     fizz: int
     buzz: int

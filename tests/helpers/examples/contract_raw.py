@@ -1,6 +1,9 @@
+# -*- coding: utf-8 -*-
 from operator import itemgetter
 
-from stories import Success, arguments, story
+from stories import arguments
+from stories import story
+from stories import Success
 from stories.shortcuts import contract_in
 
 
@@ -14,7 +17,7 @@ representations = {
     "str_field_repr": "string",
     "list_of_int_field_repr": "list_of(integer)",
     "list_of_str_field_repr": "list_of(string)",
-    "contract_class_repr": "<class 'dict'>",
+    "contract_class_repr": repr(dict),
 }
 
 
@@ -60,7 +63,7 @@ def dict_of(k, v):
             if any(map(itemgetter(1), new_key)) or any(map(itemgetter(1), new_value)):
                 return None, "Invalid value"
             else:
-                return dict((k(x)[0], v(y)[0]) for x, y in value.items()), None
+                return {k(x)[0]: v(y)[0] for x, y in value.items()}, None
         else:
             return None, "Invalid value"
 

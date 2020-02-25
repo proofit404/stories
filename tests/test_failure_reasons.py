@@ -1,9 +1,11 @@
+# -*- coding: utf-8 -*-
 import enum
 
 import pytest
 
 from stories import story
-from stories.exceptions import FailureError, FailureProtocolError
+from stories.exceptions import FailureError
+from stories.exceptions import FailureProtocolError
 
 
 # Story definition.
@@ -143,10 +145,8 @@ def test_reasons_defined_with_enum(f):
 
 
 def test_wrong_reason_with_list(f):
-    """
-    We deny to use wrong reason in stories defined with list of
-    strings as its failure protocol.
-    """
+    """We deny to use wrong reason in stories defined with list of strings as
+    its failure protocol."""
 
     class T(f.ChildWithList, f.WrongMethod):
         pass
@@ -220,10 +220,8 @@ Function returned value: T.one
 
 
 def test_wrong_reason_with_enum(f):
-    """
-    We deny to use wrong reason in stories defined with enum class as
-    its failure protocol.
-    """
+    """We deny to use wrong reason in stories defined with enum class as its
+    failure protocol."""
 
     class T(f.ChildWithEnum, f.WrongMethod):
         pass
@@ -300,10 +298,8 @@ Function returned value: T.one
 
 
 def test_null_reason_with_list(f):
-    """
-    We deny to use Failure() in stories defined with list of strings
-    as its failure protocol.
-    """
+    """We deny to use Failure() in stories defined with list of strings as its
+    failure protocol."""
 
     class T(f.ChildWithList, f.NullMethod):
         pass
@@ -383,10 +379,8 @@ Use one of them as Failure() argument.
 
 
 def test_null_reason_with_enum(f):
-    """
-    We deny to use Failure() in stories defined with enum class as its
-    failure protocol.
-    """
+    """We deny to use Failure() in stories defined with enum class as its
+    failure protocol."""
 
     class T(f.ChildWithEnum, f.NullMethod):
         pass
@@ -469,10 +463,8 @@ Use one of them as Failure() argument.
 
 
 def test_reason_without_protocol(f):
-    """
-    We deny to use Failure('reason') in stories defined without
-    failure protocol.
-    """
+    """We deny to use Failure('reason') in stories defined without failure
+    protocol."""
 
     class T(f.ChildWithNull, f.WrongMethod):
         pass
@@ -550,10 +542,8 @@ Use 'failures' story method to define failure protocol.
 
 @pytest.mark.parametrize("method", ["NormalMethod", "StringMethod"])
 def test_summary_wrong_reason_with_list(f, method):
-    """
-    Summary classes should verify failure reason passed to the
-    `failed_because` method.
-    """
+    """Summary classes should verify failure reason passed to the
+    `failed_because` method."""
 
     class T(f.ChildWithList, getattr(f, method)):
         pass
@@ -622,10 +612,8 @@ Story returned result: J.a
 
 @pytest.mark.parametrize("method", ["NormalMethod", "EnumMethod"])
 def test_summary_wrong_reason_with_enum(f, method):
-    """
-    Summary classes should verify failure reason passed to the
-    `failed_because` method.
-    """
+    """Summary classes should verify failure reason passed to the
+    `failed_because` method."""
 
     class T(f.ChildWithEnum, getattr(f, method)):
         pass
@@ -697,10 +685,8 @@ Story returned result: J.a
 
 @pytest.mark.parametrize("method", ["NormalMethod", "NullMethod"])
 def test_summary_reason_without_protocol(f, method):
-    """
-    Summary classes should deny to use `failed_because` method on
-    stories defined without failure protocol.
-    """
+    """Summary classes should deny to use `failed_because` method on stories
+    defined without failure protocol."""
 
     class T(f.ChildWithNull, getattr(f, method)):
         pass
@@ -768,10 +754,8 @@ Use 'failures' story method to define failure protocol.
 
 
 def test_use_expanded_protocol_in_summary_result_with_list(f):
-    """
-    We should allow to use `failed_because` method with expanded
-    protocol.
-    """
+    """We should allow to use `failed_because` method with expanded
+    protocol."""
 
     class T(f.ChildWithList, f.NormalMethod):
         pass
@@ -805,10 +789,8 @@ def test_use_expanded_protocol_in_summary_result_with_list(f):
 
 
 def test_use_expanded_protocol_in_summary_result_with_enum(f):
-    """
-    We should allow to use `failed_because` method with expanded
-    protocol.
-    """
+    """We should allow to use `failed_because` method with expanded
+    protocol."""
 
     class T(f.ChildWithEnum, f.NormalMethod):
         pass
@@ -845,10 +827,8 @@ def test_use_expanded_protocol_in_summary_result_with_enum(f):
 
 
 def test_substory_protocol_match_with_empty(f):
-    """
-    We should allow to use stories composition, if parent story and
-    substory does not define failure protocols.
-    """
+    """We should allow to use stories composition, if parent story and substory
+    does not define failure protocols."""
 
     class T(f.ChildWithNull, f.NullMethod):
         pass
@@ -884,10 +864,8 @@ def test_substory_protocol_match_with_empty(f):
 
 
 def test_substory_protocol_match_with_list(f):
-    """
-    We should allow to use stories composition, if parent story
-    protocol is a superset of the substory protocol.
-    """
+    """We should allow to use stories composition, if parent story protocol is
+    a superset of the substory protocol."""
 
     class T(f.ChildWithList, f.StringMethod):
         pass
@@ -923,10 +901,8 @@ def test_substory_protocol_match_with_list(f):
 
 
 def test_substory_protocol_match_with_enum(f):
-    """
-    We should allow to use stories composition, if parent story
-    protocol is a superset of the substory protocol.
-    """
+    """We should allow to use stories composition, if parent story protocol is
+    a superset of the substory protocol."""
 
     class T(f.ChildWithEnum, f.EnumMethod):
         pass
@@ -964,11 +940,8 @@ def test_substory_protocol_match_with_enum(f):
 
 
 def test_expand_substory_protocol_null_with_list(f):
-    """
-    We expand protocol of composed story, if substory does not define
-    failure protocols and parent story define protocol with list of
-    strings.
-    """
+    """We expand protocol of composed story, if substory does not define
+    failure protocols and parent story define protocol with list of strings."""
 
     class T(f.ChildWithNull, f.NormalMethod):
         pass
@@ -1004,10 +977,8 @@ def test_expand_substory_protocol_null_with_list(f):
 
 
 def test_expand_substory_protocol_null_with_enum(f):
-    """
-    We expand protocol of composed story, if substory does not define
-    protocol and parent story define protocol with enum class.
-    """
+    """We expand protocol of composed story, if substory does not define
+    protocol and parent story define protocol with enum class."""
 
     class T(f.ChildWithNull, f.NormalMethod):
         pass
@@ -1045,11 +1016,9 @@ def test_expand_substory_protocol_null_with_enum(f):
 
 
 def test_deny_failure_substory_without_protocol_story_protocol_with_list(f):
-    """
-    Substory defined without failure protocol can not return Failure,
-    if this substory was composed with parent story defined with list
-    of strings as failure protocol.
-    """
+    """Substory defined without failure protocol can not return Failure, if
+    this substory was composed with parent story defined with list of strings
+    as failure protocol."""
 
     class T(f.ChildWithNull, f.NullMethod):
         pass
@@ -1107,11 +1076,9 @@ Use 'failures' story method to define failure protocol.
 
 
 def test_deny_failure_substory_without_protocol_story_protocol_with_enum(f):
-    """
-    Substory defined without failure protocol can not return Failure,
-    if this substory was composed with parent story defined with enum
-    as failure protocol.
-    """
+    """Substory defined without failure protocol can not return Failure, if
+    this substory was composed with parent story defined with enum as failure
+    protocol."""
 
     class T(f.ChildWithNull, f.NullMethod):
         pass
@@ -1171,11 +1138,9 @@ Use 'failures' story method to define failure protocol.
 
 
 def test_deny_failure_story_without_protocol_substory_protocol_with_list(f):
-    """
-    Story defined without failure protocol can not return Failure, if
-    this story was composed with substory defined with list of strings
-    as failure protocol.
-    """
+    """Story defined without failure protocol can not return Failure, if this
+    story was composed with substory defined with list of strings as failure
+    protocol."""
 
     class T(f.ChildWithList, f.NormalMethod):
         pass
@@ -1233,11 +1198,8 @@ Use 'failures' story method to define failure protocol.
 
 
 def test_deny_failure_story_without_protocol_substory_protocol_with_enum(f):
-    """
-    Story defined without failure protocol can not return Failure, if
-    this story was composed with substory defined with enum as failure
-    protocol.
-    """
+    """Story defined without failure protocol can not return Failure, if this
+    story was composed with substory defined with enum as failure protocol."""
 
     class T(f.ChildWithEnum, f.NormalMethod):
         pass
@@ -1297,10 +1259,8 @@ Use 'failures' story method to define failure protocol.
 
 
 def test_expand_substory_protocol_list_with_null(f):
-    """
-    We expand protocol of composed story, if substory define protocol
-    with list of strings and parent story does not define protocol.
-    """
+    """We expand protocol of composed story, if substory define protocol with
+    list of strings and parent story does not define protocol."""
 
     class T(f.ChildWithList, f.NormalMethod):
         pass
@@ -1336,10 +1296,8 @@ def test_expand_substory_protocol_list_with_null(f):
 
 
 def test_expand_substory_protocol_enum_with_null(f):
-    """
-    We expand protocol of composed story, if substory define protocol
-    with enum class and parent story does not define protocol.
-    """
+    """We expand protocol of composed story, if substory define protocol with
+    enum class and parent story does not define protocol."""
 
     class T(f.ChildWithEnum, f.NormalMethod):
         pass
@@ -1377,10 +1335,8 @@ def test_expand_substory_protocol_enum_with_null(f):
 
 
 def test_expand_substory_protocol_list_with_list(f):
-    """
-    We expand protocol of composed story, if substory and parent story
-    define protocol with list of strings.
-    """
+    """We expand protocol of composed story, if substory and parent story
+    define protocol with list of strings."""
 
     class T(f.ChildWithList, f.StringMethod):
         pass
@@ -1416,10 +1372,8 @@ def test_expand_substory_protocol_list_with_list(f):
 
 
 def test_expand_substory_protocol_enum_with_enum(f):
-    """
-    We expand protocol of composed story, if substory and parent story
-    define protocol with enum class.
-    """
+    """We expand protocol of composed story, if substory and parent story
+    define protocol with enum class."""
 
     class T(f.ChildWithEnum, f.EnumMethod):
         pass
@@ -1457,10 +1411,8 @@ def test_expand_substory_protocol_enum_with_enum(f):
 
 
 def test_expand_sequential_substory_protocol_list_with_null(f):
-    """
-    If parent story consist from sequential substories, we should
-    merge their failure protocols together.
-    """
+    """If parent story consist from sequential substories, we should merge
+    their failure protocols together."""
 
     class T(f.ChildWithList, f.StringMethod):
         pass
@@ -1500,10 +1452,8 @@ def test_expand_sequential_substory_protocol_list_with_null(f):
 
 
 def test_expand_sequential_substory_protocol_enum_with_null(f):
-    """
-    If parent story consist from sequential substories, we should
-    merge their failure protocols together.
-    """
+    """If parent story consist from sequential substories, we should merge
+    their failure protocols together."""
 
     class T(f.ChildWithEnum, f.EnumMethod):
         pass
@@ -1545,10 +1495,8 @@ def test_expand_sequential_substory_protocol_enum_with_null(f):
 
 
 def test_expand_sequential_substory_protocol_list_with_list(f):
-    """
-    If parent story consist from sequential substories, we should
-    merge their failure protocols together.
-    """
+    """If parent story consist from sequential substories, we should merge
+    their failure protocols together."""
 
     class T(f.ChildWithList, f.StringMethod):
         pass
@@ -1588,10 +1536,8 @@ def test_expand_sequential_substory_protocol_list_with_list(f):
 
 
 def test_expand_sequential_substory_protocol_enum_with_enum(f):
-    """
-    If parent story consist from sequential substories, we should
-    merge their failure protocols together.
-    """
+    """If parent story consist from sequential substories, we should merge
+    their failure protocols together."""
 
     class T(f.ChildWithEnum, f.EnumMethod):
         pass
@@ -1747,10 +1693,8 @@ Substory failure protocol: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
 
 
 def test_deny_substory_reason_parent_story_protocol_with_list(f):
-    """
-    We deny to use Failure reason from the parent story protocol in
-    the substory method.
-    """
+    """We deny to use Failure reason from the parent story protocol in the
+    substory method."""
 
     class T(f.ChildWithNull, f.StringMethod):
         pass
@@ -1804,10 +1748,8 @@ Use 'failures' story method to define failure protocol.
 
 
 def test_deny_substory_reason_parent_story_protocol_with_enum(f):
-    """
-    We deny to use Failure reason from the parent story protocol in
-    the substory method.
-    """
+    """We deny to use Failure reason from the parent story protocol in the
+    substory method."""
 
     class T(f.ChildWithNull, f.EnumMethod):
         pass
@@ -1863,10 +1805,8 @@ Use 'failures' story method to define failure protocol.
 
 
 def test_deny_story_reason_substory_protocol_with_list(f):
-    """
-    We deny to use Failure reason from the substory protocol in the
-    parent story method.
-    """
+    """We deny to use Failure reason from the substory protocol in the parent
+    story method."""
 
     class T(f.ChildWithList, f.NormalMethod):
         pass
@@ -1920,10 +1860,8 @@ Use 'failures' story method to define failure protocol.
 
 
 def test_deny_story_reason_substory_protocol_with_enum(f):
-    """
-    We deny to use Failure reason from the substory protocol in the
-    parent story method.
-    """
+    """We deny to use Failure reason from the substory protocol in the parent
+    story method."""
 
     class T(f.ChildWithEnum, f.NormalMethod):
         pass

@@ -1,0 +1,9 @@
+[flake8]
+max-line-length = 88
+ban-relative-imports = True
+exclude =
+  .tox
+  migrations
+  node_modules
+per-file-ignores =
+  *.py: A003

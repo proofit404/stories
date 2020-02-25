@@ -1,0 +1,122 @@
+---
+trigger:
+  - master
+jobs:
+  - job: "Test"
+    pool:
+      vmImage: "ubuntu-latest"
+    strategy:
+      matrix:
+        precommit:
+          python.version: "3.8"
+          tox.env: precommit
+        py27:
+          python.version: "2.7"
+          tox.env: py27
+        py35:
+          python.version: "3.5"
+          tox.env: py35
+        py36:
+          python.version: "3.6"
+          tox.env: py36
+        py37:
+          python.version: "3.7"
+          tox.env: py37
+        py38:
+          python.version: "3.8"
+          tox.env: py38
+        flake8:
+          python.version: "3.8"
+          tox.env: flake8
+        bandit:
+          python.version: "3.8"
+          tox.env: bandit
+        mypy:
+          python.version: "3.8"
+          tox.env: mypy
+        importlint:
+          python.version: "3.8"
+          tox.env: importlint
+        mkdocs:
+          python.version: "3.8"
+          tox.env: mkdocs
+        doctest:
+          python.version: "3.8"
+          tox.env: doctest
+        remarklint:
+          python.version: "3.8"
+          tox.env: remarklint
+        yamllint:
+          python.version: "3.8"
+          tox.env: yamllint
+        commitlint:
+          python.version: "3.8"
+          tox.env: commitlint
+    steps:
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: $(python.version)
+        displayName: Install Python.
+      - script: pip install --upgrade tox codecov
+        displayName: Install Tox.
+      - task: NodeTool@0
+        inputs:
+          versionSpec: "10.x"
+        condition: in(variables['tox.env'], 'remarklint')
+        displayName: Install NodeJS.
+      - script: |
+          git remote set-branches origin master
+          git fetch --quiet
+          git checkout master --quiet
+          git checkout - --quiet
+        condition: in(variables['tox.env'], 'commitlint')
+        displayName: Unshallow commit log.
+      - script: tox -e $(tox.env)
+        displayName: Run Tox.
+      - script: |
+          if [ -f .coverage ]
+          then
+            codecov
+          fi
+        env:
+          CODECOV_TOKEN: 543ba944-615c-4401-b711-63ce7fc8ece3
+        displayName: Report Coverage.
+  - job: "Deploy"
+    dependsOn:
+      - "Test"
+    condition: |
+      and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    steps:
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: "3.8"
+        displayName: Install Python.
+      - script: pip install --upgrade tox
+        displayName: Install Tox.
+      - script: |
+          curl -sSL "https://raw.githubusercontent.com\
+          /python-poetry/poetry/master/get-poetry.py" | python
+          echo '##vso[task.prependpath]$(HOME)/.poetry/bin'
+        displayName: Install Poetry.
+      - task: NodeTool@0
+        inputs:
+          versionSpec: "10.x"
+        displayName: Install NodeJS.
+      - script: |
+          npm install
+        displayName: Install JS dependencies.
+      - script: |
+          git remote set-branches origin master
+          git fetch --quiet
+          git checkout master --quiet
+        displayName: Unshallow commit log.
+      - script: |
+          npx semantic-release
+        env:
+          GIT_AUTHOR_NAME: $(GIT_AUTHOR_NAME)
+          GIT_AUTHOR_EMAIL: $(GIT_AUTHOR_EMAIL)
+          GIT_COMMITTER_NAME: $(GIT_COMMITTER_NAME)
+          GIT_COMMITTER_EMAIL: $(GIT_COMMITTER_EMAIL)
+          POETRY_PYPI_TOKEN_PYPI: $(POETRY_PYPI_TOKEN_PYPI)
+          GITHUB_TOKEN: $(GITHUB_TOKEN)
+        displayName: Release package.

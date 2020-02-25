@@ -1,4 +1,8 @@
-import stories._context
+# -*- coding: utf-8 -*-
+import configparser
+import textwrap
+
+import _stories.context
 
 
 def make_collector():
@@ -7,13 +11,13 @@ def make_collector():
 
     storage = []
 
-    origin_context_init = stories._context.Context.__init__
+    origin_context_init = _stories.context.Context.__init__
 
     def wrapper(ctx):
         origin_context_init(ctx)
         storage.append(ctx)
 
-    stories._context.Context.__init__ = wrapper
+    _stories.context.Context.__init__ = wrapper
 
     def getter():
         length = len(storage)
@@ -22,3 +26,13 @@ def make_collector():
         return storage[0]
 
     return getter
+
+
+def tox_info(var):
+    """Get variable value from all sections in the tox.ini file."""
+    ini_parser = configparser.ConfigParser()
+    ini_parser.read("tox.ini")
+    for section in ini_parser:
+        if var in ini_parser[section]:
+            value = textwrap.dedent(ini_parser[section][var].strip())
+            yield section, value

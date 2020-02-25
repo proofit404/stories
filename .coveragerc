@@ -1,0 +1,10 @@
+[run]
+branch = True
+source =
+  _stories
+  stories
+  django_project
+  examples
+  helpers
+  mddoctest
+  tests

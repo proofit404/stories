@@ -1,6 +1,9 @@
+# -*- coding: utf-8 -*-
 from enum import Enum
 
-from stories import Failure, Success, story
+from stories import Failure
+from stories import story
+from stories import Success
 from stories.shortcuts import failures_in
 
 
@@ -215,8 +218,8 @@ class WideParentWithEnum(object):
         I.after
 
 
-@failures_in(WideParentWithEnum)  # noqa: F811
-class Errors(Enum):
+@failures_in(WideParentWithEnum)
+class Errors(Enum):  # noqa: F811
     foo = 1
     bar = 2
     baz = 3
@@ -231,7 +234,7 @@ class ShrinkParentWithEnum(object):
         I.after
 
 
-@failures_in(ShrinkParentWithEnum)  # noqa: F811
-class Errors(Enum):
+@failures_in(ShrinkParentWithEnum)
+class Errors(Enum):  # noqa: F811
     foo = 1
     quiz = 4

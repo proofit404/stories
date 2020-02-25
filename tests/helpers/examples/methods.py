@@ -1,4 +1,10 @@
-from stories import Failure, Result, Skip, Success, arguments, story
+# -*- coding: utf-8 -*-
+from stories import arguments
+from stories import Failure
+from stories import Result
+from stories import Skip
+from stories import story
+from stories import Success
 
 
 # Empty story.
@@ -73,6 +79,31 @@ class Pipe(object):
 
     def after(self, ctx):
         raise Exception()
+
+
+class Branch(object):
+    @story
+    @arguments("age")
+    def show_content(I):
+        I.age_lt_18
+        I.age_gte_18
+        I.load_content
+
+    def age_lt_18(self, ctx):
+        if ctx.age < 18:
+            return Success(access_allowed=False)
+        return Success()
+
+    def age_gte_18(self, ctx):
+        if not hasattr(ctx, "access_allowed") and ctx.age >= 18:
+            return Success(access_allowed=True)
+        return Success()
+
+    def load_content(self, ctx):
+        if ctx.access_allowed:
+            return Result("allowed")
+        else:
+            return Result("denied")
 
 
 # Substory in the same class.
@@ -169,3 +200,15 @@ class StepError(object):
 
     def one(self, ctx):
         raise Exception()
+
+
+# Access non-existent context attribute.
+
+
+class AttributeAccessError(object):
+    @story
+    def x(I):
+        I.one
+
+    def one(self, ctx):
+        ctx.x
