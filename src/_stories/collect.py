@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from .exceptions import StoryDefinitionError
 
 
 def collect_story(f):
@@ -12,6 +11,4 @@ def collect_story(f):
 
     f(Collector())
 
-    if not calls:
-        raise StoryDefinitionError("Stories can not be empty")
     return calls
