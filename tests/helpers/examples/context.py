@@ -8,6 +8,11 @@ from stories import Success
 # Mixins.
 
 
+class PrivateMethod(object):
+    def one(self, ctx):
+        return Result(ctx.__dict__)
+
+
 class NormalMethod(object):
     def one(self, ctx):
         return Success(foo=self.foo)

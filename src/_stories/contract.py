@@ -244,9 +244,9 @@ class NullContract(object):
             raise ContextContractError(message)
         return kwargs
 
-    def check_substory_call(self, ctx):
+    def check_substory_call(self, ctx, ns):
         __tracebackhide__ = True
-        missed = set(self.arguments) - set(ctx._Context__ns)
+        missed = set(self.arguments) - set(ns)
         if missed:
             message = missed_variable_template.format(
                 missed=", ".join(sorted(missed)),
@@ -257,9 +257,9 @@ class NullContract(object):
             )
             raise ContextContractError(message)
 
-    def check_success_statement(self, method, ctx, ns):
+    def check_success_statement(self, method, ctx, ns, kwargs):
         __tracebackhide__ = True
-        tries_to_override = set(ctx._Context__ns) & set(ns)
+        tries_to_override = set(ns) & set(kwargs)
         if tries_to_override:
             message = variable_override_template.format(
                 variables=", ".join(map(repr, sorted(tries_to_override))),
@@ -268,7 +268,7 @@ class NullContract(object):
                 ctx=ctx,
             )
             raise ContextContractError(message)
-        return ns
+        return kwargs
 
     def __repr__(self):
         return self.format_contract_fields(self.argset)
@@ -325,10 +325,10 @@ class SpecContract(NullContract):
             raise ContextContractError(message)
         return result
 
-    def check_success_statement(self, method, ctx, ns):
+    def check_success_statement(self, method, ctx, ns, kwargs):
         __tracebackhide__ = True
-        super(SpecContract, self).check_success_statement(method, ctx, ns)
-        unknown = self.identify(ns)
+        super(SpecContract, self).check_success_statement(method, ctx, ns, kwargs)
+        unknown = self.identify(kwargs)
         if unknown:
             message = unknown_variable_template.format(
                 unknown=", ".join(map(repr, sorted(unknown))),
@@ -337,27 +337,27 @@ class SpecContract(NullContract):
                 contract=self,
             )
             raise ContextContractError(message)
-        kwargs, errors = self.validate(ns)
+        normalized, errors = self.validate(kwargs)
         if errors:
             message = invalid_variable_template.format(
                 variables=", ".join(map(repr, sorted(errors))),
                 cls=method.__self__.__class__.__name__,
                 method=method.__name__,
-                violations=format_violations(ns, errors),
+                violations=format_violations(kwargs, errors),
                 contract=self.format_contract_fields(errors),
             )
             raise ContextContractError(message)
-        return kwargs
+        return normalized
 
-    def identify(self, ns):
+    def identify(self, kwargs):
         available = set(self.spec) | set(self.argset)
-        unknown = set(ns) - available
+        unknown = set(kwargs) - available
         return unknown
 
-    def validate(self, ns):
+    def validate(self, kwargs):
         __tracebackhide__ = True
         result, errors, seen, conflict = {}, {}, [], {}
-        for key, value in ns.items():
+        for key, value in kwargs.items():
             if key in self.spec:
                 self.validate_spec(result, errors, seen, key, value)
             else:
@@ -457,7 +457,7 @@ class SpecContract(NullContract):
         return "\n".join(lines)
 
 
-def format_violations(ns, errors):
+def format_violations(kwargs, errors):
     result = []
 
     def normalize(value, indent, list_item=False, dict_value=False):
@@ -476,7 +476,7 @@ def format_violations(ns, errors):
         for key in sorted(value):
             normalize(str(key) + ":", indent)
             if sep is not None:
-                normalize(repr(ns[key]), indent, dict_value=True)
+                normalize(repr(kwargs[key]), indent, dict_value=True)
             normalize(value[key], indent, dict_value=True)
             if sep is not None:
                 normalize_str(sep, 0)

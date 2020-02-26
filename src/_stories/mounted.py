@@ -43,17 +43,17 @@ class MountedStory(object):
     def __call__(self, **kwargs):
         __tracebackhide__ = True
         history = History()
-        ctx = make_context(self.methods[0][1], kwargs, history)
+        ctx, ns, lines = make_context(self.methods[0][1], kwargs, history)
         runner = Call()
-        return function.execute(runner, ctx, history, self.methods)
+        return function.execute(runner, ctx, ns, lines, history, self.methods)
 
     def run(self, **kwargs):
         __tracebackhide__ = True
         history = History()
-        ctx = make_context(self.methods[0][1], kwargs, history)
+        ctx, ns, lines = make_context(self.methods[0][1], kwargs, history)
         run_protocol = make_run_protocol(self.failures, self.cls_name, self.name)
         runner = Run(run_protocol)
-        return function.execute(runner, ctx, history, self.methods)
+        return function.execute(runner, ctx, ns, lines, history, self.methods)
 
     def __repr__(self):
         result = []

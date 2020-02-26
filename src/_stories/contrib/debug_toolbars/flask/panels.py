@@ -4,6 +4,7 @@ from flask import render_template
 from flask_debugtoolbar.panels import DebugPanel
 
 import _stories.context
+import _stories.mounted
 
 
 # FIXME: Test me.
@@ -11,13 +12,14 @@ import _stories.context
 # FIXME: Type me.
 
 
-original_context_init = _stories.context.Context.__init__
+origin_make_context = _stories.context.make_context
 
 
 def track_context(storage):
-    def wrapper(ctx):
-        original_context_init(ctx)
+    def wrapper(contract, kwargs, history):
+        ctx, ns, lines = origin_make_context(contract, kwargs, history)
         storage.append(ctx)
+        return ctx, ns, lines
 
     return wrapper
 
@@ -56,11 +58,12 @@ class StoriesPanel(DebugPanel):
 
     def content(self):
         return render_template(
-            "stories/debug_toolbar/stories_panel.html", stories=self.storage
+            "stories/debug_toolbar/stories_panel.html",
+            stories=self.storage,  # FIXME: Use pretty print.
         )
 
     def enable_instrumentation(self):
-        _stories.context.Context.__init__ = track_context(self.storage)
+        _stories.mounted.make_context = track_context(self.storage)
 
     def disable_instrumentation(self):
-        _stories.context.Context.__init__ = original_context_init
+        _stories.mounted.make_context = origin_make_context

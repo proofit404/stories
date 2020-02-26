@@ -11,6 +11,38 @@ from stories.exceptions import FailureProtocolError
 from stories.exceptions import MutationError
 
 
+def test_context_private_fields(c):
+    """Deny access to the private fields of the context object."""
+
+    class T(c.Child, c.PrivateMethod):
+        pass
+
+    class Q(c.Parent, c.NormalParentMethod, T):
+        pass
+
+    class J(c.Parent, c.NormalParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    # Simple.
+
+    assert T().x() == {}
+
+    assert T().x.run().value == {}
+
+    # Substory inheritance.
+
+    assert Q().a() == {}
+
+    assert Q().a.run().value == {}
+
+    # Substory DI.
+
+    assert J().a() == {}
+
+    assert J().a.run().value == {}
+
+
 def test_context_dir(c):
     """Show context variables in the `dir` output."""
 

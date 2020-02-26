@@ -3,6 +3,10 @@ import configparser
 import textwrap
 
 import _stories.context
+import _stories.mounted
+
+
+origin_make_context = _stories.context.make_context
 
 
 def make_collector():
@@ -11,13 +15,12 @@ def make_collector():
 
     storage = []
 
-    origin_context_init = _stories.context.Context.__init__
-
-    def wrapper(ctx):
-        origin_context_init(ctx)
+    def wrapper(contract, kwargs, history):
+        ctx, ns, lines = origin_make_context(contract, kwargs, history)
         storage.append(ctx)
+        return ctx, ns, lines
 
-    _stories.context.Context.__init__ = wrapper
+    _stories.mounted.make_context = wrapper
 
     def getter():
         length = len(storage)
