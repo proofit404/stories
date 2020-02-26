@@ -8,7 +8,7 @@ from _stories.returned import Skip
 from _stories.returned import Success
 
 
-def execute(runner, ctx, history, methods):
+def execute(runner, ctx, ns, lines, history, methods):
     __tracebackhide__ = True
 
     skipped = 0
@@ -56,7 +56,7 @@ def execute(runner, ctx, history, methods):
 
         if method_type is BeginningOfStory:
             try:
-                contract.check_substory_call(ctx)
+                contract.check_substory_call(ctx, ns)
             except Exception as error:
                 history.on_error(error.__class__.__name__)
                 raise
@@ -68,11 +68,11 @@ def execute(runner, ctx, history, methods):
             continue
 
         try:
-            kwargs = contract.check_success_statement(method, ctx, result.kwargs)
+            kwargs = contract.check_success_statement(method, ctx, ns, result.kwargs)
         except Exception as error:
             history.on_error(error.__class__.__name__)
             raise
 
-        assign_namespace(ctx, method, kwargs)
+        assign_namespace(ns, lines, method, kwargs)
 
     return runner.finished()

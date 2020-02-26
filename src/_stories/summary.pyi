@@ -4,7 +4,6 @@ from typing import NoReturn
 from typing import Optional
 from typing import Union
 
-from _stories.context import Context
 from _stories.failures import NotNullRunProtocol
 from _stories.failures import NullRunProtocol
 
@@ -12,7 +11,7 @@ class FailureSummary:
     def __init__(
         self,
         protocol: Union[NullRunProtocol, NotNullRunProtocol],
-        ctx: Context,
+        ctx: object,
         failed_method: str,
         reason: Optional[Union[str, Enum]],
     ) -> None: ...

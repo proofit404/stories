@@ -4,6 +4,7 @@ from raven.breadcrumbs import libraryhook
 from raven.breadcrumbs import record
 
 import _stories.context
+import _stories.mounted
 
 
 # FIXME: Test me.
@@ -11,17 +12,18 @@ import _stories.context
 # FIXME: Type me.
 
 
-origin_context_init = _stories.context.Context.__init__
+origin_make_context = _stories.context.make_context
 
 
 @libraryhook("stories")
 def track_context():
-    def wrapper(ctx):
-        origin_context_init(ctx)
+    def wrapper(contract, kwargs, history):
+        ctx, ns, lines = origin_make_context(contract, kwargs, history)
         record(
             processor=lambda data: data.update(
-                {"category": "story", "message": repr(ctx)}
+                {"category": "story", "message": repr(ctx)}  # FIXME: Use pretty print.
             )
         )
+        return ctx, ns, lines
 
-    _stories.context.Context.__init__ = wrapper
+    _stories.mounted.make_context = wrapper
