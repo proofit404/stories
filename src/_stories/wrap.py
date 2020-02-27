@@ -35,9 +35,8 @@ def wrap_story(arguments, collected, cls_name, story_name, obj, spec, failures):
             message = composition_error_template.format(
                 cls=cls_name, story_name=story_name, method_name=attr.name
             )
-            raise StoryDefinitionError(message)
 
-        contract.add_substory_contract(attr.methods[0][1])
+            raise StoryDefinitionError(message)
 
         combine_contract(contract, attr.contract)
 
