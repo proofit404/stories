@@ -59,3 +59,11 @@ try:
 except ImportError:
     # Prettyprinter package is not installed.
     from pprint import pformat  # noqa: F401
+
+
+try:
+    from asyncio import iscoroutinefunction
+except ImportError:
+    # We are on Python 2.7
+    def iscoroutinefunction(func):
+        return False

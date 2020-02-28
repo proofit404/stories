@@ -8,7 +8,7 @@ from _stories.returned import Skip
 from _stories.returned import Success
 
 
-def execute(runner, ctx, ns, lines, history, methods):
+async def execute(runner, ctx, ns, lines, history, methods):
     __tracebackhide__ = True
 
     skipped = 0
@@ -40,7 +40,7 @@ def execute(runner, ctx, ns, lines, history, methods):
         history.before_call(method.__name__)
 
         try:
-            result = method(ctx)
+            result = await method(ctx)
         except Exception as error:
             history.on_error(error.__class__.__name__)
             raise

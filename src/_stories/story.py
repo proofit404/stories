@@ -31,7 +31,7 @@ def story(f):
                 cls, name, collected, contract_method, failures_method
             )
         else:
-            methods, contract, failures = wrap_story(
+            methods, contract, failures, executor = wrap_story(
                 arguments,
                 collected,
                 cls.__name__,
@@ -41,7 +41,14 @@ def story(f):
                 this["failures"],
             )
             return MountedStory(
-                obj, cls.__name__, name, arguments, methods, contract, failures
+                obj,
+                cls.__name__,
+                name,
+                arguments,
+                methods,
+                contract,
+                failures,
+                executor,
             )
 
     return type(

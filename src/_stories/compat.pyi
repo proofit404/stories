@@ -1,0 +1,3 @@
+from typing import Callable
+
+def iscoroutinefunction(func: Callable) -> bool: ...
