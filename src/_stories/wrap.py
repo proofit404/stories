@@ -37,7 +37,7 @@ def wrap_story(arguments, collected, cls_name, story_name, obj, spec, failures):
 
         methods.extend(attr.methods)
 
-    methods.append((EndOfStory(is_empty=not collected), contract, protocol))
+    methods.append((EndOfStory(), contract, protocol))
 
     maybe_extend_downstream_argsets(methods, contract)
 

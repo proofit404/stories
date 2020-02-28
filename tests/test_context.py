@@ -205,59 +205,6 @@ Available variables: 'bar'
     assert str(exc_info.value) == expected
 
 
-def test_context_representation_with_empty():
-
-    expected = """
-Empty.x
-
-Context()
-    """.strip()
-
-    getter = make_collector()
-    examples.methods.Empty().x()
-    assert repr(getter()) == expected
-
-    getter = make_collector()
-    examples.methods.Empty().x.run()
-    assert repr(getter()) == expected
-
-    expected = """
-EmptySubstory.y
-  x
-
-Context()
-    """.strip()
-
-    getter = make_collector()
-    examples.methods.EmptySubstory().y()
-    assert repr(getter()) == expected
-
-    getter = make_collector()
-    examples.methods.EmptySubstory().y.run()
-    assert repr(getter()) == expected
-
-    expected = """
-SubstoryDI.y
-  start
-  before
-  x (Empty.x)
-  after (returned: 6)
-
-Context:
-  spam: 3  # Story argument
-  foo: 2   # Set by SubstoryDI.start
-  bar: 4   # Set by SubstoryDI.before
-    """.strip()
-
-    getter = make_collector()
-    examples.methods.SubstoryDI(examples.methods.Empty().x).y(spam=3)
-    assert repr(getter()) == expected
-
-    getter = make_collector()
-    examples.methods.SubstoryDI(examples.methods.Empty().x).y.run(spam=3)
-    assert repr(getter()) == expected
-
-
 def test_context_proper_getattr_behavior():
     expected = """
 Branch.show_content

@@ -1,34 +1,29 @@
 # -*- coding: utf-8 -*-
+import pytest
+
 import examples
+from stories import story
+from stories.exceptions import StoryDefinitionError
+
+
+def test_deny_empty_stories():
+    """We can not define a story which does not have any steps.
+
+    This will make it impossible to determine the right executor in the
+    stories composition.
+    """
+
+    with pytest.raises(StoryDefinitionError) as exc_info:
+
+        class Action(object):
+            @story
+            def do(I):
+                pass
+
+    assert str(exc_info.value) == "Story should have at least one step defined"
 
 
 def test_story_representation():
-
-    story = repr(examples.methods.Empty().x)
-    expected = """
-Empty.x
-  <empty>
-""".strip()
-    assert story == expected
-
-    story = repr(examples.methods.EmptySubstory().y)
-    expected = """
-EmptySubstory.y
-  x
-    <empty>
-""".strip()
-    assert story == expected
-
-    story = repr(examples.methods.SubstoryDI(examples.methods.Empty().x).y)
-    expected = """
-SubstoryDI.y
-  start
-  before
-  x (Empty.x)
-    <empty>
-  after
-""".strip()
-    assert story == expected
 
     story = repr(examples.methods.Simple().x)
     expected = """
@@ -82,21 +77,6 @@ SubstoryDI.y
 
 
 def test_story_class_attribute_representation():
-
-    story = repr(examples.methods.Empty.x)
-    expected = """
-Empty.x
-  <empty>
-""".strip()
-    assert story == expected
-
-    story = repr(examples.methods.EmptySubstory.y)
-    expected = """
-EmptySubstory.y
-  x
-    <empty>
-""".strip()
-    assert story == expected
 
     story = repr(examples.methods.Simple.x)
     expected = """
