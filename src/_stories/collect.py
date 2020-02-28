@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+
+
 def collect_story(f):
 
     calls = []
