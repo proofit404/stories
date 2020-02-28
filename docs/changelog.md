@@ -1,3 +1,9 @@
+## [0.11.1](https://github.com/dry-python/stories/compare/0.11.0...0.11.1) (2020-02-28)
+
+### Bug Fixes
+
+- deny to define stories without steps ([5067546](https://github.com/dry-python/stories/commit/5067546386df294db595fb0ee4e8968ee295c4b3))
+
 # [0.11.0](https://github.com/dry-python/stories/compare/0.10.2...0.11.0) (2020-02-14)
 
 ### Features
