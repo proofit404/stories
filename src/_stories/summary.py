@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+
+
 class FailureSummary(object):
     def __init__(self, protocol, ctx, failed_method, reason):
         self.__protocol = protocol
