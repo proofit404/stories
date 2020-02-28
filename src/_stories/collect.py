@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
+from _stories.compat import iscoroutinefunction
 from _stories.exceptions import StoryDefinitionError
 
 
 def collect_story(f):
+    if iscoroutinefunction(f):
+        raise StoryDefinitionError("Story should be a regular function")
 
     calls = []
 
