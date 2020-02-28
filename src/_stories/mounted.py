@@ -19,17 +19,14 @@ class ClassMountedStory(object):
 
     def __repr__(self):
         result = [self.cls.__name__ + "." + self.name]
-        if self.collected:
-            for name in self.collected:
-                attr = getattr(self.cls, name, None)
-                if type(attr) is ClassMountedStory:
-                    result.append("  " + attr.name)
-                    result.extend(["  " + line for line in repr(attr).splitlines()[1:]])
-                else:
-                    defined = "" if attr else " ??"
-                    result.append("  " + name + defined)
-        else:
-            result.append("  <empty>")
+        for name in self.collected:
+            attr = getattr(self.cls, name, None)
+            if type(attr) is ClassMountedStory:
+                result.append("  " + attr.name)
+                result.extend(["  " + line for line in repr(attr).splitlines()[1:]])
+            else:
+                defined = "" if attr else " ??"
+                result.append("  " + name + defined)
         return "\n".join(result)
 
 
@@ -64,8 +61,6 @@ class MountedStory(object):
         for method, _contract, _protocol in self.methods:
             method_type = type(method)
             if method_type is EndOfStory:
-                if method.is_empty:
-                    result.append("  " * indent + "<empty>")
                 indent -= 1
             else:
                 result.append("  " * indent + method.__name__)

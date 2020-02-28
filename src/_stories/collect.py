@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from _stories.exceptions import StoryDefinitionError
 
 
 def collect_story(f):
@@ -10,5 +11,8 @@ def collect_story(f):
             calls.append(name)
 
     f(Collector())
+
+    if not calls:
+        raise StoryDefinitionError("Story should have at least one step defined")
 
     return calls

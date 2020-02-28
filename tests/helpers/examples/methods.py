@@ -7,24 +7,6 @@ from stories import story
 from stories import Success
 
 
-# Empty story.
-
-
-class Empty(object):
-    @story
-    def x(I):
-        pass
-
-
-# Empty substory.
-
-
-class EmptySubstory(Empty):
-    @story
-    def y(I):
-        I.x
-
-
 # Simple story.
 
 

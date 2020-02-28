@@ -26,33 +26,6 @@ def test_signatures():
     assert str(exc_info.value) in expected
 
 
-def test_empty():
-
-    result = examples.methods.Empty().x()
-    assert result is None
-
-    result = examples.methods.Empty().x.run()
-    assert result.is_success
-    assert not result.is_failure
-    assert result.value is None
-
-    result = examples.methods.EmptySubstory().y()
-    assert result is None
-
-    result = examples.methods.EmptySubstory().y.run()
-    assert result.is_success
-    assert not result.is_failure
-    assert result.value is None
-
-    result = examples.methods.SubstoryDI(examples.methods.Empty().x).y(spam=3)
-    assert result == 6
-
-    result = examples.methods.SubstoryDI(examples.methods.Empty().x).y.run(spam=3)
-    assert result.is_success
-    assert not result.is_failure
-    assert result.value == 6
-
-
 def test_failure():
 
     # Simple.
