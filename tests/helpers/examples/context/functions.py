@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-from stories import arguments
+from examples.context import *  # noqa: F401, F403
 from stories import Result
-from stories import story
 from stories import Success
 
 
@@ -31,7 +30,7 @@ class DeleteMethod(object):
 class CompareMethod(object):
     def one(self, ctx):
         if ctx:
-            pass
+            pass  # pragma: no cover
 
 
 class DirMethod(object):
@@ -56,36 +55,3 @@ class DirParentMethod(object):
 
     def after(self, ctx):
         return Result(dir(ctx))
-
-
-# Base classes.
-
-
-class Child(object):
-    @story
-    def x(I):
-        I.one
-
-
-class ParamChild(object):
-    @story
-    @arguments("bar")
-    def x(I):
-        I.one
-
-
-class Parent(object):
-    @story
-    def a(I):
-        I.before
-        I.x
-        I.after
-
-
-class ParamParent(object):
-    @story
-    @arguments("bar")
-    def a(I):
-        I.before
-        I.x
-        I.after

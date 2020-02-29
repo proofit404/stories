@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 import pytest
 
-import examples
 from stories.exceptions import FailureError
 
 
-def test_signatures():
+def test_signatures(r, x):
+    """Story signature should not allow positional arguments."""
 
     expected = {
         "__call__() takes 1 positional argument but 2 were given",
@@ -13,7 +13,7 @@ def test_signatures():
     }
 
     with pytest.raises(TypeError) as exc_info:
-        examples.methods.Simple().x(1)
+        r(x.Simple().x)(1)
     assert str(exc_info.value) in expected
 
     expected = {
@@ -22,19 +22,68 @@ def test_signatures():
     }
 
     with pytest.raises(TypeError) as exc_info:
-        examples.methods.Simple().x.run(1)
+        r(x.Simple().x.run)(1)
     assert str(exc_info.value) in expected
 
 
-def test_failure():
+def test_success(r, x):
+    """Success marker semantics.
+
+    If story contains only success markers, it should execute every step
+    sequentially one by one.
+    """
+
+    class T(x.Child, x.NormalMethod):
+        pass
+
+    class Q(x.Parent, x.NormalParentMethod, T):
+        pass
+
+    class J(x.Parent, x.NormalParentMethod):
+        def __init__(self):
+            self.x = T().x
+
+    # Simple.
+
+    result = r(T().x)()
+    assert result is None
+
+    result = r(T().x.run)()
+    assert result.is_success
+    assert not result.is_failure
+    assert result.value is None
+
+    # Substory inheritance.
+
+    result = r(Q().a)()
+    assert result is None
+
+    result = r(Q().a.run)()
+    assert result.is_success
+    assert not result.is_failure
+    assert result.value is None
+
+    # Substory DI.
+
+    result = r(J().a)()
+    assert result is None
+
+    result = r(J().a.run)()
+    assert result.is_success
+    assert not result.is_failure
+    assert result.value is None
+
+
+def test_failure(r, x):
+    """Failure marker semantics."""
 
     # Simple.
 
     with pytest.raises(FailureError) as exc_info:
-        examples.methods.Simple().x(foo=2, bar=2)
+        r(x.Simple().x)(foo=2, bar=2)
     assert repr(exc_info.value) == "FailureError()"
 
-    result = examples.methods.Simple().x.run(foo=2, bar=2)
+    result = r(x.Simple().x.run)(foo=2, bar=2)
     assert not result.is_success
     assert result.is_failure
     assert result.ctx.foo == 2
@@ -47,10 +96,10 @@ def test_failure():
     # Simple substory.
 
     with pytest.raises(FailureError) as exc_info:
-        examples.methods.SimpleSubstory().y(spam=3)
+        r(x.SimpleSubstory().y)(spam=3)
     assert repr(exc_info.value) == "FailureError()"
 
-    result = examples.methods.SimpleSubstory().y.run(spam=3)
+    result = r(x.SimpleSubstory().y.run)(spam=3)
     assert not result.is_success
     assert result.is_failure
     assert result.ctx.foo == 2
@@ -64,10 +113,10 @@ def test_failure():
     # Substory DI.
 
     with pytest.raises(FailureError) as exc_info:
-        examples.methods.SubstoryDI(examples.methods.Simple().x).y(spam=3)
+        r(x.SubstoryDI(x.Simple().x).y)(spam=3)
     assert repr(exc_info.value) == "FailureError()"
 
-    result = examples.methods.SubstoryDI(examples.methods.Simple().x).y.run(spam=3)
+    result = r(x.SubstoryDI(x.Simple().x).y.run)(spam=3)
     assert not result.is_success
     assert result.is_failure
     assert result.ctx.foo == 2
@@ -79,104 +128,112 @@ def test_failure():
         result.value
 
 
-def test_failure_error_private_fields():
+def test_failure_error_private_fields(r, x):
     """Deny access to the private fields of the `FailureError` exception."""
 
     with pytest.raises(FailureError) as exc_info:
-        examples.methods.Simple().x(foo=2, bar=2)
+        r(x.Simple().x)(foo=2, bar=2)
     assert exc_info.value.__dict__ == {}
 
 
-def test_result():
+def test_result(r, x):
+    """Result marker semantics."""
 
-    result = examples.methods.Simple().x(foo=1, bar=3)
+    result = r(x.Simple().x)(foo=1, bar=3)
     assert result == -1
 
-    result = examples.methods.Simple().x.run(foo=1, bar=3)
+    result = r(x.Simple().x.run)(foo=1, bar=3)
     assert result.is_success
     assert not result.is_failure
     assert not result.failed_on("two")
     assert result.value == -1
 
-    result = examples.methods.SimpleSubstory().y(spam=2)
+    result = r(x.SimpleSubstory().y)(spam=2)
     assert result == -1
 
-    result = examples.methods.SimpleSubstory().y.run(spam=2)
+    result = r(x.SimpleSubstory().y.run)(spam=2)
     assert result.is_success
     assert not result.is_failure
     assert not result.failed_on("two")
     assert result.value == -1
 
-    result = examples.methods.SubstoryDI(examples.methods.Simple().x).y(spam=2)
+    result = r(x.SubstoryDI(x.Simple().x).y)(spam=2)
     assert result == -1
 
-    result = examples.methods.SubstoryDI(examples.methods.Simple().x).y.run(spam=2)
+    result = r(x.SubstoryDI(x.Simple().x).y.run)(spam=2)
     assert result.is_success
     assert not result.is_failure
     assert not result.failed_on("two")
     assert result.value == -1
 
 
-def test_skip():
+def test_skip(r, x):
+    """Skip marker semantics."""
 
-    result = examples.methods.Simple().x(foo=1, bar=-1)
+    result = r(x.Simple().x)(foo=1, bar=-1)
     assert result is None
 
-    result = examples.methods.Simple().x.run(foo=1, bar=-1)
+    result = r(x.Simple().x.run)(foo=1, bar=-1)
     assert result.is_success
     assert not result.is_failure
     assert result.value is None
 
-    result = examples.methods.SimpleSubstory().y(spam=-2)
+    result = r(x.SimpleSubstory().y)(spam=-2)
     assert result == -4
 
-    result = examples.methods.SimpleSubstory().y.run(spam=-2)
+    result = r(x.SimpleSubstory().y.run)(spam=-2)
     assert result.is_success
     assert not result.is_failure
     assert result.value == -4
 
-    result = examples.methods.SubstoryDI(examples.methods.Simple().x).y(spam=-2)
+    result = r(x.SubstoryDI(x.Simple().x).y)(spam=-2)
     assert result == -4
 
-    result = examples.methods.SubstoryDI(examples.methods.Simple().x).y.run(spam=-2)
+    result = r(x.SubstoryDI(x.Simple().x).y.run)(spam=-2)
     assert result.is_success
     assert not result.is_failure
     assert result.value == -4
 
-    result = examples.methods.SubstoryDI(examples.methods.SimpleSubstory().z).y(spam=2)
+    result = r(x.SubstoryDI(x.SimpleSubstory().z).y)(spam=2)
     assert result == 4
 
-    result = examples.methods.SubstoryDI(examples.methods.SimpleSubstory().z).y.run(
-        spam=2
-    )
+    result = r(x.SubstoryDI(x.SimpleSubstory().z).y.run)(spam=2)
     assert result.is_success
     assert not result.is_failure
     assert result.value == 4
 
-    result = examples.methods.SubstoryDI(examples.methods.Pipe().y).y(spam=-2)
+    result = r(x.SubstoryDI(x.Pipe().y).y)(spam=-2)
     assert result == -4
 
-    result = examples.methods.SubstoryDI(examples.methods.Pipe().y).y.run(spam=-2)
+    result = r(x.SubstoryDI(x.Pipe().y).y.run)(spam=-2)
     assert result.is_success
     assert not result.is_failure
     assert result.value == -4
 
 
-def test_return_type():
+def test_return_type(r, x):
+    """Story steps should return a marker.
+
+    Any other value is denied.
+    """
 
     with pytest.raises(AssertionError):
-        examples.methods.WrongResult().x()
+        r(x.WrongResult().x)()
 
     with pytest.raises(AssertionError):
-        examples.methods.WrongResult().x.run()
+        r(x.WrongResult().x.run)()
 
 
-def test_inject_implementation():
+def test_inject_implementation(r, x):
+    """Story steps should has access to the attributes of the instance.
 
-    result = examples.methods.ImplementationDI(f=lambda arg: arg + 1).x(foo=1)
+    The class of the instance is the same where story defined in.
+    """
+
+    result = r(x.ImplementationDI(f=lambda arg: arg + 1).x)(foo=1)
     assert result == 2
 
-    result = examples.methods.ImplementationDI(f=lambda arg: arg + 1).x.run(foo=1)
+    result = r(x.ImplementationDI(f=lambda arg: arg + 1).x.run)(foo=1)
     assert result.is_success
     assert not result.is_failure
     assert result.value == 2

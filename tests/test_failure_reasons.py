@@ -35,7 +35,7 @@ def test_wrong_definition():
 # Arguments of the Failure class.
 
 
-def test_reasons_defined_with_list(f):
+def test_reasons_defined_with_list(r, f):
     """We can use list of strings to define story failure protocol."""
 
     class T(f.ChildWithList, f.StringMethod):
@@ -53,10 +53,10 @@ def test_reasons_defined_with_list(f):
     assert T().x.failures == ["foo", "bar", "baz"]
 
     with pytest.raises(FailureError) as exc_info:
-        T().x()
+        r(T().x)()
     assert repr(exc_info.value) == "FailureError('foo')"
 
-    result = T().x.run()
+    result = r(T().x.run)()
     assert not result.is_success
     assert result.is_failure
     assert result.failed_because("foo")
@@ -66,10 +66,10 @@ def test_reasons_defined_with_list(f):
     assert Q().a.failures == ["foo", "bar", "baz"]
 
     with pytest.raises(FailureError) as exc_info:
-        Q().a()
+        r(Q().a)()
     assert repr(exc_info.value) == "FailureError('foo')"
 
-    result = Q().a.run()
+    result = r(Q().a.run)()
     assert not result.is_success
     assert result.is_failure
     assert result.failed_because("foo")
@@ -79,16 +79,16 @@ def test_reasons_defined_with_list(f):
     assert J().a.failures == ["foo", "bar", "baz"]
 
     with pytest.raises(FailureError) as exc_info:
-        J().a()
+        r(J().a)()
     assert repr(exc_info.value) == "FailureError('foo')"
 
-    result = J().a.run()
+    result = r(J().a.run)()
     assert not result.is_success
     assert result.is_failure
     assert result.failed_because("foo")
 
 
-def test_reasons_defined_with_enum(f):
+def test_reasons_defined_with_enum(r, f):
     """We can use enum class to define story failure protocol."""
 
     class T(f.ChildWithEnum, f.EnumMethod):
@@ -107,10 +107,10 @@ def test_reasons_defined_with_enum(f):
     assert set(T().x.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
     with pytest.raises(FailureError) as exc_info:
-        T().x()
+        r(T().x)()
     assert repr(exc_info.value) == "FailureError(<Errors.foo: 1>)"
 
-    result = T().x.run()
+    result = r(T().x.run)()
     assert not result.is_success
     assert result.is_failure
     assert result.failed_because(T().x.failures.foo)
@@ -121,10 +121,10 @@ def test_reasons_defined_with_enum(f):
     assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
     with pytest.raises(FailureError) as exc_info:
-        Q().a()
+        r(Q().a)()
     assert repr(exc_info.value) == "FailureError(<Errors.foo: 1>)"
 
-    result = Q().a.run()
+    result = r(Q().a.run)()
     assert not result.is_success
     assert result.is_failure
     assert result.failed_because(Q().a.failures.foo)
@@ -135,16 +135,16 @@ def test_reasons_defined_with_enum(f):
     assert set(J().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
     with pytest.raises(FailureError) as exc_info:
-        J().a()
+        r(J().a)()
     assert repr(exc_info.value) == "FailureError(<Errors.foo: 1>)"
 
-    result = J().a.run()
+    result = r(J().a.run)()
     assert not result.is_success
     assert result.is_failure
     assert result.failed_because(J().a.failures.foo)
 
 
-def test_wrong_reason_with_list(f):
+def test_wrong_reason_with_list(r, f):
     """We deny to use wrong reason in stories defined with list of strings as
     its failure protocol."""
 
@@ -171,11 +171,11 @@ Function returned value: T.one
     assert T().x.failures == ["foo", "bar", "baz"]
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        T().x()
+        r(T().x)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        T().x.run()
+        r(T().x.run)()
     assert str(exc_info.value) == expected
 
     # Substory inheritance.
@@ -191,11 +191,11 @@ Function returned value: Q.one
     assert Q().a.failures == ["foo", "bar", "baz"]
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        Q().a()
+        r(Q().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        Q().a.run()
+        r(Q().a.run)()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -211,15 +211,15 @@ Function returned value: T.one
     assert J().a.failures == ["foo", "bar", "baz"]
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        J().a()
+        r(J().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        J().a.run()
+        r(J().a.run)()
     assert str(exc_info.value) == expected
 
 
-def test_wrong_reason_with_enum(f):
+def test_wrong_reason_with_enum(r, f):
     """We deny to use wrong reason in stories defined with enum class as its
     failure protocol."""
 
@@ -247,11 +247,11 @@ Function returned value: T.one
     assert set(T().x.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        T().x()
+        r(T().x)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        T().x.run()
+        r(T().x.run)()
     assert str(exc_info.value) == expected
 
     # Substory inheritance.
@@ -268,11 +268,11 @@ Function returned value: Q.one
     assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        Q().a()
+        r(Q().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        Q().a.run()
+        r(Q().a.run)()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -289,15 +289,15 @@ Function returned value: T.one
     assert set(J().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        J().a()
+        r(J().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        J().a.run()
+        r(J().a.run)()
     assert str(exc_info.value) == expected
 
 
-def test_null_reason_with_list(f):
+def test_null_reason_with_list(r, f):
     """We deny to use Failure() in stories defined with list of strings as its
     failure protocol."""
 
@@ -326,11 +326,11 @@ Use one of them as Failure() argument.
     assert T().x.failures == ["foo", "bar", "baz"]
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        T().x()
+        r(T().x)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        T().x.run()
+        r(T().x.run)()
     assert str(exc_info.value) == expected
 
     # Substory inheritance.
@@ -348,11 +348,11 @@ Use one of them as Failure() argument.
     assert Q().a.failures == ["foo", "bar", "baz"]
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        Q().a()
+        r(Q().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        Q().a.run()
+        r(Q().a.run)()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -370,15 +370,15 @@ Use one of them as Failure() argument.
     assert J().a.failures == ["foo", "bar", "baz"]
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        J().a()
+        r(J().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        J().a.run()
+        r(J().a.run)()
     assert str(exc_info.value) == expected
 
 
-def test_null_reason_with_enum(f):
+def test_null_reason_with_enum(r, f):
     """We deny to use Failure() in stories defined with enum class as its
     failure protocol."""
 
@@ -408,11 +408,11 @@ Use one of them as Failure() argument.
     assert set(T().x.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        T().x()
+        r(T().x)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        T().x.run()
+        r(T().x.run)()
     assert str(exc_info.value) == expected
 
     # Substory inheritance.
@@ -431,11 +431,11 @@ Use one of them as Failure() argument.
     assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        Q().a()
+        r(Q().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        Q().a.run()
+        r(Q().a.run)()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -454,15 +454,15 @@ Use one of them as Failure() argument.
     assert set(J().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        J().a()
+        r(J().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        J().a.run()
+        r(J().a.run)()
     assert str(exc_info.value) == expected
 
 
-def test_reason_without_protocol(f):
+def test_reason_without_protocol(r, f):
     """We deny to use Failure('reason') in stories defined without failure
     protocol."""
 
@@ -489,11 +489,11 @@ Use 'failures' story method to define failure protocol.
     assert T().x.failures is None
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        T().x()
+        r(T().x)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        T().x.run()
+        r(T().x.run)()
     assert str(exc_info.value) == expected
 
     # Substory inheritance.
@@ -509,11 +509,11 @@ Use 'failures' story method to define failure protocol.
     assert Q().a.failures is None
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        Q().a()
+        r(Q().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        Q().a.run()
+        r(Q().a.run)()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -529,11 +529,11 @@ Use 'failures' story method to define failure protocol.
     assert J().a.failures is None
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        J().a()
+        r(J().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        J().a.run()
+        r(J().a.run)()
     assert str(exc_info.value) == expected
 
 
@@ -541,7 +541,7 @@ Use 'failures' story method to define failure protocol.
 
 
 @pytest.mark.parametrize("method", ["NormalMethod", "StringMethod"])
-def test_summary_wrong_reason_with_list(f, method):
+def test_summary_wrong_reason_with_list(r, f, method):
     """Summary classes should verify failure reason passed to the
     `failed_because` method."""
 
@@ -567,7 +567,7 @@ Story returned result: T.x
 
     assert T().x.failures == ["foo", "bar", "baz"]
 
-    result = T().x.run()
+    result = r(T().x.run)()
 
     with pytest.raises(FailureProtocolError) as exc_info:
         result.failed_because("'foo' is too big")
@@ -585,7 +585,7 @@ Story returned result: Q.a
 
     assert Q().a.failures == ["foo", "bar", "baz"]
 
-    result = Q().a.run()
+    result = r(Q().a.run)()
 
     with pytest.raises(FailureProtocolError) as exc_info:
         result.failed_because("'foo' is too big")
@@ -603,7 +603,7 @@ Story returned result: J.a
 
     assert J().a.failures == ["foo", "bar", "baz"]
 
-    result = J().a.run()
+    result = r(J().a.run)()
 
     with pytest.raises(FailureProtocolError) as exc_info:
         result.failed_because("'foo' is too big")
@@ -611,7 +611,7 @@ Story returned result: J.a
 
 
 @pytest.mark.parametrize("method", ["NormalMethod", "EnumMethod"])
-def test_summary_wrong_reason_with_enum(f, method):
+def test_summary_wrong_reason_with_enum(r, f, method):
     """Summary classes should verify failure reason passed to the
     `failed_because` method."""
 
@@ -638,7 +638,7 @@ Story returned result: T.x
     assert isinstance(T().x.failures, enum.EnumMeta)
     assert set(T().x.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
-    result = T().x.run()
+    result = r(T().x.run)()
 
     with pytest.raises(FailureProtocolError) as exc_info:
         result.failed_because("'foo' is too big")
@@ -657,7 +657,7 @@ Story returned result: Q.a
     assert isinstance(Q().a.failures, enum.EnumMeta)
     assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
-    result = Q().a.run()
+    result = r(Q().a.run)()
 
     with pytest.raises(FailureProtocolError) as exc_info:
         result.failed_because("'foo' is too big")
@@ -676,7 +676,7 @@ Story returned result: J.a
     assert isinstance(J().a.failures, enum.EnumMeta)
     assert set(J().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
-    result = J().a.run()
+    result = r(J().a.run)()
 
     with pytest.raises(FailureProtocolError) as exc_info:
         result.failed_because("'foo' is too big")
@@ -684,7 +684,7 @@ Story returned result: J.a
 
 
 @pytest.mark.parametrize("method", ["NormalMethod", "NullMethod"])
-def test_summary_reason_without_protocol(f, method):
+def test_summary_reason_without_protocol(r, f, method):
     """Summary classes should deny to use `failed_because` method on stories
     defined without failure protocol."""
 
@@ -710,7 +710,7 @@ Use 'failures' story method to define failure protocol.
 
     assert T().x.failures is None
 
-    result = T().x.run()
+    result = r(T().x.run)()
 
     with pytest.raises(FailureProtocolError) as exc_info:
         result.failed_because("'foo' is too big")
@@ -728,7 +728,7 @@ Use 'failures' story method to define failure protocol.
 
     assert Q().a.failures is None
 
-    result = Q().a.run()
+    result = r(Q().a.run)()
 
     with pytest.raises(FailureProtocolError) as exc_info:
         result.failed_because("'foo' is too big")
@@ -746,14 +746,14 @@ Use 'failures' story method to define failure protocol.
 
     assert J().a.failures is None
 
-    result = J().a.run()
+    result = r(J().a.run)()
 
     with pytest.raises(FailureProtocolError) as exc_info:
         result.failed_because("'foo' is too big")
     assert str(exc_info.value) == expected
 
 
-def test_use_expanded_protocol_in_summary_result_with_list(f):
+def test_use_expanded_protocol_in_summary_result_with_list(r, f):
     """We should allow to use `failed_because` method with expanded
     protocol."""
 
@@ -769,7 +769,7 @@ def test_use_expanded_protocol_in_summary_result_with_list(f):
 
     # Substory inheritance.
 
-    result = Q().a.run()
+    result = r(Q().a.run)()
     assert result.is_success
     assert not result.is_failure
     assert not result.failed_because("foo")
@@ -779,7 +779,7 @@ def test_use_expanded_protocol_in_summary_result_with_list(f):
 
     # Substory DI.
 
-    result = J().a.run()
+    result = r(J().a.run)()
     assert result.is_success
     assert not result.is_failure
     assert not result.failed_because("foo")
@@ -788,7 +788,7 @@ def test_use_expanded_protocol_in_summary_result_with_list(f):
     assert not result.failed_because("quiz")
 
 
-def test_use_expanded_protocol_in_summary_result_with_enum(f):
+def test_use_expanded_protocol_in_summary_result_with_enum(r, f):
     """We should allow to use `failed_because` method with expanded
     protocol."""
 
@@ -804,7 +804,7 @@ def test_use_expanded_protocol_in_summary_result_with_enum(f):
 
     # Substory inheritance.
 
-    result = Q().a.run()
+    result = r(Q().a.run)()
     assert result.is_success
     assert not result.is_failure
     assert not result.failed_because(Q().a.failures.foo)
@@ -814,7 +814,7 @@ def test_use_expanded_protocol_in_summary_result_with_enum(f):
 
     # Substory DI.
 
-    result = J().a.run()
+    result = r(J().a.run)()
     assert result.is_success
     assert not result.is_failure
     assert not result.failed_because(J().a.failures.foo)
@@ -826,7 +826,7 @@ def test_use_expanded_protocol_in_summary_result_with_enum(f):
 # Composition of the stories.
 
 
-def test_substory_protocol_match_with_empty(f):
+def test_substory_protocol_match_with_empty(r, f):
     """We should allow to use stories composition, if parent story and substory
     does not define failure protocols."""
 
@@ -845,10 +845,10 @@ def test_substory_protocol_match_with_empty(f):
     Q().a.failures is None
 
     with pytest.raises(FailureError) as exc_info:
-        Q().a()
+        r(Q().a)()
     assert repr(exc_info.value) == "FailureError()"
 
-    result = Q().a.run()
+    result = r(Q().a.run)()
     assert result.is_failure
 
     # Substory DI.
@@ -856,14 +856,14 @@ def test_substory_protocol_match_with_empty(f):
     J().a.failures is None
 
     with pytest.raises(FailureError) as exc_info:
-        J().a()
+        r(J().a)()
     assert repr(exc_info.value) == "FailureError()"
 
-    result = J().a.run()
+    result = r(J().a.run)()
     assert result.is_failure
 
 
-def test_substory_protocol_match_with_list(f):
+def test_substory_protocol_match_with_list(r, f):
     """We should allow to use stories composition, if parent story protocol is
     a superset of the substory protocol."""
 
@@ -882,10 +882,10 @@ def test_substory_protocol_match_with_list(f):
     assert Q().a.failures == ["foo", "bar", "baz", "quiz"]
 
     with pytest.raises(FailureError) as exc_info:
-        Q().a()
+        r(Q().a)()
     assert repr(exc_info.value) == "FailureError('foo')"
 
-    result = Q().a.run()
+    result = r(Q().a.run)()
     assert result.failed_because("foo")
 
     # Substory DI.
@@ -893,14 +893,14 @@ def test_substory_protocol_match_with_list(f):
     assert J().a.failures == ["foo", "bar", "baz", "quiz"]
 
     with pytest.raises(FailureError) as exc_info:
-        J().a()
+        r(J().a)()
     assert repr(exc_info.value) == "FailureError('foo')"
 
-    result = J().a.run()
+    result = r(J().a.run)()
     assert result.failed_because("foo")
 
 
-def test_substory_protocol_match_with_enum(f):
+def test_substory_protocol_match_with_enum(r, f):
     """We should allow to use stories composition, if parent story protocol is
     a superset of the substory protocol."""
 
@@ -920,10 +920,10 @@ def test_substory_protocol_match_with_enum(f):
     assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz", "quiz"}
 
     with pytest.raises(FailureError) as exc_info:
-        Q().a()
+        r(Q().a)()
     assert repr(exc_info.value) == "FailureError(<Errors.foo: 1>)"
 
-    result = Q().a.run()
+    result = r(Q().a.run)()
     assert result.failed_because(Q().a.failures.foo)
 
     # Substory DI.
@@ -932,14 +932,14 @@ def test_substory_protocol_match_with_enum(f):
     assert set(J().a.failures.__members__.keys()) == {"foo", "bar", "baz", "quiz"}
 
     with pytest.raises(FailureError) as exc_info:
-        J().a()
+        r(J().a)()
     assert repr(exc_info.value) == "FailureError(<Errors.foo: 1>)"
 
-    result = J().a.run()
+    result = r(J().a.run)()
     assert result.failed_because(J().a.failures.foo)
 
 
-def test_expand_substory_protocol_null_with_list(f):
+def test_expand_substory_protocol_null_with_list(r, f):
     """We expand protocol of composed story, if substory does not define
     failure protocols and parent story define protocol with list of strings."""
 
@@ -957,10 +957,10 @@ def test_expand_substory_protocol_null_with_list(f):
 
     assert Q().a.failures == ["foo", "bar", "baz"]
 
-    result = Q().a()
+    result = r(Q().a)()
     assert result is None
 
-    result = Q().a.run()
+    result = r(Q().a.run)()
     assert result.is_success
     assert result.value is None
 
@@ -968,15 +968,15 @@ def test_expand_substory_protocol_null_with_list(f):
 
     assert J().a.failures == ["foo", "bar", "baz"]
 
-    result = J().a()
+    result = r(J().a)()
     assert result is None
 
-    result = J().a.run()
+    result = r(J().a.run)()
     assert result.is_success
     assert result.value is None
 
 
-def test_expand_substory_protocol_null_with_enum(f):
+def test_expand_substory_protocol_null_with_enum(r, f):
     """We expand protocol of composed story, if substory does not define
     protocol and parent story define protocol with enum class."""
 
@@ -995,10 +995,10 @@ def test_expand_substory_protocol_null_with_enum(f):
     assert isinstance(Q().a.failures, enum.EnumMeta)
     assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
-    result = Q().a()
+    result = r(Q().a)()
     assert result is None
 
-    result = Q().a.run()
+    result = r(Q().a.run)()
     assert result.is_success
     assert result.value is None
 
@@ -1007,15 +1007,15 @@ def test_expand_substory_protocol_null_with_enum(f):
     assert isinstance(J().a.failures, enum.EnumMeta)
     assert set(J().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
-    result = J().a()
+    result = r(J().a)()
     assert result is None
 
-    result = J().a.run()
+    result = r(J().a.run)()
     assert result.is_success
     assert result.value is None
 
 
-def test_deny_failure_substory_without_protocol_story_protocol_with_list(f):
+def test_deny_failure_substory_without_protocol_story_protocol_with_list(r, f):
     """Substory defined without failure protocol can not return Failure, if
     this substory was composed with parent story defined with list of strings
     as failure protocol."""
@@ -1045,11 +1045,11 @@ Use 'failures' story method to define failure protocol.
     assert Q().a.failures == ["foo", "bar", "baz"]
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        Q().a()
+        r(Q().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        Q().a.run()
+        r(Q().a.run)()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -1067,15 +1067,15 @@ Use 'failures' story method to define failure protocol.
     assert J().a.failures == ["foo", "bar", "baz"]
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        J().a()
+        r(J().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        J().a.run()
+        r(J().a.run)()
     assert str(exc_info.value) == expected
 
 
-def test_deny_failure_substory_without_protocol_story_protocol_with_enum(f):
+def test_deny_failure_substory_without_protocol_story_protocol_with_enum(r, f):
     """Substory defined without failure protocol can not return Failure, if
     this substory was composed with parent story defined with enum as failure
     protocol."""
@@ -1106,11 +1106,11 @@ Use 'failures' story method to define failure protocol.
     assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        Q().a()
+        r(Q().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        Q().a.run()
+        r(Q().a.run)()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -1129,15 +1129,15 @@ Use 'failures' story method to define failure protocol.
     assert set(J().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        J().a()
+        r(J().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        J().a.run()
+        r(J().a.run)()
     assert str(exc_info.value) == expected
 
 
-def test_deny_failure_story_without_protocol_substory_protocol_with_list(f):
+def test_deny_failure_story_without_protocol_substory_protocol_with_list(r, f):
     """Story defined without failure protocol can not return Failure, if this
     story was composed with substory defined with list of strings as failure
     protocol."""
@@ -1167,11 +1167,11 @@ Use 'failures' story method to define failure protocol.
     assert Q().a.failures == ["foo", "bar", "baz"]
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        Q().a()
+        r(Q().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        Q().a.run()
+        r(Q().a.run)()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -1189,15 +1189,15 @@ Use 'failures' story method to define failure protocol.
     assert J().a.failures == ["foo", "bar", "baz"]
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        J().a()
+        r(J().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        J().a.run()
+        r(J().a.run)()
     assert str(exc_info.value) == expected
 
 
-def test_deny_failure_story_without_protocol_substory_protocol_with_enum(f):
+def test_deny_failure_story_without_protocol_substory_protocol_with_enum(r, f):
     """Story defined without failure protocol can not return Failure, if this
     story was composed with substory defined with enum as failure protocol."""
 
@@ -1227,11 +1227,11 @@ Use 'failures' story method to define failure protocol.
     assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        Q().a()
+        r(Q().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        Q().a.run()
+        r(Q().a.run)()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -1250,15 +1250,15 @@ Use 'failures' story method to define failure protocol.
     assert set(J().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        J().a()
+        r(J().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        J().a.run()
+        r(J().a.run)()
     assert str(exc_info.value) == expected
 
 
-def test_expand_substory_protocol_list_with_null(f):
+def test_expand_substory_protocol_list_with_null(r, f):
     """We expand protocol of composed story, if substory define protocol with
     list of strings and parent story does not define protocol."""
 
@@ -1276,10 +1276,10 @@ def test_expand_substory_protocol_list_with_null(f):
 
     assert Q().a.failures == ["foo", "bar", "baz"]
 
-    result = Q().a()
+    result = r(Q().a)()
     assert result is None
 
-    result = Q().a.run()
+    result = r(Q().a.run)()
     assert result.is_success
     assert result.value is None
 
@@ -1287,15 +1287,15 @@ def test_expand_substory_protocol_list_with_null(f):
 
     assert J().a.failures == ["foo", "bar", "baz"]
 
-    result = J().a()
+    result = r(J().a)()
     assert result is None
 
-    result = J().a.run()
+    result = r(J().a.run)()
     assert result.is_success
     assert result.value is None
 
 
-def test_expand_substory_protocol_enum_with_null(f):
+def test_expand_substory_protocol_enum_with_null(r, f):
     """We expand protocol of composed story, if substory define protocol with
     enum class and parent story does not define protocol."""
 
@@ -1314,10 +1314,10 @@ def test_expand_substory_protocol_enum_with_null(f):
     assert isinstance(Q().a.failures, enum.EnumMeta)
     assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
-    result = Q().a()
+    result = r(Q().a)()
     assert result is None
 
-    result = Q().a.run()
+    result = r(Q().a.run)()
     assert result.is_success
     assert result.value is None
 
@@ -1326,15 +1326,15 @@ def test_expand_substory_protocol_enum_with_null(f):
     assert isinstance(J().a.failures, enum.EnumMeta)
     assert set(J().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
-    result = J().a()
+    result = r(J().a)()
     assert result is None
 
-    result = J().a.run()
+    result = r(J().a.run)()
     assert result.is_success
     assert result.value is None
 
 
-def test_expand_substory_protocol_list_with_list(f):
+def test_expand_substory_protocol_list_with_list(r, f):
     """We expand protocol of composed story, if substory and parent story
     define protocol with list of strings."""
 
@@ -1353,10 +1353,10 @@ def test_expand_substory_protocol_list_with_list(f):
     assert Q().a.failures == ["foo", "quiz", "bar", "baz"]
 
     with pytest.raises(FailureError) as exc_info:
-        Q().a()
+        r(Q().a)()
     assert repr(exc_info.value) == "FailureError('foo')"
 
-    result = Q().a.run()
+    result = r(Q().a.run)()
     assert result.failed_because("foo")
 
     # Substory DI.
@@ -1364,14 +1364,14 @@ def test_expand_substory_protocol_list_with_list(f):
     assert J().a.failures == ["foo", "quiz", "bar", "baz"]
 
     with pytest.raises(FailureError) as exc_info:
-        J().a()
+        r(J().a)()
     assert repr(exc_info.value) == "FailureError('foo')"
 
-    result = J().a.run()
+    result = r(J().a.run)()
     assert result.failed_because("foo")
 
 
-def test_expand_substory_protocol_enum_with_enum(f):
+def test_expand_substory_protocol_enum_with_enum(r, f):
     """We expand protocol of composed story, if substory and parent story
     define protocol with enum class."""
 
@@ -1391,10 +1391,10 @@ def test_expand_substory_protocol_enum_with_enum(f):
     assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz", "quiz"}
 
     with pytest.raises(FailureError) as exc_info:
-        Q().a()
+        r(Q().a)()
     assert repr(exc_info.value) == "FailureError(<Errors.foo: 1>)"
 
-    result = Q().a.run()
+    result = r(Q().a.run)()
     assert result.failed_because(Q().a.failures.foo)
 
     # Substory DI.
@@ -1403,14 +1403,14 @@ def test_expand_substory_protocol_enum_with_enum(f):
     assert set(J().a.failures.__members__.keys()) == {"foo", "bar", "baz", "quiz"}
 
     with pytest.raises(FailureError) as exc_info:
-        J().a()
+        r(J().a)()
     assert repr(exc_info.value) == "FailureError(<Errors.foo: 1>)"
 
-    result = J().a.run()
+    result = r(J().a.run)()
     assert result.failed_because(J().a.failures.foo)
 
 
-def test_expand_sequential_substory_protocol_list_with_null(f):
+def test_expand_sequential_substory_protocol_list_with_null(r, f):
     """If parent story consist from sequential substories, we should merge
     their failure protocols together."""
 
@@ -1433,10 +1433,10 @@ def test_expand_sequential_substory_protocol_list_with_null(f):
     assert Q().a.failures == ["foo", "bar", "baz"]
 
     with pytest.raises(FailureError) as exc_info:
-        Q().a()
+        r(Q().a)()
     assert repr(exc_info.value) == "FailureError('foo')"
 
-    result = Q().a.run()
+    result = r(Q().a.run)()
     assert result.failed_because("foo")
 
     # Substory DI.
@@ -1444,14 +1444,14 @@ def test_expand_sequential_substory_protocol_list_with_null(f):
     assert J().a.failures == ["foo", "bar", "baz"]
 
     with pytest.raises(FailureError) as exc_info:
-        J().a()
+        r(J().a)()
     assert repr(exc_info.value) == "FailureError('foo')"
 
-    result = J().a.run()
+    result = r(J().a.run)()
     assert result.failed_because("foo")
 
 
-def test_expand_sequential_substory_protocol_enum_with_null(f):
+def test_expand_sequential_substory_protocol_enum_with_null(r, f):
     """If parent story consist from sequential substories, we should merge
     their failure protocols together."""
 
@@ -1475,10 +1475,10 @@ def test_expand_sequential_substory_protocol_enum_with_null(f):
     assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
     with pytest.raises(FailureError) as exc_info:
-        Q().a()
+        r(Q().a)()
     assert repr(exc_info.value) == "FailureError(<Errors.foo: 1>)"
 
-    result = Q().a.run()
+    result = r(Q().a.run)()
     assert result.failed_because(Q().a.failures.foo)
 
     # Substory DI.
@@ -1487,14 +1487,14 @@ def test_expand_sequential_substory_protocol_enum_with_null(f):
     assert set(J().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
     with pytest.raises(FailureError) as exc_info:
-        J().a()
+        r(J().a)()
     assert repr(exc_info.value) == "FailureError(<Errors.foo: 1>)"
 
-    result = J().a.run()
+    result = r(J().a.run)()
     assert result.failed_because(J().a.failures.foo)
 
 
-def test_expand_sequential_substory_protocol_list_with_list(f):
+def test_expand_sequential_substory_protocol_list_with_list(r, f):
     """If parent story consist from sequential substories, we should merge
     their failure protocols together."""
 
@@ -1517,10 +1517,10 @@ def test_expand_sequential_substory_protocol_list_with_list(f):
     assert Q().a.failures == ["foo", "bar", "baz", "spam", "ham", "eggs"]
 
     with pytest.raises(FailureError) as exc_info:
-        Q().a()
+        r(Q().a)()
     assert repr(exc_info.value) == "FailureError('foo')"
 
-    result = Q().a.run()
+    result = r(Q().a.run)()
     assert result.failed_because("foo")
 
     # Substory DI.
@@ -1528,14 +1528,14 @@ def test_expand_sequential_substory_protocol_list_with_list(f):
     assert J().a.failures == ["foo", "bar", "baz", "spam", "ham", "eggs"]
 
     with pytest.raises(FailureError) as exc_info:
-        J().a()
+        r(J().a)()
     assert repr(exc_info.value) == "FailureError('foo')"
 
-    result = J().a.run()
+    result = r(J().a.run)()
     assert result.failed_because("foo")
 
 
-def test_expand_sequential_substory_protocol_enum_with_enum(f):
+def test_expand_sequential_substory_protocol_enum_with_enum(r, f):
     """If parent story consist from sequential substories, we should merge
     their failure protocols together."""
 
@@ -1566,10 +1566,10 @@ def test_expand_sequential_substory_protocol_enum_with_enum(f):
     }
 
     with pytest.raises(FailureError) as exc_info:
-        Q().a()
+        r(Q().a)()
     assert repr(exc_info.value) == "FailureError(<Errors.foo: 1>)"
 
-    result = Q().a.run()
+    result = r(Q().a.run)()
     assert result.failed_because(Q().a.failures.foo)
 
     # Substory DI.
@@ -1585,14 +1585,14 @@ def test_expand_sequential_substory_protocol_enum_with_enum(f):
     }
 
     with pytest.raises(FailureError) as exc_info:
-        J().a()
+        r(J().a)()
     assert repr(exc_info.value) == "FailureError(<Errors.foo: 1>)"
 
-    result = J().a.run()
+    result = r(J().a.run)()
     assert result.failed_because(J().a.failures.foo)
 
 
-def test_composition_type_error_list_with_enum(f):
+def test_composition_type_error_list_with_enum(r, f):
     """We can't combine different types of stories and substories."""
 
     class T(f.ChildWithList, f.StringMethod):
@@ -1642,7 +1642,7 @@ Substory failure protocol: 'foo', 'bar', 'baz'
     assert str(exc_info.value) == expected
 
 
-def test_composition_type_error_enum_with_list(f):
+def test_composition_type_error_enum_with_list(r, f):
     """We can't combine different types of stories and substories."""
 
     class T(f.ChildWithEnum, f.EnumMethod):
@@ -1692,7 +1692,7 @@ Substory failure protocol: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
     assert str(exc_info.value) == expected
 
 
-def test_deny_substory_reason_parent_story_protocol_with_list(f):
+def test_deny_substory_reason_parent_story_protocol_with_list(r, f):
     """We deny to use Failure reason from the parent story protocol in the
     substory method."""
 
@@ -1719,11 +1719,11 @@ Use 'failures' story method to define failure protocol.
     assert Q().a.failures == ["foo", "bar", "baz"]
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        Q().a()
+        r(Q().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        Q().a.run()
+        r(Q().a.run)()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -1739,15 +1739,15 @@ Use 'failures' story method to define failure protocol.
     assert J().a.failures == ["foo", "bar", "baz"]
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        J().a()
+        r(J().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        J().a.run()
+        r(J().a.run)()
     assert str(exc_info.value) == expected
 
 
-def test_deny_substory_reason_parent_story_protocol_with_enum(f):
+def test_deny_substory_reason_parent_story_protocol_with_enum(r, f):
     """We deny to use Failure reason from the parent story protocol in the
     substory method."""
 
@@ -1775,11 +1775,11 @@ Use 'failures' story method to define failure protocol.
     assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        Q().a()
+        r(Q().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        Q().a.run()
+        r(Q().a.run)()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -1796,15 +1796,15 @@ Use 'failures' story method to define failure protocol.
     assert set(J().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        J().a()
+        r(J().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        J().a.run()
+        r(J().a.run)()
     assert str(exc_info.value) == expected
 
 
-def test_deny_story_reason_substory_protocol_with_list(f):
+def test_deny_story_reason_substory_protocol_with_list(r, f):
     """We deny to use Failure reason from the substory protocol in the parent
     story method."""
 
@@ -1831,11 +1831,11 @@ Use 'failures' story method to define failure protocol.
     assert Q().a.failures == ["foo", "bar", "baz"]
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        Q().a()
+        r(Q().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        Q().a.run()
+        r(Q().a.run)()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -1851,15 +1851,15 @@ Use 'failures' story method to define failure protocol.
     assert J().a.failures == ["foo", "bar", "baz"]
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        J().a()
+        r(J().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        J().a.run()
+        r(J().a.run)()
     assert str(exc_info.value) == expected
 
 
-def test_deny_story_reason_substory_protocol_with_enum(f):
+def test_deny_story_reason_substory_protocol_with_enum(r, f):
     """We deny to use Failure reason from the substory protocol in the parent
     story method."""
 
@@ -1887,11 +1887,11 @@ Use 'failures' story method to define failure protocol.
     assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        Q().a()
+        r(Q().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        Q().a.run()
+        r(Q().a.run)()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -1908,9 +1908,9 @@ Use 'failures' story method to define failure protocol.
     assert set(J().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        J().a()
+        r(J().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(FailureProtocolError) as exc_info:
-        J().a.run()
+        r(J().a.run)()
     assert str(exc_info.value) == expected
