@@ -1,10 +1,87 @@
 # -*- coding: utf-8 -*-
+from examples.methods import *  # noqa: F401, F403
 from stories import arguments
 from stories import Failure
 from stories import Result
 from stories import Skip
 from stories import story
 from stories import Success
+
+
+# Mixins.
+
+
+class MixedCoroutineMethod(object):
+    def one(self, ctx):
+        pass  # pragma: no cover
+
+    def two(self, ctx):
+        pass  # pragma: no cover
+
+    async def three(self, ctx):
+        pass  # pragma: no cover
+
+
+class MixedFunctionMethod(object):
+    async def one(self, ctx):
+        pass  # pragma: no cover
+
+    async def two(self, ctx):
+        pass  # pragma: no cover
+
+    def three(self, ctx):
+        pass  # pragma: no cover
+
+
+class NormalMethod(object):
+    async def one(self, ctx):
+        return Success()
+
+    async def two(self, ctx):
+        return Success()
+
+    async def three(self, ctx):
+        return Success()
+
+
+class FunctionMethod(object):
+    def one(self, ctx):
+        pass  # pragma: no cover
+
+    def two(self, ctx):
+        pass  # pragma: no cover
+
+    def three(self, ctx):
+        pass  # pragma: no cover
+
+
+# Parent mixins.
+
+
+class NormalParentMethod(object):
+    async def before(self, ctx):
+        return Success()
+
+    async def after(self, ctx):
+        return Success()
+
+
+class FunctionParentMethod(object):
+    def before(self, ctx):
+        pass  # pragma: no cover
+
+    def after(self, ctx):
+        pass  # pragma: no cover
+
+
+# Story factories.
+
+
+def define_coroutine_story():
+    class Action(object):
+        @story
+        async def do(I):
+            pass
 
 
 # Simple story.
@@ -18,10 +95,10 @@ class Simple(object):
         I.two
         I.three
 
-    def one(self, ctx):
+    async def one(self, ctx):
         return Success()
 
-    def two(self, ctx):
+    async def two(self, ctx):
         if ctx.foo > 1:
             return Failure()
 
@@ -30,7 +107,7 @@ class Simple(object):
 
         return Success(baz=4)
 
-    def three(self, ctx):
+    async def three(self, ctx):
         return Result(ctx.bar - ctx.baz)
 
 
@@ -47,20 +124,20 @@ class Pipe(object):
         I.x
         I.after
 
-    def one(self, ctx):
+    async def one(self, ctx):
         return Success()
 
-    def two(self, ctx):
+    async def two(self, ctx):
         return Success()
 
-    def three(self, ctx):
+    async def three(self, ctx):
         return Success()
 
-    def before(self, ctx):
+    async def before(self, ctx):
         return Skip()
 
-    def after(self, ctx):
-        raise Exception()
+    async def after(self, ctx):
+        raise Exception()  # pragma: no cover
 
 
 class Branch(object):
@@ -71,17 +148,17 @@ class Branch(object):
         I.age_gte_18
         I.load_content
 
-    def age_lt_18(self, ctx):
+    async def age_lt_18(self, ctx):
         if ctx.age < 18:
             return Success(access_allowed=False)
         return Success()
 
-    def age_gte_18(self, ctx):
+    async def age_gte_18(self, ctx):
         if not hasattr(ctx, "access_allowed") and ctx.age >= 18:
             return Success(access_allowed=True)
         return Success()
 
-    def load_content(self, ctx):
+    async def load_content(self, ctx):
         if ctx.access_allowed:
             return Result("allowed")
         else:
@@ -100,13 +177,13 @@ class SimpleSubstory(Simple):
         I.x
         I.after
 
-    def start(self, ctx):
+    async def start(self, ctx):
         return Success(foo=ctx.spam - 1)
 
-    def before(self, ctx):
+    async def before(self, ctx):
         return Success(bar=ctx.spam + 1)
 
-    def after(self, ctx):
+    async def after(self, ctx):
         return Result(ctx.spam * 2)
 
     @story
@@ -115,7 +192,7 @@ class SimpleSubstory(Simple):
         I.first
         I.x
 
-    def first(self, ctx):
+    async def first(self, ctx):
         return Skip()
 
 
@@ -134,13 +211,13 @@ class SubstoryDI(object):
         I.x
         I.after
 
-    def start(self, ctx):
+    async def start(self, ctx):
         return Success(foo=ctx.spam - 1)
 
-    def before(self, ctx):
+    async def before(self, ctx):
         return Success(bar=ctx.spam + 1)
 
-    def after(self, ctx):
+    async def after(self, ctx):
         return Result(ctx.spam * 2)
 
 
@@ -152,7 +229,7 @@ class WrongResult(object):
     def x(I):
         I.one
 
-    def one(self, ctx):
+    async def one(self, ctx):
         return 1
 
 
@@ -168,7 +245,7 @@ class ImplementationDI(object):
     def x(I):
         I.one
 
-    def one(self, ctx):
+    async def one(self, ctx):
         return Result(self.f(ctx.foo))
 
 
@@ -180,7 +257,7 @@ class StepError(object):
     def x(I):
         I.one
 
-    def one(self, ctx):
+    async def one(self, ctx):
         raise Exception()
 
 
@@ -192,5 +269,5 @@ class AttributeAccessError(object):
     def x(I):
         I.one
 
-    def one(self, ctx):
+    async def one(self, ctx):
         ctx.x

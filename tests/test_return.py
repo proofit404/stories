@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import examples
 from stories import Failure
 from stories import Result
 from stories import Skip
@@ -33,15 +32,15 @@ def test_skip_representation():
     assert repr(skip) == "Skip()"
 
 
-def test_failure_summary_representation():
+def test_failure_summary_representation(r, x):
 
     expected = "Failure()"
-    result = examples.methods.Simple().x.run(foo=2, bar=2)
+    result = r(x.Simple().x.run)(foo=2, bar=2)
     assert repr(result) == expected
 
 
-def test_success_summary_representation():
+def test_success_summary_representation(r, x):
 
     expected = "Success()"
-    result = examples.methods.Simple().x.run(foo=1, bar=3)
+    result = r(x.Simple().x.run)(foo=1, bar=3)
     assert repr(result) == expected
