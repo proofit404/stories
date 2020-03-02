@@ -6,6 +6,16 @@ from stories import story
 from stories.exceptions import StoryDefinitionError
 
 
+def test_story_private_fields():
+    """Deny access to the private fields of the story class and object."""
+
+    @story
+    def do(I):
+        I.one
+
+    assert do.__dict__ == {}
+
+
 def test_deny_empty_stories():
     """We can not define a story which does not have any steps.
 
