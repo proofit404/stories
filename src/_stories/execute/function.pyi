@@ -19,8 +19,6 @@ from _stories.returned import Skip
 from _stories.returned import Success
 from _stories.run import Call
 from _stories.run import Run
-from _stories.summary import FailureSummary
-from _stories.summary import SuccessSummary
 @overload
 def execute(
     runner: Call,
@@ -54,4 +52,4 @@ def execute(
             Union[NullExecProtocol, DisabledNullExecProtocol, NotNullExecProtocol],
         ],
     ],
-) -> Union[SuccessSummary, FailureSummary]: ...
+) -> object: ...

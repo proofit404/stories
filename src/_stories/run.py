@@ -20,10 +20,10 @@ class Run(object):
         self.protocol = protocol
 
     def got_failure(self, ctx, method_name, reason):
-        return FailureSummary(self.protocol, ctx, method_name, reason)
+        return make_failure_summary(self.protocol, ctx, method_name, reason)
 
     def got_result(self, value):
-        return SuccessSummary(self.protocol, value)
+        return make_success_summary(self.protocol, value)
 
     def finished(self):
-        return SuccessSummary(self.protocol, None)
+        return make_success_summary(self.protocol, None)
