@@ -14,8 +14,6 @@ from _stories.failures import NotNullExecProtocol
 from _stories.failures import NullExecProtocol
 from _stories.marker import BeginningOfStory
 from _stories.marker import EndOfStory
-from _stories.summary import FailureSummary
-from _stories.summary import SuccessSummary
 
 class ClassMountedStory:
     def __init__(
@@ -46,7 +44,5 @@ class MountedStory:
         failures: Optional[Union[List[str], Type[Enum]]],
     ) -> None: ...
     def __call__(self, **kwargs: Dict[str, Any]) -> Optional[Union[List[str], int]]: ...
-    def run(
-        self, **kwargs: Dict[str, Any]
-    ) -> Union[SuccessSummary, FailureSummary]: ...
+    def run(self, **kwargs: Dict[str, Any]) -> object: ...
     def __repr__(self) -> str: ...
