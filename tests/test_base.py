@@ -79,6 +79,14 @@ def test_failure():
         result.value
 
 
+def test_failure_error_private_fields():
+    """Deny access to the private fields of the `FailureError` exception."""
+
+    with pytest.raises(FailureError) as exc_info:
+        examples.methods.Simple().x(foo=2, bar=2)
+    assert exc_info.value.__dict__ == {}
+
+
 def test_result():
 
     result = examples.methods.Simple().x(foo=1, bar=3)
