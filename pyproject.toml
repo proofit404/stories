@@ -36,6 +36,7 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "~2.7 || ^3.5"
+futures = { version = "*", python = "~2.7" }
 mkdocs = { version = "*", optional = true }
 mkdocs-material = { version = "*", optional = true }
 

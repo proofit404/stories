@@ -35,7 +35,13 @@ class Parallel(object):
         self.methods = []
 
     def __call__(self, runner, ctx, ns, lines, history, executor):
-        results = self.executor.submit(runner, ctx, ns, lines, history, self.methods, executor)
+        results = self.executor.submit(runner,
+                                       ctx,
+                                       ns,
+                                       lines,
+                                       history,
+                                       self.methods,
+                                       executor)
         if not results:
             return None
 

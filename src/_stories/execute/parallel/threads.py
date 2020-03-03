@@ -13,8 +13,20 @@ class ThreadsStoryExecutor(ParallelStoryExecutor):
             for method in methods:
                 if hasattr(method[0], 'run'):
                     story = method[0]
-                    futures.append(pool.submit(executor, runner, ctx, ns, lines, history, story.methods))
+                    futures.append(pool.submit(executor,
+                                               runner,
+                                               ctx,
+                                               ns,
+                                               lines,
+                                               history,
+                                               story.methods))
                 else:
-                    futures.append(pool.submit(executor, runner, ctx, ns, lines, history, [method]))
+                    futures.append(pool.submit(executor,
+                                               runner,
+                                               ctx,
+                                               ns,
+                                               lines,
+                                               history,
+                                               [method]))
 
         return tuple(future.result() for future in futures)
