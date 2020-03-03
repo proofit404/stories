@@ -42,7 +42,7 @@ def execute(runner, ctx, ns, lines, history, methods):
 
         try:
             if method_type is Parallel:
-                result = method(runner, ctx, history, execute)
+                result = method(runner, ctx, ns, lines, history, execute)
             else:
                 result = method(ctx)
         except Exception as error:

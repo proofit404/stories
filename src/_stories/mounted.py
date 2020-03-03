@@ -75,5 +75,3 @@ class MountedStory(object):
             else:
                 result.append("  " * indent + method.__name__)
         return "\n".join(result)
-
-    __name__ = 'bla'

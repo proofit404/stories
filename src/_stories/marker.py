@@ -34,8 +34,8 @@ class Parallel(object):
         self.executor = ThreadsStoryExecutor(workers)
         self.methods = []
 
-    def __call__(self, runner, ctx, history, executor):
-        results = self.executor.submit(runner, ctx, history, self.methods, executor)
+    def __call__(self, runner, ctx, ns, lines, history, executor):
+        results = self.executor.submit(runner, ctx, ns, lines, history, self.methods, executor)
         if not results:
             return None
 
