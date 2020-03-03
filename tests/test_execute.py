@@ -237,3 +237,18 @@ def test_inject_implementation(r, x):
     assert result.is_success
     assert not result.is_failure
     assert result.value == 2
+
+
+def test_parallel_story(x):
+    result = x.ParallelStory().x.run()
+    assert result.is_success
+
+
+def test_parallel_story_with_nested_story(x):
+    result = x.ParallelStoryWithNestedStory().x.run()
+    assert result.is_success
+
+
+def test_parallel_story_with_nested_parallel_story():
+    result = x.ParallelStoryWithNestedParallelStory().x.run()
+    assert result.is_success

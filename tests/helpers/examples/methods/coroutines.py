@@ -270,3 +270,17 @@ class AttributeAccessError(object):
 
     async def one(self, ctx):
         ctx.x
+
+
+class ParallelStory(object):
+    @story
+    def x(I):
+        with I.parallel() as p:
+            p.one
+            p.two
+
+    def one(self, ctx):
+        return Success()
+
+    def two(self, ctx):
+        return Success()

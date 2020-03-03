@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from _stories.execute.parallel.threads import ThreadsStoryExecutor
+from _stories.returned import Success, Failure, Result
 
 
 class BeginningOfStory(object):
@@ -24,3 +26,33 @@ class BeginningOfStory(object):
 
 class EndOfStory(object):
     pass
+
+
+class Parallel(object):
+    def __init__(self, calls, workers):
+        self.calls = calls
+        self.executor = ThreadsStoryExecutor(workers)
+        self.methods = []
+
+    def __call__(self, ctx):
+        results = self.executor.submit(self.methods, ctx)
+        if not results:
+            return None
+
+        if any(isinstance(result, Failure) for result in results):
+            return Failure()
+
+        if all(isinstance(result, Success) for result in results):
+            return Success()
+
+        return Result(results)
+
+    @property
+    def story_name(self):
+        return ' & '.join(self.calls)
+
+    def __str__(self):
+        return self.__name__
+
+    # TODO: Figure out why we need this in context
+    __self__ = object

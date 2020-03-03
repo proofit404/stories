@@ -9,6 +9,7 @@ from _stories.failures import make_exec_protocol
 from _stories.failures import maybe_disable_null_protocol
 from _stories.marker import BeginningOfStory
 from _stories.marker import EndOfStory
+from _stories.marker import Parallel
 from _stories.mounted import MountedStory
 
 
@@ -23,7 +24,12 @@ def wrap_story(arguments, collected, cls_name, story_name, obj, spec, failures):
 
     for name in collected:
 
-        attr = getattr(obj, name)
+        if isinstance(name, Parallel):
+            attr = name
+
+            attr.methods = [getattr(obj, name) for name in attr.calls]
+        else:
+            attr = getattr(obj, name)
 
         if type(attr) is not MountedStory:
             executor = get_executor(attr, executor, cls_name, story_name)

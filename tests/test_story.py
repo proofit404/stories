@@ -23,7 +23,6 @@ def test_deny_empty_stories():
     """
 
     with pytest.raises(StoryDefinitionError) as exc_info:
-
         class Action(object):
             @story
             def do(I):
@@ -333,3 +332,14 @@ Substory function method: T.x
     with pytest.raises(StoryDefinitionError) as exc_info:
         J().a
     assert str(exc_info.value) == expected
+
+
+def test_parallel_story_representation(x):
+    story = repr(x.ParallelStory.x)
+
+    expected = """
+ParallelStory.x
+  one & two
+""".strip()
+
+    assert story == expected
