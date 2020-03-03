@@ -27,7 +27,7 @@ def wrap_story(arguments, collected, cls_name, story_name, obj, spec, failures):
         if isinstance(name, Parallel):
             attr = name
 
-            attr.methods = [getattr(obj, name) for name in attr.calls]
+            attr.methods = [(getattr(obj, name), contract, protocol) for name in attr.calls]
         else:
             attr = getattr(obj, name)
 

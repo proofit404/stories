@@ -233,3 +233,45 @@ class ParallelStory(object):
 
     def two(self, ctx):
         return Success()
+
+
+class ParallelStoryWithNestedStory(object):
+    @story
+    def x(I):
+        with I.parallel() as p:
+            p.one
+            p.two
+            p.y
+
+    def one(self, ctx):
+        return Success()
+
+    def two(self, ctx):
+        return Success()
+
+    @story
+    def y(I):
+        I.one
+        I.two
+
+
+class ParallelStoryWithNestedParallelStory(object):
+    @story
+    def y(I):
+        I.one
+        with I.parallel() as p:
+            p.one
+            p.two
+
+    @story
+    def x(I):
+        with I.parallel() as p:
+            p.one
+            p.two
+            p.y
+
+    def one(self, ctx):
+        return Success()
+
+    def two(self, ctx):
+        return Success()

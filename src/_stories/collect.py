@@ -16,7 +16,8 @@ def collect_story(f):
             self._calls = []
 
         def __getattr__(self, name):
-            self._calls.append(name)
+            if not name.startswith('__'):
+                self._calls.append(name)
 
         def __enter__(self):
             return self
@@ -29,6 +30,7 @@ def collect_story(f):
             return ParallelCollector(workers)
 
         def __getattr__(self, name):
+            # TODO: Remove this condition
             if not name.startswith('__'):
                 calls.append(name)
 

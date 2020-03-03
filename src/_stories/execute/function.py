@@ -2,6 +2,7 @@
 from _stories.context import assign_namespace
 from _stories.marker import BeginningOfStory
 from _stories.marker import EndOfStory
+from _stories.marker import Parallel
 from _stories.returned import Failure
 from _stories.returned import Result
 from _stories.returned import Skip
@@ -40,7 +41,10 @@ def execute(runner, ctx, ns, lines, history, methods):
         history.before_call(method.__name__)
 
         try:
-            result = method(ctx)
+            if method_type is Parallel:
+                result = method(runner, ctx, history, execute)
+            else:
+                result = method(ctx)
         except Exception as error:
             history.on_error(error.__class__.__name__)
             raise
