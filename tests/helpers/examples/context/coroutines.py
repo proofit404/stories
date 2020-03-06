@@ -14,12 +14,8 @@ class PrivateMethod(object):
 
 class NormalMethod(object):
     async def one(self, ctx):
-        return Success(foo=self.foo)
-
-
-class AssignMethod(object):
-    async def one(self, ctx):
-        ctx.foo = 1
+        ctx.foo = self.foo
+        return Success()
 
 
 class DeleteMethod(object):

@@ -44,11 +44,11 @@ def test_assign_existed_variables(r, m):
     # Simple.
 
     expected = """
-These variables are already present in the context: 'bar', 'foo'
+This variable is already present in the context: 'foo'
 
 Function returned value: T.one
 
-Use different names for Success() keyword arguments.
+Use a different name for context attribute.
 
 T.x
   one
@@ -69,11 +69,11 @@ Context:
     # Substory inheritance.
 
     expected = """
-These variables are already present in the context: 'bar', 'foo'
+This variable is already present in the context: 'foo'
 
 Function returned value: Q.one
 
-Use different names for Success() keyword arguments.
+Use a different name for context attribute.
 
 Q.a
   before
@@ -81,8 +81,8 @@ Q.a
     one
 
 Context:
-  bar: ['2']  # Set by Q.before
   foo: '1'    # Set by Q.before
+  bar: ['2']  # Set by Q.before
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
@@ -96,11 +96,11 @@ Context:
     # Substory DI.
 
     expected = """
-These variables are already present in the context: 'bar', 'foo'
+This variable is already present in the context: 'foo'
 
 Function returned value: T.one
 
-Use different names for Success() keyword arguments.
+Use a different name for context attribute.
 
 J.a
   before
@@ -108,8 +108,8 @@ J.a
     one
 
 Context:
-  bar: ['2']  # Set by J.before
   foo: '1'    # Set by J.before
+  bar: ['2']  # Set by J.before
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
@@ -205,20 +205,15 @@ def test_context_variables_normalization_conflict(r, m):
     # Substory inheritance.
 
     expected = """
-These arguments have normalization conflict: 'bar', 'foo'
+These arguments have normalization conflict: 'foo'
 
 Q.x:
- - bar: [2]
  - foo: 1
 
 Q.y:
- - bar: ['2']
  - foo: '1'
 
 Contract:
-  bar:
-    {list_of_int_field_repr}  # Argument of Q.x
-    {list_of_str_field_repr}  # Argument of Q.y
   foo:
     {int_field_repr}  # Argument of Q.x
     {str_field_repr}  # Argument of Q.y
@@ -237,20 +232,15 @@ Contract:
     # Substory DI.
 
     expected = """
-These arguments have normalization conflict: 'bar', 'foo'
+These arguments have normalization conflict: 'foo'
 
 E.y:
- - bar: ['2']
  - foo: '1'
 
 T.x:
- - bar: [2]
  - foo: 1
 
 Contract:
-  bar:
-    {list_of_str_field_repr}  # Argument of E.y
-    {list_of_int_field_repr}  # Argument of T.x
   foo:
     {str_field_repr}  # Argument of E.y
     {int_field_repr}  # Argument of T.x
@@ -509,22 +499,17 @@ def test_context_variables_validation(r, m):
 
     expected = (
         """
-These variables violates context contract: 'bar', 'foo'
+This variable violates context contract: 'foo'
 
 Function returned value: T.one
 
 Violations:
-
-bar:
-  ['<boom>']
-  {list_of_int_error}
 
 foo:
   '<boom>'
   {int_error}
 
 Contract:
-  bar: {list_of_int_field_repr}  # Variable in T.x
   foo: {int_field_repr}  # Variable in T.x
     """.strip()
         .format(**m.representations)
@@ -543,22 +528,17 @@ Contract:
 
     expected = (
         """
-These variables violates context contract: 'bar', 'foo'
+This variable violates context contract: 'foo'
 
 Function returned value: Q.one
 
 Violations:
-
-bar:
-  ['<boom>']
-  {list_of_int_error}
 
 foo:
   '<boom>'
   {int_error}
 
 Contract:
-  bar: {list_of_int_field_repr}  # Variable in Q.x
   foo: {int_field_repr}  # Variable in Q.x
     """.strip()
         .format(**m.representations)
@@ -577,22 +557,17 @@ Contract:
 
     expected = (
         """
-These variables violates context contract: 'bar', 'foo'
+This variable violates context contract: 'foo'
 
 Function returned value: T.one
 
 Violations:
-
-bar:
-  ['<boom>']
-  {list_of_int_error}
 
 foo:
   '<boom>'
   {int_error}
 
 Contract:
-  bar: {list_of_int_field_repr}  # Variable in T.x
   foo: {int_field_repr}  # Variable in T.x
     """.strip()
         .format(**m.representations)
@@ -1113,11 +1088,11 @@ def test_unknown_context_variable(r, m):
     # Simple.
 
     expected = """
-These variables were not defined in the context contract: 'quiz', 'spam'
+This variable was not defined in the context contract: 'spam'
 
-Function returned value: T.one
+Function assigned value: T.one
 
-Use different names for Success() keyword arguments or add these names to the contract.
+Use a different name for context attribute or add this name to the contract.
 
 Contract:
   bar: {list_of_int_field_repr}  # Variable in T.x
@@ -1138,11 +1113,11 @@ Contract:
     # Substory inheritance.
 
     expected = """
-These variables were not defined in the context contract: 'quiz', 'spam'
+This variable was not defined in the context contract: 'spam'
 
-Function returned value: Q.one
+Function assigned value: Q.one
 
-Use different names for Success() keyword arguments or add these names to the contract.
+Use a different name for context attribute or add this name to the contract.
 
 Contract:
   bar: {list_of_int_field_repr}  # Variable in Q.x
@@ -1163,11 +1138,11 @@ Contract:
     # Substory DI.
 
     expected = """
-These variables were not defined in the context contract: 'quiz', 'spam'
+This variable was not defined in the context contract: 'spam'
 
-Function returned value: T.one
+Function assigned value: T.one
 
-Use different names for Success() keyword arguments or add these names to the contract.
+Use a different name for context attribute or add this name to the contract.
 
 Contract:
   bar: {list_of_int_field_repr}  # Variable in T.x

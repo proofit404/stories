@@ -88,56 +88,6 @@ def test_context_dir(r, c):
     assert r(J().a.run)(bar=1).value == dir(Ctx())
 
 
-def test_deny_context_attribute_assignment(r, c):
-    """We can't use attribute assignment with `Context` object."""
-
-    class T(c.Child, c.AssignMethod):
-        pass
-
-    class Q(c.Parent, c.NormalParentMethod, T):
-        pass
-
-    class J(c.Parent, c.NormalParentMethod):
-        def __init__(self):
-            self.x = T().x
-
-    expected = """
-Context object is immutable.
-
-Use Success() keyword arguments to expand its scope.
-    """.strip()
-
-    # Simple.
-
-    with pytest.raises(MutationError) as exc_info:
-        r(T().x)()
-    assert str(exc_info.value) == expected
-
-    with pytest.raises(MutationError) as exc_info:
-        r(T().x.run)()
-    assert str(exc_info.value) == expected
-
-    # Substory inheritance.
-
-    with pytest.raises(MutationError) as exc_info:
-        r(Q().a)()
-    assert str(exc_info.value) == expected
-
-    with pytest.raises(MutationError) as exc_info:
-        r(Q().a.run)()
-    assert str(exc_info.value) == expected
-
-    # Substory DI.
-
-    with pytest.raises(MutationError) as exc_info:
-        r(J().a)()
-    assert str(exc_info.value) == expected
-
-    with pytest.raises(MutationError) as exc_info:
-        r(J().a.run)()
-    assert str(exc_info.value) == expected
-
-
 def test_deny_context_attribute_deletion(r, c):
     """We can't use attribute deletion with `Context` object."""
 
@@ -761,8 +711,8 @@ Q.a
 Context:
   eggs: 2     # Story argument
   ham: 1      # Story argument
-  bar: ['2']  # Set by Q.before
   foo: '1'    # Set by Q.before
+  bar: ['2']  # Set by Q.before
     """.strip()
 
     getter = make_collector()
@@ -786,8 +736,8 @@ J.a
 Context:
   eggs: 2     # Story argument
   ham: 1      # Story argument
-  bar: ['2']  # Set by J.before
   foo: '1'    # Set by J.before
+  bar: ['2']  # Set by J.before
     """.strip()
 
     getter = make_collector()
