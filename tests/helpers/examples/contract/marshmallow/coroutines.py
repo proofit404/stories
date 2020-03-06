@@ -13,17 +13,19 @@ class NormalMethod(object):
 
 class StringMethod(object):
     async def one(self, ctx):
-        return Success(foo="1", bar=["2"])
+        ctx.foo = "1"
+        ctx.bar = ["2"]
+        return Success()
 
 
 class WrongMethod(object):
     async def one(self, ctx):
-        return Success(foo="<boom>", bar=["<boom>"])
+        ctx.foo = "<boom>"
 
 
 class UnknownMethod(object):
     async def one(self, ctx):
-        return Success(spam="0", quiz="1")
+        ctx.spam = "0"
 
 
 class ExceptionMethod(object):
@@ -34,7 +36,10 @@ class ExceptionMethod(object):
 class AliasMethod(object):
     async def one(self, ctx):
         value = {"key": "1"}
-        return Success(foo=value, bar=value, baz=value)
+        ctx.foo = value
+        ctx.bar = value
+        ctx.baz = value
+        return Success()
 
 
 # Next child mixins.
@@ -58,7 +63,9 @@ class NormalParentMethod(object):
 
 class StringParentMethod(object):
     async def before(self, ctx):
-        return Success(foo="1", bar=["2"])
+        ctx.foo = "1"
+        ctx.bar = ["2"]
+        return Success()
 
     async def after(self, ctx):
         return Success()
@@ -85,7 +92,9 @@ class NormalRootMethod(object):
 
 class StringRootMethod(object):
     async def start(self, ctx):
-        return Success(foo="1", bar=["2"])
+        ctx.foo = "1"
+        ctx.bar = ["2"]
+        return Success()
 
     async def finish(self, ctx):
         return Success()
@@ -93,7 +102,10 @@ class StringRootMethod(object):
 
 class StringWideRootMethod(object):
     async def start(self, ctx):
-        return Success(foo="1", bar=["2"], baz="1")
+        ctx.foo = "1"
+        ctx.bar = ["2"]
+        ctx.baz = "1"
+        return Success()
 
     async def finish(self, ctx):
         return Success()

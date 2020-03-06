@@ -11,12 +11,6 @@ def test_result_representation():
     assert repr(result) == "Result(1)"
 
 
-def test_success_representation():
-
-    success = Success(foo="bar", baz=2)
-    assert repr(success) in {"Success(foo='bar', baz=2)", "Success(baz=2, foo='bar')"}
-
-
 def test_failure_representation():
 
     failure = Failure()
@@ -24,6 +18,12 @@ def test_failure_representation():
 
     failure = Failure("test")
     assert repr(failure) == "Failure('test')"
+
+
+def test_success_representation():
+
+    success = Success()
+    assert repr(success) == "Success()"
 
 
 def test_skip_representation():

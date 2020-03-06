@@ -104,7 +104,8 @@ class Simple(object):
         if ctx.bar < 0:
             return Skip()
 
-        return Success(baz=4)
+        ctx.baz = 4
+        return Success()
 
     async def three(self, ctx):
         return Result(ctx.bar - ctx.baz)
@@ -149,12 +150,14 @@ class Branch(object):
 
     async def age_lt_18(self, ctx):
         if ctx.age < 18:
-            return Success(access_allowed=False)
+            ctx.access_allowed = False
+            return Success()
         return Success()
 
     async def age_gte_18(self, ctx):
         if not hasattr(ctx, "access_allowed") and ctx.age >= 18:
-            return Success(access_allowed=True)
+            ctx.access_allowed = True
+            return Success()
         return Success()
 
     async def load_content(self, ctx):
@@ -177,10 +180,12 @@ class SimpleSubstory(Simple):
         I.after
 
     async def start(self, ctx):
-        return Success(foo=ctx.spam - 1)
+        ctx.foo = ctx.spam - 1
+        return Success()
 
     async def before(self, ctx):
-        return Success(bar=ctx.spam + 1)
+        ctx.bar = ctx.spam + 1
+        return Success()
 
     async def after(self, ctx):
         return Result(ctx.spam * 2)
@@ -211,10 +216,12 @@ class SubstoryDI(object):
         I.after
 
     async def start(self, ctx):
-        return Success(foo=ctx.spam - 1)
+        ctx.foo = ctx.spam - 1
+        return Success()
 
     async def before(self, ctx):
-        return Success(bar=ctx.spam + 1)
+        ctx.bar = ctx.spam + 1
+        return Success()
 
     async def after(self, ctx):
         return Result(ctx.spam * 2)
