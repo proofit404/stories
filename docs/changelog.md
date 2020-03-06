@@ -1,3 +1,9 @@
+# [0.12.0](https://github.com/dry-python/stories/compare/0.11.2...0.12.0) (2020-03-06)
+
+### Features
+
+- support coroutine functions as story step definitions ([55cbfda](https://github.com/dry-python/stories/commit/55cbfda33c61ca1395aaacf2d2d6a2c78f14ecde))
+
 ## [0.11.2](https://github.com/dry-python/stories/compare/0.11.1...0.11.2) (2020-03-02)
 
 ### Bug Fixes

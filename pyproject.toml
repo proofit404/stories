@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "stories"
-version = "0.11.2"
+version = "0.12.0"
 
 description = "Define a user story in the business transaction DSL"
 readme = "README.md"
