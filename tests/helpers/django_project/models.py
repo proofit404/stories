@@ -15,10 +15,6 @@ class Price(models.Model):
 class Profile(models.Model):
     balance = models.IntegerField()
 
-    def has_enough_balance(self, price):
-        # FIXME: Write a real method here.
-        return True
-
 
 class Subscription(models.Model):
     created = models.DateField(auto_now_add=True)

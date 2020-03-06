@@ -17,7 +17,7 @@
 If the story method returns `Success` execution of the whole story
 continues from the next step.
 
-```pycon
+```pycon tab="sync"
 
 >>> from stories import story, Success
 
@@ -45,11 +45,42 @@ continues from the next step.
 ...         print("three")
 ...         return Success()
 
+>>> Action().do()
+one
+two
+three
+
 ```
 
-```pycon
+```pycon tab="async"
 
->>> Action().do()
+>>> from stories import story, Success
+
+>>> class Action:
+...
+...     @story
+...     def do(I):
+...
+...         I.one
+...         I.two
+...         I.three
+...
+...     async def one(self, ctx):
+...
+...         print("one")
+...         return Success()
+...
+...     async def two(self, ctx):
+...
+...         print("two")
+...         return Success()
+...
+...     async def three(self, ctx):
+...
+...         print("three")
+...         return Success()
+
+>>> await Action().do()  # doctest: +SKIP
 one
 two
 three
@@ -59,7 +90,7 @@ three
 If sub-story last method returns `Success`, the execution continues in
 the next method of the parent story.
 
-```pycon
+```pycon tab="sync"
 
 >>> from stories import story, Success
 
@@ -98,11 +129,54 @@ the next method of the parent story.
 ...         print("four")
 ...         return Success()
 
+>>> Action().do()
+one
+two
+three
+four
+
 ```
 
-```pycon
+```pycon tab="async"
 
->>> Action().do()
+>>> from stories import story, Success
+
+>>> class Action:
+...
+...     @story
+...     def do(I):
+...
+...         I.one
+...         I.sub
+...         I.four
+...
+...     @story
+...     def sub(I):
+...
+...         I.two
+...         I.three
+...
+...     async def one(self, ctx):
+...
+...         print("one")
+...         return Success()
+...
+...     async def two(self, ctx):
+...
+...         print("two")
+...         return Success()
+...
+...     async def three(self, ctx):
+...
+...         print("three")
+...         return Success()
+...
+...     async def four(self, ctx):
+...
+...         print("four")
+...         return Success()
+
+>>> await Action().do()  # doctest: +SKIP
 one
 two
 three
@@ -113,7 +187,7 @@ four
 Story method can use `Success` keyword arguments to set some context
 variables for future methods.
 
-```pycon
+```pycon tab="sync"
 
 >>> from stories import story, Success
 
@@ -135,11 +209,35 @@ variables for future methods.
 ...         print(ctx.var_b)
 ...         return Success()
 
+>>> Action().do()
+1
+2
+
 ```
 
-```pycon
+```pycon tab="async"
 
->>> Action().do()
+>>> from stories import story, Success
+
+>>> class Action:
+...
+...     @story
+...     def do(I):
+...
+...         I.one
+...         I.two
+...
+...     async def one(self, ctx):
+...
+...         return Success(var_a=1, var_b=2)
+...
+...     async def two(self, ctx):
+...
+...         print(ctx.var_a)
+...         print(ctx.var_b)
+...         return Success()
+
+>>> await Action().do()  # doctest: +SKIP
 1
 2
 
@@ -150,7 +248,7 @@ variables for future methods.
 If story method returns `Failure`, the whole story considered failed.
 Execution stops at this point.
 
-```pycon
+```pycon tab="sync"
 
 >>> from stories import story, Success, Failure
 
@@ -172,11 +270,37 @@ Execution stops at this point.
 ...         print("two")
 ...         return Success()
 
+>>> result = Action().do.run()
+one
+
+>>> result.is_failure
+True
+
 ```
 
-```pycon
+```pycon tab="async"
 
->>> result = Action().do.run()
+>>> from stories import story, Success, Failure
+
+>>> class Action:
+...
+...     @story
+...     def do(I):
+...
+...         I.one
+...         I.two
+...
+...     async def one(self, ctx):
+...
+...         print("one")
+...         return Failure()
+...
+...     async def two(self, ctx):
+...
+...         print("two")
+...         return Success()
+
+>>> result = await Action().do.run()  # doctest: +SKIP
 one
 
 >>> result.is_failure
@@ -186,7 +310,7 @@ True
 
 `Failure` of the sub-story will fail the whole story.
 
-```pycon
+```pycon tab="sync"
 
 >>> from stories import story, Success, Failure
 
@@ -225,11 +349,55 @@ True
 ...         print("four")
 ...         return Success()
 
+>>> result = Action().do.run()
+one
+two
+
+>>> result.is_failure
+True
+
 ```
 
-```pycon
+```pycon tab="async"
 
->>> result = Action().do.run()
+>>> from stories import story, Success, Failure
+
+>>> class Action:
+...
+...     @story
+...     def do(I):
+...
+...         I.one
+...         I.sub
+...         I.four
+...
+...     @story
+...     def sub(I):
+...
+...         I.two
+...         I.three
+...
+...     async def one(self, ctx):
+...
+...         print("one")
+...         return Success()
+...
+...     async def two(self, ctx):
+...
+...         print("two")
+...         return Failure()
+...
+...     async def three(self, ctx):
+...
+...         print("three")
+...         return Success()
+...
+...     async def four(self, ctx):
+...
+...         print("four")
+...         return Success()
+
+>>> result = await Action().do.run()  # doctest: +SKIP
 one
 two
 
@@ -247,7 +415,7 @@ If the story method return `Result`, the whole story considered done. An
 optional argument passed to the `Result` constructor will be the return
 value of the story call.
 
-```pycon
+```pycon tab="sync"
 
 >>> from stories import story, Success, Result
 
@@ -275,13 +443,47 @@ value of the story call.
 ...         print("three")
 ...         return Success()
 
-```
-
-```pycon
-
 >>> res = Action().do()
 one
 two
+
+>>> res
+1
+
+```
+
+```pycon tab="async"
+
+>>> from stories import story, Success, Result
+
+>>> class Action:
+...
+...     @story
+...     def do(I):
+...
+...         I.one
+...         I.two
+...         I.three
+...
+...     async def one(self, ctx):
+...
+...         print("one")
+...         return Success()
+...
+...     async def two(self, ctx):
+...
+...         print("two")
+...         return Result(1)
+...
+...     async def three(self, ctx):
+...
+...         print("three")
+...         return Success()
+
+>>> res = await Action().do()  # doctest: +SKIP
+one
+two
+
 >>> res
 1
 
@@ -290,7 +492,7 @@ two
 The `Result` of the sub-story will be the result of the whole story. The
 execution stops after the method returned `Result`.
 
-```pycon
+```pycon tab="sync"
 
 >>> from stories import story, Success, Result
 
@@ -329,14 +531,60 @@ execution stops after the method returned `Result`.
 ...         print("four")
 ...         return Success()
 
-```
-
-```pycon
-
 >>> result = Action().do()
 one
 two
 three
+
+>>> result
+2
+
+```
+
+```pycon tab="async"
+
+>>> from stories import story, Success, Result
+
+>>> class Action:
+...
+...     @story
+...     def do(I):
+...
+...         I.one
+...         I.sub
+...         I.four
+...
+...     @story
+...     def sub(I):
+...
+...         I.two
+...         I.three
+...
+...     async def one(self, ctx):
+...
+...         print("one")
+...         return Success()
+...
+...     async def two(self, ctx):
+...
+...         print("two")
+...         return Success()
+...
+...     async def three(self, ctx):
+...
+...         print("three")
+...         return Result(2)
+...
+...     async def four(self, ctx):
+...
+...         print("four")
+...         return Success()
+
+>>> result = await Action().do()  # doctest: +SKIP
+one
+two
+three
+
 >>> result
 2
 
@@ -347,7 +595,7 @@ three
 If sub-story method returns `Skip` result, execution will be continued
 form the next method of the caller story.
 
-```pycon
+```pycon tab="sync"
 
 >>> from stories import story, Success, Skip
 
@@ -386,11 +634,53 @@ form the next method of the caller story.
 ...         print("four")
 ...         return Success()
 
+>>> Action().do()
+one
+two
+four
+
 ```
 
-```pycon
+```pycon tab="async"
 
->>> Action().do()
+>>> from stories import story, Success, Skip
+
+>>> class Action:
+...
+...     @story
+...     def do(I):
+...
+...         I.one
+...         I.sub
+...         I.four
+...
+...     @story
+...     def sub(I):
+...
+...         I.two
+...         I.three
+...
+...     async def one(self, ctx):
+...
+...         print("one")
+...         return Success()
+...
+...     async def two(self, ctx):
+...
+...         print("two")
+...         return Skip()
+...
+...     async def three(self, ctx):
+...
+...         print("three")
+...         return Success()
+...
+...     async def four(self, ctx):
+...
+...         print("four")
+...         return Success()
+
+>>> await Action().do()  # doctest: +SKIP
 one
 two
 four
@@ -399,7 +689,7 @@ four
 
 If the topmost story returns `Skip` result, execution will end.
 
-```pycon
+```pycon tab="sync"
 
 >>> from stories import story, Success, Skip
 
@@ -421,11 +711,34 @@ If the topmost story returns `Skip` result, execution will end.
 ...         print("two")
 ...         return Success()
 
+>>> Action().do()
+one
+
 ```
 
-```pycon
+```pycon tab="async"
 
->>> Action().do()
+>>> from stories import story, Success, Skip
+
+>>> class Action:
+...
+...     @story
+...     def do(I):
+...
+...         I.one
+...         I.two
+...
+...     async def one(self, ctx):
+...
+...         print("one")
+...         return Skip()
+...
+...     async def two(self, ctx):
+...
+...         print("two")
+...         return Success()
+
+>>> await Action().do()  # doctest: +SKIP
 one
 
 ```

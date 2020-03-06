@@ -184,7 +184,7 @@ We use simple rules to write our steps.
 
 Here are some examples:
 
-```pycon
+```pycon tab="sync"
 
 >>> class Subscription:
 ...
@@ -220,11 +220,47 @@ Here are some examples:
 
 ```
 
+```pycon tab="async"
+
+>>> class Subscription:
+...
+...     @story
+...     @arguments("profile_id", "price_id")
+...     def buy(I):
+...
+...         I.find_profile
+...         I.find_price
+...         I.check_balance
+...
+...     async def find_profile(self, ctx):
+...
+...         profile = await self.load_profile(ctx.profile_id)
+...         return Success(profile=profile)
+...
+...     async def find_price(self, ctx):
+...
+...         price = await self.load_price(ctx.price_id)
+...         return Success(price=price)
+...
+...     async def check_balance(self, ctx):
+...
+...         if ctx.profile.has_enough_balance(ctx.price):
+...             return Success()
+...         else:
+...             return Failure()
+...
+...     def __init__(self, load_profile, load_price):
+...
+...         self.load_profile = load_profile
+...         self.load_price = load_price
+
+```
+
 This way you decouple your business logic from relation mapper models or
 networking library! There is no more vendor lock on a certain framework
 or database! Welcome to the good architecture utopia.
 
-```pycon
+```pycon tab="sync"
 
 >>> from django_project.models import Profile, Price
 
@@ -236,17 +272,44 @@ or database! Welcome to the good architecture utopia.
 ...     return Price.objects.get(pk=price_id)
 ...
 
->>> Subscription(load_profile, load_price).buy(profile_id=1, price_id=7)
+>>> Subscription(load_profile, load_price).buy(profile_id=1, price_id=7)  # doctest: +SKIP
+
+```
+
+```pycon tab="async"
+
+>>> from django_project.models import Profile, Price
+
+>>> async def load_profile(profile_id):
+...     return await Profile.objects.get(pk=profile_id)
+...
+
+>>> async def load_price(price_id):
+...     return await Price.objects.get(pk=price_id)
+...
+
+>>> await Subscription(load_profile, load_price).buy(profile_id=1, price_id=7)  # doctest: +SKIP
 
 ```
 
 You can group delegates into a single object to avoid complex
 constructors and names duplication.
 
-```pycon
+```pycon tab="sync"
 
 >>> def find_price(self, ctx):
 ...     price = self.impl.find_price(ctx.price_id)
+...     return Success(price=price)
+
+>>> def __init__(self, impl):
+...     self.impl = impl
+
+```
+
+```pycon tab="async"
+
+>>> async def find_price(self, ctx):
+...     price = await self.impl.find_price(ctx.price_id)
 ...     return Success(price=price)
 
 >>> def __init__(self, impl):

@@ -39,7 +39,7 @@ capturing and returning errors from any step in the transaction.
 `stories` provide a simple way to define a complex business scenario
 that include many processing steps.
 
-```pycon
+```pycon tab="sync"
 
 >>> from stories import story, arguments, Success, Failure, Result
 >>> from django_project.models import Category, Profile, Subscription
@@ -75,7 +75,9 @@ that include many processing steps.
 ...
 ...     def persist_subscription(self, ctx):
 ...
-...         subscription = Subscription(category=ctx.category, profile=ctx.profile)
+...         subscription = Subscription(
+...             category=ctx.category, profile=ctx.profile
+...         )
 ...         subscription.save()
 ...         return Success(subscription=subscription)
 ...
@@ -83,11 +85,58 @@ that include many processing steps.
 ...
 ...         return Result(ctx.subscription)
 
+>>> Subscribe().buy(category_id=1, profile_id=2)
+<Subscription: Subscription object (9)>
+
 ```
 
-```pycon
+```pycon tab="async"
 
->>> Subscribe().buy(category_id=1, profile_id=2)
+>>> from stories import story, arguments, Success, Failure, Result
+>>> from django_project.models import Category, Profile, Subscription
+
+>>> class Subscribe:
+...
+...     @story
+...     @arguments('category_id', 'profile_id')
+...     def buy(I):
+...
+...         I.find_category
+...         I.find_profile
+...         I.check_balance
+...         I.persist_subscription
+...         I.show_subscription
+...
+...     async def find_category(self, ctx):
+...
+...         category = await Category.objects.get(pk=ctx.category_id)
+...         return Success(category=category)
+...
+...     async def find_profile(self, ctx):
+...
+...         profile = await Profile.objects.get(pk=ctx.profile_id)
+...         return Success(profile=profile)
+...
+...     async def check_balance(self, ctx):
+...
+...         if ctx.category.cost < ctx.profile.balance:
+...             return Success()
+...         else:
+...             return Failure()
+...
+...     async def persist_subscription(self, ctx):
+...
+...         subscription = Subscription(
+...             category=ctx.category, profile=ctx.profile
+...         )
+...         await subscription.save()
+...         return Success(subscription=subscription)
+...
+...     async def show_subscription(self, ctx):
+...
+...         return Result(ctx.subscription)
+
+>>> await Subscribe().buy(category_id=1, profile_id=2)  # doctest: +SKIP
 <Subscription: Subscription object (9)>
 
 ```

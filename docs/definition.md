@@ -6,13 +6,18 @@ other methods of this class in special order.
 The body of the story isn't executed directly. It's used as a spec of
 what should happen. The main purpose of it is to describe the intent.
 
+The steps of the story could be either regular methods or
+coroutines. This could not be mixed. All methods of the story should
+be of one type. If steps of the story are coroutines, you can await
+the story itself.
+
 ## Basics
 
 This is a real-world example of the story definition used in our
 [tutorials](https://github.com/dry-python/tutorials). As you can see,
 it is a business process of the subscription to our service.
 
-```pycon
+```pycon tab="sync"
 
 >>> from stories import Failure, Result, Success, arguments, story
 
@@ -81,6 +86,75 @@ it is a business process of the subscription to our service.
 
 ```
 
+```pycon tab="async"
+
+>>> from stories import Failure, Result, Success, arguments, story
+
+>>> class Subscription:
+...     """Buy subscription for certain category."""
+...
+...     @story
+...     @arguments("category_id", "price_id", "user_id")
+...     def buy(I):
+...
+...         I.find_category
+...         I.find_price
+...         I.find_profile
+...         I.check_balance
+...         I.persist_payment
+...         I.persist_subscription
+...         I.send_subscription_notification
+...         I.show_category
+...
+...     async def find_category(self, ctx):
+...
+...         category = await load_category(ctx.category_id)
+...         return Success(category=category)
+...
+...     async def find_price(self, ctx):
+...
+...         price = await load_price(ctx.price_id)
+...         return Success(price=price)
+...
+...     async def find_profile(self, ctx):
+...
+...         profile = await load_profile(ctx.user_id)
+...         return Success(profile=profile)
+...
+...     async def check_balance(self, ctx):
+...
+...         if ctx.profile.balance > ctx.price.cost:
+...             return Success()
+...         else:
+...             return Failure()
+...
+...     async def persist_payment(self, ctx):
+...
+...         await decrease_balance(ctx.profile, ctx.price.cost)
+...         await save_profile(ctx.profile)
+...         return Success()
+...
+...     async def persist_subscription(self, ctx):
+...
+...         expires = await calculate_period(ctx.price.period)
+...         subscription = await create_subscription(
+...             ctx.profile, ctx.category, expires
+...         )
+...         return Success(subscription=subscription)
+...
+...     async def send_subscription_notification(self, ctx):
+...
+...         notification = await send_notification(
+...             "subscription", ctx.profile, ctx.category.name
+...         )
+...         return Success(notification=notification)
+...
+...     async def show_category(self, ctx):
+...
+...         return Result(ctx.category)
+
+```
+
 ### Explanation
 
 There are a few terms you should be familiar with:
@@ -111,7 +185,7 @@ There are a few terms you should be familiar with:
 To make failure handling a more manageable process we can define a
 [failure protocol](failure_protocol.md).
 
-```pycon
+```pycon tab="sync"
 
 >>> from enum import Enum, auto
 >>> from stories import Failure, Result, Success, arguments, story
@@ -152,6 +226,58 @@ To make failure handling a more manageable process we can define a
 ...             return Failure(Errors.not_found)
 ...
 ...     def show_category(self, ctx):
+...
+...         return Result(ctx.category)
+
+>>> @ShowCategory.show.failures
+... class Errors(Enum):
+...
+...     forbidden = auto()
+...     not_found = auto()
+
+```
+
+```pycon tab="async"
+
+>>> from enum import Enum, auto
+>>> from stories import Failure, Result, Success, arguments, story
+
+>>> class ShowCategory:
+...     """Show category entries."""
+...
+...     @story
+...     @arguments("category_id", "user_id")
+...     def show(I):
+...
+...         I.find_subscription
+...         I.check_expiration
+...         I.find_category
+...         I.show_category
+...
+...     async def find_subscription(self, ctx):
+...
+...         subscription = await load_subscription(ctx.category_id, ctx.user_id)
+...         if subscription:
+...             return Success(subscription=subscription)
+...         else:
+...             return Failure(Errors.forbidden)
+...
+...     async def check_expiration(self, ctx):
+...
+...         if await ctx.subscription.is_expired():
+...             return Failure(Errors.forbidden)
+...         else:
+...             return Success()
+...
+...     async def find_category(self, ctx):
+...
+...         category = await load_category(ctx.category_id)
+...         if category:
+...             return Success(category=category)
+...         else:
+...             return Failure(Errors.not_found)
+...
+...     async def show_category(self, ctx):
 ...
 ...         return Result(ctx.category)
 
