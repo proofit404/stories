@@ -230,7 +230,7 @@ class NullContract(object):
             arg: {(None, self.cls_name, self.name)} for arg in self.arguments
         }
 
-    def check_story_call(self, kwargs):
+    def check_story_call(self, kwargs, ns, seen):
         __tracebackhide__ = True
         # FIXME: Check required arguments here.
         unknown_arguments = set(kwargs) - set(self.argset)
@@ -257,18 +257,17 @@ class NullContract(object):
             )
             raise ContextContractError(message)
 
-    def check_success_statement(self, method, ctx, ns, kwargs):
+    def check_assign_statement(self, method, ctx, ns, seen, name, value):
         __tracebackhide__ = True
-        tries_to_override = set(ns) & set(kwargs)
-        if tries_to_override:
+        if name in ns:
             message = variable_override_template.format(
-                variables=", ".join(map(repr, sorted(tries_to_override))),
+                variable=name,
                 cls=method.__self__.__class__.__name__,
                 method=method.__name__,
                 ctx=ctx,
             )
             raise ContextContractError(message)
-        return kwargs
+        return value
 
     def __repr__(self):
         return self.format_contract_fields(self.argset)
@@ -310,10 +309,10 @@ class SpecContract(NullContract):
             for variable, validator in self.spec.items()
         }
 
-    def check_story_call(self, kwargs):
+    def check_story_call(self, kwargs, ns, seen):
         __tracebackhide__ = True
-        super(SpecContract, self).check_story_call(kwargs)
-        result, errors = self.validate(kwargs)
+        super(SpecContract, self).check_story_call(kwargs, ns, seen)
+        result, errors = self.validate(kwargs, ns, seen)
         if errors:
             message = invalid_argument_template.format(
                 variables=", ".join(map(repr, sorted(errors))),
@@ -325,43 +324,45 @@ class SpecContract(NullContract):
             raise ContextContractError(message)
         return result
 
-    def check_success_statement(self, method, ctx, ns, kwargs):
+    def check_assign_statement(self, method, ctx, ns, seen, name, value):
         __tracebackhide__ = True
-        super(SpecContract, self).check_success_statement(method, ctx, ns, kwargs)
-        unknown = self.identify(kwargs)
+        super(SpecContract, self).check_assign_statement(
+            method, ctx, ns, seen, name, value
+        )
+        unknown = self.identify(name)
         if unknown:
             message = unknown_variable_template.format(
-                unknown=", ".join(map(repr, sorted(unknown))),
+                unknown=name,
                 cls=method.__self__.__class__.__name__,
                 method=method.__name__,
                 contract=self,
             )
             raise ContextContractError(message)
-        normalized, errors = self.validate(kwargs)
+        normalized, errors = self.validate({name: value}, ns, seen)
         if errors:
             message = invalid_variable_template.format(
-                variables=", ".join(map(repr, sorted(errors))),
+                variable=name,
                 cls=method.__self__.__class__.__name__,
                 method=method.__name__,
-                violations=format_violations(kwargs, errors),
+                violations=format_violations({name: value}, errors),
                 contract=self.format_contract_fields(errors),
             )
             raise ContextContractError(message)
-        return normalized
+        return normalized[name]
 
-    def identify(self, kwargs):
+    def identify(self, name):
         available = set(self.spec) | set(self.argset)
-        unknown = set(kwargs) - available
+        unknown = name not in available
         return unknown
 
-    def validate(self, kwargs):
+    def validate(self, kwargs, ns, seen):
         __tracebackhide__ = True
-        result, errors, seen, conflict = {}, {}, [], {}
+        result, errors, conflict = {}, {}, {}
         for key, value in kwargs.items():
             if key in self.spec:
-                self.validate_spec(result, errors, seen, key, value)
+                self.validate_spec(result, errors, ns, seen, key, value)
             else:
-                self.validate_argset(result, errors, seen, conflict, key, value)
+                self.validate_argset(result, errors, ns, seen, conflict, key, value)
         if conflict:
             conflict_vars = sorted({j for i in conflict.values() for j in i})
             message = normalization_conflict_template.format(
@@ -384,14 +385,14 @@ class SpecContract(NullContract):
             raise ContextContractError(message)
         return result, errors
 
-    def validate_spec(self, result, errors, seen, key, value):
+    def validate_spec(self, result, errors, ns, seen, key, value):
         new_value, error = self.spec[key](value)
         if error:
             errors[key] = error
         else:
-            self.assign_result(result, seen, key, value, new_value)
+            self.assign_result(result, ns, seen, key, value, new_value)
 
-    def validate_argset(self, result, errors, seen, conflict, key, value):
+    def validate_argset(self, result, errors, ns, seen, conflict, key, value):
         new_values, has_error = [], False
         for validator, cls_name, name in self.argset[key]:
             new_value, error = validator(value)
@@ -409,12 +410,16 @@ class SpecContract(NullContract):
                     conflict.setdefault((other[1], other[2]), {})
                     conflict[(other[1], other[2])][key] = other[0]
         if not has_error:
-            self.assign_result(result, seen, key, value, new_value)
+            self.assign_result(result, ns, seen, key, value, new_value)
 
-    def assign_result(self, result, seen, key, value, new_value):
+    def assign_result(self, result, ns, seen, key, value, new_value):
         for seen_key, seen_value in seen:
             if value is seen_value:
-                seen_new_value = result[seen_key]
+                # It will be `ns` if we are validating previous
+                # assignment.  It will be `result` if we are validating
+                # story call arguments.
+                place = ns if seen_key in ns else result
+                seen_new_value = place[seen_key]
                 if (
                     type(new_value) is type(seen_new_value)
                     and new_value == seen_new_value
@@ -600,22 +605,22 @@ Story arguments: {arguments}
 
 
 variable_override_template = """
-These variables are already present in the context: {variables}
+This variable is already present in the context: {variable!r}
 
 Function returned value: {cls}.{method}
 
-Use different names for Success() keyword arguments.
+Use a different name for context attribute.
 
 {ctx!r}
 """.strip()
 
 
 unknown_variable_template = """
-These variables were not defined in the context contract: {unknown}
+This variable was not defined in the context contract: {unknown!r}
 
-Function returned value: {cls}.{method}
+Function assigned value: {cls}.{method}
 
-Use different names for Success() keyword arguments or add these names to the contract.
+Use a different name for context attribute or add this name to the contract.
 
 {contract!r}
 """.strip()
@@ -631,7 +636,7 @@ Story method: {cls}.{method}
 
 
 invalid_variable_template = """
-These variables violates context contract: {variables}
+This variable violates context contract: {variable!r}
 
 Function returned value: {cls}.{method}
 

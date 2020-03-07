@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import textwrap
 from collections import OrderedDict
 from decimal import Decimal
 
@@ -7,32 +6,32 @@ from _stories.compat import indent
 from _stories.exceptions import MutationError
 
 
-ATTRIBUTE_ERROR_MSG = textwrap.dedent(
-    """
-    '{obj}' object has no attribute {attr}
-
-    {ctx!r}
-    """
-).strip()
-
-
 def make_context(contract, kwargs, history):
-    kwargs = contract.check_story_call(kwargs)
-    ns = OrderedDict(
+    ns = OrderedDict()
+    seen = []
+    kwargs = contract.check_story_call(kwargs, ns, seen)
+    for arg in sorted(contract.argset):
         # FIXME: We should be able to remove `if` statement here.
-        (arg, kwargs[arg])
-        for arg in sorted(contract.argset)
-        if arg in kwargs
-    )
+        if arg in kwargs:
+            ns[arg] = kwargs[arg]
     lines = ["Story argument"] * len(ns)
+    this = {}
 
     def getattr_method(self, name):
         try:
             return ns[name]
         except KeyError:
             raise AttributeError(
-                ATTRIBUTE_ERROR_MSG.format(obj="Context", attr=name, ctx=self)
+                missed_attribute_message.format(attribute=name, ctx=self)
             )
+
+    def setattr_method(self, name, value):
+        contract = this["contract"]
+        method = this["method"]
+        ns[name] = contract.check_assign_statement(method, self, ns, seen, name, value)
+        lines.append(
+            "Set by {}.{}".format(method.__self__.__class__.__name__, method.__name__)
+        )
 
     def repr_method(self):
         return (
@@ -48,10 +47,12 @@ def make_context(contract, kwargs, history):
 
     def bool_method(self):
         # FIXME: It isn't a mutation error.
-        #
-        # FIXME: Support custom report function.
         message = comparison_template.format(available=", ".join(map(repr, ns)))
         raise MutationError(message)
+
+    def bind(contract, method):
+        this["contract"] = contract
+        this["method"] = method
 
     return (
         type(
@@ -69,21 +70,12 @@ def make_context(contract, kwargs, history):
         )(),
         ns,
         lines,
+        bind,
     )
-
-
-def setattr_method(self, name, value):
-    raise MutationError(assign_attribute_message)
 
 
 def delattr_method(self, name):
     raise MutationError(delete_attribute_message)
-
-
-def assign_namespace(ns, lines, method, kwargs):
-    ns.update((arg, kwargs[arg]) for arg in sorted(kwargs))
-    line = "Set by {}.{}".format(method.__self__.__class__.__name__, method.__name__)
-    lines.extend([line] * len(kwargs))
 
 
 def history_representation(history):
@@ -127,10 +119,14 @@ def context_representation(ns, lines, repr_func=repr):
 # Messages.
 
 
-assign_attribute_message = """
-Context object is immutable.
+# TODO: In the story with contract undefined and not yet assigned
+# attribute should has different error messages.
 
-Use Success() keyword arguments to expand its scope.
+
+missed_attribute_message = """
+'Context' object has no attribute {attribute}
+
+{ctx!r}
 """.strip()
 
 
