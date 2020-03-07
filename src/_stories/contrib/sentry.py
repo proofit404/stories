@@ -18,12 +18,12 @@ origin_make_context = _stories.context.make_context
 @libraryhook("stories")
 def track_context():
     def wrapper(contract, kwargs, history):
-        ctx, ns, lines = origin_make_context(contract, kwargs, history)
+        ctx, ns, lines, bind = origin_make_context(contract, kwargs, history)
         record(
             processor=lambda data: data.update(
                 {"category": "story", "message": repr(ctx)}  # FIXME: Use pretty print.
             )
         )
-        return ctx, ns, lines
+        return ctx, ns, lines, bind
 
     _stories.mounted.make_context = wrapper

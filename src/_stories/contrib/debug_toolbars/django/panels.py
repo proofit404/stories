@@ -18,9 +18,9 @@ origin_make_context = _stories.context.make_context
 
 def track_context(storage):
     def wrapper(contract, kwargs, history):
-        ctx, ns, lines = origin_make_context(contract, kwargs, history)
+        ctx, ns, lines, bind = origin_make_context(contract, kwargs, history)
         storage.append(ctx)
-        return ctx, ns, lines
+        return ctx, ns, lines, bind
 
     return wrapper
 

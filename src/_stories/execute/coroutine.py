@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from _stories.context import assign_namespace
 from _stories.marker import BeginningOfStory
 from _stories.marker import EndOfStory
 from _stories.returned import Failure
@@ -8,7 +7,7 @@ from _stories.returned import Skip
 from _stories.returned import Success
 
 
-async def execute(runner, ctx, ns, lines, history, methods):
+async def execute(runner, ctx, ns, bind, history, methods):
     __tracebackhide__ = True
 
     skipped = 0
@@ -38,6 +37,7 @@ async def execute(runner, ctx, ns, lines, history, methods):
             continue
 
         history.before_call(method.__name__)
+        bind(contract, method)
 
         try:
             result = await method(ctx)
@@ -66,13 +66,5 @@ async def execute(runner, ctx, ns, lines, history, methods):
             history.on_skip()
             skipped = 1
             continue
-
-        try:
-            kwargs = contract.check_success_statement(method, ctx, ns, result.kwargs)
-        except Exception as error:
-            history.on_error(error.__class__.__name__)
-            raise
-
-        assign_namespace(ns, lines, method, kwargs)
 
     return runner.finished()

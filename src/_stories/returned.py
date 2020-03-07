@@ -9,18 +9,6 @@ class Result(object):
         return "Result(" + repr(self.value) + ")"
 
 
-class Success(object):
-    def __init__(self, **kwargs):
-        self.kwargs = kwargs
-
-    def __repr__(self):
-        return (
-            "Success("
-            + ", ".join([k + "=" + repr(v) for k, v in self.kwargs.items()])
-            + ")"
-        )
-
-
 class Failure(object):
     def __init__(self, reason=None):
         self.reason = reason
@@ -28,6 +16,11 @@ class Failure(object):
     def __repr__(self):
         reason = repr(self.reason) if self.reason else ""
         return "Failure(" + reason + ")"
+
+
+class Success(object):
+    def __repr__(self):
+        return "Success()"
 
 
 class Skip(object):

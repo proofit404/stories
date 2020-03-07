@@ -16,9 +16,9 @@ def make_collector():
     storage = []
 
     def wrapper(contract, kwargs, history):
-        ctx, ns, lines = origin_make_context(contract, kwargs, history)
+        ctx, ns, lines, set_method = origin_make_context(contract, kwargs, history)
         storage.append(ctx)
-        return ctx, ns, lines
+        return ctx, ns, lines, set_method
 
     _stories.mounted.make_context = wrapper
 
