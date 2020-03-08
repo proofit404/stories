@@ -180,6 +180,259 @@ There are a few terms you should be familiar with:
 7. `Success`, `Failure` and `Result` are markers returned by step
    methods to change business process execution path.
 
+### Invalid story definitions
+
+Some story definitions are invalid.
+If such a story is defined it may raise an error whenever the `@story` decorator wraps
+the story definition method or whenever you run it, depending on the invalid story in question.
+
+#### Story definitions which return a coroutine
+
+!!! danger "The story definition method itself must not be declared with `async def`"
+
+    Attempting to do so will raise a `StoryDefinitionError`.
+
+    ```pycon tab="sync"
+
+    >>> from stories import Success, story
+
+    >>> class InvalidStoryDefinition:
+    ...     """An example of an invalid story that is defined using `async def`."""
+    ...
+    ...     @story
+    ...     async def example(I):
+    ...
+    ...         I.step
+    ...
+    ...     def step(self, ctx):
+    ...
+    ...         return Success()
+    Traceback (most recent call last):
+      ...
+    _stories.exceptions.StoryDefinitionError: Story should be a regular function
+
+    ```
+
+    ```pycon tab="async"
+
+    >>> from stories import Success, story
+
+    >>> class InvalidStoryDefinition:
+    ...     """An example of an invalid story that is defined using `async def`."""
+    ...
+    ...     @story
+    ...     async def example(I):
+    ...
+    ...         I.step
+    ...
+    ...     async def step(self, ctx):
+    ...
+    ...         return Success()
+    Traceback (most recent call last):
+      ...
+    _stories.exceptions.StoryDefinitionError: Story should be a regular function
+
+    ```
+
+##### Explanation
+
+1. Building a story is a synchronous operation.
+2. If a story definition method were to return a coroutine, it would leak since since it
+   is never `await`ed.
+
+#### Empty Stories
+
+!!! danger "Story definitions without any steps are invalid"
+
+    Attempting to define such a story will raise a `StoryDefinitionError`.
+
+    ```pycon
+
+    >>> from stories import story
+
+    >>> class EmptyStory:
+    ...     """An example of an empty story."""
+    ...
+    ...     @story
+    ...     def empty(I):
+    ...
+    ...         pass
+    Traceback (most recent call last):
+       ...
+    _stories.exceptions.StoryDefinitionError: Story should have at least one step defined
+
+    ```
+
+##### Explanation
+
+1. Stories without any steps are meaningless.
+   Their result is unclear and they serve no purpose.
+2. We require you to define at least one step to determine whether the story
+   is synchronous or asynchronous.
+
+#### Mixing synchronous steps and asynchronous steps
+
+!!! danger "All steps must either be synchronous or asynchronous"
+
+    Attempting to access a story with synchronous steps or sub-stories which contain
+    such steps will raise a `StoryDefinitionError`.
+
+    ```pycon tab="sync"
+
+    >>> from stories import Success, story
+
+    >>> class MixedStory:
+    ...     """An example of an invalid synchrnous story that incorporates an asynchronous step."""
+    ...
+    ...     @story
+    ...     def example(I):
+    ...
+    ...         I.synchronous_step
+    ...         I.asynchronous_step
+    ...
+    ...     def synchronous_step(self, ctx):
+    ...
+    ...         return Success()
+    ...
+    ...     async def asynchronous_step(self, ctx):
+    ...
+    ...         return Success()
+    >>> MixedStory().example
+    Traceback (most recent call last):
+      ...
+    _stories.exceptions.StoryDefinitionError: Coroutines and functions can not be used together in story definition.
+    <BLANKLINE>
+    This method should be a function: MixedStory.asynchronous_step
+    <BLANKLINE>
+    Story method: MixedStory.example
+
+    ```
+
+    ```pycon tab="async"
+
+    >>> from stories import Success, story
+
+    >>> class MixedStory:
+    ...     """An example of an invalid asynchrnous story that incorporates an synchronous step."""
+    ...
+    ...     @story
+    ...     def example(I):
+    ...
+    ...         I.asynchronous_step
+    ...         I.synchronous_step
+    ...
+    ...     async def asynchronous_step(self, ctx):
+    ...
+    ...         return Success()
+    ...
+    ...     def synchronous_step(self, ctx):
+    ...
+    ...         return Success()
+    >>> MixedStory().example
+    Traceback (most recent call last):
+      ...
+    _stories.exceptions.StoryDefinitionError: Coroutines and functions can not be used together in story definition.
+    <BLANKLINE>
+    This method should be a coroutine: MixedStory.synchronous_step
+    <BLANKLINE>
+    Story method: MixedStory.example
+
+    ```
+
+    Likewise, injecting a synchronous sub-story to an asynchronous story
+    or the contrary is also forbidden.
+
+    ```pycon tab="sync"
+
+    >>> from stories import Success, story
+
+    >>> class MixedStory:
+    ...     """An example of an invalid synchrnous story that incorporates an asynchronous sub-story."""
+    ...
+    ...     @story
+    ...     def example(I):
+    ...
+    ...         I.synchronous_step
+    ...         I.asynchronous_substory
+    ...
+    ...     @story
+    ...     def asynchronous_substory(I):
+    ...
+    ...         I.asynchronous_step
+    ...
+    ...     def synchronous_step(self, ctx):
+    ...
+    ...         return Success()
+    ...
+    ...     async def asynchronous_step(self, ctx):
+    ...
+    ...         return Success()
+    >>> MixedStory().example
+    Traceback (most recent call last):
+      ...
+    _stories.exceptions.StoryDefinitionError: Coroutine and function stories can not be injected into each other.
+    <BLANKLINE>
+    Story function method: MixedStory.example
+    <BLANKLINE>
+    Substory coroutine method: MixedStory.asynchronous_substory
+
+    ```
+
+    ```pycon tab="async"
+
+    >>> from stories import Success, story
+
+    >>> class MixedStory:
+    ...     """An example of an invalid synchrnous story that incorporates an asynchronous sub-story."""
+    ...
+    ...     @story
+    ...     def example(I):
+    ...
+    ...         I.asynchronous_step
+    ...         I.synchronous_substory
+    ...
+    ...     @story
+    ...     def synchronous_substory(I):
+    ...
+    ...         I.synchronous_step
+    ...
+    ...     async def asynchronous_step(self, ctx):
+    ...
+    ...         return Success()
+    ...
+    ...     def synchronous_step(self, ctx):
+    ...
+    ...         return Success()
+    >>> MixedStory().example
+    Traceback (most recent call last):
+      ...
+    _stories.exceptions.StoryDefinitionError: Coroutine and function stories can not be injected into each other.
+    <BLANKLINE>
+    Story coroutine method: MixedStory.example
+    <BLANKLINE>
+    Substory function method: MixedStory.synchronous_substory
+
+    ```
+
+##### Explanation
+
+1. Running a synchronous step or sub-story in an asynchronous story may block the event loop.
+   If the event loop is blocked for too long the program's performance might suffer.
+2. Running a asynchronous step or sub-story in an synchronous story will cause an error
+   since the step returns a coroutine which is not one of the accepted return types for a step
+   or a sub-story.
+   In addition it will cause a coroutine leak since we don't `await` it.
+
+!!! note
+
+    This is a limitation that will be lifted by a future version.
+
+    When defining an asynchronous story, we will require you to explictly specify
+    that the synchronous step or sub-story will execute in a worker thread.
+
+    Likewise, when defining a synchronous story, we will require you to explictly specify
+    that the asynchronous step or sub-story will execute in an event loop.
+
 ## Failure protocols
 
 To make failure handling a more manageable process we can define a
@@ -294,5 +547,5 @@ To make failure handling a more manageable process we can define a
 1. `Failure` marker takes optional `reason` argument. It can be used
    in the caller code to handle this failure. For example, to show a
    proper error code to the user.
-2. Failure proctor should be defined after the story to allow passing
+2. Failure protocol should be defined after the story to allow passing
    `reason` in the `Failure` marker.
