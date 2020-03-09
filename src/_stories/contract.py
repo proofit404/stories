@@ -278,7 +278,7 @@ class NullContract(object):
             return "Contract()"
         lines = ["Contract:"]
         arguments = sorted(
-            [field for fields in fieldset for field in fields if field in self.argset]
+            field for fields in fieldset for field in fields if field in self.argset
         )
         for argument in arguments:
             # FIXME: This does not work for story composition when
@@ -430,7 +430,7 @@ class SpecContract(NullContract):
     def format_contract_fields(self, *fieldset):
         lines = ["Contract:"]
         arguments = sorted(
-            [field for fields in fieldset for field in fields if field in self.argset]
+            field for fields in fieldset for field in fields if field in self.argset
         )
         for argument in arguments:
             validators = self.argset[argument]
@@ -445,7 +445,7 @@ class SpecContract(NullContract):
                 for validator in sorted(validators, key=itemgetter(1, 2)):
                     lines.append("    %r  # Argument of %s.%s" % validator)
         variables = sorted(
-            [field for fields in fieldset for field in fields if field in self.declared]
+            field for fields in fieldset for field in fields if field in self.declared
         )
         for variable in variables:
             cls_name, name, field_name = self.declared[variable]
