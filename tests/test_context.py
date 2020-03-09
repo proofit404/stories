@@ -679,18 +679,18 @@ def test_context_representation_with_error(r, x):
 
     expected = """
 StepError.x
-  one (errored: Exception)
+  one (errored: ExpectedException)
 
 Context()
     """.strip()
 
     getter = make_collector()
-    with pytest.raises(Exception):
+    with pytest.raises(x.ExpectedException):
         r(x.StepError().x)()
     assert repr(getter()) == expected
 
     getter = make_collector()
-    with pytest.raises(Exception):
+    with pytest.raises(x.ExpectedException):
         r(x.StepError().x.run)()
     assert repr(getter()) == expected
 

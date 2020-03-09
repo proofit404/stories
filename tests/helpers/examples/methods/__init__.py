@@ -22,3 +22,7 @@ class Parent(object):
         I.before
         I.x
         I.after
+
+
+class ExpectedException(Exception):
+    pass
