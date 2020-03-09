@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
-from examples.methods import *  # noqa: F401, F403
+from examples.methods import *  # noqa: F403
 from stories import arguments
 from stories import Failure
 from stories import Result
 from stories import Skip
 from stories import story
 from stories import Success
-
 
 # Mixins.
 
@@ -258,7 +257,7 @@ class StepError(object):
         I.one
 
     async def one(self, ctx):
-        raise Exception()
+        raise ExpectedException()  # noqa: F405
 
 
 # Access non-existent context attribute.
