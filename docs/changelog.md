@@ -1,9 +1,27 @@
-# Changelog
+# [0.12.0](https://github.com/dry-python/stories/compare/0.11.2...0.12.0) (2020-03-06)
 
-Versions follow [0ver](https://0ver.org/) without a strict backward
-compatibility policy. We still try to figure some things out.
+### Features
 
-## 0.11.dev (unreleased)
+- support coroutine functions as story step definitions ([55cbfda](https://github.com/dry-python/stories/commit/55cbfda33c61ca1395aaacf2d2d6a2c78f14ecde))
+
+## [0.11.2](https://github.com/dry-python/stories/compare/0.11.1...0.11.2) (2020-03-02)
+
+### Bug Fixes
+
+- hide context private attributes in closure ([f8144aa](https://github.com/dry-python/stories/commit/f8144aabd8629682f9c7368a23c80316bb10fddc))
+- hide failure and success summary private attributes in closure ([eae4e95](https://github.com/dry-python/stories/commit/eae4e95bd89a2df8fd31f77fe665659c29feedd8))
+- hide FailureError private attributes in closure ([1fafcc1](https://github.com/dry-python/stories/commit/1fafcc1039775f2fbcc242b582181fab2d4e63d7))
+- hide story private attributes in closure ([9e79e14](https://github.com/dry-python/stories/commit/9e79e1417785db1e13ed01a1cd64613d5bf24a8a))
+
+## [0.11.1](https://github.com/dry-python/stories/compare/0.11.0...0.11.1) (2020-02-28)
+
+### Bug Fixes
+
+- deny to define stories without steps ([5067546](https://github.com/dry-python/stories/commit/5067546386df294db595fb0ee4e8968ee295c4b3))
+
+# [0.11.0](https://github.com/dry-python/stories/compare/0.10.2...0.11.0) (2020-02-14)
+
+### Features
 
 - Add context contract to the story. `Success` keyword arguments can
   be validated by contract definition in the story.
@@ -12,6 +30,13 @@ compatibility policy. We still try to figure some things out.
 - Only keyword arguments are allowed to `call` and `run` the story.
 - Raise `StoryDefinitionError` when `arguments` decorator is used
   incorrectly.
+- migrate to pydantic v1.x ([9049eae](https://github.com/dry-python/stories/commit/9049eae43c7b8db36708fc019a671a53bf4b578d))
+
+## [0.10.2](https://github.com/dry-python/stories/compare/0.10.1...0.10.2) (2020-02-11)
+
+### Bug Fixes
+
+- prevent generated changelog from style guide violation ([7d4047d](https://github.com/dry-python/stories/commit/7d4047d10e4dacc10ec356700b1fc35161efa4c0))
 
 ## 0.10.1 (2019-05-31)
 

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # NOTE: Every type ignore in this module is necessary due to
 # false-positive bugs in mypy.  Feel free to remove them as they'll be
 # fixed.  See GitHub issues for more info:
@@ -19,21 +20,13 @@ except ImportError:
 
 try:
     from pydantic.error_wrappers import ErrorWrapper as PydanticError
-    from pydantic.fields import Shape as PydanticShape
-    from pydantic.main import MetaModel as PydanticSpec
-    from pydantic.utils import display_as_type as pydantic_display
+    from pydantic.main import ModelMetaclass as PydanticSpec
 except ImportError:
     # Pydantic package is not installed.
     class PydanticSpec(object):  # type: ignore
         pass
 
     class PydanticError(object):  # type: ignore
-        pass
-
-    class PydanticShape(object):  # type: ignore
-        pass
-
-    def pydantic_display(v):  # type: ignore
         pass
 
 
@@ -65,4 +58,12 @@ try:
     from prettyprinter import pformat
 except ImportError:
     # Prettyprinter package is not installed.
-    from pprint import pformat  # noqa
+    from pprint import pformat  # noqa: F401
+
+
+try:
+    from asyncio import iscoroutinefunction
+except ImportError:
+    # We are on Python 2.7
+    def iscoroutinefunction(func):
+        return False

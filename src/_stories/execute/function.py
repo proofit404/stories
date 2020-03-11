@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from _stories.context import assign_namespace
 from _stories.marker import BeginningOfStory
 from _stories.marker import EndOfStory
@@ -7,7 +8,7 @@ from _stories.returned import Skip
 from _stories.returned import Success
 
 
-def execute(runner, ctx, history, methods):
+def execute(runner, ctx, ns, lines, history, methods):
     __tracebackhide__ = True
 
     skipped = 0
@@ -21,6 +22,19 @@ def execute(runner, ctx, history, methods):
                 skipped -= 1
             elif method_type is BeginningOfStory:
                 skipped += 1
+            continue
+
+        if method_type is BeginningOfStory:
+            history.on_substory_start(method.story_name)
+            try:
+                contract.check_substory_call(ctx, ns)
+            except Exception as error:
+                history.on_error(error.__class__.__name__)
+                raise
+            continue
+
+        if method_type is EndOfStory:
+            history.on_substory_end()
             continue
 
         history.before_call(method.__name__)
@@ -53,25 +67,12 @@ def execute(runner, ctx, history, methods):
             skipped = 1
             continue
 
-        if method_type is BeginningOfStory:
-            try:
-                contract.check_substory_call(ctx)
-            except Exception as error:
-                history.on_error(error.__class__.__name__)
-                raise
-            history.on_substory_start()
-            continue
-
-        if method_type is EndOfStory:
-            history.on_substory_end()
-            continue
-
         try:
-            kwargs = contract.check_success_statement(method, ctx, result.kwargs)
+            kwargs = contract.check_success_statement(method, ctx, ns, result.kwargs)
         except Exception as error:
             history.on_error(error.__class__.__name__)
             raise
 
-        assign_namespace(ctx, method, kwargs)
+        assign_namespace(ns, lines, method, kwargs)
 
     return runner.finished()

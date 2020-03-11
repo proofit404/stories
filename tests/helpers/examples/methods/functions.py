@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+from examples.methods import *  # noqa: F403
 from stories import arguments
 from stories import Failure
 from stories import Result
@@ -5,23 +7,29 @@ from stories import Skip
 from stories import story
 from stories import Success
 
-
-# Empty story.
-
-
-class Empty(object):
-    @story
-    def x(I):
-        pass
+# Mixins.
 
 
-# Empty substory.
+class NormalMethod(object):
+    def one(self, ctx):
+        return Success()
+
+    def two(self, ctx):
+        return Success()
+
+    def three(self, ctx):
+        return Success()
 
 
-class EmptySubstory(Empty):
-    @story
-    def y(I):
-        I.x
+# Parent mixins.
+
+
+class NormalParentMethod(object):
+    def before(self, ctx):
+        return Success()
+
+    def after(self, ctx):
+        return Success()
 
 
 # Simple story.
@@ -77,7 +85,7 @@ class Pipe(object):
         return Skip()
 
     def after(self, ctx):
-        raise Exception()
+        raise Exception()  # pragma: no cover
 
 
 class Branch(object):
@@ -198,7 +206,7 @@ class StepError(object):
         I.one
 
     def one(self, ctx):
-        raise Exception()
+        raise ExpectedException()  # noqa: F405
 
 
 # Access non-existent context attribute.

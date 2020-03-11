@@ -1,4 +1,4 @@
-from _stories.returned import Success
+# -*- coding: utf-8 -*-
 
 
 class BeginningOfStory(object):
@@ -8,11 +8,8 @@ class BeginningOfStory(object):
         self.parent_name = None
         self.same_object = None
 
-    def __call__(self, ctx):
-        return Success()
-
     @property
-    def __name__(self):
+    def story_name(self):
         if self.parent_name is None:
             return self.cls_name + "." + self.name
         elif self.same_object:
@@ -26,10 +23,4 @@ class BeginningOfStory(object):
 
 
 class EndOfStory(object):
-    def __init__(self, is_empty):
-        self.is_empty = is_empty
-
-    def __call__(self, ctx):
-        return Success()
-
-    __name__ = "end_of_story"
+    pass

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import sys
 from doctest import testfile
 from glob import glob
@@ -9,7 +10,8 @@ from django.conf import settings
 from django.core import management
 
 
-def setup():
+def _setup():
+    apps.populate(settings.INSTALLED_APPS)
     management.call_command("migrate")
     management.call_command("loaddata", "examples.yaml")
     # FIXME: Run real pdb.
@@ -32,9 +34,7 @@ def setup():
     sys.modules["pdb"] = pdb
 
 
-def main():
-    apps.populate(settings.INSTALLED_APPS)
-    setup()
+def _main():
     markdown_files = glob("**/*.md", recursive=True)
     exit_code = 0
     for markdown_file in markdown_files:
@@ -44,4 +44,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    _setup()
+    _main()

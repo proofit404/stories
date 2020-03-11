@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 INSTALLED_APPS = ["django_filters", "django_project.apps.ProjectConfig"]
 
 SECRET_KEY = "*"

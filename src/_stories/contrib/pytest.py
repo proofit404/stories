@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # type: ignore
 import linecache
 import sys
@@ -7,6 +8,7 @@ from _pytest.config import hookimpl
 
 import _stories.compat
 import _stories.context
+import _stories.mounted
 
 
 # FIXME: Test me.
@@ -14,13 +16,14 @@ import _stories.context
 # FIXME: Type me.
 
 
-origin_context_init = _stories.context.Context.__init__
+origin_make_context = _stories.context.make_context
 
 
 def track_context(storage):
-    def wrapper(ctx):
-        origin_context_init(ctx)
-        storage.append((get_test_source(*get_test_call()), ctx))
+    def wrapper(contract, kwargs, history):
+        ctx, ns, lines = origin_make_context(contract, kwargs, history)
+        storage.append((get_test_source(*get_test_call()), history, ns, lines))
+        return ctx, ns, lines
 
     return wrapper
 
@@ -53,7 +56,7 @@ def get_test_source(filename, lineno):
     src = []
     for num, line in zip(range(start, end), text.splitlines()):
         sep = "->" if num == lineno else "  "
-        src.append((" %s %s %s" % (str(num).rjust(adjust_to), sep, line)).rstrip())
+        src.append((" {} {} {}".format(str(num).rjust(adjust_to), sep, line)).rstrip())
 
     src = "\n".join(src)
 
@@ -63,16 +66,18 @@ def get_test_source(filename, lineno):
 @hookimpl(hookwrapper=True)
 def pytest_runtest_call(item):
     storage = []
-    _stories.context.Context.__init__ = track_context(storage)
+    _stories.mounted.make_context = track_context(storage)
     yield
-    _stories.context.Context.__init__ = origin_context_init
-    for i, (src, ctx) in enumerate(storage, 1):
+    _stories.mounted.make_context = origin_make_context
+    for i, (src, history, ns, lines) in enumerate(storage, 1):
         output = "\n\n".join(
             [
                 src,
-                _stories.context.history_representation(ctx)
+                _stories.context.history_representation(history)
                 + "\n\n"
-                + _stories.context.context_representation(ctx, _stories.compat.pformat),
+                + _stories.context.context_representation(
+                    ns, lines, _stories.compat.pformat
+                ),
             ]
         )
         item.add_report_section("call", "story #%d" % (i,), output)

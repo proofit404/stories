@@ -1,52 +1,50 @@
+# -*- coding: utf-8 -*-
+import sys
+
 import pytest
 
 import examples.methods  # noqa: F401
 
 
+def runners():
+    yield "function"
+    if sys.version_info[:2] > (2, 7):
+        yield "coroutine"
+
+
 def contracts():
-    import examples.contract_raw
-
-    yield examples.contract_raw
-
-    try:
-        import examples.contract_pydantic
-
-        yield examples.contract_pydantic
-    except (SyntaxError, ImportError):
-        pass
-
-    try:
-        import examples.contract_marshmallow
-
-        yield examples.contract_marshmallow
-    except ImportError:
-        pass
-
-    try:
-        import examples.contract_cerberus
-
-        yield examples.contract_cerberus
-    except ImportError:
-        pass
+    yield "examples.contract.raw"
+    if sys.version_info[:2] > (3, 5):
+        yield "examples.contract.pydantic"
+    yield "examples.contract.marshmallow"
+    yield "examples.contract.cerberus"
 
 
 # Fixtures.
 
 
+@pytest.fixture(params=runners())
+def r(request):
+    import examples.runners
+
+    return examples.runners.runners[request.param]
+
+
 @pytest.fixture()
-def c():
-    import examples.context
-
-    return examples.context
+def c(r):
+    return r.import_module("examples.context")
 
 
 @pytest.fixture()
-def f():
-    import examples.failure_reasons
+def f(r):
+    return r.import_module("examples.failure_reasons")
 
-    return examples.failure_reasons
+
+@pytest.fixture()
+def x(r):
+    return r.import_module("examples.methods")
 
 
 @pytest.fixture(params=contracts())
-def m(request):
-    return request.param
+def m(r, request):
+    return r.import_module(request.param)

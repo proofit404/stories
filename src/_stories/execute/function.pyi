@@ -5,7 +5,6 @@ from typing import overload
 from typing import Tuple
 from typing import Union
 
-from _stories.context import Context
 from _stories.contract import NullContract
 from _stories.contract import SpecContract
 from _stories.failures import DisabledNullExecProtocol
@@ -20,18 +19,16 @@ from _stories.returned import Skip
 from _stories.returned import Success
 from _stories.run import Call
 from _stories.run import Run
-from _stories.summary import FailureSummary
-from _stories.summary import SuccessSummary
 @overload
 def execute(
     runner: Call,
-    ctx: Context,
+    ctx: object,
     history: History,
     methods: List[
         Tuple[
             Union[
                 BeginningOfStory,
-                Callable[[Context], Union[Result, Success, Failure, Skip]],
+                Callable[[object], Union[Result, Success, Failure, Skip]],
                 EndOfStory,
             ],
             Union[NullContract, SpecContract],
@@ -42,17 +39,17 @@ def execute(
 @overload
 def execute(
     runner: Run,
-    ctx: Context,
+    ctx: object,
     history: History,
     methods: List[
         Tuple[
             Union[
                 BeginningOfStory,
-                Callable[[Context], Union[Result, Success, Failure, Skip]],
+                Callable[[object], Union[Result, Success, Failure, Skip]],
                 EndOfStory,
             ],
             Union[NullContract, SpecContract],
             Union[NullExecProtocol, DisabledNullExecProtocol, NotNullExecProtocol],
         ],
     ],
-) -> Union[SuccessSummary, FailureSummary]: ...
+) -> object: ...

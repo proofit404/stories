@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import pytest
 
 from helpers import make_collector
@@ -27,7 +28,7 @@ from stories.exceptions import ContextContractError
 #                  R.i
 
 
-def test_assign_existed_variables(m):
+def test_assign_existed_variables(r, m):
     """We can not write a variable with the same name to the context twice."""
 
     class T(m.ParamChildWithNull, m.StringMethod):
@@ -58,11 +59,11 @@ Context:
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        T().x(foo=1, bar=[2])
+        r(T().x)(foo=1, bar=[2])
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        T().x.run(foo=1, bar=[2])
+        r(T().x.run)(foo=1, bar=[2])
     assert str(exc_info.value) == expected
 
     # Substory inheritance.
@@ -85,11 +86,11 @@ Context:
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        Q().a()
+        r(Q().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        Q().a.run()
+        r(Q().a.run)()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -112,15 +113,15 @@ Context:
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        J().a()
+        r(J().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        J().a.run()
+        r(J().a.run)()
     assert str(exc_info.value) == expected
 
 
-def test_context_variables_normalization(m):
+def test_context_variables_normalization(r, m):
     """We apply normalization to the context variables, if story defines
     context contract.
 
@@ -141,41 +142,41 @@ def test_context_variables_normalization(m):
     # Simple.
 
     getter = make_collector()
-    T().x()
+    r(T().x)()
     assert getter().foo == 1
     assert getter().bar == [2]
 
     getter = make_collector()
-    T().x.run()
+    r(T().x.run)()
     assert getter().foo == 1
     assert getter().bar == [2]
 
     # Substory inheritance.
 
     getter = make_collector()
-    Q().a()
+    r(Q().a)()
     assert getter().foo == 1
     assert getter().bar == [2]
 
     getter = make_collector()
-    Q().a.run()
+    r(Q().a.run)()
     assert getter().foo == 1
     assert getter().bar == [2]
 
     # Substory DI.
 
     getter = make_collector()
-    J().a()
+    r(J().a)()
     assert getter().foo == 1
     assert getter().bar == [2]
 
     getter = make_collector()
-    J().a.run()
+    r(J().a.run)()
     assert getter().foo == 1
     assert getter().bar == [2]
 
 
-def test_context_variables_normalization_conflict(m):
+def test_context_variables_normalization_conflict(r, m):
     """More than one substory can declare an argument with the same name.
 
     This means validators of both substories should return the same
@@ -226,11 +227,11 @@ Contract:
     )
 
     with pytest.raises(ContextContractError) as exc_info:
-        Q().a()
+        r(Q().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        Q().a.run()
+        r(Q().a.run)()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -258,15 +259,15 @@ Contract:
     )
 
     with pytest.raises(ContextContractError) as exc_info:
-        J().a()
+        r(J().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        J().a.run()
+        r(J().a.run)()
     assert str(exc_info.value) == expected
 
 
-def test_story_arguments_normalization(m):
+def test_story_arguments_normalization(r, m):
     """We apply normalization to the story arguments, if story defines context
     contract.
 
@@ -287,41 +288,41 @@ def test_story_arguments_normalization(m):
     # Simple.
 
     getter = make_collector()
-    T().x(foo="1", bar=["2"])
+    r(T().x)(foo="1", bar=["2"])
     assert getter().foo == 1
     assert getter().bar == [2]
 
     getter = make_collector()
-    T().x.run(foo="1", bar=["2"])
+    r(T().x.run)(foo="1", bar=["2"])
     assert getter().foo == 1
     assert getter().bar == [2]
 
     # Substory inheritance.
 
     getter = make_collector()
-    Q().a(ham="1", eggs="2")
+    r(Q().a)(ham="1", eggs="2")
     assert getter().ham == 1
     assert getter().eggs == 2
 
     getter = make_collector()
-    Q().a.run(ham="1", eggs="2")
+    r(Q().a.run)(ham="1", eggs="2")
     assert getter().ham == 1
     assert getter().eggs == 2
 
     # Substory DI.
 
     getter = make_collector()
-    J().a(ham="1", eggs="2")
+    r(J().a)(ham="1", eggs="2")
     assert getter().ham == 1
     assert getter().eggs == 2
 
     getter = make_collector()
-    J().a.run(ham="1", eggs="2")
+    r(J().a.run)(ham="1", eggs="2")
     assert getter().ham == 1
     assert getter().eggs == 2
 
 
-def test_story_arguments_normalization_many_levels(m):
+def test_story_arguments_normalization_many_levels(r, m):
     """We apply normalization to the story arguments on any levels of story
     composition."""
 
@@ -345,21 +346,21 @@ def test_story_arguments_normalization_many_levels(m):
     # Substory inheritance.
 
     getter = make_collector()
-    Q().a(ham="1", eggs="2", foo="3", bar=["4"])
+    r(Q().a)(ham="1", eggs="2", foo="3", bar=["4"])
     assert getter().ham == 1
     assert getter().eggs == 2
     assert getter().foo == 3
     assert getter().bar == [4]
 
     getter = make_collector()
-    Q().a.run(ham="1", eggs="2", foo="3", bar=["4"])
+    r(Q().a.run)(ham="1", eggs="2", foo="3", bar=["4"])
     assert getter().ham == 1
     assert getter().eggs == 2
     assert getter().foo == 3
     assert getter().bar == [4]
 
     getter = make_collector()
-    R().i(fizz="0", ham="1", eggs="2", foo="3", bar=["4"])
+    r(R().i)(fizz="0", ham="1", eggs="2", foo="3", bar=["4"])
     assert getter().fizz == 0
     assert getter().ham == 1
     assert getter().eggs == 2
@@ -367,7 +368,7 @@ def test_story_arguments_normalization_many_levels(m):
     assert getter().bar == [4]
 
     getter = make_collector()
-    R().i.run(fizz="0", ham="1", eggs="2", foo="3", bar=["4"])
+    r(R().i.run)(fizz="0", ham="1", eggs="2", foo="3", bar=["4"])
     assert getter().fizz == 0
     assert getter().ham == 1
     assert getter().eggs == 2
@@ -377,21 +378,21 @@ def test_story_arguments_normalization_many_levels(m):
     # Substory DI.
 
     getter = make_collector()
-    Q().a(ham="1", eggs="2", foo="3", bar=["4"])
+    r(Q().a)(ham="1", eggs="2", foo="3", bar=["4"])
     assert getter().ham == 1
     assert getter().eggs == 2
     assert getter().foo == 3
     assert getter().bar == [4]
 
     getter = make_collector()
-    Q().a.run(ham="1", eggs="2", foo="3", bar=["4"])
+    r(Q().a.run)(ham="1", eggs="2", foo="3", bar=["4"])
     assert getter().ham == 1
     assert getter().eggs == 2
     assert getter().foo == 3
     assert getter().bar == [4]
 
     getter = make_collector()
-    F().i(fizz="0", ham="1", eggs="2", foo="3", bar=["4"])
+    r(F().i)(fizz="0", ham="1", eggs="2", foo="3", bar=["4"])
     assert getter().fizz == 0
     assert getter().ham == 1
     assert getter().eggs == 2
@@ -399,7 +400,7 @@ def test_story_arguments_normalization_many_levels(m):
     assert getter().bar == [4]
 
     getter = make_collector()
-    F().i.run(fizz="0", ham="1", eggs="2", foo="3", bar=["4"])
+    r(F().i.run)(fizz="0", ham="1", eggs="2", foo="3", bar=["4"])
     assert getter().fizz == 0
     assert getter().ham == 1
     assert getter().eggs == 2
@@ -407,7 +408,7 @@ def test_story_arguments_normalization_many_levels(m):
     assert getter().bar == [4]
 
 
-def test_story_arguments_normalization_conflict(m):
+def test_story_arguments_normalization_conflict(r, m):
     """Story and substory can have an argument with the same name.
 
     They both will define validators for this argument.  If
@@ -450,11 +451,11 @@ Contract:
     )
 
     with pytest.raises(ContextContractError) as exc_info:
-        Q().a(foo="1", bar=["2"])
+        r(Q().a)(foo="1", bar=["2"])
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        Q().a.run(foo="1", bar=["2"])
+        r(Q().a.run)(foo="1", bar=["2"])
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -482,15 +483,15 @@ Contract:
     )
 
     with pytest.raises(ContextContractError) as exc_info:
-        J().a(foo="1", bar=["2"])
+        r(J().a)(foo="1", bar=["2"])
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        J().a.run(foo="1", bar=["2"])
+        r(J().a.run)(foo="1", bar=["2"])
     assert str(exc_info.value) == expected
 
 
-def test_context_variables_validation(m):
+def test_context_variables_validation(r, m):
     """We apply validators to the context variables, if story defines context
     contract."""
 
@@ -531,11 +532,11 @@ Contract:
     )
 
     with pytest.raises(ContextContractError) as exc_info:
-        T().x()
+        r(T().x)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        T().x.run()
+        r(T().x.run)()
     assert str(exc_info.value) == expected
 
     # Substory inheritance.
@@ -565,11 +566,11 @@ Contract:
     )
 
     with pytest.raises(ContextContractError) as exc_info:
-        Q().a()
+        r(Q().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        Q().a.run()
+        r(Q().a.run)()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -599,15 +600,15 @@ Contract:
     )
 
     with pytest.raises(ContextContractError) as exc_info:
-        J().a()
+        r(J().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        J().a.run()
+        r(J().a.run)()
     assert str(exc_info.value) == expected
 
 
-def test_story_arguments_validation(m):
+def test_story_arguments_validation(r, m):
     """We apply validators to the story arguments, if story defines context
     contract.
 
@@ -654,11 +655,11 @@ Contract:
     )
 
     with pytest.raises(ContextContractError) as exc_info:
-        T().x(foo="<boom>", bar=["<boom>"])
+        r(T().x)(foo="<boom>", bar=["<boom>"])
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        T().x.run(foo="<boom>", bar=["<boom>"])
+        r(T().x.run)(foo="<boom>", bar=["<boom>"])
     assert str(exc_info.value) == expected
 
     # Substory inheritance.
@@ -688,11 +689,11 @@ Contract:
     )
 
     with pytest.raises(ContextContractError) as exc_info:
-        Q().a(ham="<boom>", eggs="<boom>")
+        r(Q().a)(ham="<boom>", eggs="<boom>")
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        Q().a.run(ham="<boom>", eggs="<boom>")
+        r(Q().a.run)(ham="<boom>", eggs="<boom>")
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -722,15 +723,15 @@ Contract:
     )
 
     with pytest.raises(ContextContractError) as exc_info:
-        J().a(ham="<boom>", eggs="<boom>")
+        r(J().a)(ham="<boom>", eggs="<boom>")
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        J().a.run(ham="<boom>", eggs="<boom>")
+        r(J().a.run)(ham="<boom>", eggs="<boom>")
     assert str(exc_info.value) == expected
 
 
-def test_story_arguments_validation_many_levels(m):
+def test_story_arguments_validation_many_levels(r, m):
     """We apply contract validation to the story arguments on any levels of
     story composition."""
 
@@ -777,11 +778,11 @@ Contract:
     )
 
     with pytest.raises(ContextContractError) as exc_info:
-        R().i(foo="<boom>", bar=[1])
+        r(R().i)(foo="<boom>", bar=[1])
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        R().i.run(foo="<boom>", bar=[1])
+        r(R().i.run)(foo="<boom>", bar=[1])
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -806,15 +807,15 @@ Contract:
     )
 
     with pytest.raises(ContextContractError) as exc_info:
-        F().i(foo="<boom>", bar=[1])
+        r(F().i)(foo="<boom>", bar=[1])
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        F().i.run(foo="<boom>", bar=[1])
+        r(F().i.run)(foo="<boom>", bar=[1])
     assert str(exc_info.value) == expected
 
 
-def test_composition_contract_variable_conflict(m):
+def test_composition_contract_variable_conflict(r, m):
     """Story and substory contracts can not declare the same variable twice."""
 
     class T(m.Child, m.NormalMethod):
@@ -864,7 +865,7 @@ Use variables with different names.
     assert str(exc_info.value) == expected
 
 
-def test_composition_contract_variable_conflict_many_levels(m):
+def test_composition_contract_variable_conflict_many_levels(r, m):
     """Story and substory contracts can not declare the same variable twice."""
 
     class T(m.Child, m.NormalMethod):
@@ -921,7 +922,7 @@ Use variables with different names.
     assert str(exc_info.value) == expected
 
 
-def test_composition_contract_variable_conflict_sequential(m):
+def test_composition_contract_variable_conflict_sequential(r, m):
     """Story and substory contracts can not declare the same variable twice."""
 
     class T(m.Child, m.NormalMethod):
@@ -975,7 +976,7 @@ Use variables with different names.
     assert str(exc_info.value) == expected
 
 
-def test_composition_contract_variable_conflict_sequential_reuse(m):
+def test_composition_contract_variable_conflict_sequential_reuse(r, m):
     """Story and substory can reuse the same contract.
 
     Substory can have more arguments than story.  Another sequential
@@ -1001,20 +1002,20 @@ def test_composition_contract_variable_conflict_sequential_reuse(m):
 
     # Substory inheritance.
 
-    R().i()
+    r(R().i)()
 
-    result = R().i.run()
+    result = r(R().i.run)()
     assert result.value is None
 
     # Substory DI.
 
-    F().i()
+    r(F().i)()
 
-    result = F().i.run()
+    result = r(F().i.run)()
     assert result.value is None
 
 
-def test_composition_incompatible_contract_types(m):
+def test_composition_incompatible_contract_types(r, m):
     """Deny to use different types in the story composition."""
 
     class T(m.Child, m.NormalMethod):
@@ -1068,7 +1069,7 @@ Substory context contract: {contract_class_repr}
     assert str(exc_info.value) == expected
 
 
-def test_composition_use_same_contract_instance(m):
+def test_composition_use_same_contract_instance(r, m):
     """The same contract class or instance can be used in story and a substory.
 
     This should not lead to the incompatible contract composition error.
@@ -1095,7 +1096,7 @@ def test_composition_use_same_contract_instance(m):
     J().a
 
 
-def test_unknown_context_variable(m):
+def test_unknown_context_variable(r, m):
     """Step can't use Success argument name which was not specified in the
     contract."""
 
@@ -1127,11 +1128,11 @@ Contract:
     )
 
     with pytest.raises(ContextContractError) as exc_info:
-        T().x()
+        r(T().x)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        T().x.run()
+        r(T().x.run)()
     assert str(exc_info.value) == expected
 
     # Substory inheritance.
@@ -1152,11 +1153,11 @@ Contract:
     )
 
     with pytest.raises(ContextContractError) as exc_info:
-        Q().a()
+        r(Q().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        Q().a.run()
+        r(Q().a.run)()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -1177,15 +1178,15 @@ Contract:
     )
 
     with pytest.raises(ContextContractError) as exc_info:
-        J().a()
+        r(J().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        J().a.run()
+        r(J().a.run)()
     assert str(exc_info.value) == expected
 
 
-def test_unknown_story_arguments_with_null(m):
+def test_unknown_story_arguments_with_null(r, m):
     """Allow to pass known only story and substory arguments to the call."""
 
     class T(m.ParamChildWithNull, m.NormalMethod):
@@ -1216,11 +1217,11 @@ Contract:
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        T().x(baz=1, fox=2)
+        r(T().x)(baz=1, fox=2)
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        T().x.run(baz=1, fox=2)
+        r(T().x.run)(baz=1, fox=2)
     assert str(exc_info.value) == expected
 
     # Substory inheritance.
@@ -1236,11 +1237,11 @@ Contract:
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        Q().a(beans=1, fox=2)
+        r(Q().a)(beans=1, fox=2)
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        Q().a.run(beans=1, fox=2)
+        r(Q().a.run)(beans=1, fox=2)
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -1256,15 +1257,15 @@ Contract:
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        J().a(beans=1, fox=2)
+        r(J().a)(beans=1, fox=2)
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        J().a.run(beans=1, fox=2)
+        r(J().a.run)(beans=1, fox=2)
     assert str(exc_info.value) == expected
 
 
-def test_unknown_story_arguments(m):
+def test_unknown_story_arguments(r, m):
     """Allow to pass known only story and substory arguments to the call."""
 
     class T(m.ParamChild, m.NormalMethod):
@@ -1296,11 +1297,11 @@ Contract:
     )
 
     with pytest.raises(ContextContractError) as exc_info:
-        T().x(baz=1, fox=2)
+        r(T().x)(baz=1, fox=2)
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        T().x.run(baz=1, fox=2)
+        r(T().x.run)(baz=1, fox=2)
     assert str(exc_info.value) == expected
 
     # Substory inheritance.
@@ -1322,11 +1323,11 @@ Contract:
     )
 
     with pytest.raises(ContextContractError) as exc_info:
-        Q().a(beans=1, fox=2)
+        r(Q().a)(beans=1, fox=2)
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        Q().a.run(beans=1, fox=2)
+        r(Q().a.run)(beans=1, fox=2)
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -1348,15 +1349,15 @@ Contract:
     )
 
     with pytest.raises(ContextContractError) as exc_info:
-        J().a(beans=1, fox=2)
+        r(J().a)(beans=1, fox=2)
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        J().a.run(beans=1, fox=2)
+        r(J().a.run)(beans=1, fox=2)
     assert str(exc_info.value) == expected
 
 
-def test_unknown_story_arguments_with_empty_with_null(m):
+def test_unknown_story_arguments_with_empty_with_null(r, m):
     """Deny any arguments in the call, if story and substory has no arguments
     specified."""
 
@@ -1381,11 +1382,11 @@ Contract()
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        T().x(baz=1, fox=2)
+        r(T().x)(baz=1, fox=2)
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        T().x.run(baz=1, fox=2)
+        r(T().x.run)(baz=1, fox=2)
     assert str(exc_info.value) == expected
 
     # Substory inheritance.
@@ -1399,11 +1400,11 @@ Contract()
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        Q().a(beans=1, fox=2)
+        r(Q().a)(beans=1, fox=2)
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        Q().a.run(beans=1, fox=2)
+        r(Q().a.run)(beans=1, fox=2)
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -1417,15 +1418,15 @@ Contract()
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        J().a(beans=1, fox=2)
+        r(J().a)(beans=1, fox=2)
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        J().a.run(beans=1, fox=2)
+        r(J().a.run)(beans=1, fox=2)
     assert str(exc_info.value) == expected
 
 
-def test_unknown_story_arguments_with_empty(m):
+def test_unknown_story_arguments_with_empty(r, m):
     """Deny any arguments in the call, if story and substory has no arguments
     specified."""
 
@@ -1455,11 +1456,11 @@ Contract:
     )
 
     with pytest.raises(ContextContractError) as exc_info:
-        T().x(baz=1, fox=2)
+        r(T().x)(baz=1, fox=2)
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        T().x.run(baz=1, fox=2)
+        r(T().x.run)(baz=1, fox=2)
     assert str(exc_info.value) == expected
 
     # Substory inheritance.
@@ -1481,11 +1482,11 @@ Contract:
     )
 
     with pytest.raises(ContextContractError) as exc_info:
-        Q().a(beans=1, fox=2)
+        r(Q().a)(beans=1, fox=2)
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        Q().a.run(beans=1, fox=2)
+        r(Q().a.run)(beans=1, fox=2)
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -1507,15 +1508,15 @@ Contract:
     )
 
     with pytest.raises(ContextContractError) as exc_info:
-        J().a(beans=1, fox=2)
+        r(J().a)(beans=1, fox=2)
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        J().a.run(beans=1, fox=2)
+        r(J().a.run)(beans=1, fox=2)
     assert str(exc_info.value) == expected
 
 
-def test_require_story_arguments_present_in_context(m):
+def test_require_story_arguments_present_in_context(r, m):
     """Check story and substory arguments are present in the context."""
 
     class T(m.ParamChildWithNull, m.NormalMethod):
@@ -1543,11 +1544,11 @@ Context()
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        T().x()  # FIXME: This should be arguments error (not substory call error).
+        r(T().x)()  # FIXME: This should be arguments error (not substory call error).
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        T().x.run()
+        r(T().x.run)()
     assert str(exc_info.value) == expected
 
     # Substory inheritance.
@@ -1567,11 +1568,11 @@ Context()
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        Q().a()
+        r(Q().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        Q().a.run()
+        r(Q().a.run)()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -1591,15 +1592,15 @@ Context()
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        J().a()
+        r(J().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        J().a.run()
+        r(J().a.run)()
     assert str(exc_info.value) == expected
 
 
-def test_parent_steps_set_story_arguments(m):
+def test_parent_steps_set_story_arguments(r, m):
     """Steps of parent stories should be able to set child stories arguments
     with `Success` marker keyword arguments."""
 
@@ -1627,49 +1628,49 @@ def test_parent_steps_set_story_arguments(m):
     # Substory inheritance.
 
     getter = make_collector()
-    Q().a()
+    r(Q().a)()
     assert getter().foo == 1
     assert getter().bar == [2]
 
     getter = make_collector()
-    Q().a.run()
+    r(Q().a.run)()
     assert getter().foo == 1
     assert getter().bar == [2]
 
     getter = make_collector()
-    R().i()
+    r(R().i)()
     assert getter().foo == 1
     assert getter().bar == [2]
 
     getter = make_collector()
-    R().i.run()
+    r(R().i.run)()
     assert getter().foo == 1
     assert getter().bar == [2]
 
     # Substory DI.
 
     getter = make_collector()
-    J().a()
+    r(J().a)()
     assert getter().foo == 1
     assert getter().bar == [2]
 
     getter = make_collector()
-    J().a.run()
+    r(J().a.run)()
     assert getter().foo == 1
     assert getter().bar == [2]
 
     getter = make_collector()
-    F().i()
+    r(F().i)()
     assert getter().foo == 1
     assert getter().bar == [2]
 
     getter = make_collector()
-    F().i.run()
+    r(F().i.run)()
     assert getter().foo == 1
     assert getter().bar == [2]
 
 
-def test_sequential_story_steps_set_story_arguments(m):
+def test_sequential_story_steps_set_story_arguments(r, m):
     """There are a few sequential substories with one common parent story.
 
     One substory should be able to set variable to provide an argument
@@ -1693,29 +1694,29 @@ def test_sequential_story_steps_set_story_arguments(m):
     # Substory inheritance.
 
     getter = make_collector()
-    Q().a()
+    r(Q().a)()
     assert getter().foo == "1"
     assert getter().bar == ["2"]
 
     getter = make_collector()
-    Q().a.run()
+    r(Q().a.run)()
     assert getter().foo == "1"
     assert getter().bar == ["2"]
 
     # Substory DI.
 
     getter = make_collector()
-    J().a()
+    r(J().a)()
     assert getter().foo == "1"
     assert getter().bar == ["2"]
 
     getter = make_collector()
-    J().a.run()
+    r(J().a.run)()
     assert getter().foo == "1"
     assert getter().bar == ["2"]
 
 
-def test_arguments_should_be_declared_in_contract(m):
+def test_arguments_should_be_declared_in_contract(r, m):
     """We should require all story arguments to be declared in the context
     contract."""
 
@@ -1775,7 +1776,7 @@ Story arguments: foo, bar, baz
 # Aliases.
 
 
-def test_story_variable_alias_normalization_store_same_object(m):
+def test_story_variable_alias_normalization_store_same_object(r, m):
     """When story step sets a set of variables some of them are aliases of each
     other.
 
@@ -1789,7 +1790,7 @@ def test_story_variable_alias_normalization_store_same_object(m):
     # Simple.
 
     getter = make_collector()
-    T().x()
+    r(T().x)()
     assert getter().foo is getter().bar
     assert getter().foo == {"key": "1"}
     assert getter().bar == {"key": "1"}
@@ -1798,7 +1799,7 @@ def test_story_variable_alias_normalization_store_same_object(m):
     assert getter().baz == {"key": 1}
 
     getter = make_collector()
-    T().x.run()
+    r(T().x.run)()
     assert getter().foo is getter().bar
     assert getter().foo == {"key": "1"}
     assert getter().bar == {"key": "1"}
@@ -1811,7 +1812,7 @@ def test_story_variable_alias_normalization_store_same_object(m):
     # FIXME: Substory DI.
 
 
-def test_story_argument_alias_normalization_store_same_object(m):
+def test_story_argument_alias_normalization_store_same_object(r, m):
     """When story has a set of arguments some of them are aliases of each
     other.
 
@@ -1827,7 +1828,7 @@ def test_story_argument_alias_normalization_store_same_object(m):
     value = {"key": "1"}
 
     getter = make_collector()
-    T().x(foo=value, bar=value, baz=value)
+    r(T().x)(foo=value, bar=value, baz=value)
     assert getter().foo is getter().bar
     assert getter().foo == {"key": "1"}
     assert getter().bar == {"key": "1"}
@@ -1836,7 +1837,7 @@ def test_story_argument_alias_normalization_store_same_object(m):
     assert getter().baz == {"key": 1}
 
     getter = make_collector()
-    T().x.run(foo=value, bar=value, baz=value)
+    r(T().x.run)(foo=value, bar=value, baz=value)
     assert getter().foo is getter().bar
     assert getter().foo == {"key": "1"}
     assert getter().bar == {"key": "1"}
@@ -1852,7 +1853,7 @@ def test_story_argument_alias_normalization_store_same_object(m):
 # Representation.
 
 
-def test_story_contract_representation_with_spec(m):
+def test_story_contract_representation_with_spec(r, m):
     """Show collected story composition contract as mounted story attribute."""
 
     class T(m.Child, m.StringMethod):
@@ -1950,7 +1951,7 @@ Contract:
     assert repr(F().i.contract) == expected
 
 
-def test_story_contract_representation_with_spec_with_args(m):
+def test_story_contract_representation_with_spec_with_args(r, m):
     """Show collected story composition contract as mounted story attribute.
 
     We show each story arguments.
@@ -2051,7 +2052,7 @@ Contract:
     assert repr(F().i.contract) == expected
 
 
-def test_story_contract_representation_with_spec_with_args_conflict(m):
+def test_story_contract_representation_with_spec_with_args_conflict(r, m):
     """Show collected story composition contract as mounted story attribute.
 
     We show each story arguments in multiline mode if the same name was

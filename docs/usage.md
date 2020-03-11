@@ -10,11 +10,20 @@ method.
 
 ### Result
 
-```pycon
+```pycon tab="sync"
 
 >>> from django_project.services import Subscription
 
 >>> Subscription().buy(category_id=1, price_id=1, profile_id=1)
+<Category: Category object (1)>
+
+```
+
+```pycon tab="async"
+
+>>> from django_project.services import Subscription
+
+>>> await Subscription().buy(category_id=1, price_id=1, profile_id=1)  # doctest: +SKIP
 <Category: Category object (1)>
 
 ```
@@ -24,9 +33,18 @@ The story was executed successfully. It returns an object we put into
 
 ### Failure
 
-```pycon
+```pycon tab="sync"
 
 >>> Subscription().buy(category_id=2, price_id=2, profile_id=1)
+Traceback (most recent call last):
+  ...
+_stories.exceptions.FailureError
+
+```
+
+```pycon tab="async"
+
+>>> await Subscription().buy(category_id=2, price_id=2, profile_id=1)  # doctest: +SKIP
 Traceback (most recent call last):
   ...
 _stories.exceptions.FailureError
@@ -47,11 +65,25 @@ summary of the business object execution.
 
 ### Result
 
-```pycon
+```pycon tab="sync"
 
 >>> from django_project.services import ShowCategory
 
 >>> result = ShowCategory().show.run(category_id=1, profile_id=1)
+
+>>> result.is_success
+True
+
+>>> result.value
+<Category: Category object (1)>
+
+```
+
+```pycon tab="async"
+
+>>> from django_project.services import ShowCategory
+
+>>> result = await ShowCategory().show.run(category_id=1, profile_id=1)  # doctest: +SKIP
 
 >>> result.is_success
 True
@@ -66,7 +98,7 @@ available in the `value` attribute.
 
 ### Failure
 
-```pycon
+```pycon tab="sync"
 
 >>> result = ShowCategory().show.run(category_id=2, profile_id=1)
 
@@ -90,6 +122,37 @@ Context:
   subscription: <Subscription: Subscription object (7)>  # Set by ShowCategory.find_subscription
 
 >>> result.ctx.subscription.is_expired()
+True
+
+>>> result.ctx.subscription.created
+datetime.date(2019, 1, 1)
+
+```
+
+```pycon tab="async"
+
+>>> result = await ShowCategory().show.run(category_id=2, profile_id=1)  # doctest: +SKIP
+
+>>> result.is_failure
+True
+
+>>> result.failed_on("check_expiration")
+True
+
+>>> result.failed_because(ShowCategory().show.failures.forbidden)
+True
+
+>>> result.ctx
+ShowCategory.show
+  find_subscription
+  check_expiration (failed: <Errors.forbidden: 1>)
+<BLANKLINE>
+Context:
+  category_id: 2                                         # Story argument
+  profile_id: 1                                          # Story argument
+  subscription: <Subscription: Subscription object (7)>  # Set by ShowCategory.find_subscription
+
+>>> await result.ctx.subscription.is_expired()  # doctest: +SKIP
 True
 
 >>> result.ctx.subscription.created

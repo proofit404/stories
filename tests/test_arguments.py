@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import pytest
 
 from stories import arguments
@@ -14,8 +15,8 @@ def test_deny_empty_arguments():
         class Action(object):
             @story
             @arguments()
-            def do(I):
-                pass
+            def do(I):  # pragma: no cover
+                I.one
 
     assert str(exc_info.value) == "Story arguments can not be an empty list"
 
@@ -29,7 +30,7 @@ def test_deny_non_string_arguments():
         class Action(object):
             @story
             @arguments
-            def do(I):
-                pass
+            def do(I):  # pragma: no cover
+                I.one
 
     assert str(exc_info.value) == "Story arguments can only be defined with string type"

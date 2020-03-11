@@ -1,9 +1,11 @@
+# -*- coding: utf-8 -*-
 # type: ignore
 from debug_toolbar.panels import Panel
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy as __
 
 import _stories.context
+import _stories.mounted
 
 
 # FIXME: Test me.
@@ -11,13 +13,14 @@ import _stories.context
 # FIXME: Type me.
 
 
-origin_context_init = _stories.context.Context.__init__
+origin_make_context = _stories.context.make_context
 
 
 def track_context(storage):
-    def wrapper(ctx):
-        origin_context_init(ctx)
+    def wrapper(contract, kwargs, history):
+        ctx, ns, lines = origin_make_context(contract, kwargs, history)
         storage.append(ctx)
+        return ctx, ns, lines
 
     return wrapper
 
@@ -51,10 +54,10 @@ class StoriesPanel(Panel):
         self.storage = []
 
     def enable_instrumentation(self):
-        _stories.context.Context.__init__ = track_context(self.storage)
+        _stories.mounted.make_context = track_context(self.storage)
 
     def disable_instrumentation(self):
-        _stories.context.Context.__init__ = origin_context_init
+        _stories.mounted.make_context = origin_make_context
 
     def generate_stats(self, request, response):
-        self.record_stats({"stories": self.storage})
+        self.record_stats({"stories": self.storage})  # FIXME: Use pretty print.

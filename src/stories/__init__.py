@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 stories
 -------
@@ -12,7 +13,7 @@ from _stories.returned import Failure
 from _stories.returned import Result
 from _stories.returned import Skip
 from _stories.returned import Success
-from _stories.story import Story as story
+from _stories.story import story
 
 
 __all__ = ["story", "arguments", "Result", "Success", "Failure", "Skip"]

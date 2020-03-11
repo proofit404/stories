@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from enum import auto
 from enum import Enum
 from inspect import getfullargspec

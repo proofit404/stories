@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+
+
 class StoryError(Exception):
     pass
 
@@ -7,13 +10,16 @@ class StoryDefinitionError(StoryError):
 
 
 class FailureError(StoryError):
-    def __init__(self, reason):
-        self.__reason = reason
-        super(FailureError, self).__init__()
+    pass
 
-    def __repr__(self):
-        reason = repr(self.__reason) if self.__reason else ""
-        return "FailureError(" + reason + ")"
+
+def make_failure_error(reason):
+    reason_representation = repr(reason) if reason else ""
+
+    def repr_method(self):
+        return "FailureError(" + reason_representation + ")"
+
+    return type("FailureError", (FailureError,), {"__repr__": repr_method})()
 
 
 class FailureProtocolError(StoryError):

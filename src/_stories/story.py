@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from _stories.argument import get_arguments
 from _stories.collect import collect_story
 from _stories.failures import check_data_type
@@ -6,46 +7,56 @@ from _stories.mounted import MountedStory
 from _stories.wrap import wrap_story
 
 
-class Story(object):
-    def __init__(self, f):
-        self.name = f.__name__
-        self.arguments = get_arguments(f)
-        self.collected = collect_story(f)
-        self.contract(None)
-        self.failures(None)
+def story(f):
+    name = f.__name__
+    arguments = get_arguments(f)
+    collected = collect_story(f)
+    # Can't use non local keyword because of Python 2.
+    this = {"contract": None, "failures": None}
 
-    def __get__(self, obj, cls):
+    def contract_method(contract):
+        # FIXME: Raise error on unsupported types.
+        this["contract"] = contract
+        return contract
+
+    def failures_method(failures):
+        check_data_type(failures)
+        this["failures"] = failures
+        return failures
+
+    def get_method(self, obj, cls):
         __tracebackhide__ = True
         if obj is None:
             return ClassMountedStory(
-                cls, self.name, self.collected, self.contract, self.failures
+                cls, name, collected, contract_method, failures_method
             )
         else:
-            methods, contract, failures = wrap_story(
-                self.arguments,
-                self.collected,
+            methods, contract, failures, executor = wrap_story(
+                arguments,
+                collected,
                 cls.__name__,
-                self.name,
+                name,
                 obj,
-                self.__contract,
-                self.__failures,
+                this["contract"],
+                this["failures"],
             )
             return MountedStory(
                 obj,
                 cls.__name__,
-                self.name,
-                self.arguments,
+                name,
+                arguments,
                 methods,
                 contract,
                 failures,
+                executor,
             )
 
-    def contract(self, contract):
-        # FIXME: Raise error on unsupported types.
-        self.__contract = contract
-        return contract
-
-    def failures(self, failures):
-        check_data_type(failures)
-        self.__failures = failures
-        return failures
+    return type(
+        "Story",
+        (object,),
+        {
+            "__get__": get_method,
+            "contract": staticmethod(contract_method),
+            "failures": staticmethod(failures_method),
+        },
+    )()
