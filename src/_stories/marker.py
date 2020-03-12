@@ -24,3 +24,16 @@ class BeginningOfStory(object):
 
 class EndOfStory(object):
     pass
+
+
+class Parallel(object):
+    def __init__(self, method_names):
+        self.method_names = method_names
+        self.methods = []
+
+    @property
+    def __name__(self):
+        return "parallel({})".format(", ".join(self.method_names))
+
+    # TODO: Figure out why we need this
+    __self__ = object

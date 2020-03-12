@@ -7,6 +7,7 @@ from stories import Skip
 from stories import story
 from stories import Success
 
+
 # Mixins.
 
 
@@ -270,3 +271,59 @@ class AttributeAccessError(object):
 
     async def one(self, ctx):
         ctx.x
+
+
+class ParallelStory(object):
+    @story
+    def x(I):
+        with I.parallel as p:
+            p.one
+            p.two
+
+    async def one(self, ctx):
+        return Success()
+
+    async def two(self, ctx):
+        return Success()
+
+
+class ParallelStoryWithNestedStory(object):
+    @story
+    def x(I):
+        with I.parallel as p:
+            p.one
+            p.two
+            p.y
+
+    async def one(self, ctx):
+        return Success()
+
+    async def two(self, ctx):
+        return Success()
+
+    @story
+    def y(I):
+        I.one
+        I.two
+
+
+class ParallelStoryWithNestedParallelStory(object):
+    @story
+    def y(I):
+        I.one
+        with I.parallel as p:
+            p.one
+            p.two
+
+    @story
+    def x(I):
+        with I.parallel as p:
+            p.one
+            p.two
+            p.y
+
+    async def one(self, ctx):
+        return Success()
+
+    async def two(self, ctx):
+        return Success()

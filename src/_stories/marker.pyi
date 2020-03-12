@@ -1,3 +1,5 @@
+from typing import List
+
 from _stories.returned import Success
 
 class BeginningOfStory:
@@ -7,3 +9,8 @@ class BeginningOfStory:
     def set_parent(self, parent_name: str, same_object: bool) -> None: ...
 
 class EndOfStory: ...
+
+class Parallel(object):
+    def __init__(self, method_names: List[str]) -> None: ...
+    @property
+    def __name__(self) -> str: ...

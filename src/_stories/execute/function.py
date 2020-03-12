@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
+from concurrent.futures.thread import ThreadPoolExecutor
+
 from _stories.context import assign_namespace
+from _stories.execute.helpers import combine_parallel_outcomes
 from _stories.marker import BeginningOfStory
 from _stories.marker import EndOfStory
+from _stories.marker import Parallel
+from _stories.mounted import MountedStory
 from _stories.returned import Failure
 from _stories.returned import Result
 from _stories.returned import Skip
@@ -40,7 +45,10 @@ def execute(runner, ctx, ns, lines, history, methods):
         history.before_call(method.__name__)
 
         try:
-            result = method(ctx)
+            if method_type is Parallel:
+                result = run_steps_in_parallel(ctx, history, lines, method, ns, runner)
+            else:
+                result = method(ctx)
         except Exception as error:
             history.on_error(error.__class__.__name__)
             raise
@@ -76,3 +84,26 @@ def execute(runner, ctx, ns, lines, history, methods):
         assign_namespace(ns, lines, method, kwargs)
 
     return runner.finished()
+
+
+def run_steps_in_parallel(ctx, history, lines, method, ns, runner):
+    futures = []
+    with ThreadPoolExecutor() as pool:
+        for parallel_method in method.methods:
+            if type(method) is MountedStory:
+                futures.append(
+                    pool.submit(
+                        execute,
+                        runner,
+                        ctx,
+                        ns,
+                        lines,
+                        history,
+                        parallel_method.methods,
+                    )
+                )
+            else:
+                futures.append(pool.submit(parallel_method, ctx))
+    results = tuple(future.result() for future in futures)
+    result = combine_parallel_outcomes(results)
+    return result

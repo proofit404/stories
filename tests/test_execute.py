@@ -237,3 +237,32 @@ def test_inject_implementation(r, x):
     assert result.is_success
     assert not result.is_failure
     assert result.value == 2
+
+
+# Example of passing test
+# TODO: Figure out how to run this correctly so that Python 2.7 ignores it.
+
+# @pytest.mark.anyio
+# async def test_parallel_story(r, x):
+#     story = x.ParallelStory().x
+#     if x.__name__ == "examples.methods.coroutines":
+#         import _stories.mounted
+#         _stories.mounted.instrumented = False
+#         result = await story.run()
+#         _stories.mounted.instrumented = True
+#     else:
+#         result = r(story.run)()
+#     assert result.is_success
+
+# TODO: asyncify these tests
+
+# @pytest.mark.anyio
+# def test_parallel_story_with_nested_story(r, x):
+#     result = r(x.ParallelStoryWithNestedStory().x.run)()
+#     assert result.is_success
+#
+#
+# @pytest.mark.anyio
+# def test_parallel_story_with_nested_parallel_story(r, x):
+#     result = r(x.ParallelStoryWithNestedParallelStory().x.run)()
+#     assert result.is_success
