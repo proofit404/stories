@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# type: ignore
 from flask import render_template
 from flask_debugtoolbar.panels import DebugPanel
 
@@ -8,8 +7,6 @@ import _stories.mounted
 
 
 # FIXME: Test me.
-#
-# FIXME: Type me.
 
 
 origin_make_context = _stories.context.make_context

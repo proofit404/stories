@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# type: ignore
 import linecache
 import sys
 import textwrap
@@ -12,8 +11,6 @@ import _stories.mounted
 
 
 # FIXME: Test me.
-#
-# FIXME: Type me.
 
 
 origin_make_context = _stories.context.make_context
