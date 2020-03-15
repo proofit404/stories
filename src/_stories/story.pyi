@@ -1,3 +1,0 @@
-from typing import Callable
-
-def story(f: Callable) -> object: ...

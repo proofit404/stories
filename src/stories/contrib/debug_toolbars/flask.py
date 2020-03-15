@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# type: ignore
 """
 stories.contrib.debug_toolbars.flask
 ------------------------------------

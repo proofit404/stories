@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# type: ignore
 from debug_toolbar.panels import Panel
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy as __
@@ -9,8 +8,6 @@ import _stories.mounted
 
 
 # FIXME: Test me.
-#
-# FIXME: Type me.
 
 
 origin_make_context = _stories.context.make_context

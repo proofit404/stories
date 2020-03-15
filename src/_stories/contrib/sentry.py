@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# type: ignore
 from raven.breadcrumbs import libraryhook
 from raven.breadcrumbs import record
 
@@ -8,8 +7,6 @@ import _stories.mounted
 
 
 # FIXME: Test me.
-#
-# FIXME: Type me.
 
 
 origin_make_context = _stories.context.make_context
