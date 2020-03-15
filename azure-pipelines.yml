@@ -28,9 +28,6 @@ jobs:
         flake8:
           python.version: "3.8"
           tox.env: flake8
-        bandit:
-          python.version: "3.8"
-          tox.env: bandit
         xenon:
           python.version: "3.8"
           tox.env: xenon
