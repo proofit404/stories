@@ -9,7 +9,7 @@ per-file-ignores =
   *.py: A003
   # Ignore E800 until https://github.com/myint/eradicate/pull/19 is merged
   ./src/_stories/contract.py: E800
-  ./tests/*: S, E800
+  ./tests/*: S, T, E800
 accept-encodings = utf-8
 max-cognitive-complexity = 30
 max-expression-complexity = 10
