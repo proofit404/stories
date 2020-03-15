@@ -1,3 +1,9 @@
+# [0.13.0](https://github.com/dry-python/stories/compare/0.12.0...0.13.0) (2020-03-14)
+
+### Features
+
+- use assignment expression instead of Success keyword arguments ([9756571](https://github.com/dry-python/stories/commit/9756571237d56c52f8769c61f20f544ab389a211))
+
 # [0.12.0](https://github.com/dry-python/stories/compare/0.11.2...0.12.0) (2020-03-06)
 
 ### Features
