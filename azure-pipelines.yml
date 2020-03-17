@@ -59,7 +59,7 @@ jobs:
       - task: NodeTool@0
         inputs:
           versionSpec: "10.x"
-        condition: in(variables['tox.env'], 'remarklint')
+        condition: in(variables['tox.env'], 'remarklint', 'commitlint')
         displayName: Install NodeJS.
       - script: |
           git remote set-branches origin master
