@@ -1,3 +1,9 @@
+# [0.14.0](https://github.com/dry-python/stories/compare/0.13.0...0.14.0) (2020-03-21)
+
+### Features
+
+- support marshmallow v3 as a context contract definition ([a87c0c4](https://github.com/dry-python/stories/commit/a87c0c45cbb52e40fba872f57aa07a3550de6143))
+
 # [0.13.0](https://github.com/dry-python/stories/compare/0.12.0...0.13.0) (2020-03-14)
 
 ### Features
