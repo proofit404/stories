@@ -6,7 +6,7 @@ def arguments(*names):
     if not names:
         raise StoryDefinitionError("Story arguments can not be an empty list")
 
-    if any(name for name in names if not isinstance(name, str)):
+    if not all(isinstance(name, str) for name in names):
         message = "Story arguments can only be defined with string type"
         raise StoryDefinitionError(message)
 
