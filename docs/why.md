@@ -23,17 +23,18 @@ There is a lot of complexity in it.
 
 Let's consider following view function.
 
-```pycon
+```python
 
->>> from flask import Flask
->>> app = Flask('app')
+from flask import Flask
 
->>> @app.route('/subscriptions/')        # 85
-... def buy_subscription(page):          # 86
-...                                      # ...
-...      if props[-1].endswith('$'):     # 121
-...         props[-1] = props[-1][:-1]   # 122 <-
-...                                      # 123
+app = Flask('app')
+
+@app.route('/subscriptions/')        # 85
+def buy_subscription(page):          # 86
+                                     # ...
+     if props[-1].endswith('$'):     # 121
+        props[-1] = props[-1][:-1]   # 122 <-
+                                     # 123
 
 ```
 
@@ -74,19 +75,19 @@ This approach also has its own cost.
 
 Let's consider this view:
 
-```pycon
+```python
 
->>> from rest_framework import viewsets
->>> from django_project.filters import SubscriptionFilter
->>> from django_project.models import Subscription
->>> from django_project.permissions import CanSubscribe
->>> from django_project.serializers import SubscriptionSerializer
+from rest_framework import viewsets
+from django_project.filters import SubscriptionFilter
+from django_project.models import Subscription
+from django_project.permissions import CanSubscribe
+from django_project.serializers import SubscriptionSerializer
 
->>> class SubscriptionViewSet(viewsets.ModelViewSet):
-...     queryset = Subscription.objects.all()
-...     serializer_class = SubscriptionSerializer
-...     permission_classes = (CanSubscribe,)
-...     filter_class = SubscriptionFilter
+class SubscriptionViewSet(viewsets.ModelViewSet):
+    queryset = Subscription.objects.all()
+    serializer_class = SubscriptionSerializer
+    permission_classes = (CanSubscribe,)
+    filter_class = SubscriptionFilter
 
 ```
 
@@ -240,7 +241,7 @@ intended?
 
 Wouldn't it be nice to have a clear understandable state?
 
-```pycon
+```
 
 (Pdb) ctx
 Subscription.buy:

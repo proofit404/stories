@@ -3,15 +3,15 @@ from enum import auto
 from enum import Enum
 from inspect import getfullargspec
 
-from django_project.repositories import calculate_period
-from django_project.repositories import create_subscription
-from django_project.repositories import decrease_balance
-from django_project.repositories import load_category
-from django_project.repositories import load_price
-from django_project.repositories import load_profile
-from django_project.repositories import load_subscription
-from django_project.repositories import save_profile
-from django_project.repositories import send_notification
+from app.repositories import calculate_period
+from app.repositories import create_subscription
+from app.repositories import decrease_balance
+from app.repositories import load_category
+from app.repositories import load_price
+from app.repositories import load_profile
+from app.repositories import load_subscription
+from app.repositories import save_profile
+from app.repositories import send_notification
 from stories import arguments
 from stories import Failure
 from stories import Result
@@ -22,9 +22,7 @@ from stories import Success
 class MethodDefinitionsType(type):
     def __new__(cls, class_name, bases, namespace):
         def getattribute(self, name):
-            def method(self, ctx):
-                return Success()
-
+            method = type("method", (), {})()
             method.__name__ = name
             return method
 
@@ -35,7 +33,7 @@ class MethodDefinitionsType(type):
         if attrname in getfullargspec(cls.__init__).args:
             raise AttributeError
         else:
-            return lambda self, ctx: Success()
+            return type("method", (), {})()
 
 
 class MethodDefinitions(metaclass=MethodDefinitionsType):

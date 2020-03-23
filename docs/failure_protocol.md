@@ -35,8 +35,8 @@ different way.
 ```pycon tab="sync"
 
 >>> from stories import story, arguments, Success, Failure
->>> from django_project.entities import Category
->>> from django_project.repositories import load_promo_code
+>>> from app.entities import Category
+>>> from app.repositories import load_promo_code
 
 >>> class ApplyPromoCode:
 ...     """Calculate actual product discount, apply it to the price."""
@@ -76,16 +76,12 @@ different way.
 ...
 ...         self.load_promo_code = load_promo_code
 
->>> # Protocol definition.
-
 >>> ApplyPromoCode.apply.failures(["not_found", "expired"])
 ['not_found', 'expired']
 
->>> # Execution.
-
 >>> promo_code = ApplyPromoCode(load_promo_code=load_promo_code)
 
->>> result = promo_code.apply.run(category=Category(177))
+>>> result = promo_code.apply.run(category=Category(177, 'Drawing', 700))
 
 >>> if result.is_success:
 ...     print("Promo code applied")
@@ -100,8 +96,8 @@ Promo code not found
 ```pycon tab="async"
 
 >>> from stories import story, arguments, Success, Failure
->>> from django_project.entities import Category
->>> from django_project.repositories import load_promo_code
+>>> from app.entities import Category
+>>> from app.repositories import load_promo_code
 
 >>> class ApplyPromoCode:
 ...     """Calculate actual product discount, apply it to the price."""
@@ -141,16 +137,12 @@ Promo code not found
 ...
 ...         self.load_promo_code = load_promo_code
 
->>> # Protocol definition.
-
 >>> ApplyPromoCode.apply.failures(["not_found", "expired"])
 ['not_found', 'expired']
 
->>> # Execution.
-
 >>> promo_code = ApplyPromoCode(load_promo_code=load_promo_code)
 
->>> result = await promo_code.apply.run(category=Category(177))  # doctest: +SKIP
+>>> result = await promo_code.apply.run(category=Category(177, 'Drawing', 700))  # doctest: +SKIP
 
 >>> if result.is_success:
 ...     print("Promo code applied")
@@ -213,19 +205,15 @@ members to process different failures in a different way.
 ...
 ...         self.load_promo_code = load_promo_code
 
->>> # Protocol definition.
-
 >>> @ApplyPromoCode.apply.failures
 ... class Errors(Enum):
 ...
 ...     not_found = auto()
 ...     expired = auto()
 
->>> # Execution.
-
 >>> promo_code = ApplyPromoCode(load_promo_code=load_promo_code)
 
->>> result = promo_code.apply.run(category=Category(177))
+>>> result = promo_code.apply.run(category=Category(177, 'Drawing', 700))
 
 >>> if result.is_success:
 ...     print("Promo code applied")
@@ -279,19 +267,15 @@ Promo code not found
 ...
 ...         self.load_promo_code = load_promo_code
 
->>> # Protocol definition.
-
 >>> @ApplyPromoCode.apply.failures
 ... class Errors(Enum):
 ...
 ...     not_found = auto()
 ...     expired = auto()
 
->>> # Execution.
-
 >>> promo_code = ApplyPromoCode(load_promo_code=load_promo_code)
 
->>> result = await promo_code.apply.run(category=Category(177))  # doctest: +SKIP
+>>> result = await promo_code.apply.run(category=Category(177, 'Drawing', 700))  # doctest: +SKIP
 
 >>> if result.is_success:
 ...     print("Promo code applied")
@@ -332,7 +316,7 @@ property will contain protocols composition. A new `enum` class.
 
 ```pycon tab="sync"
 
->>> from django_project.repositories import load_token
+>>> from app.repositories import load_token
 
 >>> class Subscription:
 ...
@@ -434,7 +418,7 @@ Promo code expired
 
 ```pycon tab="async"
 
->>> from django_project.repositories import load_token
+>>> from app.repositories import load_token
 
 >>> class Subscription:
 ...

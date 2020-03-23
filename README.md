@@ -33,7 +33,7 @@ that include many processing steps.
 ```pycon
 
 >>> from stories import story, arguments, Success, Failure, Result
->>> from django_project.models import Category, Profile, Subscription
+>>> from app.repositories import load_category, load_profile, create_subscription
 
 >>> class Subscribe:
 ...
@@ -49,12 +49,12 @@ that include many processing steps.
 ...
 ...     def find_category(self, ctx):
 ...
-...         ctx.category = Category.objects.get(pk=ctx.category_id)
+...         ctx.category = load_category(ctx.category_id)
 ...         return Success()
 ...
 ...     def find_profile(self, ctx):
 ...
-...         ctx.profile = Profile.objects.get(pk=ctx.profile_id)
+...         ctx.profile = load_profile(ctx.profile_id)
 ...         return Success()
 ...
 ...     def check_balance(self, ctx):
@@ -66,8 +66,7 @@ that include many processing steps.
 ...
 ...     def persist_subscription(self, ctx):
 ...
-...         ctx.subscription = Subscription(category=ctx.category, profile=ctx.profile)
-...         ctx.subscription.save()
+...         ctx.subscription = create_subscription(category=ctx.category, profile=ctx.profile)
 ...         return Success()
 ...
 ...     def show_subscription(self, ctx):
@@ -75,7 +74,7 @@ that include many processing steps.
 ...         return Result(ctx.subscription)
 
 >>> Subscribe().buy(category_id=1, profile_id=1)
-<Subscription: Subscription object (8)>
+Subscription(primary_key=8)
 
 ```
 

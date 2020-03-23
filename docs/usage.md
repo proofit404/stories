@@ -12,19 +12,19 @@ method.
 
 ```pycon tab="sync"
 
->>> from django_project.services import Subscription
+>>> from app.services import Subscription
 
 >>> Subscription().buy(category_id=1, price_id=1, profile_id=1)
-<Category: Category object (1)>
+Category(primary_key=1, name='Books', cost=7)
 
 ```
 
 ```pycon tab="async"
 
->>> from django_project.services import Subscription
+>>> from app.services import Subscription
 
 >>> await Subscription().buy(category_id=1, price_id=1, profile_id=1)  # doctest: +SKIP
-<Category: Category object (1)>
+Category(primary_key=1, name='Books', cost=7)
 
 ```
 
@@ -67,7 +67,7 @@ summary of the business object execution.
 
 ```pycon tab="sync"
 
->>> from django_project.services import ShowCategory
+>>> from app.services import ShowCategory
 
 >>> result = ShowCategory().show.run(category_id=1, profile_id=1)
 
@@ -75,13 +75,13 @@ summary of the business object execution.
 True
 
 >>> result.value
-<Category: Category object (1)>
+Category(primary_key=1, name='Books', cost=7)
 
 ```
 
 ```pycon tab="async"
 
->>> from django_project.services import ShowCategory
+>>> from app.services import ShowCategory
 
 >>> result = await ShowCategory().show.run(category_id=1, profile_id=1)  # doctest: +SKIP
 
@@ -89,7 +89,7 @@ True
 True
 
 >>> result.value
-<Category: Category object (1)>
+Category(primary_key=1, name='Books', cost=7)
 
 ```
 
@@ -117,9 +117,9 @@ ShowCategory.show
   check_expiration (failed: <Errors.forbidden: 1>)
 <BLANKLINE>
 Context:
-  category_id: 2                                         # Story argument
-  profile_id: 1                                          # Story argument
-  subscription: <Subscription: Subscription object (7)>  # Set by ShowCategory.find_subscription
+  category_id: 2                             # Story argument
+  profile_id: 1                              # Story argument
+  subscription: Subscription(primary_key=7)  # Set by ShowCategory.find_subscription
 
 >>> result.ctx.subscription.is_expired()
 True
@@ -148,9 +148,9 @@ ShowCategory.show
   check_expiration (failed: <Errors.forbidden: 1>)
 <BLANKLINE>
 Context:
-  category_id: 2                                         # Story argument
-  profile_id: 1                                          # Story argument
-  subscription: <Subscription: Subscription object (7)>  # Set by ShowCategory.find_subscription
+  category_id: 2                             # Story argument
+  profile_id: 1                              # Story argument
+  subscription: Subscription(primary_key=7)  # Set by ShowCategory.find_subscription
 
 >>> await result.ctx.subscription.is_expired()  # doctest: +SKIP
 True

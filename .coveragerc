@@ -4,7 +4,8 @@ parallel = True
 source =
   _stories
   stories
-  django_project
+  aioapp
+  app
   examples
   helpers
   mddoctest
