@@ -131,7 +131,7 @@ right after traceback.
 
 >>> import pdb
 
->>> pdb.pm()
+>>> pdb.pm()  # doctest: +SKIP
 > example.py(73)apply_discount()
 -> return price * self.fraction
 (Pdb) ll
