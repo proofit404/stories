@@ -30,7 +30,7 @@ If you want the parent story to provide some context variables, use
 ```pycon
 
 >>> from stories import story, arguments, Success, Failure
->>> from django_project.services import MethodDefinitions
+>>> from app.services import MethodDefinitions
 
 >>> class Subscription(MethodDefinitions):
 ...
@@ -262,15 +262,13 @@ or database! Welcome to the good architecture utopia.
 
 ```pycon tab="sync"
 
->>> from django_project.models import Profile, Price
+>>> from app.db import ProfileTable, PriceTable
 
 >>> def load_profile(profile_id):
-...     return Profile.objects.get(pk=profile_id)
-...
+...     return ProfileTable.where(pk=profile_id).select()
 
 >>> def load_price(price_id):
-...     return Price.objects.get(pk=price_id)
-...
+...     return PriceTable.where(pk=price_id).select()
 
 >>> Subscription(load_profile, load_price).buy(profile_id=1, price_id=7)  # doctest: +SKIP
 
@@ -278,15 +276,13 @@ or database! Welcome to the good architecture utopia.
 
 ```pycon tab="async"
 
->>> from django_project.models import Profile, Price
+>>> from aioapp.db import ProfileTable, PriceTable
 
 >>> async def load_profile(profile_id):
-...     return await Profile.objects.get(pk=profile_id)
-...
+...     return await ProfileTable.where(pk=profile_id).select()
 
 >>> async def load_price(price_id):
-...     return await Price.objects.get(pk=price_id)
-...
+...     return await PriceTable.where(pk=price_id).select()
 
 >>> await Subscription(load_profile, load_price).buy(profile_id=1, price_id=7)  # doctest: +SKIP
 

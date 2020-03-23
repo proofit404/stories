@@ -41,7 +41,7 @@ that include many processing steps.
 ```pycon tab="sync"
 
 >>> from stories import story, arguments, Success, Failure, Result
->>> from django_project.models import Category, Profile, Subscription
+>>> from app.repositories import load_category, load_profile, create_subscription
 
 >>> class Subscribe:
 ...
@@ -57,12 +57,12 @@ that include many processing steps.
 ...
 ...     def find_category(self, ctx):
 ...
-...         ctx.category = Category.objects.get(pk=ctx.category_id)
+...         ctx.category = load_category(ctx.category_id)
 ...         return Success()
 ...
 ...     def find_profile(self, ctx):
 ...
-...         ctx.profile = Profile.objects.get(pk=ctx.profile_id)
+...         ctx.profile = load_profile(ctx.profile_id)
 ...         return Success()
 ...
 ...     def check_balance(self, ctx):
@@ -74,23 +74,22 @@ that include many processing steps.
 ...
 ...     def persist_subscription(self, ctx):
 ...
-...         ctx.subscription = Subscription(category=ctx.category, profile=ctx.profile)
-...         ctx.subscription.save()
+...         ctx.subscription = create_subscription(category=ctx.category, profile=ctx.profile)
 ...         return Success()
 ...
 ...     def show_subscription(self, ctx):
 ...
 ...         return Result(ctx.subscription)
 
->>> Subscribe().buy(category_id=1, profile_id=2)
-<Subscription: Subscription object (9)>
+>>> Subscribe().buy(category_id=1, profile_id=1)
+Subscription(primary_key=10)
 
 ```
 
 ```pycon tab="async"
 
 >>> from stories import story, arguments, Success, Failure, Result
->>> from django_project.models import Category, Profile, Subscription
+>>> from aioapp.repositories import load_category, load_profile, create_subscription
 
 >>> class Subscribe:
 ...
@@ -106,12 +105,12 @@ that include many processing steps.
 ...
 ...     async def find_category(self, ctx):
 ...
-...         ctx.category = await Category.objects.get(pk=ctx.category_id)
+...         ctx.category = await load_category(ctx.category_id)
 ...         return Success()
 ...
 ...     async def find_profile(self, ctx):
 ...
-...         ctx.profile = await Profile.objects.get(pk=ctx.profile_id)
+...         ctx.profile = await load_profile(ctx.profile_id)
 ...         return Success()
 ...
 ...     async def check_balance(self, ctx):
@@ -123,18 +122,15 @@ that include many processing steps.
 ...
 ...     async def persist_subscription(self, ctx):
 ...
-...         ctx.subscription = Subscription(
-...             category=ctx.category, profile=ctx.profile
-...         )
-...         await ctx.subscription.save()
+...         ctx.subscription = await create_subscription(category=ctx.category, profile=ctx.profile)
 ...         return Success()
 ...
 ...     async def show_subscription(self, ctx):
 ...
 ...         return Result(ctx.subscription)
 
->>> await Subscribe().buy(category_id=1, profile_id=2)  # doctest: +SKIP
-<Subscription: Subscription object (9)>
+>>> await Subscribe().buy(category_id=1, profile_id=1)  # doctest: +SKIP
+<app.entities.Subscription object at ...>
 
 ```
 
