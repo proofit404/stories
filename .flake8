@@ -1,6 +1,7 @@
 [flake8]
 max-line-length = 88
 ban-relative-imports = True
+accept-encodings = utf-8
 exclude =
   .tox
   migrations
