@@ -25,3 +25,7 @@ instead of the import statement documented above:
 >>> SENTRY_CLIENT = "stories.contrib.sentry.django.DjangoClient"
 
 ```
+
+<p align="center">&mdash; ⭐️ &mdash;</p>
+<p align="center"><i>Drylabs maintains dry-python and helps those who want to use it inside their organizations.</i></p>
+<p align="center"><i>Read more at <a href="https://drylabs.io">drylabs.io</a></i></p>

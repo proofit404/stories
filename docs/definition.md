@@ -553,3 +553,7 @@ To make failure handling a more manageable process we can define a
    proper error code to the user.
 2. Failure protocol should be defined after the story to allow passing
    `reason` in the `Failure` marker.
+
+<p align="center">&mdash; ⭐️ &mdash;</p>
+<p align="center"><i>Drylabs maintains dry-python and helps those who want to use it inside their organizations.</i></p>
+<p align="center"><i>Read more at <a href="https://drylabs.io">drylabs.io</a></i></p>

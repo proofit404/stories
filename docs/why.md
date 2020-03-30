@@ -273,3 +273,7 @@ Wouldn't it be nice to have it when production fails?
 
 Interesting, isn't it? Check out [Definition](definition.md) guide to
 learn more.
+
+<p align="center">&mdash; ⭐️ &mdash;</p>
+<p align="center"><i>Drylabs maintains dry-python and helps those who want to use it inside their organizations.</i></p>
+<p align="center"><i>Read more at <a href="https://drylabs.io">drylabs.io</a></i></p>
