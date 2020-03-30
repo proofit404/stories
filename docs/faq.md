@@ -74,3 +74,7 @@ Otherwise, we will need to use `inspect` library to call the function.
 Yes, you are free to use whatever name you want. We use this convention
 in our documentation and examples to keep in mind that `I`, `self` and
 `ctx` are three different things.
+
+<p align="center">&mdash; ⭐️ &mdash;</p>
+<p align="center"><i>Drylabs maintains dry-python and helps those who want to use it inside their organizations.</i></p>
+<p align="center"><i>Read more at <a href="https://drylabs.io">drylabs.io</a></i></p>

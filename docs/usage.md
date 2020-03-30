@@ -169,3 +169,7 @@ the `failed_because` method will be described in more details in the
 [failure protocol](failure_protocol.md) chapter.
 
 The context of the failed story is also available in the result object.
+
+<p align="center">&mdash; ⭐️ &mdash;</p>
+<p align="center"><i>Drylabs maintains dry-python and helps those who want to use it inside their organizations.</i></p>
+<p align="center"><i>Read more at <a href="https://drylabs.io">drylabs.io</a></i></p>

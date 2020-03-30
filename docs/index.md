@@ -146,3 +146,7 @@ implementation details.
 
     `stories` library was heavily inspired by
     [dry-transaction](http://dry-rb.org/gems/dry-transaction/) ruby gem.
+
+<p align="center">&mdash; ⭐️ &mdash;</p>
+<p align="center"><i>Drylabs maintains dry-python and helps those who want to use it inside their organizations.</i></p>
+<p align="center"><i>Read more at <a href="https://drylabs.io">drylabs.io</a></i></p>
