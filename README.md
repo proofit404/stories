@@ -14,6 +14,7 @@
 - [Source Code](https://github.com/dry-python/stories)
 - [Issue Tracker](https://github.com/dry-python/stories/issues)
 - [Documentation](https://stories.readthedocs.io/en/latest/)
+- [Newsletter](https://twitter.com/dry_py)
 - [Discussion](https://gitter.im/dry-python/stories)
 
 ## Installation
