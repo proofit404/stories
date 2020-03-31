@@ -79,6 +79,9 @@ jobs:
         remarklint:
           python.version: "3.8"
           tox.env: remarklint
+        eslint:
+          python.version: "3.8"
+          tox.env: eslint
         yamllint:
           python.version: "3.8"
           tox.env: yamllint
@@ -95,7 +98,8 @@ jobs:
       - task: NodeTool@0
         inputs:
           versionSpec: "10.x"
-        condition: in(variables['tox.env'], 'remarklint', 'commitlint')
+        condition: |
+          in(variables['tox.env'], 'remarklint', 'eslint', 'commitlint')
         displayName: Install NodeJS.
       - script: |
           git remote set-branches origin master
