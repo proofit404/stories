@@ -27,6 +27,10 @@ def wrap_story(arguments, collected, cls_name, story_name, obj, spec, failures):
 
         if type(attr) is not MountedStory:
             executor = get_executor(attr, executor, cls_name, story_name)
+            # FIXME: This is wrong substory name! It's a bug.
+            check_duplicated_step(
+                cls_name, story_name, methods, cls_name, story_name, attr
+            )
             methods.append((attr, contract, protocol))
             continue
 
@@ -42,6 +46,8 @@ def wrap_story(arguments, collected, cls_name, story_name, obj, spec, failures):
             raise StoryDefinitionError(message)
         elif executor is None:
             executor = attr.executor
+
+        check_duplicated_steps(cls_name, story_name, methods, attr)
 
         combine_contract(contract, attr.contract)
 
@@ -63,6 +69,32 @@ def wrap_story(arguments, collected, cls_name, story_name, obj, spec, failures):
     return methods, contract, failures, executor
 
 
+def check_duplicated_step(cls_name, story_name, methods, other_cls, other_method, attr):
+    for method in methods[1:]:
+        method = method[0]
+        if isinstance(method, (BeginningOfStory, EndOfStory)):
+            continue
+        if method.__func__ is attr.__func__:
+            message = duplicated_steps_template.format(
+                cls=cls_name,
+                method=story_name,
+                other_cls=other_cls,
+                other_method=other_method,
+                step_name=attr.__func__.__name__,
+            )
+            raise StoryDefinitionError(message)
+
+
+def check_duplicated_steps(cls_name, story_name, methods, attr):
+    for attr_method in attr.methods[1:-1]:
+        attr_method = attr_method[0]
+        if isinstance(attr_method, (BeginningOfStory, EndOfStory)):
+            continue
+        check_duplicated_step(
+            cls_name, story_name, methods, attr.cls_name, attr.name, attr_method
+        )
+
+
 # Messages.
 
 
@@ -72,4 +104,13 @@ Coroutine and function stories can not be injected into each other.
 Story {kind} method: {cls}.{method}
 
 Substory {other_kind} method: {other_cls}.{other_method}
+""".strip()
+
+
+duplicated_steps_template = """
+Story composition has repeated steps: {step_name}
+
+Story method: {cls}.{method}
+
+Substory method: {other_cls}.{other_method}
 """.strip()

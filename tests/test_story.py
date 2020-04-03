@@ -47,6 +47,183 @@ def test_deny_repeat_steps():
     assert str(exc_info.value) == "Story has repeated steps: foo"
 
 
+def test_deny_repeat_steps_in_inheritance_forward():
+    """We can not compose stories which have duplicating steps.
+
+    Story and substory defined in the same class can not access the same
+    method of this class.
+
+    This test checks condition when the method is already collected as
+    part of the parrent story and precent in a substory when we try to
+    add it to the parent story.
+    """
+
+    class Action(object):
+        @story
+        def do(I):
+            I.foo
+            I.bar
+
+        @story
+        def bar(I):
+            I.foo
+
+        def foo(self, ctx):
+            pass  # pragma: no cover
+
+    expected = """
+Story composition has repeated steps: foo
+
+Story method: Action.do
+
+Substory method: Action.bar
+""".strip()
+
+    with pytest.raises(StoryDefinitionError) as exc_info:
+
+        Action().do
+
+    assert str(exc_info.value) == expected
+
+
+def test_deny_repeat_steps_in_inheritance_backward():
+    """We can not compose stories which have duplicating steps.
+
+    Story and substory defined in the same class can not access the same
+    method of this class.
+
+    This test checks the condition when we have the method as part of
+    the substory which is already include into a parent story.  And we
+    try to include the method the second time into parent story after
+    that.
+    """
+
+    class Action(object):
+        @story
+        def do(I):
+            I.bar
+            I.foo
+
+        @story
+        def bar(I):
+            I.foo
+
+        def foo(self, ctx):
+            pass  # pragma: no cover
+
+    expected = """
+Story composition has repeated steps: foo
+
+Story method: Action.do
+
+Substory method: Action.do
+""".strip()
+
+    with pytest.raises(StoryDefinitionError) as exc_info:
+
+        Action().do
+
+    assert str(exc_info.value) == expected
+
+
+def test_deny_repeat_steps_in_composition_forward():
+    """We can not compose stories which have duplicating steps.
+
+    We can not inject substory in the story if they access the same
+    method of the same class somewhere in the composition.
+
+    This test checks the condition when we already have the method in
+    the parent story and we try to add substory which substory have
+    this method also collected.
+    """
+
+    class T(object):
+        @story
+        def x(I):
+            I.one
+
+        def one(self, ctx):
+            pass  # pragma: no cover
+
+    class Q(T):
+        @story
+        def a(I):
+            I.before
+            I.x
+
+        def before(self, ctx):
+            pass  # pragma: no cover
+
+    class R(Q):
+        @story
+        def i(I):
+            I.one
+            I.a
+
+    expected = """
+Story composition has repeated steps: one
+
+Story method: R.i
+
+Substory method: R.a
+""".strip()
+
+    with pytest.raises(StoryDefinitionError) as exc_info:
+
+        R().i
+
+    assert str(exc_info.value) == expected
+
+
+def test_deny_repeat_steps_in_composition_backward():
+    """We can not compose stories which have duplicating steps.
+
+    We can not inject substory in the story if they access the same
+    method of the same class somewhere in the composition.
+
+    This test checks the condition when parent story already have a
+    substory which have a substory with the method.  And we try to
+    include this method the second time into parent story itself.
+    """
+
+    class T(object):
+        @story
+        def x(I):
+            I.one
+
+        def one(self, ctx):
+            pass  # pragma: no cover
+
+    class Q(T):
+        @story
+        def a(I):
+            I.before
+            I.x
+
+        def before(self, ctx):
+            pass  # pragma: no cover
+
+    class R(Q):
+        @story
+        def i(I):
+            I.a
+            I.one
+
+    expected = """
+Story composition has repeated steps: one
+
+Story method: R.i
+
+Substory method: R.i
+""".strip()
+
+    with pytest.raises(StoryDefinitionError) as exc_info:
+
+        R().i
+
+    assert str(exc_info.value) == expected
+
+
 def test_story_representation(x):
 
     story = repr(x.Simple().x)
