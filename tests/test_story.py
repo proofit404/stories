@@ -32,6 +32,21 @@ def test_deny_empty_stories():
     assert str(exc_info.value) == "Story should have at least one step defined"
 
 
+def test_deny_repeat_steps():
+    """We can not define a story which has duplicating steps."""
+
+    with pytest.raises(StoryDefinitionError) as exc_info:
+
+        class Action(object):
+            @story
+            def do(I):
+                I.foo
+                I.bar
+                I.foo
+
+    assert str(exc_info.value) == "Story has repeated steps: foo"
+
+
 def test_story_representation(x):
 
     story = repr(x.Simple().x)

@@ -11,6 +11,8 @@ def collect_story(f):
 
     class Collector(object):
         def __getattr__(self, name):
+            if name in calls:
+                raise StoryDefinitionError("Story has repeated steps: " + name)
             calls.append(name)
 
     f(Collector())
