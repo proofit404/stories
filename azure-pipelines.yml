@@ -5,116 +5,42 @@ jobs:
   - job: "Test"
     pool:
       vmImage: "ubuntu-latest"
-    strategy:
-      matrix:
-        precommit:
-          python.version: "3.8"
-          tox.env: precommit
-        py27-cerberus:
-          python.version: "2.7"
-          tox.env: py27-cerberus
-        py35-cerberus:
-          python.version: "3.5"
-          tox.env: py35-cerberus
-        py36-cerberus:
-          python.version: "3.6"
-          tox.env: py36-cerberus
-        py37-cerberus:
-          python.version: "3.7"
-          tox.env: py37-cerberus
-        py38-cerberus:
-          python.version: "3.8"
-          tox.env: py38-cerberus
-        py27-marshmallow2:
-          python.version: "2.7"
-          tox.env: py27-marshmallow2
-        py35-marshmallow2:
-          python.version: "3.5"
-          tox.env: py35-marshmallow2
-        py36-marshmallow2:
-          python.version: "3.6"
-          tox.env: py36-marshmallow2
-        py37-marshmallow2:
-          python.version: "3.7"
-          tox.env: py37-marshmallow2
-        py38-marshmallow2:
-          python.version: "3.8"
-          tox.env: py38-marshmallow2
-        py35-marshmallow3:
-          python.version: "3.5"
-          tox.env: py35-marshmallow3
-        py36-marshmallow3:
-          python.version: "3.6"
-          tox.env: py36-marshmallow3
-        py37-marshmallow3:
-          python.version: "3.7"
-          tox.env: py37-marshmallow3
-        py38-marshmallow3:
-          python.version: "3.8"
-          tox.env: py38-marshmallow3
-        py36-pydantic:
-          python.version: "3.6"
-          tox.env: py36-pydantic
-        py37-pydantic:
-          python.version: "3.7"
-          tox.env: py37-pydantic
-        py38-pydantic:
-          python.version: "3.8"
-          tox.env: py38-pydantic
-        flake8:
-          python.version: "3.8"
-          tox.env: flake8
-        bandit:
-          python.version: "3.8"
-          tox.env: bandit
-        importlint:
-          python.version: "3.8"
-          tox.env: importlint
-        mkdocs:
-          python.version: "3.8"
-          tox.env: mkdocs
-        doctest:
-          python.version: "3.8"
-          tox.env: doctest
-        remarklint:
-          python.version: "3.8"
-          tox.env: remarklint
-        eslint:
-          python.version: "3.8"
-          tox.env: eslint
-        yamllint:
-          python.version: "3.8"
-          tox.env: yamllint
-        commitlint:
-          python.version: "3.8"
-          tox.env: commitlint
     steps:
       - task: UsePythonVersion@0
         inputs:
-          versionSpec: $(python.version)
-        displayName: Install Python.
+          versionSpec: "2.7"
+        displayName: Install Python 2.7.
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: "3.5"
+        displayName: Install Python 3.5.
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: "3.6"
+        displayName: Install Python 3.6.
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: "3.7"
+        displayName: Install Python 3.7.
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: "3.8"
+        displayName: Install Python 3.8.
       - script: pip install --upgrade tox codecov
         displayName: Install Tox.
       - task: NodeTool@0
         inputs:
           versionSpec: "10.x"
-        condition: |
-          in(variables['tox.env'], 'remarklint', 'eslint', 'commitlint')
         displayName: Install NodeJS.
       - script: |
           git remote set-branches origin master
           git fetch --quiet
           git checkout master --quiet
           git checkout - --quiet
-        condition: in(variables['tox.env'], 'commitlint')
         displayName: Unshallow commit log.
-      - script: tox -e $(tox.env)
+      - script: tox
         displayName: Run Tox.
-      - script: |
-          if [ -f .coverage ]
-          then
-            codecov
-          fi
+      - script: codecov
         env:
           CODECOV_TOKEN: 543ba944-615c-4401-b711-63ce7fc8ece3
         displayName: Report Coverage.
