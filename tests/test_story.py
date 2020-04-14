@@ -32,8 +32,46 @@ def test_deny_empty_stories():
     assert str(exc_info.value) == "Story should have at least one step defined"
 
 
-def test_story_representation(x):
+def test_deny_classmethods():
+    with pytest.raises(StoryDefinitionError) as exc_info:
 
+        class Action(object):
+            @story
+            @classmethod
+            def do(I):
+                I.step
+
+    expected = """
+Story cannot be a class method.
+
+Use @class_story instead:
+@class_story
+def do(cls, I):
+    I.step
+""".strip()
+    assert str(exc_info.value) == expected
+
+
+def test_deny_classmethods_when_source_is_unavailable(mocker):
+    mocker.patch("_stories.collect.getsourcelines", side_effect=OSError)
+    with pytest.raises(StoryDefinitionError) as exc_info:
+
+        class Action(object):
+            @story
+            @classmethod
+            def do(I):
+                I.step
+
+    expected = """
+Story cannot be a class method.
+
+Use @class_story instead:
+Source code unavailable.
+""".strip()
+    assert str(exc_info.value) == expected
+
+
+def test_story_representation(x):
     story = repr(x.Simple().x)
     expected = """
 Simple.x
@@ -86,7 +124,6 @@ SubstoryDI.y
 
 
 def test_story_class_attribute_representation(x):
-
     story = repr(x.Simple.x)
     expected = """
 Simple.x
@@ -116,6 +153,54 @@ SubstoryDI.y
   before
   x ??
   after
+""".strip()
+    assert story == expected
+
+
+def test_class_story(r, x):
+    story = repr(x.ClassStory.x)
+    expected = """
+ClassStory.x
+  one
+""".strip()
+
+    assert story == expected
+
+    story = repr(x.ClassStoryWithInheritance.x)
+    expected = """
+ClassStoryWithInheritance.x
+  x (super story from ClassStory)
+    one
+  two
+""".strip()
+
+    assert story == expected
+
+    story = repr(x.ClassStoryWithMultipleInheritance.x)
+    expected = """
+ClassStoryWithMultipleInheritance.x
+  x (super story from ClassStory)
+    one
+  x (super story from Simple)
+    one
+    two
+    three
+  two
+""".strip()
+
+    assert story == expected
+
+    result = r(x.ClassStoryWithInheritance().x.run)()
+
+    assert result.is_success
+
+    story = repr(x.ClassStoryWithInheritance().x)
+
+    expected = """
+ClassStoryWithInheritance.x
+  x (super story from ClassStory)
+    one
+  two
 """.strip()
     assert story == expected
 

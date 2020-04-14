@@ -1,16 +1,12 @@
 # -*- coding: utf-8 -*-
-from _stories.argument import get_arguments
 from _stories.collect import collect_story
 from _stories.failures import check_data_type
 from _stories.mounted import ClassMountedStory
-from _stories.mounted import MountedStory
-from _stories.wrap import wrap_story
 
 
 def story(f):
-    name = f.__name__
-    arguments = get_arguments(f)
     collected = collect_story(f)
+    name = f.__name__
     # Can't use non local keyword because of Python 2.
     this = {"contract": None, "failures": None}
 
@@ -26,29 +22,14 @@ def story(f):
 
     def get_method(self, obj, cls):
         __tracebackhide__ = True
+        class_mounted_story = ClassMountedStory(
+            cls, f, name, collected, contract_method, failures_method
+        )
         if obj is None:
-            return ClassMountedStory(
-                cls, name, collected, contract_method, failures_method
-            )
+            return class_mounted_story
         else:
-            methods, contract, failures, executor = wrap_story(
-                arguments,
-                collected,
-                cls.__name__,
-                name,
-                obj,
-                this["contract"],
-                this["failures"],
-            )
-            return MountedStory(
-                obj,
-                cls.__name__,
-                name,
-                arguments,
-                methods,
-                contract,
-                failures,
-                executor,
+            return class_mounted_story.to_mounted_story(
+                obj, this["contract"], this["failures"]
             )
 
     return type(
@@ -60,3 +41,9 @@ def story(f):
             "failures": staticmethod(failures_method),
         },
     )()
+
+
+class class_story(classmethod):
+    def __get__(self, instance, owner):
+        method = super(class_story, self).__get__(instance, owner)
+        return story(method).__get__(instance, owner)

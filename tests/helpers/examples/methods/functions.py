@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 from examples.methods import *  # noqa: F403
 from stories import arguments
+from stories import class_story
 from stories import Failure
 from stories import Result
 from stories import Skip
 from stories import story
 from stories import Success
+
 
 # Mixins.
 
@@ -226,3 +228,42 @@ class AttributeAccessError(object):
 
     def one(self, ctx):
         ctx.x
+
+
+# Class stories
+
+
+class ClassStory(object):
+    @class_story
+    def x(cls, I):
+        I.one
+
+    def one(self, ctx):
+        # attr only exists in instances of ClassStoryWithInheritance.
+        # Running ClassStoryWithInheritance().x() proves that self
+        # is bound to the right object.
+        ctx.attr = self.attr
+        return Success()
+
+
+class ClassStoryWithInheritance(ClassStory):
+    def __init__(self):
+        self.attr = True
+
+    @class_story
+    def x(cls, I):
+        super(ClassStoryWithInheritance, cls).x(I)
+        I.two
+
+    def two(self, ctx):
+        if ctx.attr:
+            return Success()
+        else:
+            return Failure()
+
+
+class ClassStoryWithMultipleInheritance(ClassStory, Simple):
+    @class_story
+    def x(cls, I):
+        super(ClassStoryWithMultipleInheritance, cls).x(I)
+        I.two

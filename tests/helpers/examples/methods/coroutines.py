@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 from examples.methods import *  # noqa: F403
 from stories import arguments
+from stories import class_story
 from stories import Failure
 from stories import Result
 from stories import Skip
 from stories import story
 from stories import Success
+
 
 # Mixins.
 
@@ -277,3 +279,32 @@ class AttributeAccessError(object):
 
     async def one(self, ctx):
         ctx.x
+
+
+# Class stories
+
+
+class ClassStory(object):
+    @class_story
+    def x(cls, I):
+        I.one
+
+    async def one(self, ctx):
+        return Success()
+
+
+class ClassStoryWithInheritance(ClassStory):
+    @class_story
+    def x(cls, I):
+        super(ClassStoryWithInheritance, cls).x(I)
+        I.two
+
+    async def two(self, ctx):
+        return Success()
+
+
+class ClassStoryWithMultipleInheritance(ClassStory, Simple):
+    @class_story
+    def x(cls, I):
+        super(ClassStoryWithMultipleInheritance, cls).x(I)
+        I.two
