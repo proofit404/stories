@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 from debug_toolbar.panels import Panel
-from django.utils.translation import ugettext_lazy as _
+
+try:
+    from django.utils.translation import gettext_lazy as _
+except ImportError:
+    from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy as __
 
 import _stories.context
