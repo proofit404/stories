@@ -1,3 +1,9 @@
+# [0.15.0](https://github.com/dry-python/stories/compare/0.14.0...0.15.0) (2020-04-16)
+
+### Features
+
+- support Django 4.0 ([f02a334](https://github.com/dry-python/stories/commit/f02a3341c58b7885a2095c11ff5bef4acf626e94))
+
 # [0.14.0](https://github.com/dry-python/stories/compare/0.13.0...0.14.0) (2020-03-21)
 
 ### Features
