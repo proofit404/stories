@@ -20,6 +20,9 @@ def collect_story(f):
                     return
             calls.append(name)
 
+        def __repr__(self):
+            return "Collector({})".format(", ".join(calls))
+
     f(Collector())
 
     if not calls:
