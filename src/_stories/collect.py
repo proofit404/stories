@@ -11,6 +11,13 @@ def collect_story(f):
 
     class Collector(object):
         def __getattr__(self, name):
+            if __debug__:
+                # Workaround PyDev calling __len__ on the collector
+                # instance
+                import os
+
+                if name == "__len__" and "PYDEVD_LOAD_VALUES_ASYNC" in os.environ:
+                    return
             calls.append(name)
 
     f(Collector())
