@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+from _stories.execute.utilities import validate_result_type
 from _stories.marker import BeginningOfStory
 from _stories.marker import EndOfStory
 from _stories.returned import Failure
 from _stories.returned import Result
 from _stories.returned import Skip
-from _stories.returned import Success
 
 
 async def execute(runner, ctx, ns, bind, history, methods):
@@ -46,8 +46,7 @@ async def execute(runner, ctx, ns, bind, history, methods):
             raise
 
         restype = type(result)
-        if restype not in (Result, Success, Failure, Skip):
-            raise AssertionError
+        validate_result_type(method, restype, result)
 
         if restype is Failure:
             try:

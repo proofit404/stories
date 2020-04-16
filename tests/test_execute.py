@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import pytest
 
+from _stories.exceptions import StoryDefinitionError
 from stories.exceptions import FailureError
 
 
@@ -217,11 +218,117 @@ def test_return_type(r, x):
     Any other value is denied.
     """
 
-    with pytest.raises(AssertionError):
-        r(x.WrongResult().x)()
+    expected = """
+Invalid result type returned from WrongResult.one.
 
-    with pytest.raises(AssertionError):
-        r(x.WrongResult().x.run)()
+Got `1`. Did you mean `Result(1)`?
+""".strip()
+    with pytest.raises(StoryDefinitionError) as exc_info:
+        r(x.WrongResult(1).x)()
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(StoryDefinitionError) as exc_info:
+        r(x.WrongResult(1).x.run)()
+
+    assert str(exc_info.value) == expected
+
+    expected = """
+Ambiguous result type returned from WrongResult.one.
+
+Got `True`. Did you mean `Success()` or `Result(True)`?
+""".strip()
+    with pytest.raises(StoryDefinitionError) as exc_info:
+        r(x.WrongResult(True).x)()
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(StoryDefinitionError) as exc_info:
+        r(x.WrongResult(True).x.run)()
+
+    assert str(exc_info.value) == expected
+
+    expected = """
+Ambiguous result type returned from WrongResult.one.
+
+Got `False`. Did you mean `Failure()` or `Result(False)`?
+""".strip()
+    with pytest.raises(StoryDefinitionError) as exc_info:
+        r(x.WrongResult(False).x)()
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(StoryDefinitionError) as exc_info:
+        r(x.WrongResult(False).x.run)()
+
+    assert str(exc_info.value) == expected
+
+    expected = """
+Ambiguous result type returned from WrongResult.one.
+
+Got `None`. Did you mean `Success()` or `Result()`?
+""".strip()
+    with pytest.raises(StoryDefinitionError) as exc_info:
+        r(x.WrongResult(None).x)()
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(StoryDefinitionError) as exc_info:
+        r(x.WrongResult(None).x.run)()
+
+    assert str(exc_info.value) == expected
+
+    expected = """
+Invalid result type returned from WrongResultSubStory.one.
+
+Got `1`. Did you mean `Result(1)`?
+""".strip()
+    with pytest.raises(StoryDefinitionError) as exc_info:
+        r(x.WrongResult(1, step=x.WrongResultSubStory).x)()
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(StoryDefinitionError) as exc_info:
+        r(x.WrongResult(1, step=x.WrongResultSubStory).x.run)()
+
+    assert str(exc_info.value) == expected
+
+    expected = """
+Ambiguous result type returned from WrongResultSubStory.one.
+
+Got `True`. Did you mean `Success()` or `Result(True)`?
+""".strip()
+    with pytest.raises(StoryDefinitionError) as exc_info:
+        r(x.WrongResult(True, step=x.WrongResultSubStory).x)()
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(StoryDefinitionError) as exc_info:
+        r(x.WrongResult(True, step=x.WrongResultSubStory).x.run)()
+
+    assert str(exc_info.value) == expected
+
+    expected = """
+Ambiguous result type returned from WrongResultSubStory.one.
+
+Got `False`. Did you mean `Failure()` or `Result(False)`?
+""".strip()
+    with pytest.raises(StoryDefinitionError) as exc_info:
+        r(x.WrongResult(False, step=x.WrongResultSubStory).x)()
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(StoryDefinitionError) as exc_info:
+        r(x.WrongResult(False, step=x.WrongResultSubStory).x.run)()
+
+    assert str(exc_info.value) == expected
+
+    expected = """
+Ambiguous result type returned from WrongResultSubStory.one.
+
+Got `None`. Did you mean `Success()` or `Result()`?
+""".strip()
+    with pytest.raises(StoryDefinitionError) as exc_info:
+        r(x.WrongResult(None, step=x.WrongResultSubStory).x)()
+    assert str(exc_info.value) == expected
+
+    with pytest.raises(StoryDefinitionError) as exc_info:
+        r(x.WrongResult(None, step=x.WrongResultSubStory).x.run)()
+
+    assert str(exc_info.value) == expected
 
 
 def test_inject_implementation(r, x):

@@ -7,6 +7,7 @@ from stories import Skip
 from stories import story
 from stories import Success
 
+
 # Mixins.
 
 
@@ -231,12 +232,31 @@ class SubstoryDI(object):
 
 
 class WrongResult(object):
+    def __init__(self, result, step=None):
+        self.result = result
+        if step is None:
+            self.step = self.one
+        else:
+            self.step = step(result).one
+
+    @story
+    def x(I):
+        I.step
+
+    async def one(self, ctx):
+        return self.result
+
+
+class WrongResultSubStory(object):
+    def __init__(self, result):
+        self.result = result
+
     @story
     def x(I):
         I.one
 
     async def one(self, ctx):
-        return 1
+        return self.result
 
 
 # Dependency injection of the implementation methods.
