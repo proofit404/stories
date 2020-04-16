@@ -38,7 +38,9 @@ jobs:
           git checkout master --quiet
           git checkout - --quiet
         displayName: Unshallow commit log.
-      - script: TOX_PARALLEL_NO_SPINNER=1 tox -p auto
+      - script: |
+          TOX_PARALLEL_NO_SPINNER=1 tox -p auto -e $(tox -l | grep -v coverage)
+          tox -e coverage
         displayName: Run Tox.
       - script: codecov
         env:
