@@ -38,7 +38,9 @@ jobs:
           git checkout master --quiet
           git checkout - --quiet
         displayName: Unshallow commit log.
-      - script: tox
+      - script: |
+          tox -e $(tox -l | grep -v coverage)
+          tox -e coverage
         displayName: Run Tox.
       - script: codecov
         env:
