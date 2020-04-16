@@ -39,7 +39,8 @@ jobs:
           git checkout - --quiet
         displayName: Unshallow commit log.
       - script: |
-          TOX_PARALLEL_NO_SPINNER=1 tox -p auto -e $(tox -l | grep -v coverage)
+          function join_by { local IFS="$1"; shift; echo "$*"; }
+          TOX_PARALLEL_NO_SPINNER=1 tox -p auto -e $(join_by , $(tox -l | grep -v coverage))
           tox -e coverage
         displayName: Run Tox.
       - script: codecov
