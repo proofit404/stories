@@ -35,6 +35,7 @@ nav:
   - "Execution": execution.md
   - "Debugging": debugging.md
   - "Composition": composition.md
+  - "Inheritance": inheritance.md
   - "Failure protocol": failure_protocol.md
   - "Contrib":
       - "Py.test": contrib/pytest.md
