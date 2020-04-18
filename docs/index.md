@@ -1,11 +1,10 @@
 ![logo](https://raw.githubusercontent.com/dry-python/brand/master/logo/stories.png)
 
-[![azure-pipeline](https://dev.azure.com/dry-python/stories/_apis/build/status/dry-python.stories?branchName=master)](https://dev.azure.com/dry-python/stories/_build/latest?definitionId=3&branchName=master)
-[![codecov](https://codecov.io/gh/dry-python/stories/branch/master/graph/badge.svg)](https://codecov.io/gh/dry-python/stories)
-[![docs](https://readthedocs.org/projects/stories/badge/?version=latest)](https://stories.readthedocs.io/en/latest/?badge=latest)
-[![gitter](https://badges.gitter.im/dry-python/stories.svg)](https://gitter.im/dry-python/stories)
-[![pypi](https://img.shields.io/pypi/v/stories.svg)](https://pypi.python.org/pypi/stories/)
-[![black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
+[![azure-devops-builds](https://img.shields.io/azure-devops/build/dry-python/stories/3?style=flat-square)](https://dev.azure.com/dry-python/stories/_build/latest?definitionId=3&branchName=master)
+[![azure-devops-coverage](https://img.shields.io/azure-devops/coverage/dry-python/stories/3?style=flat-square)](https://dev.azure.com/dry-python/stories/_build/latest?definitionId=3&branchName=master)
+[![readthedocs](https://img.shields.io/readthedocs/stories?style=flat-square)](https://stories.readthedocs.io/en/latest/?badge=latest)
+[![gitter](https://img.shields.io/gitter/room/dry-python/stories?style=flat-square)](https://gitter.im/dry-python/stories)
+[![pypi](https://img.shields.io/pypi/v/stories?style=flat-square)](https://pypi.python.org/pypi/stories/)
 
 ---
 
