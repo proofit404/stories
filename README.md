@@ -2,10 +2,9 @@
 
 [![azure-devops-builds](https://img.shields.io/azure-devops/build/dry-python/stories/3?style=flat-square)](https://dev.azure.com/dry-python/stories/_build/latest?definitionId=3&branchName=master)
 [![azure-devops-coverage](https://img.shields.io/azure-devops/coverage/dry-python/stories/3?style=flat-square)](https://dev.azure.com/dry-python/stories/_build/latest?definitionId=3&branchName=master)
-[![docs](https://readthedocs.org/projects/stories/badge/?version=latest)](https://stories.readthedocs.io/en/latest/?badge=latest)
-[![gitter](https://badges.gitter.im/dry-python/stories.svg)](https://gitter.im/dry-python/stories)
-[![pypi](https://img.shields.io/pypi/v/stories.svg)](https://pypi.python.org/pypi/stories/)
-[![black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
+[![readthedocs](https://img.shields.io/readthedocs/stories?style=flat-square)](https://stories.readthedocs.io/en/latest/?badge=latest)
+[![gitter](https://img.shields.io/gitter/room/dry-python/stories?style=flat-square)](https://gitter.im/dry-python/stories)
+[![pypi](https://img.shields.io/pypi/v/stories?style=flat-square)](https://pypi.python.org/pypi/stories/)
 
 ---
 
