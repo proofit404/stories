@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import configparser
 import importlib
+import re
 import textwrap
 
 import _stories.context
@@ -51,3 +52,12 @@ def tox_info(var):
         if var in ini_parser[section]:
             value = textwrap.dedent(ini_parser[section][var].strip())
             yield section, value
+
+
+def tox_parse_envlist(string):
+    """Parse tox environment list with proper comma escaping."""
+    escaped = string
+    while re.search(r"({[^,}]*),", escaped):
+        escaped = re.subn(r"({[^,}]*),", r"\1:", escaped)[0]
+    parts = escaped.split(",")
+    return [re.subn(r":", ",", p)[0].strip() for p in parts]
