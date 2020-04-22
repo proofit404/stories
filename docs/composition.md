@@ -218,6 +218,16 @@ Here are some examples:
 ...         self.load_profile = load_profile
 ...         self.load_price = load_price
 
+>>> from app.db import ProfileTable, PriceTable
+
+>>> def load_profile(profile_id):
+...     return ProfileTable.where(pk=profile_id).select()
+
+>>> def load_price(price_id):
+...     return PriceTable.where(pk=price_id).select()
+
+>>> Subscription(load_profile, load_price).buy(profile_id=1, price_id=7)
+
 ```
 
 ```pycon tab="async"
@@ -254,28 +264,7 @@ Here are some examples:
 ...         self.load_profile = load_profile
 ...         self.load_price = load_price
 
-```
-
-This way you decouple your business logic from relation mapper models or
-networking library! There is no more vendor lock on a certain framework
-or database! Welcome to the good architecture utopia.
-
-```pycon tab="sync"
-
->>> from app.db import ProfileTable, PriceTable
-
->>> def load_profile(profile_id):
-...     return ProfileTable.where(pk=profile_id).select()
-
->>> def load_price(price_id):
-...     return PriceTable.where(pk=price_id).select()
-
->>> Subscription(load_profile, load_price).buy(profile_id=1, price_id=7)  # doctest: +SKIP
-
-```
-
-```pycon tab="async"
-
+>>> import asyncio
 >>> from aioapp.db import ProfileTable, PriceTable
 
 >>> async def load_profile(profile_id):
@@ -284,9 +273,13 @@ or database! Welcome to the good architecture utopia.
 >>> async def load_price(price_id):
 ...     return await PriceTable.where(pk=price_id).select()
 
->>> await Subscription(load_profile, load_price).buy(profile_id=1, price_id=7)  # doctest: +SKIP
+>>> asyncio.run(Subscription(load_profile, load_price).buy(profile_id=1, price_id=7))
 
 ```
+
+This way you decouple your business logic from relation mapper models or
+networking library! There is no more vendor lock on a certain framework
+or database! Welcome to the good architecture utopia.
 
 You can group delegates into a single object to avoid complex
 constructors and names duplication.

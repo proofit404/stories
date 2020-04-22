@@ -38,6 +38,9 @@ class Profile:
     primary_key: ProfileId
     balance: int
 
+    def has_enough_balance(self, price):
+        return self.balance >= price.cost
+
 
 SubscriptionId = NewType("SubscriptionId", int)
 

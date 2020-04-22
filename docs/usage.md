@@ -21,9 +21,10 @@ Category(primary_key=1, name='Books', cost=7)
 
 ```pycon tab="async"
 
->>> from app.services import Subscription
+>>> import asyncio
+>>> from aioapp.services import Subscription
 
->>> await Subscription().buy(category_id=1, price_id=1, profile_id=1)  # doctest: +SKIP
+>>> asyncio.run(Subscription().buy(category_id=1, price_id=1, profile_id=1))
 Category(primary_key=1, name='Books', cost=7)
 
 ```
@@ -35,6 +36,8 @@ The story was executed successfully. It returns an object we put into
 
 ```pycon tab="sync"
 
+>>> from app.services import Subscription
+
 >>> Subscription().buy(category_id=2, price_id=2, profile_id=1)
 Traceback (most recent call last):
   ...
@@ -44,7 +47,9 @@ _stories.exceptions.FailureError
 
 ```pycon tab="async"
 
->>> await Subscription().buy(category_id=2, price_id=2, profile_id=1)  # doctest: +SKIP
+>>> from aioapp.services import Subscription
+
+>>> asyncio.run(Subscription().buy(category_id=2, price_id=2, profile_id=1))
 Traceback (most recent call last):
   ...
 _stories.exceptions.FailureError
@@ -81,9 +86,10 @@ Category(primary_key=1, name='Books', cost=7)
 
 ```pycon tab="async"
 
->>> from app.services import ShowCategory
+>>> import asyncio
+>>> from aioapp.services import ShowCategory
 
->>> result = await ShowCategory().show.run(category_id=1, profile_id=1)  # doctest: +SKIP
+>>> result = asyncio.run(ShowCategory().show.run(category_id=1, profile_id=1))
 
 >>> result.is_success
 True
@@ -99,6 +105,8 @@ available in the `value` attribute.
 ### Failure
 
 ```pycon tab="sync"
+
+>>> from app.services import ShowCategory
 
 >>> result = ShowCategory().show.run(category_id=2, profile_id=1)
 
@@ -131,7 +139,9 @@ datetime.date(2019, 1, 1)
 
 ```pycon tab="async"
 
->>> result = await ShowCategory().show.run(category_id=2, profile_id=1)  # doctest: +SKIP
+>>> from aioapp.services import ShowCategory
+
+>>> result = asyncio.run(ShowCategory().show.run(category_id=2, profile_id=1))
 
 >>> result.is_failure
 True
@@ -152,7 +162,7 @@ Context:
   profile_id: 1                              # Story argument
   subscription: Subscription(primary_key=7)  # Set by ShowCategory.find_subscription
 
->>> await result.ctx.subscription.is_expired()  # doctest: +SKIP
+>>> result.ctx.subscription.is_expired()
 True
 
 >>> result.ctx.subscription.created
