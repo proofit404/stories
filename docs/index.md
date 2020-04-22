@@ -88,6 +88,7 @@ Subscription(primary_key=10)
 
 ```pycon tab="async"
 
+>>> import asyncio
 >>> from stories import story, arguments, Success, Failure, Result
 >>> from aioapp.repositories import load_category, load_profile, create_subscription
 
@@ -129,8 +130,8 @@ Subscription(primary_key=10)
 ...
 ...         return Result(ctx.subscription)
 
->>> await Subscribe().buy(category_id=1, profile_id=1)  # doctest: +SKIP
-<app.entities.Subscription object at ...>
+>>> asyncio.run(Subscribe().buy(category_id=1, profile_id=1))
+Subscription(primary_key=9)
 
 ```
 

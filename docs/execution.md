@@ -54,6 +54,7 @@ three
 
 ```pycon tab="async"
 
+>>> import asyncio
 >>> from stories import story, Success
 
 >>> class Action:
@@ -80,7 +81,7 @@ three
 ...         print("three")
 ...         return Success()
 
->>> await Action().do()  # doctest: +SKIP
+>>> asyncio.run(Action().do())
 one
 two
 three
@@ -176,7 +177,7 @@ four
 ...         print("four")
 ...         return Success()
 
->>> await Action().do()  # doctest: +SKIP
+>>> asyncio.run(Action().do())
 one
 two
 three
@@ -241,7 +242,7 @@ variables for future methods.
 ...         print(ctx.var_b)
 ...         return Success()
 
->>> await Action().do()  # doctest: +SKIP
+>>> asyncio.run(Action().do())
 1
 2
 
@@ -314,7 +315,7 @@ True
 ...         print("two")
 ...         return Success()
 
->>> result = await Action().do.run()  # doctest: +SKIP
+>>> result = asyncio.run(Action().do.run())
 one
 
 >>> result.is_failure
@@ -411,7 +412,7 @@ True
 ...         print("four")
 ...         return Success()
 
->>> result = await Action().do.run()  # doctest: +SKIP
+>>> result = asyncio.run(Action().do.run())
 one
 two
 
@@ -494,7 +495,7 @@ two
 ...         print("three")
 ...         return Success()
 
->>> res = await Action().do()  # doctest: +SKIP
+>>> res = asyncio.run(Action().do())
 one
 two
 
@@ -594,7 +595,7 @@ three
 ...         print("four")
 ...         return Success()
 
->>> result = await Action().do()  # doctest: +SKIP
+>>> result = asyncio.run(Action().do())
 one
 two
 three
@@ -694,7 +695,7 @@ four
 ...         print("four")
 ...         return Success()
 
->>> await Action().do()  # doctest: +SKIP
+>>> asyncio.run(Action().do())
 one
 two
 four
@@ -752,7 +753,7 @@ one
 ...         print("two")
 ...         return Success()
 
->>> await Action().do()  # doctest: +SKIP
+>>> asyncio.run(Action().do())
 one
 
 ```

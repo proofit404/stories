@@ -95,9 +95,10 @@ Promo code not found
 
 ```pycon tab="async"
 
+>>> import asyncio
 >>> from stories import story, arguments, Success, Failure
 >>> from app.entities import Category
->>> from app.repositories import load_promo_code
+>>> from aioapp.repositories import load_promo_code
 
 >>> class ApplyPromoCode:
 ...     """Calculate actual product discount, apply it to the price."""
@@ -142,7 +143,7 @@ Promo code not found
 
 >>> promo_code = ApplyPromoCode(load_promo_code=load_promo_code)
 
->>> result = await promo_code.apply.run(category=Category(177, 'Drawing', 700))  # doctest: +SKIP
+>>> result = asyncio.run(promo_code.apply.run(category=Category(177, 'Drawing', 700)))
 
 >>> if result.is_success:
 ...     print("Promo code applied")
@@ -166,6 +167,7 @@ members to process different failures in a different way.
 ```pycon tab="sync"
 
 >>> from enum import Enum, auto
+>>> from app.repositories import load_promo_code
 
 >>> class ApplyPromoCode:
 ...     """Calculate actual product discount, apply it to the price."""
@@ -228,6 +230,7 @@ Promo code not found
 ```pycon tab="async"
 
 >>> from enum import Enum, auto
+>>> from aioapp.repositories import load_promo_code
 
 >>> class ApplyPromoCode:
 ...     """Calculate actual product discount, apply it to the price."""
@@ -275,7 +278,7 @@ Promo code not found
 
 >>> promo_code = ApplyPromoCode(load_promo_code=load_promo_code)
 
->>> result = await promo_code.apply.run(category=Category(177, 'Drawing', 700))  # doctest: +SKIP
+>>> result = asyncio.run(promo_code.apply.run(category=Category(177, 'Drawing', 700)))
 
 >>> if result.is_success:
 ...     print("Promo code applied")
@@ -418,7 +421,7 @@ Promo code expired
 
 ```pycon tab="async"
 
->>> from app.repositories import load_token
+>>> from aioapp.repositories import load_token
 
 >>> class Subscription:
 ...
@@ -506,7 +509,7 @@ Promo code expired
 
 >>> subscription = Subscription(promo_code.find)
 
->>> result = await subscription.buy.run()  # doctest: +SKIP
+>>> result = asyncio.run(subscription.buy.run())
 
 >>> if result.is_success:
 ...     print("Subscribed")
