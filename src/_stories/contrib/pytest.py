@@ -10,9 +10,6 @@ import _stories.context
 import _stories.mounted
 
 
-# FIXME: Test me.
-
-
 origin_make_context = _stories.context.make_context
 
 

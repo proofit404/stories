@@ -6,9 +6,6 @@ import _stories.context
 import _stories.mounted
 
 
-# FIXME: Test me.
-
-
 origin_make_context = _stories.context.make_context
 
 
@@ -55,8 +52,7 @@ class StoriesPanel(DebugPanel):
 
     def content(self):
         return render_template(
-            "stories/debug_toolbar/stories_panel.html",
-            stories=self.storage,  # FIXME: Use pretty print.
+            "stories/debug_toolbar/stories_panel.html", stories=self.storage
         )
 
     def enable_instrumentation(self):

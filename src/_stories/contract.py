@@ -11,94 +11,6 @@ from _stories.compat import PydanticSpec
 from _stories.exceptions import ContextContractError
 
 
-# FIXME: Handle protocol extension.  There should be way to say in the
-# substory contract "this variable should be an integer" and in
-# addition in the story "this integer should be greater then 7".  This
-# way we also can require a certain substory to declare context
-# variable for parent story.
-#
-# FIXME: Add fix suggestion to the bottom of the error message.
-#
-# FIXME: Support custom validation of complex relationships.  For
-# example, `@pydantic.validator` of `password2` depends on
-# `password1`.
-#
-# FIXME: Check that contracts collisions are checked in the situation:
-#
-# story
-#   substory
-#     substory with variable declaration
-#   substory with this variable as an argument
-#
-# FIXME: Depending of the level of nesting the same substory can
-# occurred multiple times at one argument in the contract
-# representation.
-#
-# defaults:
-#   typing.Union[typing.Dict[str, str], NoneType]  # Argument of ProcessImages.process
-#   typing.Union[typing.Dict[str, str], NoneType]  # Argument of ProcessImages.process
-#   typing.Union[typing.Dict[str, str], NoneType]  # Argument of ProcessImages.process
-# raw_urls:
-#   str  # Argument of FetchURLPreviews.fetch
-#   str  # Argument of FetchURLPreviews.fetch
-# files:
-#   typing.Dict[str, typing.Union[str, int, typing.Any]]  # Argument of ProcessVideos.process  # noqa: E501
-#   typing.Dict[str, typing.Union[str, int, typing.Any]]  # Argument of ProcessImages.process  # noqa: E501
-#   typing.Dict[str, typing.Union[str, int, typing.Any]]  # Argument of ProcessImages.process  # noqa: E501
-#   typing.Dict[str, typing.Union[str, int, typing.Any]]  # Argument of ProcessImages.process  # noqa: E501
-#
-# FIXME: Fix pydantic error messages.
-#
-# In [1]: class Context(pydantic.BaseModel):
-#    ...:     files: typing.Dict[str, typing.Dict[str, typing.Union[str, int, typing.BinaryIO]]]  # noqa: E501
-#    ...:
-#
-# In [2]: Context(files={"a": {'name': B(name='test'), 'size': 1}})
-# ---------------------------------------------------------------------------
-# ValidationError: 3 validation errors
-# files -> a -> name
-#   str type expected (type=type_error.str)
-# files -> a -> name
-#   value is not a valid integer (type=type_error.integer)
-# files -> a -> name
-#   instance of BinaryIO expected (type=type_error.arbitrary_type; expected_arbitrary_type=BinaryIO)  # noqa: E501
-#
-# FIXME: Test all field representation for all supported libraries.
-# I.e. Dict, List, Tuple, Integer, String, etc.
-#
-# FIXME: Alias validation creates new object for each alias.  So they
-# became not aliases.
-#
-# FIXME: Parent story can't define an argument, if child story already
-# defined variable with the same name.
-#
-# FIXME: When Success argument is broken we should show validator of
-# what argument of what substory is broken.  Because it's really hard
-# to track down it in a deep story composition.
-#
-# FIXME: Nested collision detector doesn't support identity check for
-# neighbor substories.  Only parent-child for now.
-#
-# class Subs
-#   @story
-#   def foo(I):
-#
-#   @story
-#   def bar(I):
-#
-#   @contract_in(Subs)
-#   class Context:
-#     bar: int
-#
-# class Parent:
-#   @story
-#   def quiz(I):
-#     I.foo
-#     I.bar   <--- `bar` will be treated as repeated variable.
-#
-# NOTE: `noqa` comments are not part of the program output.
-
-
 # Validators.
 
 
@@ -252,7 +164,6 @@ class NullContract(object):
 
     def check_story_call(self, kwargs, ns, seen):
         __tracebackhide__ = True
-        # FIXME: Check required arguments here.
         unknown_arguments = set(kwargs) - set(self.argset)
         if unknown_arguments:
             message = unknown_argument_template.format(
@@ -300,17 +211,12 @@ class NullContract(object):
             field for fields in fieldset for field in fields if field in self.argset
         )
         for argument in arguments:
-            # FIXME: This does not work for story composition when
-            # many stories has the same argument.
             ((validator, cls_name, name),) = self.argset[argument]
             lines.append("  {}  # Argument of {}.{}".format(argument, cls_name, name))
         return "\n".join(lines)
 
 
 class SpecContract(NullContract):
-    # FIXME: Deny empty disassembled spec.  If there is such need, we
-    # should replace `NullContract` with empty `SpecContract`
-    # ourselves.
     def __init__(self, cls_name, name, arguments, spec, origin):
         self.spec = spec
         self.origin = origin
@@ -551,8 +457,6 @@ def combine_contract(parent, child):
     ):
         repeated = set(parent.declared) & set(child.declared)
         if repeated:
-            # FIXME: Repeated variables can occur in three different
-            # classes.
             key = next(iter(repeated))
             message = incompatible_contracts_template.format(
                 repeated=", ".join(map(repr, sorted(repeated))),

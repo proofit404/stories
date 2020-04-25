@@ -15,7 +15,6 @@ def story(f):
     this = {"contract": None, "failures": None}
 
     def contract_method(contract):
-        # FIXME: Raise error on unsupported types.
         this["contract"] = contract
         return contract
 

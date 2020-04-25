@@ -6,9 +6,6 @@ import _stories.context
 import _stories.mounted
 
 
-# FIXME: Test me.
-
-
 origin_make_context = _stories.context.make_context
 
 
@@ -18,7 +15,7 @@ def track_context():
         ctx, ns, lines, bind = origin_make_context(contract, kwargs, history)
         record(
             processor=lambda data: data.update(
-                {"category": "story", "message": repr(ctx)}  # FIXME: Use pretty print.
+                {"category": "story", "message": repr(ctx)}
             )
         )
         return ctx, ns, lines, bind

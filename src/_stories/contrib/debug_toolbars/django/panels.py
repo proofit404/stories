@@ -11,9 +11,6 @@ import _stories.context
 import _stories.mounted
 
 
-# FIXME: Test me.
-
-
 origin_make_context = _stories.context.make_context
 
 
@@ -61,4 +58,4 @@ class StoriesPanel(Panel):
         _stories.mounted.make_context = origin_make_context
 
     def generate_stats(self, request, response):
-        self.record_stats({"stories": self.storage})  # FIXME: Use pretty print.
+        self.record_stats({"stories": self.storage})

@@ -11,7 +11,6 @@ def make_context(contract, kwargs, history):
     seen = []
     kwargs = contract.check_story_call(kwargs, ns, seen)
     for arg in sorted(contract.argset):
-        # FIXME: We should be able to remove `if` statement here.
         if arg in kwargs:
             ns[arg] = kwargs[arg]
     lines = ["Story argument"] * len(ns)
@@ -46,7 +45,6 @@ def make_context(contract, kwargs, history):
         return attributes
 
     def bool_method(self):
-        # FIXME: It isn't a mutation error.
         message = comparison_template.format(available=", ".join(map(repr, ns)))
         raise MutationError(message)
 
@@ -117,10 +115,6 @@ def context_representation(ns, lines, repr_func=repr):
 
 
 # Messages.
-
-
-# TODO: In the story with contract undefined and not yet assigned
-# attribute should has different error messages.
 
 
 missed_attribute_message = """

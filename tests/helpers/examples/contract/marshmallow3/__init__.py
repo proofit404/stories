@@ -18,7 +18,7 @@ representations = {
     "int_field_repr": "Integer",
     "str_field_repr": "String",
     "list_of_int_field_repr": "List",
-    "list_of_str_field_repr": "List",  # FIXME: Should show child schema.
+    "list_of_str_field_repr": "List",
     "contract_class_repr": "<class 'marshmallow.schema.Schema'>",
 }
 
@@ -227,7 +227,7 @@ class SequentialParent(object):
         I.y
         I.after
 
-    @a.contract  # FIXME: Should be inferred.
+    @a.contract
     class Contract(Schema):
         pass
 
