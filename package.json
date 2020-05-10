@@ -9,11 +9,13 @@
     "@semantic-release/changelog": "*",
     "@semantic-release/exec": "*",
     "@semantic-release/git": "*",
+    "danger": "*",
     "eslint": "*",
     "eslint-plugin-json": "*",
     "remark-cli": "*",
     "remark-lint": "*",
     "remark-preset-lint-recommended": "*",
-    "semantic-release": "*"
+    "semantic-release": "*",
+    "typescript": "*"
   }
 }
