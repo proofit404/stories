@@ -5,5 +5,5 @@ accept-encodings = utf-8
 exclude =
   .tox
   node_modules
-ignore = W503
+ignore = E741, W503
 per-file-ignores =
