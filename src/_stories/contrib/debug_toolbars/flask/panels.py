@@ -21,18 +21,10 @@ def track_context(storage):
     return wrapper
 
 
-def pluralize(number, singular, plural=None):
-    if plural is None:
-        plural = singular + "s"
-    if number == 1:
-        return "%d %s" % (number, singular)
-    else:
-        return "%d %s" % (number, plural)
-
-
 class StoriesPanel(DebugPanel):
     name = "Stories"
     has_content = True
+    template = "stories/debug_toolbar/stories_panel.html"
 
     def __init__(self, *args, **kwargs):
         super(StoriesPanel, self).__init__(*args, **kwargs)
@@ -44,23 +36,27 @@ class StoriesPanel(DebugPanel):
 
     def nav_subtitle(self):
         count = len(self.storage)
-        return pluralize(count, "call")
+        template = "%(count)d call" if count == 1 else "%(count)d calls"
+        return template % {"count": count}
 
     def title(self):
         count = len(self.storage)
-        return "Context and execution path of %s" % pluralize(count, "story", "stories")
+        template = (
+            "Context and execution path of %(count)d story"
+            if count == 1
+            else "Context and execution path of %(count)d stories"
+        )
+        return template % {"count": count}
 
     def url(self):
         return "#"
-
-    def content(self):
-        return render_template(
-            "stories/debug_toolbar/stories_panel.html",
-            stories=self.storage,  # FIXME: Use pretty print.
-        )
 
     def enable_instrumentation(self):
         _stories.mounted.make_context = track_context(self.storage)
 
     def disable_instrumentation(self):
         _stories.mounted.make_context = origin_make_context
+
+    def content(self):
+        # FIXME: Use pretty print.
+        return render_template(self.template, stories=self.storage)

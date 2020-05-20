@@ -3,7 +3,7 @@
 
 try:
     from enum import Enum, EnumMeta
-except ImportError:
+except ImportError:  # pragma: no cover
     # We are on Python 2.7 and enum34 package is not installed.
     class Enum(object):
         pass
