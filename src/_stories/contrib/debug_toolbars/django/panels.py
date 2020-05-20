@@ -1,12 +1,6 @@
 # -*- coding: utf-8 -*-
 from debug_toolbar.panels import Panel
 
-try:
-    from django.utils.translation import gettext_lazy as _
-except ImportError:
-    from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ungettext_lazy as __
-
 import _stories.context
 import _stories.mounted
 
@@ -27,32 +21,31 @@ def track_context(storage):
 
 
 class StoriesPanel(Panel):
-
-    # Implement the Panel API
-
     template = "stories/debug_toolbar/stories_panel.html"
-
-    nav_title = _("Stories")
-
-    @property
-    def nav_subtitle(self):
-        count = len(self.storage)
-        return __("%(count)d call", "%(count)d calls", count) % {"count": count}
-
-    @property
-    def title(self):
-        count = len(self.storage)
-        return __(
-            "Context and execution path of %(count)d story",
-            "Context and execution path of %(count)d stories",
-            count,
-        ) % {"count": count}
-
-    # Implement the Collector.
 
     def __init__(self, *args, **kwargs):
         super(StoriesPanel, self).__init__(*args, **kwargs)
         self.storage = []
+
+    @property
+    def nav_title(self):
+        return "Stories"
+
+    @property
+    def nav_subtitle(self):
+        count = len(self.storage)
+        template = "%(count)d call" if count == 1 else "%(count)d calls"
+        return template % {"count": count}
+
+    @property
+    def title(self):
+        count = len(self.storage)
+        template = (
+            "Context and execution path of %(count)d story"
+            if count == 1
+            else "Context and execution path of %(count)d stories"
+        )
+        return template % {"count": count}
 
     def enable_instrumentation(self):
         _stories.mounted.make_context = track_context(self.storage)

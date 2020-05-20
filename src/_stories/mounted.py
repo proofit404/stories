@@ -18,14 +18,7 @@ class ClassMountedStory(object):
 
     def __repr__(self):
         result = [self.cls.__name__ + "." + self.name]
-        for name in self.collected:
-            attr = getattr(self.cls, name, None)
-            if type(attr) is ClassMountedStory:
-                result.append("  " + attr.name)
-                result.extend(["  " + line for line in repr(attr).splitlines()[1:]])
-            else:
-                defined = "" if attr else " ??"
-                result.append("  " + name + defined)
+        result.extend("  " + name for name in self.collected)
         return "\n".join(result)
 
 

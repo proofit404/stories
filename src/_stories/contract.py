@@ -528,27 +528,7 @@ def combine_contract(parent, child):
     if type(parent) is NullContract and type(child) is NullContract:
         combine_argsets(parent, child)
         return
-    elif (
-        type(parent) is SpecContract
-        and type(child) is SpecContract
-        and parent.origin is child.origin
-    ):
-        combine_argsets(parent, child)
-        return
-    elif (
-        type(parent) is SpecContract
-        and type(child) is SpecContract
-        and any(
-            isinstance(parent.origin, spec_type) and isinstance(child.origin, spec_type)
-            for spec_type in [
-                PydanticSpec,
-                Marshmallow3Spec,
-                Marshmallow2Spec,
-                CerberusSpec,
-                dict,
-            ]
-        )
-    ):
+    elif type(parent) is SpecContract and type(child) is SpecContract:
         repeated = set(parent.declared) & set(child.declared)
         if repeated:
             # FIXME: Repeated variables can occur in three different
