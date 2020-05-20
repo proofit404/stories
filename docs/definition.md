@@ -297,6 +297,7 @@ the story definition method or whenever you run it, depending on the invalid sto
     ...     async def asynchronous_step(self, ctx):
     ...
     ...         return Success()
+
     >>> MixedStory().example
     Traceback (most recent call last):
       ...
@@ -328,6 +329,7 @@ the story definition method or whenever you run it, depending on the invalid sto
     ...     def synchronous_step(self, ctx):
     ...
     ...         return Success()
+
     >>> MixedStory().example
     Traceback (most recent call last):
       ...
@@ -355,18 +357,25 @@ the story definition method or whenever you run it, depending on the invalid sto
     ...         I.synchronous_step
     ...         I.asynchronous_substory
     ...
+    ...     def synchronous_step(self, ctx):
+    ...
+    ...         return Success()
+    ...
+    ...     def __init__(self):
+    ...
+    ...         self.asynchronous_substory = MixedSubstory().asynchronous_substory
+
+    >>> class MixedSubstory:
+    ...
     ...     @story
     ...     def asynchronous_substory(I):
     ...
     ...         I.asynchronous_step
     ...
-    ...     def synchronous_step(self, ctx):
-    ...
-    ...         return Success()
-    ...
     ...     async def asynchronous_step(self, ctx):
     ...
     ...         return Success()
+
     >>> MixedStory().example
     Traceback (most recent call last):
       ...
@@ -374,7 +383,7 @@ the story definition method or whenever you run it, depending on the invalid sto
     <BLANKLINE>
     Story function method: MixedStory.example
     <BLANKLINE>
-    Substory coroutine method: MixedStory.asynchronous_substory
+    Substory coroutine method: MixedSubstory.asynchronous_substory
 
     ```
 
@@ -391,18 +400,25 @@ the story definition method or whenever you run it, depending on the invalid sto
     ...         I.asynchronous_step
     ...         I.synchronous_substory
     ...
+    ...     async def asynchronous_step(self, ctx):
+    ...
+    ...         return Success()
+    ...
+    ...     def __init__(self):
+    ...
+    ...         self.synchronous_substory = MixedSubstory().synchronous_substory
+
+    >>> class MixedSubstory:
+    ...
     ...     @story
     ...     def synchronous_substory(I):
     ...
     ...         I.synchronous_step
     ...
-    ...     async def asynchronous_step(self, ctx):
-    ...
-    ...         return Success()
-    ...
     ...     def synchronous_step(self, ctx):
     ...
     ...         return Success()
+
     >>> MixedStory().example
     Traceback (most recent call last):
       ...
@@ -410,7 +426,7 @@ the story definition method or whenever you run it, depending on the invalid sto
     <BLANKLINE>
     Story coroutine method: MixedStory.example
     <BLANKLINE>
-    Substory function method: MixedStory.synchronous_substory
+    Substory function method: MixedSubstory.synchronous_substory
 
     ```
 
