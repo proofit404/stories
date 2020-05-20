@@ -2,7 +2,6 @@
 from enum import Enum
 
 from stories import story
-from stories.shortcuts import failures_in
 
 
 # Base classes.
@@ -63,7 +62,7 @@ class ParentWithList(object):
         I.after
 
 
-failures_in(ParentWithList, ["foo", "bar", "baz"])
+ParentWithList.a.failures(["foo", "bar", "baz"])
 
 
 class WideParentWithList(object):
@@ -74,7 +73,7 @@ class WideParentWithList(object):
         I.after
 
 
-failures_in(WideParentWithList, ["foo", "bar", "baz", "quiz"])
+WideParentWithList.a.failures(["foo", "bar", "baz", "quiz"])
 
 
 class ShrinkParentWithList(object):
@@ -85,7 +84,7 @@ class ShrinkParentWithList(object):
         I.after
 
 
-failures_in(ShrinkParentWithList, ["foo", "quiz"])
+ShrinkParentWithList.a.failures(["foo", "quiz"])
 
 
 class ChildWithEnum(object):
@@ -120,7 +119,7 @@ class ParentWithEnum(object):
         I.after
 
 
-@failures_in(ParentWithEnum)
+@ParentWithEnum.a.failures
 class Errors(Enum):
     foo = 1
     bar = 2
@@ -135,7 +134,7 @@ class WideParentWithEnum(object):
         I.after
 
 
-@failures_in(WideParentWithEnum)
+@WideParentWithEnum.a.failures
 class Errors(Enum):  # noqa: F811
     foo = 1
     bar = 2
@@ -151,7 +150,7 @@ class ShrinkParentWithEnum(object):
         I.after
 
 
-@failures_in(ShrinkParentWithEnum)
+@ShrinkParentWithEnum.a.failures
 class Errors(Enum):  # noqa: F811
     foo = 1
     quiz = 4

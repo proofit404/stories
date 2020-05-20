@@ -36,9 +36,6 @@ def test_success(r, x):
     class T(x.Child, x.NormalMethod):
         pass
 
-    class Q(x.Parent, x.NormalParentMethod, T):
-        pass
-
     class J(x.Parent, x.NormalParentMethod):
         def __init__(self):
             self.x = T().x
@@ -49,16 +46,6 @@ def test_success(r, x):
     assert result is None
 
     result = r(T().x.run)()
-    assert result.is_success
-    assert not result.is_failure
-    assert result.value is None
-
-    # Substory inheritance.
-
-    result = r(Q().a)()
-    assert result is None
-
-    result = r(Q().a.run)()
     assert result.is_success
     assert not result.is_failure
     assert result.value is None
@@ -88,23 +75,6 @@ def test_failure(r, x):
     assert result.is_failure
     assert result.ctx.foo == 2
     assert result.ctx.bar == 2
-    assert result.failed_on("two")
-    assert not result.failed_on("one")
-    with pytest.raises(AssertionError):
-        result.value
-
-    # Simple substory.
-
-    with pytest.raises(FailureError) as exc_info:
-        r(x.SimpleSubstory().y)(spam=3)
-    assert repr(exc_info.value) == "FailureError()"
-
-    result = r(x.SimpleSubstory().y.run)(spam=3)
-    assert not result.is_success
-    assert result.is_failure
-    assert result.ctx.foo == 2
-    assert result.ctx.bar == 4
-    assert result.ctx.spam == 3
     assert result.failed_on("two")
     assert not result.failed_on("one")
     with pytest.raises(AssertionError):
@@ -148,15 +118,6 @@ def test_result(r, x):
     assert not result.failed_on("two")
     assert result.value == -1
 
-    result = r(x.SimpleSubstory().y)(spam=2)
-    assert result == -1
-
-    result = r(x.SimpleSubstory().y.run)(spam=2)
-    assert result.is_success
-    assert not result.is_failure
-    assert not result.failed_on("two")
-    assert result.value == -1
-
     result = r(x.SubstoryDI(x.Simple().x).y)(spam=2)
     assert result == -1
 
@@ -178,14 +139,6 @@ def test_skip(r, x):
     assert not result.is_failure
     assert result.value is None
 
-    result = r(x.SimpleSubstory().y)(spam=-2)
-    assert result == -4
-
-    result = r(x.SimpleSubstory().y.run)(spam=-2)
-    assert result.is_success
-    assert not result.is_failure
-    assert result.value == -4
-
     result = r(x.SubstoryDI(x.Simple().x).y)(spam=-2)
     assert result == -4
 
@@ -193,14 +146,6 @@ def test_skip(r, x):
     assert result.is_success
     assert not result.is_failure
     assert result.value == -4
-
-    result = r(x.SubstoryDI(x.SimpleSubstory().z).y)(spam=2)
-    assert result == 4
-
-    result = r(x.SubstoryDI(x.SimpleSubstory().z).y.run)(spam=2)
-    assert result.is_success
-    assert not result.is_failure
-    assert result.value == 4
 
     result = r(x.SubstoryDI(x.Pipe().y).y)(spam=-2)
     assert result == -4

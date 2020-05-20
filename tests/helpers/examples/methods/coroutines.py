@@ -80,7 +80,7 @@ def define_coroutine_story():
     class Action(object):
         @story
         async def do(I):
-            pass
+            pass  # pragma: no cover
 
 
 # Simple story.
@@ -165,39 +165,6 @@ class Branch(object):
             return Result("allowed")
         else:
             return Result("denied")
-
-
-# Substory in the same class.
-
-
-class SimpleSubstory(Simple):
-    @story
-    @arguments("spam")
-    def y(I):
-        I.start
-        I.before
-        I.x
-        I.after
-
-    async def start(self, ctx):
-        ctx.foo = ctx.spam - 1
-        return Success()
-
-    async def before(self, ctx):
-        ctx.bar = ctx.spam + 1
-        return Success()
-
-    async def after(self, ctx):
-        return Result(ctx.spam * 2)
-
-    @story
-    @arguments("foo", "bar")
-    def z(I):
-        I.first
-        I.x
-
-    async def first(self, ctx):
-        return Skip()
 
 
 # Dependency injection of the substory.

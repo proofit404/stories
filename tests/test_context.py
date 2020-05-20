@@ -16,9 +16,6 @@ def test_context_private_fields(r, c):
     class T(c.Child, c.PrivateMethod):
         pass
 
-    class Q(c.Parent, c.NormalParentMethod, T):
-        pass
-
     class J(c.Parent, c.NormalParentMethod):
         def __init__(self):
             self.x = T().x
@@ -28,12 +25,6 @@ def test_context_private_fields(r, c):
     assert r(T().x)() == {}
 
     assert r(T().x.run)().value == {}
-
-    # Substory inheritance.
-
-    assert r(Q().a)() == {}
-
-    assert r(Q().a.run)().value == {}
 
     # Substory DI.
 
@@ -47,9 +38,6 @@ def test_context_dir(r, c):
 
     class T(c.ParamChild, c.DirMethod):
         pass
-
-    class Q(c.ParamParent, c.DirParentMethod, c.Child, c.NormalMethod):
-        foo = 1
 
     class J(c.ParamParent, c.DirParentMethod):
         def __init__(self):
@@ -67,16 +55,6 @@ def test_context_dir(r, c):
 
     assert r(T().x.run)(bar=2).value == dir(Ctx())
 
-    # Substory inheritance.
-
-    class Ctx(object):
-        foo = 1
-        bar = 2
-
-    assert r(Q().a)(bar=2) == dir(Ctx())
-
-    assert r(Q().a.run)(bar=2).value == dir(Ctx())
-
     # Substory DI.
 
     class Ctx(object):
@@ -92,9 +70,6 @@ def test_deny_context_attribute_deletion(r, c):
     """We can't use attribute deletion with `Context` object."""
 
     class T(c.Child, c.DeleteMethod):
-        pass
-
-    class Q(c.Parent, c.NormalParentMethod, T):
         pass
 
     class J(c.Parent, c.NormalParentMethod):
@@ -117,16 +92,6 @@ Variables can not be removed from Context.
         r(T().x.run)()
     assert str(exc_info.value) == expected
 
-    # Substory inheritance.
-
-    with pytest.raises(MutationError) as exc_info:
-        r(Q().a)()
-    assert str(exc_info.value) == expected
-
-    with pytest.raises(MutationError) as exc_info:
-        r(Q().a.run)()
-    assert str(exc_info.value) == expected
-
     # Substory DI.
 
     with pytest.raises(MutationError) as exc_info:
@@ -140,9 +105,6 @@ Variables can not be removed from Context.
 
 def test_deny_context_boolean_comparison(r, c):
     class T(c.ParamChild, c.CompareMethod):
-        pass
-
-    class Q(c.ParamParent, c.NormalParentMethod, T):
         pass
 
     class J(c.ParamParent, c.NormalParentMethod):
@@ -163,16 +125,6 @@ Available variables: 'bar'
 
     with pytest.raises(MutationError) as exc_info:
         r(T().x.run)(bar=1)
-    assert str(exc_info.value) == expected
-
-    # Substory inheritance.
-
-    with pytest.raises(MutationError) as exc_info:
-        r(Q().a)(bar=1)
-    assert str(exc_info.value) == expected
-
-    with pytest.raises(MutationError) as exc_info:
-        r(Q().a.run)(bar=1)
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -255,29 +207,6 @@ Context:
     assert repr(getter()) == expected
 
     expected = """
-SimpleSubstory.y
-  start
-  before
-  x
-    one
-    two (failed)
-
-Context:
-  spam: 3  # Story argument
-  foo: 2   # Set by SimpleSubstory.start
-  bar: 4   # Set by SimpleSubstory.before
-    """.strip()
-
-    getter = make_collector()
-    with pytest.raises(FailureError):
-        r(x.SimpleSubstory().y)(spam=3)
-    assert repr(getter()) == expected
-
-    getter = make_collector()
-    r(x.SimpleSubstory().y.run)(spam=3)
-    assert repr(getter()) == expected
-
-    expected = """
 SubstoryDI.y
   start
   before
@@ -330,26 +259,6 @@ Context()
     r(T().x.run)()
     assert repr(getter()) == expected
 
-    # Substory inheritance.
-
-    expected = """
-Q.a
-  before
-  x
-    one (failed: 'foo')
-
-Context()
-    """.strip()
-
-    getter = make_collector()
-    with pytest.raises(FailureError):
-        r(Q().a)()
-    assert repr(getter()) == expected
-
-    getter = make_collector()
-    r(Q().a.run)()
-    assert repr(getter()) == expected
-
     # Substory DI.
 
     expected = """
@@ -375,9 +284,6 @@ def test_context_representation_with_failure_reason_enum(r, f):
     class T(f.ChildWithEnum, f.EnumMethod):
         pass
 
-    class Q(f.ParentWithEnum, f.NormalParentMethod, T):
-        pass
-
     class J(f.ParentWithEnum, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
@@ -398,26 +304,6 @@ Context()
 
     getter = make_collector()
     r(T().x.run)()
-    assert repr(getter()) == expected
-
-    # Substory inheritance.
-
-    expected = """
-Q.a
-  before
-  x
-    one (failed: <Errors.foo: 1>)
-
-Context()
-    """.strip()
-
-    getter = make_collector()
-    with pytest.raises(FailureError):
-        r(Q().a)()
-    assert repr(getter()) == expected
-
-    getter = make_collector()
-    r(Q().a.run)()
     assert repr(getter()) == expected
 
     # Substory DI.
@@ -461,30 +347,6 @@ Context:
 
     getter = make_collector()
     r(x.Simple().x.run)(foo=1, bar=3)
-    assert repr(getter()) == expected
-
-    expected = """
-SimpleSubstory.y
-  start
-  before
-  x
-    one
-    two
-    three (returned: -1)
-
-Context:
-  spam: 2  # Story argument
-  foo: 1   # Set by SimpleSubstory.start
-  bar: 3   # Set by SimpleSubstory.before
-  baz: 4   # Set by SimpleSubstory.two
-    """.strip()
-
-    getter = make_collector()
-    r(x.SimpleSubstory().y)(spam=2)
-    assert repr(getter()) == expected
-
-    getter = make_collector()
-    r(x.SimpleSubstory().y.run)(spam=2)
     assert repr(getter()) == expected
 
     expected = """
@@ -557,29 +419,6 @@ Context:
     assert repr(getter()) == expected
 
     expected = """
-SimpleSubstory.y
-  start
-  before
-  x
-    one
-    two (skipped)
-  after (returned: -4)
-
-Context:
-  spam: -2  # Story argument
-  foo: -3   # Set by SimpleSubstory.start
-  bar: -1   # Set by SimpleSubstory.before
-    """.strip()
-
-    getter = make_collector()
-    r(x.SimpleSubstory().y)(spam=-2)
-    assert repr(getter()) == expected
-
-    getter = make_collector()
-    r(x.SimpleSubstory().y.run)(spam=-2)
-    assert repr(getter()) == expected
-
-    expected = """
 SubstoryDI.y
   start
   before
@@ -600,28 +439,6 @@ Context:
 
     getter = make_collector()
     r(x.SubstoryDI(x.Simple().x).y.run)(spam=-2)
-    assert repr(getter()) == expected
-
-    expected = """
-SubstoryDI.y
-  start
-  before
-  x (SimpleSubstory.z)
-    first (skipped)
-  after (returned: 4)
-
-Context:
-  spam: 2  # Story argument
-  foo: 1   # Set by SubstoryDI.start
-  bar: 3   # Set by SubstoryDI.before
-    """.strip()
-
-    getter = make_collector()
-    r(x.SubstoryDI(x.SimpleSubstory().z).y)(spam=2)
-    assert repr(getter()) == expected
-
-    getter = make_collector()
-    r(x.SubstoryDI(x.SimpleSubstory().z).y.run)(spam=2)
     assert repr(getter()) == expected
 
 
@@ -672,9 +489,6 @@ def test_context_representation_with_context_contract_error(r, m):
     class T(m.ParamChildWithNull, m.StringMethod):
         pass
 
-    class Q(m.ParamParentWithNull, m.StringParentMethod, T):
-        pass
-
     class J(m.ParamParentWithNull, m.StringParentMethod):
         def __init__(self):
             self.x = T().x
@@ -698,31 +512,6 @@ Context:
     getter = make_collector()
     with pytest.raises(ContextContractError):
         r(T().x.run)(foo=1, bar=2)
-    assert repr(getter()) == expected
-
-    # Substory inheritance.
-
-    expected = """
-Q.a
-  before
-  x
-    one (errored: ContextContractError)
-
-Context:
-  eggs: 2     # Story argument
-  ham: 1      # Story argument
-  foo: '1'    # Set by Q.before
-  bar: ['2']  # Set by Q.before
-    """.strip()
-
-    getter = make_collector()
-    with pytest.raises(ContextContractError):
-        r(Q().a)(ham=1, eggs=2)
-    assert repr(getter()) == expected
-
-    getter = make_collector()
-    with pytest.raises(ContextContractError):
-        r(Q().a.run)(ham=1, eggs=2)
     assert repr(getter()) == expected
 
     # Substory DI.
@@ -755,9 +544,6 @@ def test_context_representation_with_missing_variables(r, m):
     class T(m.ParamChildWithNull, m.NormalMethod):
         pass
 
-    class Q(m.ParentWithNull, m.NormalParentMethod, T):
-        pass
-
     class J(m.ParentWithNull, m.NormalParentMethod):
         def __init__(self):
             self.x = T().x
@@ -778,26 +564,6 @@ Context()
     getter = make_collector()
     with pytest.raises(ContextContractError):
         r(T().x.run)()
-    assert repr(getter()) == expected
-
-    # Substory inheritance.
-
-    expected = """
-Q.a
-  before
-  x (errored: ContextContractError)
-
-Context()
-    """.strip()
-
-    getter = make_collector()
-    with pytest.raises(ContextContractError):
-        r(Q().a)()
-    assert repr(getter()) == expected
-
-    getter = make_collector()
-    with pytest.raises(ContextContractError):
-        r(Q().a.run)()
     assert repr(getter()) == expected
 
     # Substory DI.
@@ -845,17 +611,12 @@ Context:
     r(x.Simple().x.run)(bar=3, foo=1)
     assert repr(getter()) == expected
 
-    # FIXME: Substory inheritance.
-
     # FIXME: Substory DI.
 
 
 def test_context_representation_long_variable(r, c):
     class T(c.ParamChild, c.NormalMethod):
         foo = list(range(23))
-
-    class Q(c.ParamParent, c.NormalParentMethod, T):
-        pass
 
     class J(c.ParamParent, c.NormalParentMethod):
         def __init__(self):
@@ -879,29 +640,6 @@ Context:
 
     getter = make_collector()
     r(T().x.run)(bar="baz")
-    assert repr(getter()) == expected
-
-    # Substory inheritance.
-
-    expected = """
-Q.a
-  before
-  x
-    one
-  after
-
-Context:
-  bar: 'baz'  # Story argument
-  foo:        # Set by Q.one
-    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]
-    """.strip()
-
-    getter = make_collector()
-    r(Q().a)(bar="baz")
-    assert repr(getter()) == expected
-
-    getter = make_collector()
-    r(Q().a.run)(bar="baz")
     assert repr(getter()) == expected
 
     # Substory DI.
@@ -936,9 +674,6 @@ def test_context_representation_multiline_variable(r, c):
     class T(c.ParamChild, c.NormalMethod):
         foo = userlist(range(3))
 
-    class Q(c.ParamParent, c.NormalParentMethod, T):
-        pass
-
     class J(c.ParamParent, c.NormalParentMethod):
         def __init__(self):
             self.x = T().x
@@ -963,31 +698,6 @@ Context:
 
     getter = make_collector()
     r(T().x.run)(bar="baz")
-    assert repr(getter()) == expected
-
-    # Substory inheritance.
-
-    expected = """
-Q.a
-  before
-  x
-    one
-  after
-
-Context:
-  bar: 'baz'  # Story argument
-  foo:        # Set by Q.one
-    [0,
-     1,
-     2]
-    """.strip()
-
-    getter = make_collector()
-    r(Q().a)(bar="baz")
-    assert repr(getter()) == expected
-
-    getter = make_collector()
-    r(Q().a.run)(bar="baz")
     assert repr(getter()) == expected
 
     # Substory DI.
@@ -1020,9 +730,6 @@ def test_context_representation_variable_aliases(r, c):
     class T(c.ParamChild, c.NormalMethod):
         foo = "baz"
 
-    class Q(c.ParamParent, c.NormalParentMethod, T):
-        pass
-
     class J(c.ParamParent, c.NormalParentMethod):
         def __init__(self):
             self.x = T().x
@@ -1044,28 +751,6 @@ Context:
 
     getter = make_collector()
     r(T().x.run)(bar=T.foo)
-    assert repr(getter()) == expected
-
-    # Substory inheritance.
-
-    expected = """
-Q.a
-  before
-  x
-    one
-  after
-
-Context:
-  bar: 'baz'        # Story argument
-  foo: `bar` alias  # Set by Q.one
-    """.strip()
-
-    getter = make_collector()
-    r(Q().a)(bar=T.foo)
-    assert repr(getter()) == expected
-
-    getter = make_collector()
-    r(Q().a.run)(bar=T.foo)
     assert repr(getter()) == expected
 
     # Substory DI.
@@ -1096,9 +781,6 @@ def test_context_representation_variable_aliases_ignore(r, c, arg):
     class T(c.ParamChild, c.NormalMethod):
         foo = arg
 
-    class Q(c.ParamParent, c.NormalParentMethod, T):
-        pass
-
     class J(c.ParamParent, c.NormalParentMethod):
         def __init__(self):
             self.x = T().x
@@ -1122,30 +804,6 @@ Context:
 
     getter = make_collector()
     r(T().x.run)(bar=T.foo)
-    assert repr(getter()) == expected
-
-    # Substory inheritance.
-
-    expected = """
-Q.a
-  before
-  x
-    one
-  after
-
-Context:
-  bar: %(arg)s  # Story argument
-  foo: %(arg)s  # Set by Q.one
-    """.strip() % {
-        "arg": repr(arg)
-    }
-
-    getter = make_collector()
-    r(Q().a)(bar=T.foo)
-    assert repr(getter()) == expected
-
-    getter = make_collector()
-    r(Q().a.run)(bar=T.foo)
     assert repr(getter()) == expected
 
     # Substory DI.
