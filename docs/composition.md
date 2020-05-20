@@ -13,72 +13,6 @@ There are several ways to do it.
     [composition itself](failure_protocol.md#composition). It will use all
     reasons for all protocols of all stories used in the composition.
 
-## Class methods
-
-You can write sub-stories in the same class and use them as steps as a
-parent story step.
-
-If you want the parent story to provide some context variables, use
-`@arguments` decorator on the sub-story definition.
-
-!!! note
-
-    We advise all users to define step definition methods in the same
-    class with stories which use them.  We use inheritance from
-    `MethodDefinitions` base class for brevity.
-
-```pycon
-
->>> from stories import story, arguments, Success, Failure
->>> from app.services import MethodDefinitions
-
->>> class Subscription(MethodDefinitions):
-...
-...     @story
-...     @arguments("category_id", "price_id", "profile_id")
-...     def buy(I):
-...
-...         I.find_category
-...         I.find_price
-...         I.find_promo_code
-...         I.find_profile
-...         I.check_balance
-...         I.persist_payment
-...         I.persist_subscription
-...         I.send_subscription_notification
-...         I.show_category
-...
-...     @story
-...     @arguments("category", "price")
-...     def find_promo_code(I):
-...
-...         I.find_token
-...         I.check_expiration
-...         I.calculate_discount
-
-```
-
-You can see final composition in the class result representation:
-
-```pycon
-
->>> Subscription.buy
-Subscription.buy
-  find_category
-  find_price
-  find_promo_code
-    find_token
-    check_expiration
-    calculate_discount
-  find_profile
-  check_balance
-  persist_payment
-  persist_subscription
-  send_subscription_notification
-  show_category
-
-```
-
 ## Instance attributes
 
 We prefer to define our business logic in separate components with loose
@@ -90,6 +24,9 @@ instance with attribute assignment. No matter where these steps come
 from, constructor or not.
 
 ```pycon
+
+>>> from stories import story, arguments, Success, Failure
+>>> from app.services import MethodDefinitions
 
 >>> class Subscription(MethodDefinitions):
 ...
@@ -132,7 +69,7 @@ step should be.
 Subscription.buy
   find_category
   find_price
-  find_promo_code ??
+  find_promo_code
   find_profile
   check_balance
   persist_payment
