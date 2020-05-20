@@ -3,7 +3,6 @@ from operator import itemgetter
 
 from stories import arguments
 from stories import story
-from stories.shortcuts import contract_in
 
 
 # Constants.
@@ -95,12 +94,6 @@ class ChildWithShrink(object):
     x.contract({"baz": integer})
 
 
-class ChildReuse(object):
-    @story
-    def x(I):
-        I.one
-
-
 class ChildAlias(object):
     @story
     def x(I):
@@ -175,13 +168,6 @@ class NextParamChildWithString(object):
     y.contract({"foo": string, "bar": list_of(string)})
 
 
-class NextParamChildReuse(object):
-    @story
-    @arguments("foo", "bar", "baz")
-    def y(I):
-        I.one
-
-
 # Parent base classes.
 
 
@@ -213,19 +199,6 @@ class ParentWithSame(object):
 
 
 ParentWithSame.a.contract({"foo": integer, "bar": list_of(integer), "baz": integer})
-
-
-class ParentReuse(object):
-    @story
-    def a(I):
-        I.before
-        I.x
-        I.after
-
-
-ChildReuse.x.contract(
-    ParentReuse.a.contract({"foo": integer, "bar": list_of(integer), "baz": integer})
-)
 
 
 class SequentialParent(object):
@@ -285,25 +258,6 @@ class ParamParentWithSameWithString(object):
 ParamParentWithSameWithString.a.contract({"foo": string, "bar": list_of(string)})
 
 
-# Next parent base classes.
-
-
-class NextParamParentReuse(object):
-    @story
-    @arguments("foo", "bar")
-    def b(I):
-        I.before
-        I.y
-        I.after
-
-
-NextParamChildReuse.y.contract(
-    NextParamParentReuse.b.contract(
-        {"foo": integer, "bar": list_of(integer), "baz": integer}
-    )
-)
-
-
 # Root base classes.
 
 
@@ -315,7 +269,7 @@ class Root(object):
         I.finish
 
 
-contract_in(Root, {"fizz": integer, "buzz": integer})
+Root.i.contract({"fizz": integer, "buzz": integer})
 
 
 class RootWithSame(object):
@@ -326,7 +280,7 @@ class RootWithSame(object):
         I.finish
 
 
-contract_in(RootWithSame, {"foo": integer, "bar": list_of(integer), "baz": integer})
+RootWithSame.i.contract({"foo": integer, "bar": list_of(integer), "baz": integer})
 
 
 class SequentialRoot(object):
@@ -338,7 +292,7 @@ class SequentialRoot(object):
         I.finish
 
 
-contract_in(SequentialRoot, {"fizz": integer, "buzz": integer})
+SequentialRoot.i.contract({"fizz": integer, "buzz": integer})
 
 
 class ParamRoot(object):
@@ -350,4 +304,4 @@ class ParamRoot(object):
         I.finish
 
 
-contract_in(ParamRoot, {"fizz": integer, "buzz": integer})
+ParamRoot.i.contract({"fizz": integer, "buzz": integer})

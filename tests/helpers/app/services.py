@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from enum import auto
 from enum import Enum
-from inspect import getfullargspec
 
 from app.repositories import calculate_period
 from app.repositories import create_subscription
@@ -19,25 +18,9 @@ from stories import story
 from stories import Success
 
 
-class MethodDefinitionsType(type):
-    def __new__(cls, class_name, bases, namespace):
-        def getattribute(self, name):
-            method = type("method", (), {})()
-            method.__name__ = name
-            return method
-
-        namespace["__getattr__"] = getattribute
-        return type.__new__(cls, class_name, bases, namespace)
-
-    def __getattr__(cls, attrname):
-        if attrname in getfullargspec(cls.__init__).args:
-            raise AttributeError
-        else:
-            return type("method", (), {})()
-
-
-class MethodDefinitions(metaclass=MethodDefinitionsType):
-    pass
+class MethodDefinitions:
+    def __getattr__(self, name):
+        return type("Step", (), {"__name__": name})()
 
 
 class Subscription:

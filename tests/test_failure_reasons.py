@@ -41,9 +41,6 @@ def test_reasons_defined_with_list(r, f):
     class T(f.ChildWithList, f.StringMethod):
         pass
 
-    class Q(f.ParentWithList, f.NormalParentMethod, T):
-        pass
-
     class J(f.ParentWithList, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
@@ -57,19 +54,6 @@ def test_reasons_defined_with_list(r, f):
     assert repr(exc_info.value) == "FailureError('foo')"
 
     result = r(T().x.run)()
-    assert not result.is_success
-    assert result.is_failure
-    assert result.failed_because("foo")
-
-    # Substory inheritance.
-
-    assert Q().a.failures == ["foo", "bar", "baz"]
-
-    with pytest.raises(FailureError) as exc_info:
-        r(Q().a)()
-    assert repr(exc_info.value) == "FailureError('foo')"
-
-    result = r(Q().a.run)()
     assert not result.is_success
     assert result.is_failure
     assert result.failed_because("foo")
@@ -94,9 +78,6 @@ def test_reasons_defined_with_enum(r, f):
     class T(f.ChildWithEnum, f.EnumMethod):
         pass
 
-    class Q(f.ParentWithEnum, f.NormalParentMethod, T):
-        pass
-
     class J(f.ParentWithEnum, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
@@ -114,20 +95,6 @@ def test_reasons_defined_with_enum(r, f):
     assert not result.is_success
     assert result.is_failure
     assert result.failed_because(T().x.failures.foo)
-
-    # Substory inheritance.
-
-    assert isinstance(Q().a.failures, enum.EnumMeta)
-    assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
-
-    with pytest.raises(FailureError) as exc_info:
-        r(Q().a)()
-    assert repr(exc_info.value) == "FailureError(<Errors.foo: 1>)"
-
-    result = r(Q().a.run)()
-    assert not result.is_success
-    assert result.is_failure
-    assert result.failed_because(Q().a.failures.foo)
 
     # Substory DI.
 
@@ -149,9 +116,6 @@ def test_wrong_reason_with_list(r, f):
     its failure protocol."""
 
     class T(f.ChildWithList, f.WrongMethod):
-        pass
-
-    class Q(f.ParentWithList, f.NormalParentMethod, T):
         pass
 
     class J(f.ParentWithList, f.NormalParentMethod):
@@ -176,26 +140,6 @@ Function returned value: T.one
 
     with pytest.raises(FailureProtocolError) as exc_info:
         r(T().x.run)()
-    assert str(exc_info.value) == expected
-
-    # Substory inheritance.
-
-    expected = """
-Failure("'foo' is too big") failure reason is not allowed by current protocol.
-
-Available failures are: 'foo', 'bar', 'baz'
-
-Function returned value: Q.one
-    """.strip()
-
-    assert Q().a.failures == ["foo", "bar", "baz"]
-
-    with pytest.raises(FailureProtocolError) as exc_info:
-        r(Q().a)()
-    assert str(exc_info.value) == expected
-
-    with pytest.raises(FailureProtocolError) as exc_info:
-        r(Q().a.run)()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -226,9 +170,6 @@ def test_wrong_reason_with_enum(r, f):
     class T(f.ChildWithEnum, f.WrongMethod):
         pass
 
-    class Q(f.ParentWithEnum, f.NormalParentMethod, T):
-        pass
-
     class J(f.ParentWithEnum, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
@@ -252,27 +193,6 @@ Function returned value: T.one
 
     with pytest.raises(FailureProtocolError) as exc_info:
         r(T().x.run)()
-    assert str(exc_info.value) == expected
-
-    # Substory inheritance.
-
-    expected = """
-Failure("'foo' is too big") failure reason is not allowed by current protocol.
-
-Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
-
-Function returned value: Q.one
-    """.strip()
-
-    assert isinstance(Q().a.failures, enum.EnumMeta)
-    assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
-
-    with pytest.raises(FailureProtocolError) as exc_info:
-        r(Q().a)()
-    assert str(exc_info.value) == expected
-
-    with pytest.raises(FailureProtocolError) as exc_info:
-        r(Q().a.run)()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -304,9 +224,6 @@ def test_null_reason_with_list(r, f):
     class T(f.ChildWithList, f.NullMethod):
         pass
 
-    class Q(f.ParentWithList, f.NormalParentMethod, T):
-        pass
-
     class J(f.ParentWithList, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
@@ -331,28 +248,6 @@ Use one of them as Failure() argument.
 
     with pytest.raises(FailureProtocolError) as exc_info:
         r(T().x.run)()
-    assert str(exc_info.value) == expected
-
-    # Substory inheritance.
-
-    expected = """
-Failure() can not be used in a story with failure protocol.
-
-Available failures are: 'foo', 'bar', 'baz'
-
-Function returned value: Q.one
-
-Use one of them as Failure() argument.
-    """.strip()
-
-    assert Q().a.failures == ["foo", "bar", "baz"]
-
-    with pytest.raises(FailureProtocolError) as exc_info:
-        r(Q().a)()
-    assert str(exc_info.value) == expected
-
-    with pytest.raises(FailureProtocolError) as exc_info:
-        r(Q().a.run)()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -385,9 +280,6 @@ def test_null_reason_with_enum(r, f):
     class T(f.ChildWithEnum, f.NullMethod):
         pass
 
-    class Q(f.ParentWithEnum, f.NormalParentMethod, T):
-        pass
-
     class J(f.ParentWithEnum, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
@@ -413,29 +305,6 @@ Use one of them as Failure() argument.
 
     with pytest.raises(FailureProtocolError) as exc_info:
         r(T().x.run)()
-    assert str(exc_info.value) == expected
-
-    # Substory inheritance.
-
-    expected = """
-Failure() can not be used in a story with failure protocol.
-
-Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
-
-Function returned value: Q.one
-
-Use one of them as Failure() argument.
-    """.strip()
-
-    assert isinstance(Q().a.failures, enum.EnumMeta)
-    assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
-
-    with pytest.raises(FailureProtocolError) as exc_info:
-        r(Q().a)()
-    assert str(exc_info.value) == expected
-
-    with pytest.raises(FailureProtocolError) as exc_info:
-        r(Q().a.run)()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -469,9 +338,6 @@ def test_reason_without_protocol(r, f):
     class T(f.ChildWithNull, f.WrongMethod):
         pass
 
-    class Q(f.ParentWithNull, f.NormalParentMethod, T):
-        pass
-
     class J(f.ParentWithNull, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
@@ -494,26 +360,6 @@ Use 'failures' story method to define failure protocol.
 
     with pytest.raises(FailureProtocolError) as exc_info:
         r(T().x.run)()
-    assert str(exc_info.value) == expected
-
-    # Substory inheritance.
-
-    expected = """
-Failure("'foo' is too big") can not be used in a story without failure protocol.
-
-Function returned value: Q.one
-
-Use 'failures' story method to define failure protocol.
-    """.strip()
-
-    assert Q().a.failures is None
-
-    with pytest.raises(FailureProtocolError) as exc_info:
-        r(Q().a)()
-    assert str(exc_info.value) == expected
-
-    with pytest.raises(FailureProtocolError) as exc_info:
-        r(Q().a.run)()
     assert str(exc_info.value) == expected
 
     # Substory DI.
@@ -548,9 +394,6 @@ def test_summary_wrong_reason_with_list(r, f, method):
     class T(f.ChildWithList, getattr(f, method)):
         pass
 
-    class Q(f.ParentWithList, f.NormalParentMethod, T):
-        pass
-
     class J(f.ParentWithList, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
@@ -568,24 +411,6 @@ Story returned result: T.x
     assert T().x.failures == ["foo", "bar", "baz"]
 
     result = r(T().x.run)()
-
-    with pytest.raises(FailureProtocolError) as exc_info:
-        result.failed_because("'foo' is too big")
-    assert str(exc_info.value) == expected
-
-    # Substory inheritance.
-
-    expected = """
-'failed_because' method got argument mismatching failure protocol: "'foo' is too big"
-
-Available failures are: 'foo', 'bar', 'baz'
-
-Story returned result: Q.a
-    """.strip()
-
-    assert Q().a.failures == ["foo", "bar", "baz"]
-
-    result = r(Q().a.run)()
 
     with pytest.raises(FailureProtocolError) as exc_info:
         result.failed_because("'foo' is too big")
@@ -618,9 +443,6 @@ def test_summary_wrong_reason_with_enum(r, f, method):
     class T(f.ChildWithEnum, getattr(f, method)):
         pass
 
-    class Q(f.ParentWithEnum, f.NormalParentMethod, T):
-        pass
-
     class J(f.ParentWithEnum, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
@@ -639,25 +461,6 @@ Story returned result: T.x
     assert set(T().x.failures.__members__.keys()) == {"foo", "bar", "baz"}
 
     result = r(T().x.run)()
-
-    with pytest.raises(FailureProtocolError) as exc_info:
-        result.failed_because("'foo' is too big")
-    assert str(exc_info.value) == expected
-
-    # Substory inheritance.
-
-    expected = """
-'failed_because' method got argument mismatching failure protocol: "'foo' is too big"
-
-Available failures are: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
-
-Story returned result: Q.a
-    """.strip()
-
-    assert isinstance(Q().a.failures, enum.EnumMeta)
-    assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
-
-    result = r(Q().a.run)()
 
     with pytest.raises(FailureProtocolError) as exc_info:
         result.failed_because("'foo' is too big")
@@ -691,9 +494,6 @@ def test_summary_reason_without_protocol(r, f, method):
     class T(f.ChildWithNull, getattr(f, method)):
         pass
 
-    class Q(f.ParentWithNull, f.NormalParentMethod, T):
-        pass
-
     class J(f.ParentWithNull, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
@@ -711,24 +511,6 @@ Use 'failures' story method to define failure protocol.
     assert T().x.failures is None
 
     result = r(T().x.run)()
-
-    with pytest.raises(FailureProtocolError) as exc_info:
-        result.failed_because("'foo' is too big")
-    assert str(exc_info.value) == expected
-
-    # Substory inheritance.
-
-    expected = """
-'failed_because' method can not be used with story defined without failure protocol.
-
-Story returned result: Q.a
-
-Use 'failures' story method to define failure protocol.
-    """.strip()
-
-    assert Q().a.failures is None
-
-    result = r(Q().a.run)()
 
     with pytest.raises(FailureProtocolError) as exc_info:
         result.failed_because("'foo' is too big")
@@ -760,22 +542,9 @@ def test_use_expanded_protocol_in_summary_result_with_list(r, f):
     class T(f.ChildWithList, f.NormalMethod):
         pass
 
-    class Q(f.ShrinkParentWithList, f.NormalParentMethod, T):
-        pass
-
     class J(f.ShrinkParentWithList, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
-
-    # Substory inheritance.
-
-    result = r(Q().a.run)()
-    assert result.is_success
-    assert not result.is_failure
-    assert not result.failed_because("foo")
-    assert not result.failed_because("bar")
-    assert not result.failed_because("baz")
-    assert not result.failed_because("quiz")
 
     # Substory DI.
 
@@ -795,22 +564,9 @@ def test_use_expanded_protocol_in_summary_result_with_enum(r, f):
     class T(f.ChildWithEnum, f.NormalMethod):
         pass
 
-    class Q(f.ShrinkParentWithEnum, f.NormalParentMethod, T):
-        pass
-
     class J(f.ShrinkParentWithEnum, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
-
-    # Substory inheritance.
-
-    result = r(Q().a.run)()
-    assert result.is_success
-    assert not result.is_failure
-    assert not result.failed_because(Q().a.failures.foo)
-    assert not result.failed_because(Q().a.failures.bar)
-    assert not result.failed_because(Q().a.failures.baz)
-    assert not result.failed_because(Q().a.failures.quiz)
 
     # Substory DI.
 
@@ -833,23 +589,9 @@ def test_substory_protocol_match_with_empty(r, f):
     class T(f.ChildWithNull, f.NullMethod):
         pass
 
-    class Q(f.ParentWithNull, f.NormalParentMethod, T):
-        pass
-
     class J(f.ParentWithNull, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
-
-    # Substory inheritance.
-
-    Q().a.failures is None
-
-    with pytest.raises(FailureError) as exc_info:
-        r(Q().a)()
-    assert repr(exc_info.value) == "FailureError()"
-
-    result = r(Q().a.run)()
-    assert result.is_failure
 
     # Substory DI.
 
@@ -870,23 +612,9 @@ def test_substory_protocol_match_with_list(r, f):
     class T(f.ChildWithList, f.StringMethod):
         pass
 
-    class Q(f.WideParentWithList, f.NormalParentMethod, T):
-        pass
-
     class J(f.WideParentWithList, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
-
-    # Substory inheritance.
-
-    assert Q().a.failures == ["foo", "bar", "baz", "quiz"]
-
-    with pytest.raises(FailureError) as exc_info:
-        r(Q().a)()
-    assert repr(exc_info.value) == "FailureError('foo')"
-
-    result = r(Q().a.run)()
-    assert result.failed_because("foo")
 
     # Substory DI.
 
@@ -907,24 +635,9 @@ def test_substory_protocol_match_with_enum(r, f):
     class T(f.ChildWithEnum, f.EnumMethod):
         pass
 
-    class Q(f.WideParentWithEnum, f.NormalParentMethod, T):
-        pass
-
     class J(f.WideParentWithEnum, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
-
-    # Substory inheritance.
-
-    assert isinstance(Q().a.failures, enum.EnumMeta)
-    assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz", "quiz"}
-
-    with pytest.raises(FailureError) as exc_info:
-        r(Q().a)()
-    assert repr(exc_info.value) == "FailureError(<Errors.foo: 1>)"
-
-    result = r(Q().a.run)()
-    assert result.failed_because(Q().a.failures.foo)
 
     # Substory DI.
 
@@ -946,23 +659,9 @@ def test_expand_substory_protocol_null_with_list(r, f):
     class T(f.ChildWithNull, f.NormalMethod):
         pass
 
-    class Q(f.ParentWithList, f.NormalParentMethod, T):
-        pass
-
     class J(f.ParentWithList, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
-
-    # Substory inheritance.
-
-    assert Q().a.failures == ["foo", "bar", "baz"]
-
-    result = r(Q().a)()
-    assert result is None
-
-    result = r(Q().a.run)()
-    assert result.is_success
-    assert result.value is None
 
     # Substory DI.
 
@@ -983,24 +682,9 @@ def test_expand_substory_protocol_null_with_enum(r, f):
     class T(f.ChildWithNull, f.NormalMethod):
         pass
 
-    class Q(f.ParentWithEnum, f.NormalParentMethod, T):
-        pass
-
     class J(f.ParentWithEnum, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
-
-    # Substory inheritance.
-
-    assert isinstance(Q().a.failures, enum.EnumMeta)
-    assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
-
-    result = r(Q().a)()
-    assert result is None
-
-    result = r(Q().a.run)()
-    assert result.is_success
-    assert result.value is None
 
     # Substory DI.
 
@@ -1023,34 +707,9 @@ def test_deny_failure_substory_without_protocol_story_protocol_with_list(r, f):
     class T(f.ChildWithNull, f.NullMethod):
         pass
 
-    class Q(f.ParentWithList, f.NormalParentMethod, T):
-        pass
-
     class J(f.ParentWithList, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
-
-    # Substory inheritance.
-
-    expected = """
-Failure() can not be used in a story composition.
-
-Different types of failure protocol were used in parent and substory definitions.
-
-Function returned value: Q.one
-
-Use 'failures' story method to define failure protocol.
-    """.strip()
-
-    assert Q().a.failures == ["foo", "bar", "baz"]
-
-    with pytest.raises(FailureProtocolError) as exc_info:
-        r(Q().a)()
-    assert str(exc_info.value) == expected
-
-    with pytest.raises(FailureProtocolError) as exc_info:
-        r(Q().a.run)()
-    assert str(exc_info.value) == expected
 
     # Substory DI.
 
@@ -1083,35 +742,9 @@ def test_deny_failure_substory_without_protocol_story_protocol_with_enum(r, f):
     class T(f.ChildWithNull, f.NullMethod):
         pass
 
-    class Q(f.ParentWithEnum, f.NormalParentMethod, T):
-        pass
-
     class J(f.ParentWithEnum, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
-
-    # Substory inheritance.
-
-    expected = """
-Failure() can not be used in a story composition.
-
-Different types of failure protocol were used in parent and substory definitions.
-
-Function returned value: Q.one
-
-Use 'failures' story method to define failure protocol.
-    """.strip()
-
-    assert isinstance(Q().a.failures, enum.EnumMeta)
-    assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
-
-    with pytest.raises(FailureProtocolError) as exc_info:
-        r(Q().a)()
-    assert str(exc_info.value) == expected
-
-    with pytest.raises(FailureProtocolError) as exc_info:
-        r(Q().a.run)()
-    assert str(exc_info.value) == expected
 
     # Substory DI.
 
@@ -1145,34 +778,9 @@ def test_deny_failure_story_without_protocol_substory_protocol_with_list(r, f):
     class T(f.ChildWithList, f.NormalMethod):
         pass
 
-    class Q(f.ParentWithNull, f.NullParentMethod, T):
-        pass
-
     class J(f.ParentWithNull, f.NullParentMethod):
         def __init__(self):
             self.x = T().x
-
-    # Substory inheritance.
-
-    expected = """
-Failure() can not be used in a story composition.
-
-Different types of failure protocol were used in parent and substory definitions.
-
-Function returned value: Q.before
-
-Use 'failures' story method to define failure protocol.
-    """.strip()
-
-    assert Q().a.failures == ["foo", "bar", "baz"]
-
-    with pytest.raises(FailureProtocolError) as exc_info:
-        r(Q().a)()
-    assert str(exc_info.value) == expected
-
-    with pytest.raises(FailureProtocolError) as exc_info:
-        r(Q().a.run)()
-    assert str(exc_info.value) == expected
 
     # Substory DI.
 
@@ -1204,35 +812,9 @@ def test_deny_failure_story_without_protocol_substory_protocol_with_enum(r, f):
     class T(f.ChildWithEnum, f.NormalMethod):
         pass
 
-    class Q(f.ParentWithNull, f.NullParentMethod, T):
-        pass
-
     class J(f.ParentWithNull, f.NullParentMethod):
         def __init__(self):
             self.x = T().x
-
-    # Substory inheritance.
-
-    expected = """
-Failure() can not be used in a story composition.
-
-Different types of failure protocol were used in parent and substory definitions.
-
-Function returned value: Q.before
-
-Use 'failures' story method to define failure protocol.
-    """.strip()
-
-    assert isinstance(Q().a.failures, enum.EnumMeta)
-    assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
-
-    with pytest.raises(FailureProtocolError) as exc_info:
-        r(Q().a)()
-    assert str(exc_info.value) == expected
-
-    with pytest.raises(FailureProtocolError) as exc_info:
-        r(Q().a.run)()
-    assert str(exc_info.value) == expected
 
     # Substory DI.
 
@@ -1265,23 +847,9 @@ def test_expand_substory_protocol_list_with_null(r, f):
     class T(f.ChildWithList, f.NormalMethod):
         pass
 
-    class Q(f.ParentWithNull, f.NormalParentMethod, T):
-        pass
-
     class J(f.ParentWithNull, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
-
-    # Substory inheritance.
-
-    assert Q().a.failures == ["foo", "bar", "baz"]
-
-    result = r(Q().a)()
-    assert result is None
-
-    result = r(Q().a.run)()
-    assert result.is_success
-    assert result.value is None
 
     # Substory DI.
 
@@ -1302,24 +870,9 @@ def test_expand_substory_protocol_enum_with_null(r, f):
     class T(f.ChildWithEnum, f.NormalMethod):
         pass
 
-    class Q(f.ParentWithNull, f.NormalParentMethod, T):
-        pass
-
     class J(f.ParentWithNull, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
-
-    # Substory inheritance.
-
-    assert isinstance(Q().a.failures, enum.EnumMeta)
-    assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
-
-    result = r(Q().a)()
-    assert result is None
-
-    result = r(Q().a.run)()
-    assert result.is_success
-    assert result.value is None
 
     # Substory DI.
 
@@ -1341,23 +894,9 @@ def test_expand_substory_protocol_list_with_list(r, f):
     class T(f.ChildWithList, f.StringMethod):
         pass
 
-    class Q(f.ShrinkParentWithList, f.NormalParentMethod, T):
-        pass
-
     class J(f.ShrinkParentWithList, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
-
-    # Substory inheritance.
-
-    assert Q().a.failures == ["foo", "quiz", "bar", "baz"]
-
-    with pytest.raises(FailureError) as exc_info:
-        r(Q().a)()
-    assert repr(exc_info.value) == "FailureError('foo')"
-
-    result = r(Q().a.run)()
-    assert result.failed_because("foo")
 
     # Substory DI.
 
@@ -1378,24 +917,9 @@ def test_expand_substory_protocol_enum_with_enum(r, f):
     class T(f.ChildWithEnum, f.EnumMethod):
         pass
 
-    class Q(f.ShrinkParentWithEnum, f.NormalParentMethod, T):
-        pass
-
     class J(f.ShrinkParentWithEnum, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
-
-    # Substory inheritance.
-
-    assert isinstance(Q().a.failures, enum.EnumMeta)
-    assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz", "quiz"}
-
-    with pytest.raises(FailureError) as exc_info:
-        r(Q().a)()
-    assert repr(exc_info.value) == "FailureError(<Errors.foo: 1>)"
-
-    result = r(Q().a.run)()
-    assert result.failed_because(Q().a.failures.foo)
 
     # Substory DI.
 
@@ -1420,24 +944,10 @@ def test_expand_sequential_substory_protocol_list_with_null(r, f):
     class E(f.NextChildWithNull, f.NormalMethod):
         pass
 
-    class Q(f.SequenceParentWithNull, f.NormalParentMethod, T, E):
-        pass
-
     class J(f.SequenceParentWithNull, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
             self.y = E().y
-
-    # Substory inheritance.
-
-    assert Q().a.failures == ["foo", "bar", "baz"]
-
-    with pytest.raises(FailureError) as exc_info:
-        r(Q().a)()
-    assert repr(exc_info.value) == "FailureError('foo')"
-
-    result = r(Q().a.run)()
-    assert result.failed_because("foo")
 
     # Substory DI.
 
@@ -1461,25 +971,10 @@ def test_expand_sequential_substory_protocol_enum_with_null(r, f):
     class E(f.NextChildWithNull, f.NormalMethod):
         pass
 
-    class Q(f.SequenceParentWithNull, f.NormalParentMethod, T, E):
-        pass
-
     class J(f.SequenceParentWithNull, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
             self.y = E().y
-
-    # Substory inheritance.
-
-    assert isinstance(Q().a.failures, enum.EnumMeta)
-    assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
-
-    with pytest.raises(FailureError) as exc_info:
-        r(Q().a)()
-    assert repr(exc_info.value) == "FailureError(<Errors.foo: 1>)"
-
-    result = r(Q().a.run)()
-    assert result.failed_because(Q().a.failures.foo)
 
     # Substory DI.
 
@@ -1504,24 +999,10 @@ def test_expand_sequential_substory_protocol_list_with_list(r, f):
     class E(f.NextChildWithList, f.StringMethod):
         pass
 
-    class Q(f.SequenceParentWithNull, f.NormalParentMethod, T, E):
-        pass
-
     class J(f.SequenceParentWithNull, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
             self.y = E().y
-
-    # Substory inheritance.
-
-    assert Q().a.failures == ["foo", "bar", "baz", "spam", "ham", "eggs"]
-
-    with pytest.raises(FailureError) as exc_info:
-        r(Q().a)()
-    assert repr(exc_info.value) == "FailureError('foo')"
-
-    result = r(Q().a.run)()
-    assert result.failed_because("foo")
 
     # Substory DI.
 
@@ -1545,32 +1026,10 @@ def test_expand_sequential_substory_protocol_enum_with_enum(r, f):
     class E(f.NextChildWithEnum, f.EnumMethod):
         pass
 
-    class Q(f.SequenceParentWithNull, f.NormalParentMethod, T, E):
-        pass
-
     class J(f.SequenceParentWithNull, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
             self.y = E().y
-
-    # Substory inheritance.
-
-    assert isinstance(Q().a.failures, enum.EnumMeta)
-    assert set(Q().a.failures.__members__.keys()) == {
-        "foo",
-        "bar",
-        "baz",
-        "spam",
-        "ham",
-        "eggs",
-    }
-
-    with pytest.raises(FailureError) as exc_info:
-        r(Q().a)()
-    assert repr(exc_info.value) == "FailureError(<Errors.foo: 1>)"
-
-    result = r(Q().a.run)()
-    assert result.failed_because(Q().a.failures.foo)
 
     # Substory DI.
 
@@ -1598,30 +1057,9 @@ def test_composition_type_error_list_with_enum(r, f):
     class T(f.ChildWithList, f.StringMethod):
         pass
 
-    class Q(f.ParentWithEnum, f.NormalParentMethod, T):
-        pass
-
     class J(f.ParentWithEnum, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
-
-    # Substory inheritance.
-
-    expected = """
-Story and substory failure protocols has incompatible types:
-
-Story method: Q.a
-
-Story failure protocol: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
-
-Substory method: Q.x
-
-Substory failure protocol: 'foo', 'bar', 'baz'
-    """.strip()
-
-    with pytest.raises(FailureProtocolError) as exc_info:
-        Q().a
-    assert str(exc_info.value) == expected
 
     # Substory DI.
 
@@ -1648,30 +1086,9 @@ def test_composition_type_error_enum_with_list(r, f):
     class T(f.ChildWithEnum, f.EnumMethod):
         pass
 
-    class Q(f.ParentWithList, f.NormalParentMethod, T):
-        pass
-
     class J(f.ParentWithList, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
-
-    # Substory inheritance.
-
-    expected = """
-Story and substory failure protocols has incompatible types:
-
-Story method: Q.a
-
-Story failure protocol: 'foo', 'bar', 'baz'
-
-Substory method: Q.x
-
-Substory failure protocol: <Errors.foo: 1>, <Errors.bar: 2>, <Errors.baz: 3>
-    """.strip()
-
-    with pytest.raises(FailureProtocolError) as exc_info:
-        Q().a
-    assert str(exc_info.value) == expected
 
     # Substory DI.
 
@@ -1699,32 +1116,9 @@ def test_deny_substory_reason_parent_story_protocol_with_list(r, f):
     class T(f.ChildWithNull, f.StringMethod):
         pass
 
-    class Q(f.ParentWithList, f.NormalParentMethod, T):
-        pass
-
     class J(f.ParentWithList, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
-
-    # Substory inheritance.
-
-    expected = """
-Failure('foo') can not be used in a story without failure protocol.
-
-Function returned value: Q.one
-
-Use 'failures' story method to define failure protocol.
-    """.strip()
-
-    assert Q().a.failures == ["foo", "bar", "baz"]
-
-    with pytest.raises(FailureProtocolError) as exc_info:
-        r(Q().a)()
-    assert str(exc_info.value) == expected
-
-    with pytest.raises(FailureProtocolError) as exc_info:
-        r(Q().a.run)()
-    assert str(exc_info.value) == expected
 
     # Substory DI.
 
@@ -1754,33 +1148,9 @@ def test_deny_substory_reason_parent_story_protocol_with_enum(r, f):
     class T(f.ChildWithNull, f.EnumMethod):
         pass
 
-    class Q(f.ParentWithEnum, f.NormalParentMethod, T):
-        pass
-
     class J(f.ParentWithEnum, f.NormalParentMethod):
         def __init__(self):
             self.x = T().x
-
-    # Substory inheritance.
-
-    expected = """
-Failure(<Errors.foo: 1>) can not be used in a story without failure protocol.
-
-Function returned value: Q.one
-
-Use 'failures' story method to define failure protocol.
-    """.strip()
-
-    assert isinstance(Q().a.failures, enum.EnumMeta)
-    assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
-
-    with pytest.raises(FailureProtocolError) as exc_info:
-        r(Q().a)()
-    assert str(exc_info.value) == expected
-
-    with pytest.raises(FailureProtocolError) as exc_info:
-        r(Q().a.run)()
-    assert str(exc_info.value) == expected
 
     # Substory DI.
 
@@ -1811,32 +1181,9 @@ def test_deny_story_reason_substory_protocol_with_list(r, f):
     class T(f.ChildWithList, f.NormalMethod):
         pass
 
-    class Q(f.ParentWithNull, f.StringParentMethod, T):
-        pass
-
     class J(f.ParentWithNull, f.StringParentMethod):
         def __init__(self):
             self.x = T().x
-
-    # Substory inheritance.
-
-    expected = """
-Failure('foo') can not be used in a story without failure protocol.
-
-Function returned value: Q.before
-
-Use 'failures' story method to define failure protocol.
-    """.strip()
-
-    assert Q().a.failures == ["foo", "bar", "baz"]
-
-    with pytest.raises(FailureProtocolError) as exc_info:
-        r(Q().a)()
-    assert str(exc_info.value) == expected
-
-    with pytest.raises(FailureProtocolError) as exc_info:
-        r(Q().a.run)()
-    assert str(exc_info.value) == expected
 
     # Substory DI.
 
@@ -1866,33 +1213,9 @@ def test_deny_story_reason_substory_protocol_with_enum(r, f):
     class T(f.ChildWithEnum, f.NormalMethod):
         pass
 
-    class Q(f.ParentWithNull, f.EnumParentMethod, T):
-        pass
-
     class J(f.ParentWithNull, f.EnumParentMethod):
         def __init__(self):
             self.x = T().x
-
-    # Substory inheritance.
-
-    expected = """
-Failure(<Errors.foo: 1>) can not be used in a story without failure protocol.
-
-Function returned value: Q.before
-
-Use 'failures' story method to define failure protocol.
-    """.strip()
-
-    assert isinstance(Q().a.failures, enum.EnumMeta)
-    assert set(Q().a.failures.__members__.keys()) == {"foo", "bar", "baz"}
-
-    with pytest.raises(FailureProtocolError) as exc_info:
-        r(Q().a)()
-    assert str(exc_info.value) == expected
-
-    with pytest.raises(FailureProtocolError) as exc_info:
-        r(Q().a.run)()
-    assert str(exc_info.value) == expected
 
     # Substory DI.
 

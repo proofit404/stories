@@ -2,6 +2,7 @@
 from enum import auto
 from enum import Enum
 
+from aioapp.repositories import calculate_period
 from aioapp.repositories import create_subscription
 from aioapp.repositories import decrease_balance
 from aioapp.repositories import load_category
@@ -10,7 +11,6 @@ from aioapp.repositories import load_profile
 from aioapp.repositories import load_subscription
 from aioapp.repositories import save_profile
 from aioapp.repositories import send_notification
-from app.repositories import calculate_period
 from stories import arguments
 from stories import Failure
 from stories import Result
@@ -64,7 +64,7 @@ class Subscription:
 
     async def persist_subscription(self, ctx):
 
-        expires = calculate_period(ctx.price.period)
+        expires = await calculate_period(ctx.price.period)
         ctx.subscription = await create_subscription(ctx.profile, ctx.category, expires)
         return Success()
 

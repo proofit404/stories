@@ -6,7 +6,6 @@ from pydantic import BaseModel
 
 from stories import arguments
 from stories import story
-from stories.shortcuts import contract_in
 
 
 # Constants.
@@ -52,12 +51,6 @@ class ChildWithShrink(object):
     @x.contract
     class Contract(BaseModel):
         baz: int
-
-
-class ChildReuse(object):
-    @story
-    def x(I):
-        I.one
 
 
 class ChildAlias(object):
@@ -143,13 +136,6 @@ class NextParamChildWithString(object):
         bar: List[str]
 
 
-class NextParamChildReuse(object):
-    @story
-    @arguments("foo", "bar", "baz")
-    def y(I):
-        I.one
-
-
 # Parent base classes.
 
 
@@ -185,22 +171,6 @@ class ParentWithSame(object):
 
 
 @ParentWithSame.a.contract
-class Contract(BaseModel):  # noqa: F811
-    foo: int
-    bar: List[int]
-    baz: int
-
-
-class ParentReuse(object):
-    @story
-    def a(I):
-        I.before
-        I.x
-        I.after
-
-
-@ChildReuse.x.contract
-@ParentReuse.a.contract
 class Contract(BaseModel):  # noqa: F811
     foo: int
     bar: List[int]
@@ -275,26 +245,6 @@ class Contract(BaseModel):  # noqa: F811
     bar: List[str]
 
 
-# Next parent base classes.
-
-
-class NextParamParentReuse(object):
-    @story
-    @arguments("foo", "bar")
-    def b(I):
-        I.before
-        I.y
-        I.after
-
-
-@NextParamChildReuse.y.contract
-@NextParamParentReuse.b.contract
-class Contract(BaseModel):  # noqa: F811
-    foo: int
-    bar: List[int]
-    baz: int
-
-
 # Root base classes.
 
 
@@ -306,7 +256,7 @@ class Root(object):
         I.finish
 
 
-@contract_in(Root)
+@Root.i.contract
 class Contract(BaseModel):  # noqa: F811
     fizz: int
     buzz: int
@@ -320,7 +270,7 @@ class RootWithSame(object):
         I.finish
 
 
-@contract_in(RootWithSame)
+@RootWithSame.i.contract
 class Contract(BaseModel):  # noqa: F811
     foo: int
     bar: List[int]
@@ -336,7 +286,7 @@ class SequentialRoot(object):
         I.finish
 
 
-@contract_in(SequentialRoot)
+@SequentialRoot.i.contract
 class Contract(BaseModel):  # noqa: F811
     fizz: int
     buzz: int
@@ -351,7 +301,7 @@ class ParamRoot(object):
         I.finish
 
 
-@contract_in(ParamRoot)
+@ParamRoot.i.contract
 class Contract(BaseModel):  # noqa: F811
     fizz: int
     buzz: int

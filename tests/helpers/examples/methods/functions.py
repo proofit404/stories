@@ -116,39 +116,6 @@ class Branch(object):
             return Result("denied")
 
 
-# Substory in the same class.
-
-
-class SimpleSubstory(Simple):
-    @story
-    @arguments("spam")
-    def y(I):
-        I.start
-        I.before
-        I.x
-        I.after
-
-    def start(self, ctx):
-        ctx.foo = ctx.spam - 1
-        return Success()
-
-    def before(self, ctx):
-        ctx.bar = ctx.spam + 1
-        return Success()
-
-    def after(self, ctx):
-        return Result(ctx.spam * 2)
-
-    @story
-    @arguments("foo", "bar")
-    def z(I):
-        I.first
-        I.x
-
-    def first(self, ctx):
-        return Skip()
-
-
 # Dependency injection of the substory.
 
 

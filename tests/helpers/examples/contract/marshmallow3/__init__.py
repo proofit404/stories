@@ -4,7 +4,6 @@ from marshmallow import Schema
 
 from stories import arguments
 from stories import story
-from stories.shortcuts import contract_in
 
 
 # Constants.
@@ -52,12 +51,6 @@ class ChildWithShrink(object):
     @x.contract
     class Contract(Schema):
         baz = fields.Integer()
-
-
-class ChildReuse(object):
-    @story
-    def x(I):
-        I.one
 
 
 class ChildAlias(object):
@@ -155,13 +148,6 @@ class NextParamChildWithString(object):
         bar = fields.List(fields.String())
 
 
-class NextParamChildReuse(object):
-    @story
-    @arguments("foo", "bar", "baz")
-    def y(I):
-        I.one
-
-
 # Parent base classes.
 
 
@@ -197,22 +183,6 @@ class ParentWithSame(object):
 
 
 @ParentWithSame.a.contract
-class Contract(Schema):  # noqa: F811
-    foo = fields.Integer()
-    bar = fields.List(fields.Integer())
-    baz = fields.Integer()
-
-
-class ParentReuse(object):
-    @story
-    def a(I):
-        I.before
-        I.x
-        I.after
-
-
-@ChildReuse.x.contract
-@ParentReuse.a.contract
 class Contract(Schema):  # noqa: F811
     foo = fields.Integer()
     bar = fields.List(fields.Integer())
@@ -287,26 +257,6 @@ class Contract(Schema):  # noqa: F811
     bar = fields.List(fields.String())
 
 
-# Next parent base classes.
-
-
-class NextParamParentReuse(object):
-    @story
-    @arguments("foo", "bar")
-    def b(I):
-        I.before
-        I.y
-        I.after
-
-
-@NextParamChildReuse.y.contract
-@NextParamParentReuse.b.contract
-class Contract(Schema):  # noqa: F811
-    foo = fields.Integer()
-    bar = fields.List(fields.Integer())
-    baz = fields.Integer()
-
-
 # Root base classes.
 
 
@@ -318,7 +268,7 @@ class Root(object):
         I.finish
 
 
-@contract_in(Root)
+@Root.i.contract
 class Contract(Schema):  # noqa: F811
     fizz = fields.Integer()
     buzz = fields.Integer()
@@ -332,7 +282,7 @@ class RootWithSame(object):
         I.finish
 
 
-@contract_in(RootWithSame)
+@RootWithSame.i.contract
 class Contract(Schema):  # noqa: F811
     foo = fields.Integer()
     bar = fields.List(fields.Integer())
@@ -348,7 +298,7 @@ class SequentialRoot(object):
         I.finish
 
 
-@contract_in(SequentialRoot)
+@SequentialRoot.i.contract
 class Contract(Schema):  # noqa: F811
     fizz = fields.Integer()
     buzz = fields.Integer()
@@ -363,7 +313,7 @@ class ParamRoot(object):
         I.finish
 
 
-@contract_in(ParamRoot)
+@ParamRoot.i.contract
 class Contract(Schema):  # noqa: F811
     fizz = fields.Integer()
     buzz = fields.Integer()

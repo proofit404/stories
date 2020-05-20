@@ -17,6 +17,6 @@ def _main():
     sys.exit(exit_code)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no branch
     _setup()
     _main()
