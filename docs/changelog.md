@@ -1,3 +1,13 @@
+# [1.0.0](https://github.com/dry-python/stories/compare/0.15.0...1.0.0) (2020-05-22)
+
+### Features
+
+- deprecate substories defined within the class ([c5d7930](https://github.com/dry-python/stories/commit/c5d7930af4d0af3a510993b852aeee19335a4154)), closes [#388](https://github.com/dry-python/stories/issues/388)
+
+### BREAKING CHANGES
+
+- Substories defined in the same class do not deserve special treatment. From now they require to have different context contracts and failure protocols. They will be interpreted the same way as if they were defined in the other class. Shortcuts module have been removed.
+
 # [0.15.0](https://github.com/dry-python/stories/compare/0.14.0...0.15.0) (2020-04-16)
 
 ### Features
