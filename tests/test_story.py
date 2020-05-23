@@ -127,39 +127,39 @@ def test_deny_mix_coroutine_with_regular_methods(r, x):
     """If all story steps are functions, we can not use coroutine method in it."""
     r.skip_if_function()
 
-    class T(x.Child, x.MixedCoroutineMethod):
+    class A(x.Child, x.MixedCoroutineMethod):
         pass
 
-    class J(x.Parent, x.NormalParentMethod):
+    class B(x.Parent, x.NormalParentMethod):
         def __init__(self):
-            self.x = T().x
+            self.x = A().x
 
-    # Simple.
+    # First level.
 
     expected = """
 Coroutines and functions can not be used together in story definition.
 
-This method should be a function: T.three
+This method should be a function: A.three
 
-Story method: T.x
+Story method: A.x
     """.strip()
 
     with pytest.raises(StoryDefinitionError) as exc_info:
-        T().x
+        A().x
     assert str(exc_info.value) == expected
 
-    # Substory DI.
+    # Second level.
 
     expected = """
 Coroutines and functions can not be used together in story definition.
 
-This method should be a function: T.three
+This method should be a function: A.three
 
-Story method: T.x
+Story method: A.x
     """.strip()
 
     with pytest.raises(StoryDefinitionError) as exc_info:
-        J().a
+        B().a
     assert str(exc_info.value) == expected
 
 
@@ -167,39 +167,39 @@ def test_deny_mix_function_with_coroutine_methods(r, x):
     """If all story steps are functions, we can not use coroutine method in it."""
     r.skip_if_function()
 
-    class T(x.Child, x.MixedFunctionMethod):
+    class A(x.Child, x.MixedFunctionMethod):
         pass
 
-    class J(x.Parent, x.NormalParentMethod):
+    class B(x.Parent, x.NormalParentMethod):
         def __init__(self):
-            self.x = T().x
+            self.x = A().x
 
-    # Simple.
+    # First level.
 
     expected = """
 Coroutines and functions can not be used together in story definition.
 
-This method should be a coroutine: T.three
+This method should be a coroutine: A.three
 
-Story method: T.x
+Story method: A.x
     """.strip()
 
     with pytest.raises(StoryDefinitionError) as exc_info:
-        T().x
+        A().x
     assert str(exc_info.value) == expected
 
-    # Substory DI.
+    # Second level.
 
     expected = """
 Coroutines and functions can not be used together in story definition.
 
-This method should be a coroutine: T.three
+This method should be a coroutine: A.three
 
-Story method: T.x
+Story method: A.x
     """.strip()
 
     with pytest.raises(StoryDefinitionError) as exc_info:
-        J().a
+        B().a
     assert str(exc_info.value) == expected
 
 
@@ -208,25 +208,25 @@ def test_deny_compose_coroutine_with_function_stories(r, x):
     which steps are functions."""
     r.skip_if_function()
 
-    class T(x.Child, x.NormalMethod):
+    class A(x.Child, x.NormalMethod):
         pass
 
-    class J(x.Parent, x.FunctionParentMethod):
+    class B(x.Parent, x.FunctionParentMethod):
         def __init__(self):
-            self.x = T().x
+            self.x = A().x
 
-    # Substory DI.
+    # Second level.
 
     expected = """
 Coroutine and function stories can not be injected into each other.
 
-Story function method: J.a
+Story function method: B.a
 
-Substory coroutine method: T.x
+Substory coroutine method: A.x
     """.strip()
 
     with pytest.raises(StoryDefinitionError) as exc_info:
-        J().a
+        B().a
     assert str(exc_info.value) == expected
 
 
@@ -235,23 +235,23 @@ def test_deny_compose_function_with_coroutine_stories(r, x):
     which steps are coroutines."""
     r.skip_if_function()
 
-    class T(x.Child, x.FunctionMethod):
+    class A(x.Child, x.FunctionMethod):
         pass
 
-    class J(x.Parent, x.NormalParentMethod):
+    class B(x.Parent, x.NormalParentMethod):
         def __init__(self):
-            self.x = T().x
+            self.x = A().x
 
-    # Substory DI.
+    # Second level.
 
     expected = """
 Coroutine and function stories can not be injected into each other.
 
-Story coroutine method: J.a
+Story coroutine method: B.a
 
-Substory function method: T.x
+Substory function method: A.x
     """.strip()
 
     with pytest.raises(StoryDefinitionError) as exc_info:
-        J().a
+        B().a
     assert str(exc_info.value) == expected

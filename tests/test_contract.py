@@ -18,23 +18,23 @@ from stories.exceptions import ContextContractError
 def test_assign_existed_variables(r, m):
     """We can not write a variable with the same name to the context twice."""
 
-    class T(m.ParamChildWithNull, m.StringMethod):
+    class A(m.ParamChildWithNull, m.StringMethod):
         pass
 
-    class J(m.ParentWithNull, m.StringParentMethod):
+    class B(m.ParentWithNull, m.StringParentMethod):
         def __init__(self):
-            self.x = T().x
+            self.x = A().x
 
-    # Simple.
+    # First level.
 
     expected = """
 This variable is already present in the context: 'foo'
 
-Function returned value: T.one
+Function returned value: A.one
 
 Use a different name for context attribute.
 
-T.x
+A.x
   one
 
 Context:
@@ -43,38 +43,38 @@ Context:
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(T().x)(foo=1, bar=[2])
+        r(A().x)(foo=1, bar=[2])
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(T().x.run)(foo=1, bar=[2])
+        r(A().x.run)(foo=1, bar=[2])
     assert str(exc_info.value) == expected
 
-    # Substory DI.
+    # Second level.
 
     expected = """
 This variable is already present in the context: 'foo'
 
-Function returned value: T.one
+Function returned value: A.one
 
 Use a different name for context attribute.
 
-J.a
+B.a
   before
-  x (T.x)
+  x (A.x)
     one
 
 Context:
-  foo: '1'    # Set by J.before
-  bar: ['2']  # Set by J.before
+  foo: '1'    # Set by B.before
+  bar: ['2']  # Set by B.before
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(J().a)()
+        r(B().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(J().a.run)()
+        r(B().a.run)()
     assert str(exc_info.value) == expected
 
 
@@ -87,34 +87,34 @@ def test_context_variables_normalization(r, m):
 
     """
 
-    class T(m.Child, m.StringMethod):
+    class A(m.Child, m.StringMethod):
         pass
 
-    class J(m.Parent, m.NormalParentMethod):
+    class B(m.Parent, m.NormalParentMethod):
         def __init__(self):
-            self.x = T().x
+            self.x = A().x
 
-    # Simple.
+    # First level.
 
     getter = make_collector()
-    r(T().x)()
+    r(A().x)()
     assert getter().foo == 1
     assert getter().bar == [2]
 
     getter = make_collector()
-    r(T().x.run)()
+    r(A().x.run)()
     assert getter().foo == 1
     assert getter().bar == [2]
 
-    # Substory DI.
+    # Second level.
 
     getter = make_collector()
-    r(J().a)()
+    r(B().a)()
     assert getter().foo == 1
     assert getter().bar == [2]
 
     getter = make_collector()
-    r(J().a.run)()
+    r(B().a.run)()
     assert getter().foo == 1
     assert getter().bar == [2]
 
@@ -131,42 +131,42 @@ def test_context_variables_normalization_conflict(r, m):
     # substory.  The second variable can be set by
     # another substory.
 
-    class T(m.ParamChild, m.NormalMethod):
+    class A1(m.ParamChild, m.NormalMethod):
         pass
 
-    class E(m.NextParamChildWithString, m.NormalNextMethod):
+    class A2(m.NextParamChildWithString, m.NormalNextMethod):
         pass
 
-    class J(m.SequentialParent, m.StringParentMethod):
+    class B(m.SequentialParent, m.StringParentMethod):
         def __init__(self):
-            self.x = T().x
-            self.y = E().y
+            self.x = A1().x
+            self.y = A2().y
 
-    # Substory DI.
+    # Second level.
 
     expected = """
 These arguments have normalization conflict: 'foo'
 
-E.y:
- - foo: '1'
-
-T.x:
+A1.x:
  - foo: 1
+
+A2.y:
+ - foo: '1'
 
 Contract:
   foo:
-    {str_field_repr}  # Argument of E.y
-    {int_field_repr}  # Argument of T.x
+    {int_field_repr}  # Argument of A1.x
+    {str_field_repr}  # Argument of A2.y
     """.strip().format(
         **m.representations
     )
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(J().a)()
+        r(B().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(J().a.run)()
+        r(B().a.run)()
     assert str(exc_info.value) == expected
 
 
@@ -178,34 +178,34 @@ def test_story_arguments_normalization(r, m):
 
     """
 
-    class T(m.ParamChild, m.NormalMethod):
+    class A(m.ParamChild, m.NormalMethod):
         pass
 
-    class J(m.ParamParent, m.StringParentMethod):
+    class B(m.ParamParent, m.StringParentMethod):
         def __init__(self):
-            self.x = T().x
+            self.x = A().x
 
-    # Simple.
+    # First level.
 
     getter = make_collector()
-    r(T().x)(foo="1", bar=["2"])
+    r(A().x)(foo="1", bar=["2"])
     assert getter().foo == 1
     assert getter().bar == [2]
 
     getter = make_collector()
-    r(T().x.run)(foo="1", bar=["2"])
+    r(A().x.run)(foo="1", bar=["2"])
     assert getter().foo == 1
     assert getter().bar == [2]
 
-    # Substory DI.
+    # Second level.
 
     getter = make_collector()
-    r(J().a)(ham="1", eggs="2")
+    r(B().a)(ham="1", eggs="2")
     assert getter().ham == 1
     assert getter().eggs == 2
 
     getter = make_collector()
-    r(J().a.run)(ham="1", eggs="2")
+    r(B().a.run)(ham="1", eggs="2")
     assert getter().ham == 1
     assert getter().eggs == 2
 
@@ -214,35 +214,35 @@ def test_story_arguments_normalization_many_levels(r, m):
     """We apply normalization to the story arguments on any levels of story
     composition."""
 
-    class T(m.ParamChild, m.NormalMethod):
+    class A(m.ParamChild, m.NormalMethod):
         pass
 
-    class J(m.ParamParent, m.NormalParentMethod):
+    class B(m.ParamParent, m.NormalParentMethod):
         def __init__(self):
-            self.x = T().x
+            self.x = A().x
 
-    class F(m.ParamRoot, m.NormalRootMethod):
+    class C(m.ParamRoot, m.NormalRootMethod):
         def __init__(self):
-            self.a = J().a
+            self.a = B().a
 
-    # Substory DI.
+    # Second level.
 
     getter = make_collector()
-    r(J().a)(ham="1", eggs="2", foo="3", bar=["4"])
+    r(B().a)(ham="1", eggs="2", foo="3", bar=["4"])
     assert getter().ham == 1
     assert getter().eggs == 2
     assert getter().foo == 3
     assert getter().bar == [4]
 
     getter = make_collector()
-    r(J().a.run)(ham="1", eggs="2", foo="3", bar=["4"])
+    r(B().a.run)(ham="1", eggs="2", foo="3", bar=["4"])
     assert getter().ham == 1
     assert getter().eggs == 2
     assert getter().foo == 3
     assert getter().bar == [4]
 
     getter = make_collector()
-    r(F().i)(fizz="0", ham="1", eggs="2", foo="3", bar=["4"])
+    r(C().i)(fizz="0", ham="1", eggs="2", foo="3", bar=["4"])
     assert getter().fizz == 0
     assert getter().ham == 1
     assert getter().eggs == 2
@@ -250,7 +250,7 @@ def test_story_arguments_normalization_many_levels(r, m):
     assert getter().bar == [4]
 
     getter = make_collector()
-    r(F().i.run)(fizz="0", ham="1", eggs="2", foo="3", bar=["4"])
+    r(C().i.run)(fizz="0", ham="1", eggs="2", foo="3", bar=["4"])
     assert getter().fizz == 0
     assert getter().ham == 1
     assert getter().eggs == 2
@@ -266,43 +266,43 @@ def test_story_arguments_normalization_conflict(r, m):
 
     """
 
-    class T(m.ParamChild, m.NormalMethod):
+    class A(m.ParamChild, m.NormalMethod):
         pass
 
-    class J(m.ParamParentWithSameWithString, m.NormalParentMethod):
+    class B(m.ParamParentWithSameWithString, m.NormalParentMethod):
         def __init__(self):
-            self.x = T().x
+            self.x = A().x
 
-    # Substory DI.
+    # Second level.
 
     expected = """
 These arguments have normalization conflict: 'bar', 'foo'
 
-J.a:
- - bar: ['2']
- - foo: '1'
-
-T.x:
+A.x:
  - bar: [2]
  - foo: 1
 
+B.a:
+ - bar: ['2']
+ - foo: '1'
+
 Contract:
   bar:
-    {list_of_str_field_repr}  # Argument of J.a
-    {list_of_int_field_repr}  # Argument of T.x
+    {list_of_int_field_repr}  # Argument of A.x
+    {list_of_str_field_repr}  # Argument of B.a
   foo:
-    {str_field_repr}  # Argument of J.a
-    {int_field_repr}  # Argument of T.x
+    {int_field_repr}  # Argument of A.x
+    {str_field_repr}  # Argument of B.a
     """.strip().format(
         **m.representations
     )
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(J().a)(foo="1", bar=["2"])
+        r(B().a)(foo="1", bar=["2"])
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(J().a.run)(foo="1", bar=["2"])
+        r(B().a.run)(foo="1", bar=["2"])
     assert str(exc_info.value) == expected
 
 
@@ -310,20 +310,20 @@ def test_context_variables_validation(r, m):
     """We apply validators to the context variables, if story defines context
     contract."""
 
-    class T(m.Child, m.WrongMethod):
+    class A(m.Child, m.WrongMethod):
         pass
 
-    class J(m.Parent, m.NormalParentMethod):
+    class B(m.Parent, m.NormalParentMethod):
         def __init__(self):
-            self.x = T().x
+            self.x = A().x
 
-    # Simple.
+    # First level.
 
     expected = (
         """
 This variable violates context contract: 'foo'
 
-Function returned value: T.one
+Function returned value: A.one
 
 Violations:
 
@@ -332,27 +332,27 @@ foo:
   {int_error}
 
 Contract:
-  foo: {int_field_repr}  # Variable in T.x
+  foo: {int_field_repr}  # Variable in A.x
     """.strip()
         .format(**m.representations)
         .format("foo")
     )
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(T().x)()
+        r(A().x)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(T().x.run)()
+        r(A().x.run)()
     assert str(exc_info.value) == expected
 
-    # Substory DI.
+    # Second level.
 
     expected = (
         """
 This variable violates context contract: 'foo'
 
-Function returned value: T.one
+Function returned value: A.one
 
 Violations:
 
@@ -361,18 +361,18 @@ foo:
   {int_error}
 
 Contract:
-  foo: {int_field_repr}  # Variable in T.x
+  foo: {int_field_repr}  # Variable in A.x
     """.strip()
         .format(**m.representations)
         .format("foo")
     )
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(J().a)()
+        r(B().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(J().a.run)()
+        r(B().a.run)()
     assert str(exc_info.value) == expected
 
 
@@ -383,23 +383,23 @@ def test_story_arguments_validation(r, m):
 
     """
 
-    class T(m.ParamChild, m.ExceptionMethod):
+    class A(m.ParamChild, m.ExceptionMethod):
         pass
 
-    class J(m.ParamParent, m.ExceptionParentMethod):
+    class B(m.ParamParent, m.ExceptionParentMethod):
         def __init__(self):
-            class T(m.Child, m.NormalMethod):
+            class A(m.Child, m.NormalMethod):
                 pass
 
-            self.x = T().x
+            self.x = A().x
 
-    # Simple.
+    # First level.
 
     expected = (
         """
 These arguments violates context contract: 'bar', 'foo'
 
-Story method: T.x
+Story method: A.x
 
 Violations:
 
@@ -412,28 +412,28 @@ foo:
   {int_error}
 
 Contract:
-  bar: {list_of_int_field_repr}  # Argument of T.x
-  foo: {int_field_repr}  # Argument of T.x
+  bar: {list_of_int_field_repr}  # Argument of A.x
+  foo: {int_field_repr}  # Argument of A.x
     """.strip()
         .format(**m.representations)
         .format("foo")
     )
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(T().x)(foo="<boom>", bar=["<boom>"])
+        r(A().x)(foo="<boom>", bar=["<boom>"])
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(T().x.run)(foo="<boom>", bar=["<boom>"])
+        r(A().x.run)(foo="<boom>", bar=["<boom>"])
     assert str(exc_info.value) == expected
 
-    # Substory DI.
+    # Second level.
 
     expected = (
         """
 These arguments violates context contract: 'eggs', 'ham'
 
-Story method: J.a
+Story method: B.a
 
 Violations:
 
@@ -446,19 +446,19 @@ ham:
   {int_error}
 
 Contract:
-  eggs: {int_field_repr}  # Argument of J.a
-  ham: {int_field_repr}  # Argument of J.a
+  eggs: {int_field_repr}  # Argument of B.a
+  ham: {int_field_repr}  # Argument of B.a
     """.strip()
         .format(**m.representations)
         .format("eggs", "ham")
     )
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(J().a)(ham="<boom>", eggs="<boom>")
+        r(B().a)(ham="<boom>", eggs="<boom>")
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(J().a.run)(ham="<boom>", eggs="<boom>")
+        r(B().a.run)(ham="<boom>", eggs="<boom>")
     assert str(exc_info.value) == expected
 
 
@@ -466,24 +466,24 @@ def test_story_arguments_validation_many_levels(r, m):
     """We apply contract validation to the story arguments on any levels of story
     composition."""
 
-    class T(m.ParamChild, m.NormalMethod):
+    class A(m.ParamChild, m.NormalMethod):
         pass
 
-    class J(m.Parent, m.NormalParentMethod):
+    class B(m.Parent, m.NormalParentMethod):
         def __init__(self):
-            self.x = T().x
+            self.x = A().x
 
-    class F(m.Root, m.ExceptionRootMethod):
+    class C(m.Root, m.ExceptionRootMethod):
         def __init__(self):
-            self.a = J().a
+            self.a = B().a
 
-    # Substory DI.
+    # Second level.
 
     expected = (
         """
 These arguments violates context contract: 'foo'
 
-Story method: F.i
+Story method: C.i
 
 Violations:
 
@@ -492,136 +492,136 @@ foo:
   {int_error}
 
 Contract:
-  foo: {int_field_repr}  # Argument of T.x
+  foo: {int_field_repr}  # Argument of A.x
     """.strip()
         .format(**m.representations)
         .format("foo")
     )
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(F().i)(foo="<boom>", bar=[1])
+        r(C().i)(foo="<boom>", bar=[1])
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(F().i.run)(foo="<boom>", bar=[1])
+        r(C().i.run)(foo="<boom>", bar=[1])
     assert str(exc_info.value) == expected
 
 
 def test_composition_contract_variable_conflict(r, m):
     """Story and substory contracts can not declare the same variable twice."""
 
-    class T(m.Child, m.NormalMethod):
+    class A(m.Child, m.NormalMethod):
         pass
 
-    class J(m.ParentWithSame, m.NormalParentMethod):
+    class B(m.ParentWithSame, m.NormalParentMethod):
         def __init__(self):
-            self.x = T().x
+            self.x = A().x
 
-    # Substory DI.
+    # Second level.
 
     expected = """
 Repeated variables can not be used in a story composition.
 
 Variables repeated in both context contracts: 'bar', 'baz', 'foo'
 
-Story method: J.a
+Story method: B.a
 
-Substory method: T.x
+Substory method: A.x
 
 Use variables with different names.
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        J().a
+        B().a
     assert str(exc_info.value) == expected
 
 
 def test_composition_contract_variable_conflict_many_levels(r, m):
     """Story and substory contracts can not declare the same variable twice."""
 
-    class T(m.Child, m.NormalMethod):
+    class A(m.Child, m.NormalMethod):
         pass
 
-    class J(m.Parent, m.NormalParentMethod):
+    class B(m.Parent, m.NormalParentMethod):
         def __init__(self):
-            self.x = T().x
+            self.x = A().x
 
-    class F(m.RootWithSame, m.NormalRootMethod):
+    class C(m.RootWithSame, m.NormalRootMethod):
         def __init__(self):
-            self.a = J().a
+            self.a = B().a
 
-    # Substory DI.
+    # Second level.
 
     expected = """
 Repeated variables can not be used in a story composition.
 
 Variables repeated in both context contracts: 'bar', 'baz', 'foo'
 
-Story method: F.i
+Story method: C.i
 
-Substory method: T.x
+Substory method: A.x
 
 Use variables with different names.
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        F().i
+        C().i
     assert str(exc_info.value) == expected
 
 
 def test_composition_contract_variable_conflict_sequential(r, m):
     """Story and substory contracts can not declare the same variable twice."""
 
-    class T(m.Child, m.NormalMethod):
+    class A(m.Child, m.NormalMethod):
         pass
 
-    class E(m.NextChildWithSame, m.NormalMethod):
+    class A2(m.NextChildWithSame, m.NormalMethod):
         pass
 
-    class J(m.SequentialParent, m.StringParentMethod):
+    class B(m.SequentialParent, m.StringParentMethod):
         def __init__(self):
-            self.x = T().x
-            self.y = E().y
+            self.x = A().x
+            self.y = A2().y
 
-    # Substory DI.
+    # Second level.
 
     expected = """
 Repeated variables can not be used in a story composition.
 
 Variables repeated in both context contracts: 'bar', 'baz', 'foo'
 
-Story method: T.x
+Story method: A.x
 
-Substory method: E.y
+Substory method: A2.y
 
 Use variables with different names.
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        J().a
+        B().a
     assert str(exc_info.value) == expected
 
 
 def test_composition_incompatible_contract_types(r, m):
     """Deny to use different types in the story composition."""
 
-    class T(m.Child, m.NormalMethod):
+    class A(m.Child, m.NormalMethod):
         pass
 
-    class J(m.ParentWithNull, m.NormalParentMethod):
+    class B(m.ParentWithNull, m.NormalParentMethod):
         def __init__(self):
-            self.x = T().x
+            self.x = A().x
 
-    # Substory DI.
+    # Second level.
 
     expected = """
 Story and substory context contracts has incompatible types:
 
-Story method: J.a
+Story method: B.a
 
 Story context contract: None
 
-Substory method: T.x
+Substory method: A.x
 
 Substory context contract: {contract_class_repr}
     """.strip().format(
@@ -629,185 +629,185 @@ Substory context contract: {contract_class_repr}
     )
 
     with pytest.raises(ContextContractError) as exc_info:
-        J().a
+        B().a
     assert str(exc_info.value) == expected
 
 
 def test_unknown_context_variable(r, m):
     """Step can't use Success argument name which was not specified in the contract."""
 
-    class T(m.Child, m.UnknownMethod):
+    class A(m.Child, m.UnknownMethod):
         pass
 
-    class J(m.Parent, m.NormalParentMethod):
+    class B(m.Parent, m.NormalParentMethod):
         def __init__(self):
-            self.x = T().x
+            self.x = A().x
 
-    # Simple.
+    # First level.
 
     expected = """
 This variable was not defined in the context contract: 'spam'
 
-Function assigned value: T.one
+Function assigned value: A.one
 
 Use a different name for context attribute or add this name to the contract.
 
 Contract:
-  bar: {list_of_int_field_repr}  # Variable in T.x
-  baz: {int_field_repr}  # Variable in T.x
-  foo: {int_field_repr}  # Variable in T.x
+  bar: {list_of_int_field_repr}  # Variable in A.x
+  baz: {int_field_repr}  # Variable in A.x
+  foo: {int_field_repr}  # Variable in A.x
     """.strip().format(
         **m.representations
     )
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(T().x)()
+        r(A().x)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(T().x.run)()
+        r(A().x.run)()
     assert str(exc_info.value) == expected
 
-    # Substory DI.
+    # Second level.
 
     expected = """
 This variable was not defined in the context contract: 'spam'
 
-Function assigned value: T.one
+Function assigned value: A.one
 
 Use a different name for context attribute or add this name to the contract.
 
 Contract:
-  bar: {list_of_int_field_repr}  # Variable in T.x
-  baz: {int_field_repr}  # Variable in T.x
-  foo: {int_field_repr}  # Variable in T.x
+  bar: {list_of_int_field_repr}  # Variable in A.x
+  baz: {int_field_repr}  # Variable in A.x
+  foo: {int_field_repr}  # Variable in A.x
     """.strip().format(
         **m.representations
     )
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(J().a)()
+        r(B().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(J().a.run)()
+        r(B().a.run)()
     assert str(exc_info.value) == expected
 
 
 def test_unknown_story_arguments_with_null(r, m):
     """Allow to pass known only story and substory arguments to the call."""
 
-    class T(m.ParamChildWithNull, m.NormalMethod):
+    class A(m.ParamChildWithNull, m.NormalMethod):
         pass
 
-    class J(m.ParamParentWithNull, m.NormalParentMethod):
+    class B(m.ParamParentWithNull, m.NormalParentMethod):
         def __init__(self):
-            class T(m.ChildWithNull, m.NormalMethod):
+            class A(m.ChildWithNull, m.NormalMethod):
                 pass
 
-            self.x = T().x
+            self.x = A().x
 
-    # Simple.
+    # First level.
 
     expected = """
 These arguments are unknown: baz, fox
 
-Story method: T.x
+Story method: A.x
 
 Contract:
-  bar  # Argument of T.x
-  foo  # Argument of T.x
+  bar  # Argument of A.x
+  foo  # Argument of A.x
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(T().x)(baz=1, fox=2)
+        r(A().x)(baz=1, fox=2)
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(T().x.run)(baz=1, fox=2)
+        r(A().x.run)(baz=1, fox=2)
     assert str(exc_info.value) == expected
 
-    # Substory DI.
+    # Second level.
 
     expected = """
 These arguments are unknown: beans, fox
 
-Story method: J.a
+Story method: B.a
 
 Contract:
-  eggs  # Argument of J.a
-  ham  # Argument of J.a
+  eggs  # Argument of B.a
+  ham  # Argument of B.a
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(J().a)(beans=1, fox=2)
+        r(B().a)(beans=1, fox=2)
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(J().a.run)(beans=1, fox=2)
+        r(B().a.run)(beans=1, fox=2)
     assert str(exc_info.value) == expected
 
 
 def test_unknown_story_arguments(r, m):
     """Allow to pass known only story and substory arguments to the call."""
 
-    class T(m.ParamChild, m.NormalMethod):
+    class A(m.ParamChild, m.NormalMethod):
         pass
 
-    class J(m.ParamParent, m.NormalParentMethod):
+    class B(m.ParamParent, m.NormalParentMethod):
         def __init__(self):
-            class T(m.Child, m.NormalMethod):
+            class A(m.Child, m.NormalMethod):
                 pass
 
-            self.x = T().x
+            self.x = A().x
 
-    # Simple.
+    # First level.
 
     expected = """
 These arguments are unknown: baz, fox
 
-Story method: T.x
+Story method: A.x
 
 Contract:
-  bar: {list_of_int_field_repr}  # Argument of T.x
-  foo: {int_field_repr}  # Argument of T.x
-  baz: {int_field_repr}  # Variable in T.x
+  bar: {list_of_int_field_repr}  # Argument of A.x
+  foo: {int_field_repr}  # Argument of A.x
+  baz: {int_field_repr}  # Variable in A.x
     """.strip().format(
         **m.representations
     )
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(T().x)(baz=1, fox=2)
+        r(A().x)(baz=1, fox=2)
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(T().x.run)(baz=1, fox=2)
+        r(A().x.run)(baz=1, fox=2)
     assert str(exc_info.value) == expected
 
-    # Substory DI.
+    # Second level.
 
     expected = """
 These arguments are unknown: beans, fox
 
-Story method: J.a
+Story method: B.a
 
 Contract:
-  eggs: {int_field_repr}  # Argument of J.a
-  ham: {int_field_repr}  # Argument of J.a
-  bar: {list_of_int_field_repr}  # Variable in T.x
-  baz: {int_field_repr}  # Variable in T.x
-  beans: {int_field_repr}  # Variable in J.a
-  foo: {int_field_repr}  # Variable in T.x
+  eggs: {int_field_repr}  # Argument of B.a
+  ham: {int_field_repr}  # Argument of B.a
+  bar: {list_of_int_field_repr}  # Variable in A.x
+  baz: {int_field_repr}  # Variable in A.x
+  beans: {int_field_repr}  # Variable in B.a
+  foo: {int_field_repr}  # Variable in A.x
     """.strip().format(
         **m.representations
     )
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(J().a)(beans=1, fox=2)
+        r(B().a)(beans=1, fox=2)
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(J().a.run)(beans=1, fox=2)
+        r(B().a.run)(beans=1, fox=2)
     assert str(exc_info.value) == expected
 
 
@@ -815,47 +815,47 @@ def test_unknown_story_arguments_with_empty_with_null(r, m):
     """Deny any arguments in the call, if story and substory has no arguments
     specified."""
 
-    class T(m.ChildWithNull, m.NormalMethod):
+    class A(m.ChildWithNull, m.NormalMethod):
         pass
 
-    class J(m.ParentWithNull, m.NormalParentMethod):
+    class B(m.ParentWithNull, m.NormalParentMethod):
         def __init__(self):
-            self.x = T().x
+            self.x = A().x
 
-    # Simple.
+    # First level.
 
     expected = """
 These arguments are unknown: baz, fox
 
-Story method: T.x
+Story method: A.x
 
 Contract()
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(T().x)(baz=1, fox=2)
+        r(A().x)(baz=1, fox=2)
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(T().x.run)(baz=1, fox=2)
+        r(A().x.run)(baz=1, fox=2)
     assert str(exc_info.value) == expected
 
-    # Substory DI.
+    # Second level.
 
     expected = """
 These arguments are unknown: beans, fox
 
-Story method: J.a
+Story method: B.a
 
 Contract()
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(J().a)(beans=1, fox=2)
+        r(B().a)(beans=1, fox=2)
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(J().a.run)(beans=1, fox=2)
+        r(B().a.run)(beans=1, fox=2)
     assert str(exc_info.value) == expected
 
 
@@ -863,117 +863,117 @@ def test_unknown_story_arguments_with_empty(r, m):
     """Deny any arguments in the call, if story and substory has no arguments
     specified."""
 
-    class T(m.Child, m.NormalMethod):
+    class A(m.Child, m.NormalMethod):
         pass
 
-    class J(m.Parent, m.NormalParentMethod):
+    class B(m.Parent, m.NormalParentMethod):
         def __init__(self):
-            self.x = T().x
+            self.x = A().x
 
-    # Simple.
+    # First level.
 
     expected = """
 These arguments are unknown: baz, fox
 
-Story method: T.x
+Story method: A.x
 
 Contract:
-  bar: {list_of_int_field_repr}  # Variable in T.x
-  baz: {int_field_repr}  # Variable in T.x
-  foo: {int_field_repr}  # Variable in T.x
+  bar: {list_of_int_field_repr}  # Variable in A.x
+  baz: {int_field_repr}  # Variable in A.x
+  foo: {int_field_repr}  # Variable in A.x
     """.strip().format(
         **m.representations
     )
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(T().x)(baz=1, fox=2)
+        r(A().x)(baz=1, fox=2)
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(T().x.run)(baz=1, fox=2)
+        r(A().x.run)(baz=1, fox=2)
     assert str(exc_info.value) == expected
 
-    # Substory DI.
+    # Second level.
 
     expected = """
 These arguments are unknown: beans, fox
 
-Story method: J.a
+Story method: B.a
 
 Contract:
-  bar: {list_of_int_field_repr}  # Variable in T.x
-  baz: {int_field_repr}  # Variable in T.x
-  beans: {int_field_repr}  # Variable in J.a
-  eggs: {int_field_repr}  # Variable in J.a
-  foo: {int_field_repr}  # Variable in T.x
-  ham: {int_field_repr}  # Variable in J.a
+  bar: {list_of_int_field_repr}  # Variable in A.x
+  baz: {int_field_repr}  # Variable in A.x
+  beans: {int_field_repr}  # Variable in B.a
+  eggs: {int_field_repr}  # Variable in B.a
+  foo: {int_field_repr}  # Variable in A.x
+  ham: {int_field_repr}  # Variable in B.a
     """.strip().format(
         **m.representations
     )
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(J().a)(beans=1, fox=2)
+        r(B().a)(beans=1, fox=2)
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(J().a.run)(beans=1, fox=2)
+        r(B().a.run)(beans=1, fox=2)
     assert str(exc_info.value) == expected
 
 
 def test_require_story_arguments_present_in_context(r, m):
     """Check story and substory arguments are present in the context."""
 
-    class T(m.ParamChildWithNull, m.NormalMethod):
+    class A(m.ParamChildWithNull, m.NormalMethod):
         pass
 
-    class J(m.ParentWithNull, m.NormalParentMethod):
+    class B(m.ParentWithNull, m.NormalParentMethod):
         def __init__(self):
-            self.x = T().x
+            self.x = A().x
 
-    # Simple.
+    # First level.
 
     expected = """
 These variables are missing from the context: bar, foo
 
-Story method: T.x
+Story method: A.x
 
 Story arguments: foo, bar
 
-T.x
+A.x
 
 Context()
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(T().x)()  # FIXME: This should be arguments error (not substory call error).
+        r(A().x)()  # FIXME: This should be arguments error (not substory call error).
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(T().x.run)()
+        r(A().x.run)()
     assert str(exc_info.value) == expected
 
-    # Substory DI.
+    # Second level.
 
     expected = """
 These variables are missing from the context: bar, foo
 
-Story method: T.x
+Story method: A.x
 
 Story arguments: foo, bar
 
-J.a
+B.a
   before
-  x (T.x)
+  x (A.x)
 
 Context()
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(J().a)()
+        r(B().a)()
     assert str(exc_info.value) == expected
 
     with pytest.raises(ContextContractError) as exc_info:
-        r(J().a.run)()
+        r(B().a.run)()
     assert str(exc_info.value) == expected
 
 
@@ -981,43 +981,41 @@ def test_parent_steps_set_story_arguments(r, m):
     """Steps of parent stories should be able to set child stories arguments with
     `Success` marker keyword arguments."""
 
-    class T(m.ParamChild, m.NormalMethod):
+    class A(m.ParamChild, m.NormalMethod):
         pass
 
-    class J(m.Parent, m.StringParentMethod):
+    class B(m.Parent, m.StringParentMethod):
         def __init__(self):
-            self.x = T().x
+            self.x = A().x
 
-    class R(m.Root, m.StringRootMethod, m.Parent, m.NormalParentMethod, T):
-        pass
-
-    class F(m.Root, m.StringRootMethod):
+    class C(m.Root, m.StringRootMethod):
         def __init__(self):
-            class J(m.Parent, m.NormalParentMethod):
+            class B(m.Parent, m.NormalParentMethod):
                 def __init__(self):
-                    self.x = T().x
+                    self.x = A().x
+            self.a = B().a
 
-            self.a = J().a
-
-    # Substory DI.
+    # Second level.
 
     getter = make_collector()
-    r(J().a)()
+    r(B().a)()
     assert getter().foo == 1
     assert getter().bar == [2]
 
     getter = make_collector()
-    r(J().a.run)()
+    r(B().a.run)()
+    assert getter().foo == 1
+    assert getter().bar == [2]
+
+    # Third level.
+    
+    getter = make_collector()
+    r(C().i)()
     assert getter().foo == 1
     assert getter().bar == [2]
 
     getter = make_collector()
-    r(F().i)()
-    assert getter().foo == 1
-    assert getter().bar == [2]
-
-    getter = make_collector()
-    r(F().i.run)()
+    r(C().i.run)()
     assert getter().foo == 1
     assert getter().bar == [2]
 
@@ -1030,26 +1028,26 @@ def test_sequential_story_steps_set_story_arguments(r, m):
 
     """
 
-    class T(m.ChildWithShrink, m.StringMethod):
+    class A1(m.ChildWithShrink, m.StringMethod):
         pass
 
-    class E(m.NextParamChildWithString, m.NormalNextMethod):
+    class A2(m.NextParamChildWithString, m.NormalNextMethod):
         pass
 
-    class J(m.SequentialParent, m.NormalParentMethod):
+    class B(m.SequentialParent, m.NormalParentMethod):
         def __init__(self):
-            self.x = T().x
-            self.y = E().y
+            self.x = A1().x
+            self.y = A2().y
 
-    # Substory DI.
+    # Second level.
 
     getter = make_collector()
-    r(J().a)()
+    r(B().a)()
     assert getter().foo == "1"
     assert getter().bar == ["2"]
 
     getter = make_collector()
-    r(J().a.run)()
+    r(B().a.run)()
     assert getter().foo == "1"
     assert getter().bar == ["2"]
 
@@ -1057,39 +1055,39 @@ def test_sequential_story_steps_set_story_arguments(r, m):
 def test_arguments_should_be_declared_in_contract(r, m):
     """We should require all story arguments to be declared in the context contract."""
 
-    class T(m.ParamChildWithShrink, m.NormalMethod):
+    class A(m.ParamChildWithShrink, m.NormalMethod):
         pass
 
-    class J(m.Parent, m.NormalParentMethod):
+    class B(m.Parent, m.NormalParentMethod):
         def __init__(self):
-            self.x = T().x
+            self.x = A().x
 
-    # Simple.
+    # First level.
 
     expected = """
 These arguments should be declared in the context contract: bar, foo
 
-Story method: T.x
+Story method: A.x
 
 Story arguments: foo, bar, baz
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        T().x
+        A().x
     assert str(exc_info.value) == expected
 
-    # Substory DI.
+    # Second level.
 
     expected = """
 These arguments should be declared in the context contract: bar, foo
 
-Story method: T.x
+Story method: A.x
 
 Story arguments: foo, bar, baz
     """.strip()
 
     with pytest.raises(ContextContractError) as exc_info:
-        J().a
+        B().a
     assert str(exc_info.value) == expected
 
 
@@ -1104,13 +1102,13 @@ def test_story_variable_alias_normalization_store_same_object(r, m):
 
     """
 
-    class T(m.ChildAlias, m.AliasMethod):
+    class A(m.ChildAlias, m.AliasMethod):
         pass
 
-    # Simple.
+    # First level.
 
     getter = make_collector()
-    r(T().x)()
+    r(A().x)()
     assert getter().foo is getter().bar
     assert getter().foo == {"key": "1"}
     assert getter().bar == {"key": "1"}
@@ -1119,7 +1117,7 @@ def test_story_variable_alias_normalization_store_same_object(r, m):
     assert getter().baz == {"key": 1}
 
     getter = make_collector()
-    r(T().x.run)()
+    r(A().x.run)()
     assert getter().foo is getter().bar
     assert getter().foo == {"key": "1"}
     assert getter().bar == {"key": "1"}
@@ -1127,7 +1125,7 @@ def test_story_variable_alias_normalization_store_same_object(r, m):
     assert getter().bar is not getter().baz
     assert getter().baz == {"key": 1}
 
-    # FIXME: Substory DI.
+    # FIXME: Second level.
 
 
 def test_story_argument_alias_normalization_store_same_object(r, m):
@@ -1138,15 +1136,15 @@ def test_story_argument_alias_normalization_store_same_object(r, m):
 
     """
 
-    class T(m.ParamChildAlias, m.NormalMethod):
+    class A(m.ParamChildAlias, m.NormalMethod):
         pass
 
-    # Simple.
+    # First level.
 
     value = {"key": "1"}
 
     getter = make_collector()
-    r(T().x)(foo=value, bar=value, baz=value)
+    r(A().x)(foo=value, bar=value, baz=value)
     assert getter().foo is getter().bar
     assert getter().foo == {"key": "1"}
     assert getter().bar == {"key": "1"}
@@ -1155,7 +1153,7 @@ def test_story_argument_alias_normalization_store_same_object(r, m):
     assert getter().baz == {"key": 1}
 
     getter = make_collector()
-    r(T().x.run)(foo=value, bar=value, baz=value)
+    r(A().x.run)(foo=value, bar=value, baz=value)
     assert getter().foo is getter().bar
     assert getter().foo == {"key": "1"}
     assert getter().bar == {"key": "1"}
@@ -1163,7 +1161,7 @@ def test_story_argument_alias_normalization_store_same_object(r, m):
     assert getter().bar is not getter().baz
     assert getter().baz == {"key": 1}
 
-    # FIXME: Substory DI.
+    # FIXME: Second level.
 
 
 # Representation.
@@ -1172,63 +1170,63 @@ def test_story_argument_alias_normalization_store_same_object(r, m):
 def test_story_contract_representation_with_spec(r, m):
     """Show collected story composition contract as mounted story attribute."""
 
-    class T(m.Child, m.StringMethod):
+    class A(m.Child, m.StringMethod):
         pass
 
-    class J(m.Parent, m.NormalParentMethod):
+    class B(m.Parent, m.NormalParentMethod):
         def __init__(self):
-            self.x = T().x
+            self.x = A().x
 
-    class F(m.Root, m.NormalRootMethod):
+    class C(m.Root, m.NormalRootMethod):
         def __init__(self):
-            self.a = J().a
+            self.a = B().a
 
-    # Simple.
+    # First level.
 
     expected = """
 Contract:
-  bar: {list_of_int_field_repr}  # Variable in T.x
-  baz: {int_field_repr}  # Variable in T.x
-  foo: {int_field_repr}  # Variable in T.x
+  bar: {list_of_int_field_repr}  # Variable in A.x
+  baz: {int_field_repr}  # Variable in A.x
+  foo: {int_field_repr}  # Variable in A.x
     """.strip().format(
         **m.representations
     )
 
-    assert repr(T().x.contract) == expected
+    assert repr(A().x.contract) == expected
 
-    # Substory DI.
+    # Second level.
 
     expected = """
 Contract:
-  bar: {list_of_int_field_repr}  # Variable in T.x
-  baz: {int_field_repr}  # Variable in T.x
-  beans: {int_field_repr}  # Variable in J.a
-  eggs: {int_field_repr}  # Variable in J.a
-  foo: {int_field_repr}  # Variable in T.x
-  ham: {int_field_repr}  # Variable in J.a
+  bar: {list_of_int_field_repr}  # Variable in A.x
+  baz: {int_field_repr}  # Variable in A.x
+  beans: {int_field_repr}  # Variable in B.a
+  eggs: {int_field_repr}  # Variable in B.a
+  foo: {int_field_repr}  # Variable in A.x
+  ham: {int_field_repr}  # Variable in B.a
     """.strip().format(
         **m.representations
     )
 
-    assert repr(J().a.contract) == expected
+    assert repr(B().a.contract) == expected
 
-    # Hierarchy.
+    # Third level.
 
     expected = """
 Contract:
-  bar: {list_of_int_field_repr}  # Variable in T.x
-  baz: {int_field_repr}  # Variable in T.x
-  beans: {int_field_repr}  # Variable in J.a
-  buzz: {int_field_repr}  # Variable in F.i
-  eggs: {int_field_repr}  # Variable in J.a
-  fizz: {int_field_repr}  # Variable in F.i
-  foo: {int_field_repr}  # Variable in T.x
-  ham: {int_field_repr}  # Variable in J.a
+  bar: {list_of_int_field_repr}  # Variable in A.x
+  baz: {int_field_repr}  # Variable in A.x
+  beans: {int_field_repr}  # Variable in B.a
+  buzz: {int_field_repr}  # Variable in C.i
+  eggs: {int_field_repr}  # Variable in B.a
+  fizz: {int_field_repr}  # Variable in C.i
+  foo: {int_field_repr}  # Variable in A.x
+  ham: {int_field_repr}  # Variable in B.a
     """.strip().format(
         **m.representations
     )
 
-    assert repr(F().i.contract) == expected
+    assert repr(C().i.contract) == expected
 
 
 def test_story_contract_representation_with_spec_with_args(r, m):
@@ -1238,63 +1236,63 @@ def test_story_contract_representation_with_spec_with_args(r, m):
 
     """
 
-    class T(m.ParamChild, m.StringMethod):
+    class A(m.ParamChild, m.StringMethod):
         pass
 
-    class J(m.ParamParent, m.NormalParentMethod):
+    class B(m.ParamParent, m.NormalParentMethod):
         def __init__(self):
-            self.x = T().x
+            self.x = A().x
 
-    class F(m.ParamRoot, m.NormalRootMethod):
+    class C(m.ParamRoot, m.NormalRootMethod):
         def __init__(self):
-            self.a = J().a
+            self.a = B().a
 
-    # Simple.
+    # First level.
 
     expected = """
 Contract:
-  bar: {list_of_int_field_repr}  # Argument of T.x
-  foo: {int_field_repr}  # Argument of T.x
-  baz: {int_field_repr}  # Variable in T.x
+  bar: {list_of_int_field_repr}  # Argument of A.x
+  foo: {int_field_repr}  # Argument of A.x
+  baz: {int_field_repr}  # Variable in A.x
     """.strip().format(
         **m.representations
     )
 
-    assert repr(T().x.contract) == expected
+    assert repr(A().x.contract) == expected
 
-    # Substory DI.
+    # Second level.
 
     expected = """
 Contract:
-  bar: {list_of_int_field_repr}  # Argument of T.x
-  eggs: {int_field_repr}  # Argument of J.a
-  foo: {int_field_repr}  # Argument of T.x
-  ham: {int_field_repr}  # Argument of J.a
-  baz: {int_field_repr}  # Variable in T.x
-  beans: {int_field_repr}  # Variable in J.a
+  bar: {list_of_int_field_repr}  # Argument of A.x
+  eggs: {int_field_repr}  # Argument of B.a
+  foo: {int_field_repr}  # Argument of A.x
+  ham: {int_field_repr}  # Argument of B.a
+  baz: {int_field_repr}  # Variable in A.x
+  beans: {int_field_repr}  # Variable in B.a
     """.strip().format(
         **m.representations
     )
 
-    assert repr(J().a.contract) == expected
+    assert repr(B().a.contract) == expected
 
-    # Hierarchy.
+    # Third level.
 
     expected = """
 Contract:
-  bar: {list_of_int_field_repr}  # Argument of T.x
-  eggs: {int_field_repr}  # Argument of J.a
-  fizz: {int_field_repr}  # Argument of F.i
-  foo: {int_field_repr}  # Argument of T.x
-  ham: {int_field_repr}  # Argument of J.a
-  baz: {int_field_repr}  # Variable in T.x
-  beans: {int_field_repr}  # Variable in J.a
-  buzz: {int_field_repr}  # Variable in F.i
+  bar: {list_of_int_field_repr}  # Argument of A.x
+  eggs: {int_field_repr}  # Argument of B.a
+  fizz: {int_field_repr}  # Argument of C.i
+  foo: {int_field_repr}  # Argument of A.x
+  ham: {int_field_repr}  # Argument of B.a
+  baz: {int_field_repr}  # Variable in A.x
+  beans: {int_field_repr}  # Variable in B.a
+  buzz: {int_field_repr}  # Variable in C.i
     """.strip().format(
         **m.representations
     )
 
-    assert repr(F().i.contract) == expected
+    assert repr(C().i.contract) == expected
 
 
 def test_story_contract_representation_with_spec_with_args_conflict(r, m):
@@ -1305,46 +1303,46 @@ def test_story_contract_representation_with_spec_with_args_conflict(r, m):
 
     """
 
-    class T(m.ParamChild, m.NormalMethod):
+    class A(m.ParamChild, m.NormalMethod):
         pass
 
-    class J(m.ParamParentWithSameWithString, m.NormalParentMethod):
+    class B(m.ParamParentWithSameWithString, m.NormalParentMethod):
         def __init__(self):
-            self.x = T().x
+            self.x = A().x
 
     # FIXME: Implement this.
     #
-    # class F(..., m.NormalRootMethod):
+    # class C(..., m.NormalRootMethod):
     #     def __init__(self):
-    #         self.a = J().a
+    #         self.a = B().a
 
-    # Substory DI.
+    # Second level.
 
     expected = """
 Contract:
   bar:
-    {list_of_str_field_repr}  # Argument of J.a
-    {list_of_int_field_repr}  # Argument of T.x
+    {list_of_int_field_repr}  # Argument of A.x
+    {list_of_str_field_repr}  # Argument of B.a
   foo:
-    {str_field_repr}  # Argument of J.a
-    {int_field_repr}  # Argument of T.x
-  baz: {int_field_repr}  # Variable in T.x
+    {int_field_repr}  # Argument of A.x
+    {str_field_repr}  # Argument of B.a
+  baz: {int_field_repr}  # Variable in A.x
     """.strip().format(
         **m.representations
     )
 
-    assert repr(J().a.contract) == expected
+    assert repr(B().a.contract) == expected
 
     #     expected = """
     # Contract:
-    #   fizz: ...  # F.i argument
-    #   ham: ...   # J.a argument
-    #   eggs: ...  # J.a argument
-    #   foo: ...   # T.x argument
-    #   bar: ...   # T.x argument
-    #   buzz: ...  # F.i variable
-    #   beans: ... # J.a variable
-    #   baz: ...   # T.x variable
+    #   fizz: ...  # C.i argument
+    #   ham: ...   # B.a argument
+    #   eggs: ...  # B.a argument
+    #   foo: ...   # A.x argument
+    #   bar: ...   # A.x argument
+    #   buzz: ...  # C.i variable
+    #   beans: ... # B.a variable
+    #   baz: ...   # A.x variable
     #     """.strip()
     #
-    #     assert repr(F().i.contract) == expected
+    #     assert repr(C().i.contract) == expected

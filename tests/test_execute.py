@@ -27,29 +27,29 @@ def test_success(r, x):
 
     """
 
-    class T(x.Child, x.NormalMethod):
+    class A(x.Child, x.NormalMethod):
         pass
 
-    class J(x.Parent, x.NormalParentMethod):
+    class B(x.Parent, x.NormalParentMethod):
         def __init__(self):
-            self.x = T().x
+            self.x = A().x
 
-    # Simple.
+    # First level.
 
-    result = r(T().x)()
+    result = r(A().x)()
     assert result is None
 
-    result = r(T().x.run)()
+    result = r(A().x.run)()
     assert result.is_success
     assert not result.is_failure
     assert result.value is None
 
-    # Substory DI.
+    # Second level.
 
-    result = r(J().a)()
+    result = r(B().a)()
     assert result is None
 
-    result = r(J().a.run)()
+    result = r(B().a.run)()
     assert result.is_success
     assert not result.is_failure
     assert result.value is None
@@ -58,7 +58,7 @@ def test_success(r, x):
 def test_failure(r, x):
     """Failure marker semantics."""
 
-    # Simple.
+    # First level.
 
     with pytest.raises(FailureError) as exc_info:
         r(x.Simple().x)(foo=2, bar=2)
@@ -74,7 +74,7 @@ def test_failure(r, x):
     with pytest.raises(AssertionError):
         result.value
 
-    # Substory DI.
+    # Second level.
 
     with pytest.raises(FailureError) as exc_info:
         r(x.SubstoryDI(x.Simple().x).y)(spam=3)
