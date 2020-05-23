@@ -60,7 +60,7 @@ def dict_of(k, v):
             if any(map(itemgetter(1), new_key)) or any(map(itemgetter(1), new_value)):
                 return None, "Invalid value"
             else:
-                return {k(x)[0]: v(y)[0] for x, y in value.items()}, None
+                return {k(a1)[0]: v(a2)[0] for a1, a2 in value.items()}, None
         else:
             return None, "Invalid value"
 
@@ -73,76 +73,76 @@ def dict_of(k, v):
 
 class Child:
     @story
-    def x(I):
-        I.one
+    def a1(I):
+        I.a1s1
 
-    x.contract({"foo": integer, "bar": list_of(integer), "baz": integer})
+    a1.contract({"a1v1": integer, "a1v2": list_of(integer), "a1v3": integer})
 
 
 class ChildWithNull:
     @story
-    def x(I):
-        I.one
+    def a1(I):
+        I.a1s1
 
 
 class ChildWithShrink:
     @story
-    def x(I):
-        I.one
+    def a1(I):
+        I.a1s1
 
-    x.contract({"baz": integer})
+    a1.contract({"a1v3": integer})
 
 
 class ChildAlias:
     @story
-    def x(I):
-        I.one
+    def a1(I):
+        I.a1s1
 
-    x.contract(
+    a1.contract(
         {
-            "foo": dict_of(string, string),
-            "bar": dict_of(string, string),
-            "baz": dict_of(string, integer),
+            "a1v1": dict_of(string, string),
+            "a1v2": dict_of(string, string),
+            "a1v3": dict_of(string, integer),
         }
     )
 
 
 class ParamChild:
     @story
-    @arguments("foo", "bar")
-    def x(I):
-        I.one
+    @arguments("a1v1", "a1v2")
+    def a1(I):
+        I.a1s1
 
-    x.contract({"foo": integer, "bar": list_of(integer), "baz": integer})
+    a1.contract({"a1v1": integer, "a1v2": list_of(integer), "a1v3": integer})
 
 
 class ParamChildWithNull:
     @story
-    @arguments("foo", "bar")
-    def x(I):
-        I.one
+    @arguments("a1v1", "a1v2")
+    def a1(I):
+        I.a1s1
 
 
 class ParamChildWithShrink:
     @story
-    @arguments("foo", "bar", "baz")
-    def x(I):
-        I.one
+    @arguments("a1v1", "a1v2", "a1v3")
+    def a1(I):
+        I.a1s1
 
-    x.contract({"baz": integer})
+    a1.contract({"a1v3": integer})
 
 
 class ParamChildAlias:
     @story
-    @arguments("foo", "bar", "baz")
-    def x(I):
-        I.one
+    @arguments("a1v1", "a1v2", "a1v3")
+    def a1(I):
+        I.a1s1
 
-    x.contract(
+    a1.contract(
         {
-            "foo": dict_of(string, string),
-            "bar": dict_of(string, string),
-            "baz": dict_of(string, integer),
+            "a1v1": dict_of(string, string),
+            "a1v2": dict_of(string, string),
+            "a1v3": dict_of(string, integer),
         }
     )
 
@@ -152,19 +152,19 @@ class ParamChildAlias:
 
 class NextChildWithSame:
     @story
-    def y(I):
-        I.one
+    def a2(I):
+        I.a1s1
 
-    y.contract({"foo": integer, "bar": list_of(integer), "baz": integer})
+    a2.contract({"a1v1": integer, "a1v2": list_of(integer), "a1v3": integer})
 
 
 class NextParamChildWithString:
     @story
-    @arguments("foo", "bar")
-    def y(I):
-        I.two
+    @arguments("a1v1", "a1v2")
+    def a2(I):
+        I.a2s1
 
-    y.contract({"foo": string, "bar": list_of(string)})
+    a2.contract({"a1v1": string, "a1v2": list_of(string)})
 
 
 # Parent base classes.
@@ -172,89 +172,89 @@ class NextParamChildWithString:
 
 class Parent:
     @story
-    def a(I):
-        I.before
-        I.x
-        I.after
+    def b1(I):
+        I.b1s1
+        I.a1
+        I.b1s2
 
 
-Parent.a.contract({"ham": integer, "eggs": integer, "beans": integer})
+Parent.b1.contract({"b1v1": integer, "b1v2": integer, "b1v3": integer})
 
 
 class ParentWithNull:
     @story
-    def a(I):
-        I.before
-        I.x
-        I.after
+    def b1(I):
+        I.b1s1
+        I.a1
+        I.b1s2
 
 
 class ParentWithSame:
     @story
-    def a(I):
-        I.before
-        I.x
-        I.after
+    def b1(I):
+        I.b1s1
+        I.a1
+        I.b1s2
 
 
-ParentWithSame.a.contract({"foo": integer, "bar": list_of(integer), "baz": integer})
+ParentWithSame.b1.contract({"a1v1": integer, "a1v2": list_of(integer), "a1v3": integer})
 
 
 class SequentialParent:
     @story
-    def a(I):
-        I.before
-        I.x
-        I.y
-        I.after
+    def b1(I):
+        I.b1s1
+        I.a1
+        I.a2
+        I.b1s2
 
-    a.contract({})
+    b1.contract({})
 
 
 class ParamParent:
     @story
-    @arguments("ham", "eggs")
-    def a(I):
-        I.before
-        I.x
-        I.after
+    @arguments("b1v1", "b1v2")
+    def b1(I):
+        I.b1s1
+        I.a1
+        I.b1s2
 
 
-ParamParent.a.contract({"ham": integer, "eggs": integer, "beans": integer})
+ParamParent.b1.contract({"b1v1": integer, "b1v2": integer, "b1v3": integer})
 
 
 class ParamParentWithNull:
     @story
-    @arguments("ham", "eggs")
-    def a(I):
-        I.before
-        I.x
-        I.after
+    @arguments("b1v1", "b1v2")
+    def b1(I):
+        I.b1s1
+        I.a1
+        I.b1s2
 
 
 class ParamParentWithSame:
     @story
-    @arguments("foo", "bar", "baz")
-    def a(I):
-        I.before
-        I.after
+    @arguments("a1v1", "a1v2", "a1v3")
+    def b1(I):
+        I.b1s1
+        I.b1s2
 
 
-ParamParentWithSame.a.contract(
-    {"foo": integer, "bar": list_of(integer), "baz": integer}
+ParamParentWithSame.b1.contract(
+    {"a1v1": integer, "a1v2": list_of(integer), "a1v3": integer}
 )
 
 
 class ParamParentWithSameWithString:
     @story
-    @arguments("foo", "bar")
-    def a(I):
-        I.before
-        I.x
-        I.after
+    @arguments("a1v1", "a1v2")
+    def b1(I):
+        I.b1s1
+        I.a1
+        I.b1s2
 
 
-ParamParentWithSameWithString.a.contract({"foo": string, "bar": list_of(string)})
+ParamParentWithSameWithString.b1.contract({"a1v1": string, "a1v2": list_of(string)})
 
 
 # Root base classes.
@@ -262,45 +262,45 @@ ParamParentWithSameWithString.a.contract({"foo": string, "bar": list_of(string)}
 
 class Root:
     @story
-    def i(I):
-        I.start
-        I.a
-        I.finish
+    def c1(I):
+        I.c1s1
+        I.b1
+        I.c1s2
 
 
-Root.i.contract({"fizz": integer, "buzz": integer})
+Root.c1.contract({"c1v1": integer, "c1v2": integer})
 
 
 class RootWithSame:
     @story
-    def i(I):
-        I.start
-        I.a
-        I.finish
+    def c1(I):
+        I.c1s1
+        I.b1
+        I.c1s2
 
 
-RootWithSame.i.contract({"foo": integer, "bar": list_of(integer), "baz": integer})
+RootWithSame.c1.contract({"a1v1": integer, "a1v2": list_of(integer), "a1v3": integer})
 
 
 class SequentialRoot:
     @story
-    def i(I):
-        I.start
-        I.a
-        I.b
-        I.finish
+    def c1(I):
+        I.c1s1
+        I.b1
+        I.b2
+        I.c1s2
 
 
-SequentialRoot.i.contract({"fizz": integer, "buzz": integer})
+SequentialRoot.c1.contract({"c1v1": integer, "c1v2": integer})
 
 
 class ParamRoot:
     @story
-    @arguments("fizz")
-    def i(I):
-        I.start
-        I.a
-        I.finish
+    @arguments("c1v1")
+    def c1(I):
+        I.c1s1
+        I.b1
+        I.c1s2
 
 
-ParamRoot.i.contract({"fizz": integer, "buzz": integer})
+ParamRoot.c1.contract({"c1v1": integer, "c1v2": integer})

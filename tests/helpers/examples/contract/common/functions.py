@@ -4,114 +4,114 @@ from stories import Success
 # Mixins.
 
 
-class NormalMethod:
-    def one(self, ctx):
+class NormalMethod(object):
+    def a1s1(self, ctx):
         return Success()
 
 
-class StringMethod:
-    def one(self, ctx):
-        ctx.foo = "1"
-        ctx.bar = ["2"]
+class StringMethod(object):
+    def a1s1(self, ctx):
+        ctx.a1v1 = "1"
+        ctx.a1v2 = ["2"]
         return Success()
 
 
-class WrongMethod:
-    def one(self, ctx):
-        ctx.foo = "<boom>"
+class WrongMethod(object):
+    def a1s1(self, ctx):
+        ctx.a1v1 = "<boom>"
 
 
-class UnknownMethod:
-    def one(self, ctx):
+class UnknownMethod(object):
+    def a1s1(self, ctx):
         ctx.spam = "0"
 
 
-class ExceptionMethod:
-    def one(self, ctx):
+class ExceptionMethod(object):
+    def a1s1(self, ctx):
         raise Exception
 
 
-class AliasMethod:
-    def one(self, ctx):
+class AliasMethod(object):
+    def a1s1(self, ctx):
         value = {"key": "1"}
-        ctx.foo = value
-        ctx.bar = value
-        ctx.baz = value
+        ctx.a1v1 = value
+        ctx.a1v2 = value
+        ctx.a1v3 = value
         return Success()
 
 
 # Next child mixins.
 
 
-class NormalNextMethod:
-    def two(self, ctx):
+class NormalNextMethod(object):
+    def a2s1(self, ctx):
         return Success()
 
 
 # Parent mixins.
 
 
-class NormalParentMethod:
-    def before(self, ctx):
+class NormalParentMethod(object):
+    def b1s1(self, ctx):
         return Success()
 
-    def after(self, ctx):
-        return Success()
-
-
-class StringParentMethod:
-    def before(self, ctx):
-        ctx.foo = "1"
-        ctx.bar = ["2"]
-        return Success()
-
-    def after(self, ctx):
+    def b1s2(self, ctx):
         return Success()
 
 
-class ExceptionParentMethod:
-    def before(self, ctx):
+class StringParentMethod(object):
+    def b1s1(self, ctx):
+        ctx.a1v1 = "1"
+        ctx.a1v2 = ["2"]
+        return Success()
+
+    def b1s2(self, ctx):
+        return Success()
+
+
+class ExceptionParentMethod(object):
+    def b1s1(self, ctx):
         raise Exception
 
-    def after(self, ctx):
+    def b1s2(self, ctx):
         return Success()
 
 
 # Root mixins.
 
 
-class NormalRootMethod:
-    def start(self, ctx):
+class NormalRootMethod(object):
+    def c1s1(self, ctx):
         return Success()
 
-    def finish(self, ctx):
-        return Success()
-
-
-class StringRootMethod:
-    def start(self, ctx):
-        ctx.foo = "1"
-        ctx.bar = ["2"]
-        return Success()
-
-    def finish(self, ctx):
+    def c1s2(self, ctx):
         return Success()
 
 
-class StringWideRootMethod:
-    def start(self, ctx):
-        ctx.foo = "1"
-        ctx.bar = ["2"]
-        ctx.baz = "1"
+class StringRootMethod(object):
+    def c1s1(self, ctx):
+        ctx.a1v1 = "1"
+        ctx.a1v2 = ["2"]
         return Success()
 
-    def finish(self, ctx):
+    def c1s2(self, ctx):
         return Success()
 
 
-class ExceptionRootMethod:
-    def start(self, ctx):
+class StringWideRootMethod(object):
+    def c1s1(self, ctx):
+        ctx.a1v1 = "1"
+        ctx.a1v2 = ["2"]
+        ctx.a1v3 = "1"
+        return Success()
+
+    def c1s2(self, ctx):
+        return Success()
+
+
+class ExceptionRootMethod(object):
+    def c1s1(self, ctx):
         raise Exception
 
-    def finish(self, ctx):
+    def c1s2(self, ctx):
         return Success()

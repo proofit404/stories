@@ -9,9 +9,9 @@ from stories import story
 
 
 representations = {
-    "int_error": "Not a valid integer.",
+    "int_error": "Not b1 valid integer.",
     "list_of_int_error": """0:
-    Not a valid integer.
+    Not b1 valid integer.
     """.strip(),
     "int_field_repr": "Integer",
     "str_field_repr": "String",
@@ -26,38 +26,38 @@ representations = {
 
 class Child:
     @story
-    def x(I):
-        I.one
+    def a1(I):
+        I.a1s1
 
-    @x.contract
+    @a1.contract
     class Contract(Schema):
-        foo = fields.Integer()
-        bar = fields.List(fields.Integer())
-        baz = fields.Integer()
+        a1v1 = fields.Integer()
+        a1v2 = fields.List(fields.Integer())
+        a1v3 = fields.Integer()
 
 
 class ChildWithNull:
     @story
-    def x(I):
-        I.one
+    def a1(I):
+        I.a1s1
 
 
 class ChildWithShrink:
     @story
-    def x(I):
-        I.one
+    def a1(I):
+        I.a1s1
 
-    @x.contract
+    @a1.contract
     class Contract(Schema):
-        baz = fields.Integer()
+        a1v3 = fields.Integer()
 
 
 class ChildAlias:
     @story
-    def x(I):
-        I.one
+    def a1(I):
+        I.a1s1
 
-    @x.contract
+    @a1.contract
     class Contract(Schema):
         class _DictOfStr(Schema):
             key = fields.Str()
@@ -65,49 +65,49 @@ class ChildAlias:
         class _DictOfInteger(Schema):
             key = fields.Integer()
 
-        foo = fields.Nested(_DictOfStr)
-        bar = fields.Nested(_DictOfStr)
-        baz = fields.Nested(_DictOfInteger)
+        a1v1 = fields.Nested(_DictOfStr)
+        a1v2 = fields.Nested(_DictOfStr)
+        a1v3 = fields.Nested(_DictOfInteger)
 
 
 class ParamChild:
     @story
-    @arguments("foo", "bar")
-    def x(I):
-        I.one
+    @arguments("a1v1", "a1v2")
+    def a1(I):
+        I.a1s1
 
-    @x.contract
+    @a1.contract
     class Contract(Schema):
-        foo = fields.Integer()
-        bar = fields.List(fields.Integer())
-        baz = fields.Integer()
+        a1v1 = fields.Integer()
+        a1v2 = fields.List(fields.Integer())
+        a1v3 = fields.Integer()
 
 
 class ParamChildWithNull:
     @story
-    @arguments("foo", "bar")
-    def x(I):
-        I.one
+    @arguments("a1v1", "a1v2")
+    def a1(I):
+        I.a1s1
 
 
 class ParamChildWithShrink:
     @story
-    @arguments("foo", "bar", "baz")
-    def x(I):
-        I.one
+    @arguments("a1v1", "a1v2", "a1v3")
+    def a1(I):
+        I.a1s1
 
-    @x.contract
+    @a1.contract
     class Contract(Schema):
-        baz = fields.Integer()
+        a1v3 = fields.Integer()
 
 
 class ParamChildAlias:
     @story
-    @arguments("foo", "bar", "baz")
-    def x(I):
-        I.one
+    @arguments("a1v1", "a1v2", "a1v3")
+    def a1(I):
+        I.a1s1
 
-    @x.contract
+    @a1.contract
     class Contract(Schema):
         class _DictOfStr(Schema):
             key = fields.Str()
@@ -115,9 +115,9 @@ class ParamChildAlias:
         class _DictOfInteger(Schema):
             key = fields.Integer()
 
-        foo = fields.Nested(_DictOfStr)
-        bar = fields.Nested(_DictOfStr)
-        baz = fields.Nested(_DictOfInteger)
+        a1v1 = fields.Nested(_DictOfStr)
+        a1v2 = fields.Nested(_DictOfStr)
+        a1v3 = fields.Nested(_DictOfInteger)
 
 
 # Next child base classes.
@@ -125,26 +125,26 @@ class ParamChildAlias:
 
 class NextChildWithSame:
     @story
-    def y(I):
-        I.one
+    def a2(I):
+        I.a1s1
 
-    @y.contract
+    @a2.contract
     class Contract(Schema):
-        foo = fields.Integer()
-        bar = fields.List(fields.Integer())
-        baz = fields.Integer()
+        a1v1 = fields.Integer()
+        a1v2 = fields.List(fields.Integer())
+        a1v3 = fields.Integer()
 
 
 class NextParamChildWithString:
     @story
-    @arguments("foo", "bar")
-    def y(I):
-        I.two
+    @arguments("a1v1", "a1v2")
+    def a2(I):
+        I.a2s1
 
-    @y.contract
+    @a2.contract
     class Contract(Schema):
-        foo = fields.String()
-        bar = fields.List(fields.String())
+        a1v1 = fields.String()
+        a1v2 = fields.List(fields.String())
 
 
 # Parent base classes.
@@ -152,108 +152,108 @@ class NextParamChildWithString:
 
 class Parent:
     @story
-    def a(I):
-        I.before
-        I.x
-        I.after
+    def b1(I):
+        I.b1s1
+        I.a1
+        I.b1s2
 
 
-@Parent.a.contract
+@Parent.b1.contract
 class Contract(Schema):
-    ham = fields.Integer()
-    eggs = fields.Integer()
-    beans = fields.Integer()
+    b1v1 = fields.Integer()
+    b1v2 = fields.Integer()
+    b1v3 = fields.Integer()
 
 
 class ParentWithNull:
     @story
-    def a(I):
-        I.before
-        I.x
-        I.after
+    def b1(I):
+        I.b1s1
+        I.a1
+        I.b1s2
 
 
 class ParentWithSame:
     @story
-    def a(I):
-        I.before
-        I.x
-        I.after
+    def b1(I):
+        I.b1s1
+        I.a1
+        I.b1s2
 
 
-@ParentWithSame.a.contract
+@ParentWithSame.b1.contract
 class Contract(Schema):  # noqa: F811
-    foo = fields.Integer()
-    bar = fields.List(fields.Integer())
-    baz = fields.Integer()
+    a1v1 = fields.Integer()
+    a1v2 = fields.List(fields.Integer())
+    a1v3 = fields.Integer()
 
 
 class SequentialParent:
     @story
-    def a(I):
-        I.before
-        I.x
-        I.y
-        I.after
+    def b1(I):
+        I.b1s1
+        I.a1
+        I.a2
+        I.b1s2
 
-    @a.contract  # FIXME: Should be inferred.
+    @b1.contract  # FIXME: Should be inferred.
     class Contract(Schema):
         pass
 
 
 class ParamParent:
     @story
-    @arguments("ham", "eggs")
-    def a(I):
-        I.before
-        I.x
-        I.after
+    @arguments("b1v1", "b1v2")
+    def b1(I):
+        I.b1s1
+        I.a1
+        I.b1s2
 
 
-@ParamParent.a.contract
+@ParamParent.b1.contract
 class Contract(Schema):  # noqa: F811
-    ham = fields.Integer()
-    eggs = fields.Integer()
-    beans = fields.Integer()
+    b1v1 = fields.Integer()
+    b1v2 = fields.Integer()
+    b1v3 = fields.Integer()
 
 
 class ParamParentWithNull:
     @story
-    @arguments("ham", "eggs")
-    def a(I):
-        I.before
-        I.x
-        I.after
+    @arguments("b1v1", "b1v2")
+    def b1(I):
+        I.b1s1
+        I.a1
+        I.b1s2
 
 
 class ParamParentWithSame:
     @story
-    @arguments("foo", "bar", "baz")
-    def a(I):
-        I.before
-        I.after
+    @arguments("a1v1", "a1v2", "a1v3")
+    def b1(I):
+        I.b1s1
+        I.b1s2
 
 
-@ParamParentWithSame.a.contract
+@ParamParentWithSame.b1.contract
 class Contract(Schema):  # noqa: F811
-    foo = fields.Integer()
-    bar = fields.List(fields.Integer())
-    baz = fields.Integer()
+    a1v1 = fields.Integer()
+    a1v2 = fields.List(fields.Integer())
+    a1v3 = fields.Integer()
 
 
 class ParamParentWithSameWithString:
     @story
-    @arguments("foo", "bar")
-    def a(I):
-        I.before
-        I.x
-        I.after
+    @arguments("a1v1", "a1v2")
+    def b1(I):
+        I.b1s1
+        I.a1
+        I.b1s2
 
 
-@ParamParentWithSameWithString.a.contract
+@ParamParentWithSameWithString.b1.contract
 class Contract(Schema):  # noqa: F811
-    foo = fields.String()
-    bar = fields.List(fields.String())
+    a1v1 = fields.String()
+    a1v2 = fields.List(fields.String())
 
 
 # Root base classes.
@@ -261,58 +261,58 @@ class Contract(Schema):  # noqa: F811
 
 class Root:
     @story
-    def i(I):
-        I.start
-        I.a
-        I.finish
+    def c1(I):
+        I.c1s1
+        I.b1
+        I.c1s2
 
 
-@Root.i.contract
+@Root.c1.contract
 class Contract(Schema):  # noqa: F811
-    fizz = fields.Integer()
-    buzz = fields.Integer()
+    c1v1 = fields.Integer()
+    c1v2 = fields.Integer()
 
 
 class RootWithSame:
     @story
-    def i(I):
-        I.start
-        I.a
-        I.finish
+    def c1(I):
+        I.c1s1
+        I.b1
+        I.c1s2
 
 
-@RootWithSame.i.contract
+@RootWithSame.c1.contract
 class Contract(Schema):  # noqa: F811
-    foo = fields.Integer()
-    bar = fields.List(fields.Integer())
-    baz = fields.Integer()
+    a1v1 = fields.Integer()
+    a1v2 = fields.List(fields.Integer())
+    a1v3 = fields.Integer()
 
 
 class SequentialRoot:
     @story
-    def i(I):
-        I.start
-        I.a
-        I.b
-        I.finish
+    def c1(I):
+        I.c1s1
+        I.b1
+        I.b2
+        I.c1s2
 
 
-@SequentialRoot.i.contract
+@SequentialRoot.c1.contract
 class Contract(Schema):  # noqa: F811
-    fizz = fields.Integer()
-    buzz = fields.Integer()
+    c1v1 = fields.Integer()
+    c1v2 = fields.Integer()
 
 
 class ParamRoot:
     @story
-    @arguments("fizz")
-    def i(I):
-        I.start
-        I.a
-        I.finish
+    @arguments("c1v1")
+    def c1(I):
+        I.c1s1
+        I.b1
+        I.c1s2
 
 
-@ParamRoot.i.contract
+@ParamRoot.c1.contract
 class Contract(Schema):  # noqa: F811
-    fizz = fields.Integer()
-    buzz = fields.Integer()
+    c1v1 = fields.Integer()
+    c1v2 = fields.Integer()
