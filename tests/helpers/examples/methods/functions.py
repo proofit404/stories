@@ -6,189 +6,121 @@ from stories import Result
 from stories import story
 from stories import Success
 
+
 # Mixins.
 
 
-class NormalMethod:
-    def one(self, ctx):
+class NormalMethod(object):
+    def a1s1(self, ctx):
         return Success()
 
-    def two(self, ctx):
+    def a1s2(self, ctx):
         return Success()
 
-    def three(self, ctx):
+    def a1s3(self, ctx):
         return Success()
+
+
+class FailureMethod(object):
+    def a1s1(self, ctx):
+        return Success()
+
+    def a1s2(self, ctx):
+        return Failure()
+
+    def a1s3(self, ctx):
+        pass  # pragma: no cover
+
+
+class ResultMethod(object):
+    def a1s1(self, ctx):
+        return Success()
+
+    def a1s2(self, ctx):
+        return Result(-1)
+
+    def a1s3(self, ctx):
+        pass  # pragma: no cover
+
+
+class PassMethod(object):
+    def a1s1(self, ctx):
+        pass
+
+    def a1s2(self, ctx):
+        pass  # pragma: no cover
+
+    def a1s3(self, ctx):
+        pass  # pragma: no cover
+
+
+class DependencyMethod(object):
+    def a1s1(self, ctx):
+        return Success()
+
+    def a1s2(self, ctx):
+        ctx.a1v3 = self.f(ctx.a1v1, ctx.a1v2)
+        return Success()
+
+    def a1s3(self, ctx):
+        return Result(ctx.a1v3)
 
 
 # Parent mixins.
 
 
-class NormalParentMethod:
-    def before(self, ctx):
+class NormalParentMethod(object):
+    def b1s1(self, ctx):
         return Success()
 
-    def after(self, ctx):
+    def b1s2(self, ctx):
         return Success()
 
 
-# Simple story.
-
-
-class Simple:
-    @story
-    @arguments("foo", "bar")
-    def x(I):
-        I.one
-        I.two
-        I.three
-
-    def one(self, ctx):
+class AssignParentMethod(object):
+    def b1s1(self, ctx):
+        ctx.a1v1 = 2
+        ctx.a1v2 = 4
         return Success()
 
-    def two(self, ctx):
-        if ctx.foo > 1:
-            return Failure()
+    def b1s2(self, ctx):
+        pass  # pragma: no cover
 
-        if ctx.bar < 0:
-            return Next()
 
-        ctx.baz = 4
+class DependencyParentMethod(object):
+    def b1s1(self, ctx):
+        ctx.a1v1 = self.f(ctx.b1v1)
+        ctx.a1v2 = self.f(ctx.a1v1)
         return Success()
 
-    def three(self, ctx):
-        return Result(ctx.bar - ctx.baz)
+    def b1s2(self, ctx):
+        pass  # pragma: no cover
 
 
-class Pipe:
-    @story
-    def x(I):
-        I.one
-        I.two
-        I.three
+# Root mixins.
 
-    @story
-    def y(I):
-        I.before
-        I.x
-        I.after
 
-    def one(self, ctx):
+class NormalRootMethod(object):
+    def c1s1(self, ctx):
         return Success()
 
-    def two(self, ctx):
+    def c1s2(self, ctx):
         return Success()
 
-    def three(self, ctx):
+
+class AssignRootMethod(object):
+    def c1s1(self, ctx):
+        ctx.b1v1 = 3
         return Success()
 
-    def before(self, ctx):
-        return Next()
-
-    def after(self, ctx):
-        raise Exception()  # pragma: no cover
+    def c1s2(self, ctx):
+        pass  # pragma: no cover
 
 
-class Branch:
-    @story
-    @arguments("age")
-    def show_content(I):
-        I.age_lt_18
-        I.age_gte_18
-        I.load_content
-
-    def age_lt_18(self, ctx):
-        if ctx.age < 18:
-            ctx.access_allowed = False
-            return Success()
+class DependencyRootMethod(object):
+    def c1s1(self, ctx):
+        ctx.b1v1 = self.f(ctx.c1v1)
         return Success()
 
-    def age_gte_18(self, ctx):
-        if not hasattr(ctx, "access_allowed") and ctx.age >= 18:
-            ctx.access_allowed = True
-            return Success()
-        return Success()
-
-    def load_content(self, ctx):
-        if ctx.access_allowed:
-            return Result("allowed")
-        else:
-            return Result("denied")
-
-
-# Dependency injection of the substory.
-
-
-class SubstoryDI:
-    def __init__(self, x):
-        self.x = x
-
-    @story
-    @arguments("spam")
-    def y(I):
-        I.start
-        I.before
-        I.x
-        I.after
-
-    def start(self, ctx):
-        ctx.foo = ctx.spam - 1
-        return Success()
-
-    def before(self, ctx):
-        ctx.bar = ctx.spam + 1
-        return Success()
-
-    def after(self, ctx):
-        return Result(ctx.spam * 2)
-
-
-# Method tries to return wrong type.
-
-
-class WrongResult:
-    @story
-    def x(I):
-        I.one
-
-    def one(self, ctx):
-        return 1
-
-
-# Dependency injection of the implementation methods.
-
-
-class ImplementationDI:
-    def __init__(self, f):
-        self.f = f
-
-    @story
-    @arguments("foo")
-    def x(I):
-        I.one
-
-    def one(self, ctx):
-        return Result(self.f(ctx.foo))
-
-
-# Step error.
-
-
-class StepError:
-    @story
-    def x(I):
-        I.one
-
-    def one(self, ctx):
-        raise ExpectedException()  # noqa: F405
-
-
-# Access non-existent context attribute.
-
-
-class AttributeAccessError:
-    @story
-    def x(I):
-        I.one
-
-    def one(self, ctx):
-        ctx.x
+    def c1s2(self, ctx):
+        pass  # pragma: no cover
