@@ -1,53 +1,53 @@
-# [1.0.0](https://github.com/dry-python/stories/compare/0.15.0...1.0.0) (2020-05-22)
+# [1.0.0](https://github.com/proofit404/stories/compare/0.15.0...1.0.0) (2020-05-22)
 
 ### Features
 
-- deprecate substories defined within the class ([c5d7930](https://github.com/dry-python/stories/commit/c5d7930af4d0af3a510993b852aeee19335a4154)), closes [#388](https://github.com/dry-python/stories/issues/388)
+- deprecate substories defined within the class ([c5d7930](https://github.com/proofit404/stories/commit/c5d7930af4d0af3a510993b852aeee19335a4154)), closes [#388](https://github.com/proofit404/stories/issues/388)
 
 ### BREAKING CHANGES
 
 - Substories defined in the same class do not deserve special treatment. From now they require to have different context contracts and failure protocols. They will be interpreted the same way as if they were defined in the other class. Shortcuts module have been removed.
 
-# [0.15.0](https://github.com/dry-python/stories/compare/0.14.0...0.15.0) (2020-04-16)
+# [0.15.0](https://github.com/proofit404/stories/compare/0.14.0...0.15.0) (2020-04-16)
 
 ### Features
 
-- support Django 4.0 ([f02a334](https://github.com/dry-python/stories/commit/f02a3341c58b7885a2095c11ff5bef4acf626e94))
+- support Django 4.0 ([f02a334](https://github.com/proofit404/stories/commit/f02a3341c58b7885a2095c11ff5bef4acf626e94))
 
-# [0.14.0](https://github.com/dry-python/stories/compare/0.13.0...0.14.0) (2020-03-21)
-
-### Features
-
-- support marshmallow v3 as a context contract definition ([a87c0c4](https://github.com/dry-python/stories/commit/a87c0c45cbb52e40fba872f57aa07a3550de6143))
-
-# [0.13.0](https://github.com/dry-python/stories/compare/0.12.0...0.13.0) (2020-03-14)
+# [0.14.0](https://github.com/proofit404/stories/compare/0.13.0...0.14.0) (2020-03-21)
 
 ### Features
 
-- use assignment expression instead of Success keyword arguments ([9756571](https://github.com/dry-python/stories/commit/9756571237d56c52f8769c61f20f544ab389a211))
+- support marshmallow v3 as a context contract definition ([a87c0c4](https://github.com/proofit404/stories/commit/a87c0c45cbb52e40fba872f57aa07a3550de6143))
 
-# [0.12.0](https://github.com/dry-python/stories/compare/0.11.2...0.12.0) (2020-03-06)
+# [0.13.0](https://github.com/proofit404/stories/compare/0.12.0...0.13.0) (2020-03-14)
 
 ### Features
 
-- support coroutine functions as story step definitions ([55cbfda](https://github.com/dry-python/stories/commit/55cbfda33c61ca1395aaacf2d2d6a2c78f14ecde))
+- use assignment expression instead of Success keyword arguments ([9756571](https://github.com/proofit404/stories/commit/9756571237d56c52f8769c61f20f544ab389a211))
 
-## [0.11.2](https://github.com/dry-python/stories/compare/0.11.1...0.11.2) (2020-03-02)
+# [0.12.0](https://github.com/proofit404/stories/compare/0.11.2...0.12.0) (2020-03-06)
+
+### Features
+
+- support coroutine functions as story step definitions ([55cbfda](https://github.com/proofit404/stories/commit/55cbfda33c61ca1395aaacf2d2d6a2c78f14ecde))
+
+## [0.11.2](https://github.com/proofit404/stories/compare/0.11.1...0.11.2) (2020-03-02)
 
 ### Bug Fixes
 
-- hide context private attributes in closure ([f8144aa](https://github.com/dry-python/stories/commit/f8144aabd8629682f9c7368a23c80316bb10fddc))
-- hide failure and success summary private attributes in closure ([eae4e95](https://github.com/dry-python/stories/commit/eae4e95bd89a2df8fd31f77fe665659c29feedd8))
-- hide FailureError private attributes in closure ([1fafcc1](https://github.com/dry-python/stories/commit/1fafcc1039775f2fbcc242b582181fab2d4e63d7))
-- hide story private attributes in closure ([9e79e14](https://github.com/dry-python/stories/commit/9e79e1417785db1e13ed01a1cd64613d5bf24a8a))
+- hide context private attributes in closure ([f8144aa](https://github.com/proofit404/stories/commit/f8144aabd8629682f9c7368a23c80316bb10fddc))
+- hide failure and success summary private attributes in closure ([eae4e95](https://github.com/proofit404/stories/commit/eae4e95bd89a2df8fd31f77fe665659c29feedd8))
+- hide FailureError private attributes in closure ([1fafcc1](https://github.com/proofit404/stories/commit/1fafcc1039775f2fbcc242b582181fab2d4e63d7))
+- hide story private attributes in closure ([9e79e14](https://github.com/proofit404/stories/commit/9e79e1417785db1e13ed01a1cd64613d5bf24a8a))
 
-## [0.11.1](https://github.com/dry-python/stories/compare/0.11.0...0.11.1) (2020-02-28)
+## [0.11.1](https://github.com/proofit404/stories/compare/0.11.0...0.11.1) (2020-02-28)
 
 ### Bug Fixes
 
-- deny to define stories without steps ([5067546](https://github.com/dry-python/stories/commit/5067546386df294db595fb0ee4e8968ee295c4b3))
+- deny to define stories without steps ([5067546](https://github.com/proofit404/stories/commit/5067546386df294db595fb0ee4e8968ee295c4b3))
 
-# [0.11.0](https://github.com/dry-python/stories/compare/0.10.2...0.11.0) (2020-02-14)
+# [0.11.0](https://github.com/proofit404/stories/compare/0.10.2...0.11.0) (2020-02-14)
 
 ### Features
 
@@ -58,13 +58,13 @@
 - Only keyword arguments are allowed to `call` and `run` the story.
 - Raise `StoryDefinitionError` when `arguments` decorator is used
   incorrectly.
-- migrate to pydantic v1.x ([9049eae](https://github.com/dry-python/stories/commit/9049eae43c7b8db36708fc019a671a53bf4b578d))
+- migrate to pydantic v1.x ([9049eae](https://github.com/proofit404/stories/commit/9049eae43c7b8db36708fc019a671a53bf4b578d))
 
-## [0.10.2](https://github.com/dry-python/stories/compare/0.10.1...0.10.2) (2020-02-11)
+## [0.10.2](https://github.com/proofit404/stories/compare/0.10.1...0.10.2) (2020-02-11)
 
 ### Bug Fixes
 
-- prevent generated changelog from style guide violation ([7d4047d](https://github.com/dry-python/stories/commit/7d4047d10e4dacc10ec356700b1fc35161efa4c0))
+- prevent generated changelog from style guide violation ([7d4047d](https://github.com/proofit404/stories/commit/7d4047d10e4dacc10ec356700b1fc35161efa4c0))
 
 ## 0.10.1 (2019-05-31)
 
@@ -136,5 +136,4 @@
 - Initial release.
 
 <p align="center">&mdash; ⭐️ &mdash;</p>
-<p align="center"><i>Drylabs maintains dry-python and helps those who want to use it inside their organizations.</i></p>
-<p align="center"><i>Read more at <a href="https://drylabs.io">drylabs.io</a></i></p>
+<p align="center"><i>The stories library is part of the SOLID python family.</i></p>

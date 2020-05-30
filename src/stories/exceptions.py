@@ -5,7 +5,7 @@ stories.exceptions
 
 This module contains errors definitions user can handle.
 
-:copyright: (c) 2018-2020 dry-python team.
+:copyright: (c) 2018-2020 Artem Malyshev.
 :license: BSD, see LICENSE for more details.
 """
 from _stories.exceptions import ContextContractError

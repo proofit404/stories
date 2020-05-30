@@ -1,20 +1,10 @@
-![logo](https://raw.githubusercontent.com/dry-python/brand/master/logo/stories.png)
+# Stories
 
-[![azure-devops-builds](https://img.shields.io/azure-devops/build/dry-python/stories/3?style=flat-square)](https://dev.azure.com/dry-python/stories/_build/latest?definitionId=3&branchName=master)
-[![azure-devops-coverage](https://img.shields.io/azure-devops/coverage/dry-python/stories/3?style=flat-square)](https://dev.azure.com/dry-python/stories/_build/latest?definitionId=3&branchName=master)
-[![readthedocs](https://img.shields.io/readthedocs/stories?style=flat-square)](https://stories.readthedocs.io/en/latest/?badge=latest)
-[![gitter](https://img.shields.io/gitter/room/dry-python/stories?style=flat-square)](https://gitter.im/dry-python/stories)
+[![azure-devops-builds](https://img.shields.io/azure-devops/build/proofit404/stories/3?style=flat-square)](https://dev.azure.com/proofit404/stories/_build/latest?definitionId=3&branchName=master)
+[![azure-devops-coverage](https://img.shields.io/azure-devops/coverage/proofit404/stories/3?style=flat-square)](https://dev.azure.com/proofit404/stories/_build/latest?definitionId=3&branchName=master)
 [![pypi](https://img.shields.io/pypi/v/stories?style=flat-square)](https://pypi.python.org/pypi/stories/)
 
----
-
-# The business transaction DSL
-
-- [Source Code](https://github.com/dry-python/stories)
-- [Issue Tracker](https://github.com/dry-python/stories/issues)
-- [Documentation](https://stories.readthedocs.io/en/latest/)
-- [Newsletter](https://twitter.com/dry_py)
-- [Discussion](https://gitter.im/dry-python/stories)
+The business transaction DSL.
 
 ## Installation
 
@@ -86,5 +76,4 @@ implementation details.
 Stories library is offered under the two clause BSD license.
 
 <p align="center">&mdash; ⭐️ &mdash;</p>
-<p align="center"><i>Drylabs maintains dry-python and helps those who want to use it inside their organizations.</i></p>
-<p align="center"><i>Read more at <a href="https://drylabs.io">drylabs.io</a></i></p>
+<p align="center"><i>The stories library is part of the SOLID python family.</i></p>

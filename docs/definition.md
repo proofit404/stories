@@ -13,9 +13,8 @@ the story itself.
 
 ## Basics
 
-This is a real-world example of the story definition used in our
-[tutorials](https://github.com/dry-python/tutorials). As you can see,
-it is a business process of the subscription to our service.
+As you can see, it is a business process of the subscription to our
+service.
 
 ```pycon tab="sync"
 
@@ -571,5 +570,4 @@ To make failure handling a more manageable process we can define a
    `reason` in the `Failure` marker.
 
 <p align="center">&mdash; ⭐️ &mdash;</p>
-<p align="center"><i>Drylabs maintains dry-python and helps those who want to use it inside their organizations.</i></p>
-<p align="center"><i>Read more at <a href="https://drylabs.io">drylabs.io</a></i></p>
+<p align="center"><i>The stories library is part of the SOLID python family.</i></p>

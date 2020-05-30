@@ -3,19 +3,17 @@ strict: true
 site_name: stories
 site_description: Define a user story in the business transaction DSL.
 theme:
-  name: "material"
+  name: material
   palette:
-    primary: "white"
-    accent: "light-blue"
-  logo: "https://raw.githubusercontent.com\
-    /dry-python/brand/master/logo/dry-python.png"
-  favicon: "https://raw.githubusercontent.com\
-    /dry-python/brand/master/logo/dry-python.ico"
-  language: "en"
+    primary: deep-purple
+    accent: deep-purple
+  icon:
+    logo: material/language-python
+  language: en
   features:
     - tabs
-repo_name: dry-python/stories
-repo_url: "https://github.com/dry-python/stories"
+repo_name: proofit404/stories
+repo_url: https://github.com/proofit404/stories
 edit_uri: ""
 markdown_extensions:
   - admonition
@@ -28,21 +26,21 @@ markdown_extensions:
   - pymdownx.tasklist:
       custom_checkbox: true
 extra_javascript:
-  - "javascripts/extra.js"
+  - javascripts/extra.js
 nav:
-  - "Home":
-      - "Home": index.md
-      - "Why": why.md
-      - "Definition": definition.md
-      - "Usage": usage.md
-      - "Execution": execution.md
-      - "Failure protocol": failure_protocol.md
-      - "FAQ": faq.md
-      - "Changelog": changelog.md
-  - "Guides":
-      - "Debugging": debugging.md
-      - "Composition": composition.md
-  - "Contrib":
-      - "Py.test": contrib/pytest.md
-      - "Debug toolbars": contrib/debug_toolbars.md
-      - "Sentry": contrib/sentry.md
+  - Home:
+      - Home: index.md
+      - Why: why.md
+      - Definition: definition.md
+      - Usage: usage.md
+      - Execution: execution.md
+      - Failure protocol: failure_protocol.md
+      - FAQ: faq.md
+      - Changelog: changelog.md
+  - Guides:
+      - Debugging: debugging.md
+      - Composition: composition.md
+  - Contrib:
+      - Py.test: contrib/pytest.md
+      - Debug toolbars: contrib/debug_toolbars.md
+      - Sentry: contrib/sentry.md

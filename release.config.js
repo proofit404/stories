@@ -1,5 +1,5 @@
 module.exports = {
-  repositoryUrl: "https://github.com/dry-python/stories",
+  repositoryUrl: "https://github.com/proofit404/stories",
   tagFormat: "${version}",
   plugins: [
     "@semantic-release/commit-analyzer",
