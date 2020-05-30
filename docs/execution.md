@@ -260,16 +260,6 @@ variables for future methods.
 
 ```
 
-!!! note
-
-    A previous version of the stories library implemented the same
-    behavior with `Success()` marker keyword arguments.  If you need
-    to migrate source files where outdated version of the library was
-    used, please have a look at the
-    [editors](https://github.com/dry-python/editors#stories-upgrade)
-    project.  It will refactory all your codebase properly within a
-    single command.
-
 ## Failure
 
 If story method returns `Failure`, the whole story considered failed.
@@ -807,5 +797,4 @@ one
 ```
 
 <p align="center">&mdash; ⭐️ &mdash;</p>
-<p align="center"><i>Drylabs maintains dry-python and helps those who want to use it inside their organizations.</i></p>
-<p align="center"><i>Read more at <a href="https://drylabs.io">drylabs.io</a></i></p>
+<p align="center"><i>The stories library is part of the SOLID python family.</i></p>
