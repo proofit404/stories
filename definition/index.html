@@ -1,0 +1,1392 @@
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Define a user story in the business transaction DSL.">
+      
+      
+      
+      <link rel="shortcut icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.2.2">
+    
+    
+      
+        <title>Definition - stories</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.a2408e81.min.css">
+      
+        <link rel="stylesheet" href="../assets/stylesheets/palette.a46bcfb3.min.css">
+      
+      
+        
+        
+        <meta name="theme-color" content="#7e57c2">
+      
+    
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="deep-purple" data-md-color-accent="deep-purple">
+  
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#definition" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href=".." title="stories" class="md-header-nav__button md-logo" aria-label="stories">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.14 7.5A2.86 2.86 0 0122 10.36v3.78A2.86 2.86 0 0119.14 17H12c0 .39.32.96.71.96H17v1.68a2.86 2.86 0 01-2.86 2.86H9.86A2.86 2.86 0 017 19.64v-3.75a2.85 2.85 0 012.86-2.85h5.25a2.85 2.85 0 002.85-2.86V7.5h1.18m-4.28 11.79c-.4 0-.72.3-.72.89 0 .59.32.71.72.71a.71.71 0 00.71-.71c0-.59-.32-.89-.71-.89m-10-1.79A2.86 2.86 0 012 14.64v-3.78A2.86 2.86 0 014.86 8H12c0-.39-.32-.96-.71-.96H7V5.36A2.86 2.86 0 019.86 2.5h4.28A2.86 2.86 0 0117 5.36v3.75a2.85 2.85 0 01-2.86 2.85H8.89a2.85 2.85 0 00-2.85 2.86v2.68H4.86M9.14 5.71c.4 0 .72-.3.72-.89 0-.59-.32-.71-.72-.71-.39 0-.71.12-.71.71s.32.89.71.89z"/></svg>
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      
+        <div class="md-header-nav__ellipsis">
+          <span class="md-header-nav__topic md-ellipsis">
+            stories
+          </span>
+          <span class="md-header-nav__topic md-ellipsis">
+            
+              Definition
+            
+          </span>
+        </div>
+      
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active">
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header-nav__source">
+        
+<a href="https://github.com/proofit404/stories" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    proofit404/stories
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+        
+      
+      
+        
+          
+
+  
+
+<nav class="md-tabs md-tabs--active" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href=".." class="md-tabs__link md-tabs__link--active">
+          Home
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../debugging/" class="md-tabs__link">
+          Guides
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../contrib/pytest/" class="md-tabs__link">
+          Contrib
+        </a>
+      
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="stories" class="md-nav__button md-logo" aria-label="stories">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19.14 7.5A2.86 2.86 0 0122 10.36v3.78A2.86 2.86 0 0119.14 17H12c0 .39.32.96.71.96H17v1.68a2.86 2.86 0 01-2.86 2.86H9.86A2.86 2.86 0 017 19.64v-3.75a2.85 2.85 0 012.86-2.85h5.25a2.85 2.85 0 002.85-2.86V7.5h1.18m-4.28 11.79c-.4 0-.72.3-.72.89 0 .59.32.71.72.71a.71.71 0 00.71-.71c0-.59-.32-.89-.71-.89m-10-1.79A2.86 2.86 0 012 14.64v-3.78A2.86 2.86 0 014.86 8H12c0-.39-.32-.96-.71-.96H7V5.36A2.86 2.86 0 019.86 2.5h4.28A2.86 2.86 0 0117 5.36v3.75a2.85 2.85 0 01-2.86 2.85H8.89a2.85 2.85 0 00-2.85 2.86v2.68H4.86M9.14 5.71c.4 0 .72-.3.72-.89 0-.59-.32-.71-.72-.71-.39 0-.71.12-.71.71s.32.89.71.89z"/></svg>
+
+    </a>
+    stories
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/proofit404/stories" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    proofit404/stories
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-1" type="checkbox" id="nav-1" checked>
+    
+    <label class="md-nav__link" for="nav-1">
+      Home
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="Home" data-md-level="1">
+      <label class="md-nav__title" for="nav-1">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        Home
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href=".." title="Home" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../why/" title="Why" class="md-nav__link">
+      Why
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Definition
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9h14V7H3v2m0 4h14v-2H3v2m0 4h14v-2H3v2m16 0h2v-2h-2v2m0-10v2h2V7h-2m0 6h2v-2h-2v2z"/></svg>
+        </span>
+      </label>
+    
+    <a href="./" title="Definition" class="md-nav__link md-nav__link--active">
+      Definition
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#basics" class="md-nav__link">
+    Basics
+  </a>
+  
+    <nav class="md-nav" aria-label="Basics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#explanation" class="md-nav__link">
+    Explanation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#invalid-story-definitions" class="md-nav__link">
+    Invalid story definitions
+  </a>
+  
+    <nav class="md-nav" aria-label="Invalid story definitions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#story-definitions-which-return-a-coroutine" class="md-nav__link">
+    Story definitions which return a coroutine
+  </a>
+  
+    <nav class="md-nav" aria-label="Story definitions which return a coroutine">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#explanation_1" class="md-nav__link">
+    Explanation
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#empty-stories" class="md-nav__link">
+    Empty Stories
+  </a>
+  
+    <nav class="md-nav" aria-label="Empty Stories">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#explanation_2" class="md-nav__link">
+    Explanation
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mixing-synchronous-steps-and-asynchronous-steps" class="md-nav__link">
+    Mixing synchronous steps and asynchronous steps
+  </a>
+  
+    <nav class="md-nav" aria-label="Mixing synchronous steps and asynchronous steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#explanation_3" class="md-nav__link">
+    Explanation
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#failure-protocols" class="md-nav__link">
+    Failure protocols
+  </a>
+  
+    <nav class="md-nav" aria-label="Failure protocols">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#explanation_4" class="md-nav__link">
+    Explanation
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../usage/" title="Usage" class="md-nav__link">
+      Usage
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../execution/" title="Execution" class="md-nav__link">
+      Execution
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../failure_protocol/" title="Failure protocol" class="md-nav__link">
+      Failure protocol
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../faq/" title="FAQ" class="md-nav__link">
+      FAQ
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../changelog/" title="Changelog" class="md-nav__link">
+      Changelog
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
+    
+    <label class="md-nav__link" for="nav-2">
+      Guides
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="Guides" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        Guides
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../debugging/" title="Debugging" class="md-nav__link">
+      Debugging
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../composition/" title="Composition" class="md-nav__link">
+      Composition
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      Contrib
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="Contrib" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        Contrib
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../contrib/pytest/" title="Py.test" class="md-nav__link">
+      Py.test
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../contrib/debug_toolbars/" title="Debug toolbars" class="md-nav__link">
+      Debug toolbars
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../contrib/sentry/" title="Sentry" class="md-nav__link">
+      Sentry
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#basics" class="md-nav__link">
+    Basics
+  </a>
+  
+    <nav class="md-nav" aria-label="Basics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#explanation" class="md-nav__link">
+    Explanation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#invalid-story-definitions" class="md-nav__link">
+    Invalid story definitions
+  </a>
+  
+    <nav class="md-nav" aria-label="Invalid story definitions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#story-definitions-which-return-a-coroutine" class="md-nav__link">
+    Story definitions which return a coroutine
+  </a>
+  
+    <nav class="md-nav" aria-label="Story definitions which return a coroutine">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#explanation_1" class="md-nav__link">
+    Explanation
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#empty-stories" class="md-nav__link">
+    Empty Stories
+  </a>
+  
+    <nav class="md-nav" aria-label="Empty Stories">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#explanation_2" class="md-nav__link">
+    Explanation
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mixing-synchronous-steps-and-asynchronous-steps" class="md-nav__link">
+    Mixing synchronous steps and asynchronous steps
+  </a>
+  
+    <nav class="md-nav" aria-label="Mixing synchronous steps and asynchronous steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#explanation_3" class="md-nav__link">
+    Explanation
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#failure-protocols" class="md-nav__link">
+    Failure protocols
+  </a>
+  
+    <nav class="md-nav" aria-label="Failure protocols">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#explanation_4" class="md-nav__link">
+    Explanation
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                  
+                
+                
+                <h1 id="definition">Definition<a class="headerlink" href="#definition" title="Permanent link">&para;</a></h1>
+<p>Technically speaking, a story is a method of the class which calls
+other methods of this class in special order.</p>
+<p>The body of the story isn't executed directly. It's used as a spec of
+what should happen. The main purpose of it is to describe the intent.</p>
+<p>The steps of the story could be either regular methods or
+coroutines. This could not be mixed. All methods of the story should
+be of one type. If steps of the story are coroutines, you can await
+the story itself.</p>
+<h2 id="basics">Basics<a class="headerlink" href="#basics" title="Permanent link">&para;</a></h2>
+<p>As you can see, it is a business process of the subscription to our
+service.</p>
+<div class="tabbed-set" data-tabs="1:2">
+<input name="__tabbed_1" type="radio" id="__tabbed_1_1" checked="checked" /><label for="__tabbed_1_1">sync</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Failure</span><span class="p">,</span> <span class="n">Result</span><span class="p">,</span> <span class="n">Success</span><span class="p">,</span> <span class="n">arguments</span><span class="p">,</span> <span class="n">story</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Subscription</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="sd">&quot;&quot;&quot;Buy subscription for certain category.&quot;&quot;&quot;</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="nd">@story</span>
+<span class="gp">... </span>    <span class="nd">@arguments</span><span class="p">(</span><span class="s2">&quot;category_id&quot;</span><span class="p">,</span> <span class="s2">&quot;price_id&quot;</span><span class="p">,</span> <span class="s2">&quot;user_id&quot;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">buy</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">find_category</span>
+<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">find_price</span>
+<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">find_profile</span>
+<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">check_balance</span>
+<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">persist_payment</span>
+<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">persist_subscription</span>
+<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">send_subscription_notification</span>
+<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">show_category</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">find_category</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">category</span> <span class="o">=</span> <span class="n">load_category</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">category_id</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">find_price</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">price</span> <span class="o">=</span> <span class="n">load_price</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">price_id</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">find_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">profile</span> <span class="o">=</span> <span class="n">load_profile</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">check_balance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">balance</span> <span class="o">&gt;</span> <span class="n">ctx</span><span class="o">.</span><span class="n">price</span><span class="o">.</span><span class="n">cost</span><span class="p">:</span>
+<span class="gp">... </span>            <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+<span class="gp">... </span>        <span class="k">else</span><span class="p">:</span>
+<span class="gp">... </span>            <span class="k">return</span> <span class="n">Failure</span><span class="p">()</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">persist_payment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="n">decrease_balance</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">profile</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">price</span><span class="o">.</span><span class="n">cost</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="n">save_profile</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">profile</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">persist_subscription</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="n">expires</span> <span class="o">=</span> <span class="n">calculate_period</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">price</span><span class="o">.</span><span class="n">period</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">subscription</span> <span class="o">=</span> <span class="n">create_subscription</span><span class="p">(</span>
+<span class="gp">... </span>            <span class="n">ctx</span><span class="o">.</span><span class="n">profile</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">category</span><span class="p">,</span> <span class="n">expires</span>
+<span class="gp">... </span>        <span class="p">)</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">send_subscription_notification</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">notification</span> <span class="o">=</span> <span class="n">send_notification</span><span class="p">(</span>
+<span class="gp">... </span>            <span class="s2">&quot;subscription&quot;</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">profile</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">category</span><span class="o">.</span><span class="n">name</span>
+<span class="gp">... </span>        <span class="p">)</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">show_category</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="n">Result</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">category</span><span class="p">)</span>
+</code></pre></div></div>
+<input name="__tabbed_1" type="radio" id="__tabbed_1_2" /><label for="__tabbed_1_2">async</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Failure</span><span class="p">,</span> <span class="n">Result</span><span class="p">,</span> <span class="n">Success</span><span class="p">,</span> <span class="n">arguments</span><span class="p">,</span> <span class="n">story</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Subscription</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="sd">&quot;&quot;&quot;Buy subscription for certain category.&quot;&quot;&quot;</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="nd">@story</span>
+<span class="gp">... </span>    <span class="nd">@arguments</span><span class="p">(</span><span class="s2">&quot;category_id&quot;</span><span class="p">,</span> <span class="s2">&quot;price_id&quot;</span><span class="p">,</span> <span class="s2">&quot;user_id&quot;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">buy</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">find_category</span>
+<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">find_price</span>
+<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">find_profile</span>
+<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">check_balance</span>
+<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">persist_payment</span>
+<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">persist_subscription</span>
+<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">send_subscription_notification</span>
+<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">show_category</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">find_category</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">category</span> <span class="o">=</span> <span class="k">await</span> <span class="n">load_category</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">category_id</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">find_price</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">price</span> <span class="o">=</span> <span class="k">await</span> <span class="n">load_price</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">price_id</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">find_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">profile</span> <span class="o">=</span> <span class="k">await</span> <span class="n">load_profile</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">check_balance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">balance</span> <span class="o">&gt;</span> <span class="n">ctx</span><span class="o">.</span><span class="n">price</span><span class="o">.</span><span class="n">cost</span><span class="p">:</span>
+<span class="gp">... </span>            <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+<span class="gp">... </span>        <span class="k">else</span><span class="p">:</span>
+<span class="gp">... </span>            <span class="k">return</span> <span class="n">Failure</span><span class="p">()</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">persist_payment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="k">await</span> <span class="n">decrease_balance</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">profile</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">price</span><span class="o">.</span><span class="n">cost</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="k">await</span> <span class="n">save_profile</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">profile</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">persist_subscription</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="n">expires</span> <span class="o">=</span> <span class="k">await</span> <span class="n">calculate_period</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">price</span><span class="o">.</span><span class="n">period</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">subscription</span> <span class="o">=</span> <span class="k">await</span> <span class="n">create_subscription</span><span class="p">(</span>
+<span class="gp">... </span>            <span class="n">ctx</span><span class="o">.</span><span class="n">profile</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">category</span><span class="p">,</span> <span class="n">expires</span>
+<span class="gp">... </span>        <span class="p">)</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">send_subscription_notification</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">notification</span> <span class="o">=</span> <span class="k">await</span> <span class="n">send_notification</span><span class="p">(</span>
+<span class="gp">... </span>            <span class="s2">&quot;subscription&quot;</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">profile</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">category</span><span class="o">.</span><span class="n">name</span>
+<span class="gp">... </span>        <span class="p">)</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">show_category</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="n">Result</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">category</span><span class="p">)</span>
+</code></pre></div></div>
+</div>
+<h3 id="explanation">Explanation<a class="headerlink" href="#explanation" title="Permanent link">&para;</a></h3>
+<p>There are a few terms you should be familiar with:</p>
+<ol>
+<li><code>@story</code> decorated method represents the spec of the business
+   process. It's executed only once at the class definition
+   moment. This class attribute became a smart business object.</li>
+<li><code>@arguments</code> decorator describes input data similar to function
+   arguments.</li>
+<li><code>I</code> object is used to build the execution spec out of its
+   attributes. You can use any <strong>human-readable</strong> names.</li>
+<li>Methods defined in the class are story steps. They will be called
+   by the smart business object defined with the <code>@story</code>
+   decorator. Usually, they just delegate responsibility to the call
+   of other function with proper variables from the context.</li>
+<li><code>self</code> in step methods is the real instance of the <code>Subscription</code>
+   class. You own this class. It's up to you how to write it. The
+   smart business object will use its instance to resolve its steps.</li>
+<li><code>ctx</code> is a scope of variables available to step methods. Context is
+   initiated from input data passed to the business object. It can be
+   extended by previously executed step methods with keyword arguments
+   to the <code>Success()</code> marker.</li>
+<li><code>Success</code>, <code>Failure</code> and <code>Result</code> are markers returned by step
+   methods to change business process execution path.</li>
+</ol>
+<h3 id="invalid-story-definitions">Invalid story definitions<a class="headerlink" href="#invalid-story-definitions" title="Permanent link">&para;</a></h3>
+<p>Some story definitions are invalid.
+If such a story is defined it may raise an error whenever the <code>@story</code> decorator wraps
+the story definition method or whenever you run it, depending on the invalid story in question.</p>
+<h4 id="story-definitions-which-return-a-coroutine">Story definitions which return a coroutine<a class="headerlink" href="#story-definitions-which-return-a-coroutine" title="Permanent link">&para;</a></h4>
+<div class="admonition danger">
+<p class="admonition-title">The story definition method itself must not be declared with <code>async def</code></p>
+<p>Attempting to do so will raise a <code>StoryDefinitionError</code>.</p>
+<div class="tabbed-set" data-tabs="2:2">
+<input name="__tabbed_2" type="radio" id="__tabbed_2_1" checked="checked" /><label for="__tabbed_2_1">sync</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Success</span><span class="p">,</span> <span class="n">story</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">InvalidStoryDefinition</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="sd">&quot;&quot;&quot;An example of an invalid story that is defined using `async def`.&quot;&quot;&quot;</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="nd">@story</span>
+<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">example</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">step</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+<span class="gt">Traceback (most recent call last):</span>
+  <span class="c">...</span>
+<span class="gr">_stories.exceptions.StoryDefinitionError</span>: <span class="n">Story should be a regular function</span>
+</code></pre></div></div>
+<input name="__tabbed_2" type="radio" id="__tabbed_2_2" /><label for="__tabbed_2_2">async</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Success</span><span class="p">,</span> <span class="n">story</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">InvalidStoryDefinition</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="sd">&quot;&quot;&quot;An example of an invalid story that is defined using `async def`.&quot;&quot;&quot;</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="nd">@story</span>
+<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">example</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">step</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+<span class="gt">Traceback (most recent call last):</span>
+  <span class="c">...</span>
+<span class="gr">_stories.exceptions.StoryDefinitionError</span>: <span class="n">Story should be a regular function</span>
+</code></pre></div></div>
+</div>
+</div>
+<h5 id="explanation_1">Explanation<a class="headerlink" href="#explanation_1" title="Permanent link">&para;</a></h5>
+<ol>
+<li>Building a story is a synchronous operation.</li>
+<li>If a story definition method were to return a coroutine, it would leak since since it
+   is never <code>await</code>ed.</li>
+</ol>
+<h4 id="empty-stories">Empty Stories<a class="headerlink" href="#empty-stories" title="Permanent link">&para;</a></h4>
+<div class="admonition danger">
+<p class="admonition-title">Story definitions without any steps are invalid</p>
+<p>Attempting to define such a story will raise a <code>StoryDefinitionError</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">story</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">EmptyStory</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="sd">&quot;&quot;&quot;An example of an empty story.&quot;&quot;&quot;</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="nd">@story</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">empty</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="k">pass</span>
+<span class="gt">Traceback (most recent call last):</span>
+   <span class="c">...</span>
+<span class="gr">_stories.exceptions.StoryDefinitionError</span>: <span class="n">Story should have at least one step defined</span>
+</code></pre></div>
+
+</div>
+<h5 id="explanation_2">Explanation<a class="headerlink" href="#explanation_2" title="Permanent link">&para;</a></h5>
+<ol>
+<li>Stories without any steps are meaningless.
+   Their result is unclear and they serve no purpose.</li>
+<li>We require you to define at least one step to determine whether the story
+   is synchronous or asynchronous.</li>
+</ol>
+<h4 id="mixing-synchronous-steps-and-asynchronous-steps">Mixing synchronous steps and asynchronous steps<a class="headerlink" href="#mixing-synchronous-steps-and-asynchronous-steps" title="Permanent link">&para;</a></h4>
+<div class="admonition danger">
+<p class="admonition-title">All steps must either be synchronous or asynchronous</p>
+<p>Attempting to access a story with synchronous steps or sub-stories which contain
+such steps will raise a <code>StoryDefinitionError</code>.</p>
+<div class="tabbed-set" data-tabs="3:2">
+<input name="__tabbed_3" type="radio" id="__tabbed_3_1" checked="checked" /><label for="__tabbed_3_1">sync</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Success</span><span class="p">,</span> <span class="n">story</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MixedStory</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="sd">&quot;&quot;&quot;An example of an invalid synchrnous story that incorporates an asynchronous step.&quot;&quot;&quot;</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="nd">@story</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">example</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">synchronous_step</span>
+<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">asynchronous_step</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">synchronous_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">asynchronous_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">MixedStory</span><span class="p">()</span><span class="o">.</span><span class="n">example</span>
+<span class="gt">Traceback (most recent call last):</span>
+  <span class="c">...</span>
+<span class="gr">_stories.exceptions.StoryDefinitionError</span>: <span class="n">Coroutines and functions can not be used together in story definition.</span>
+<span class="go">&lt;BLANKLINE&gt;</span>
+<span class="go">This method should be a function: MixedStory.asynchronous_step</span>
+<span class="go">&lt;BLANKLINE&gt;</span>
+<span class="go">Story method: MixedStory.example</span>
+</code></pre></div></div>
+<input name="__tabbed_3" type="radio" id="__tabbed_3_2" /><label for="__tabbed_3_2">async</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Success</span><span class="p">,</span> <span class="n">story</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MixedStory</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="sd">&quot;&quot;&quot;An example of an invalid asynchrnous story that incorporates an synchronous step.&quot;&quot;&quot;</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="nd">@story</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">example</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">asynchronous_step</span>
+<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">synchronous_step</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">asynchronous_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">synchronous_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">MixedStory</span><span class="p">()</span><span class="o">.</span><span class="n">example</span>
+<span class="gt">Traceback (most recent call last):</span>
+  <span class="c">...</span>
+<span class="gr">_stories.exceptions.StoryDefinitionError</span>: <span class="n">Coroutines and functions can not be used together in story definition.</span>
+<span class="go">&lt;BLANKLINE&gt;</span>
+<span class="go">This method should be a coroutine: MixedStory.synchronous_step</span>
+<span class="go">&lt;BLANKLINE&gt;</span>
+<span class="go">Story method: MixedStory.example</span>
+</code></pre></div></div>
+</div>
+<p>Likewise, injecting a synchronous sub-story to an asynchronous story
+or the contrary is also forbidden.</p>
+<div class="tabbed-set" data-tabs="4:2">
+<input name="__tabbed_4" type="radio" id="__tabbed_4_1" checked="checked" /><label for="__tabbed_4_1">sync</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Success</span><span class="p">,</span> <span class="n">story</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MixedStory</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="sd">&quot;&quot;&quot;An example of an invalid synchrnous story that incorporates an asynchronous sub-story.&quot;&quot;&quot;</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="nd">@story</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">example</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">synchronous_step</span>
+<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">asynchronous_substory</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">synchronous_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">asynchronous_substory</span> <span class="o">=</span> <span class="n">MixedSubstory</span><span class="p">()</span><span class="o">.</span><span class="n">asynchronous_substory</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MixedSubstory</span><span class="p">:</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="nd">@story</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">asynchronous_substory</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">asynchronous_step</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">asynchronous_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">MixedStory</span><span class="p">()</span><span class="o">.</span><span class="n">example</span>
+<span class="gt">Traceback (most recent call last):</span>
+  <span class="c">...</span>
+<span class="gr">_stories.exceptions.StoryDefinitionError</span>: <span class="n">Coroutine and function stories can not be injected into each other.</span>
+<span class="go">&lt;BLANKLINE&gt;</span>
+<span class="go">Story function method: MixedStory.example</span>
+<span class="go">&lt;BLANKLINE&gt;</span>
+<span class="go">Substory coroutine method: MixedSubstory.asynchronous_substory</span>
+</code></pre></div></div>
+<input name="__tabbed_4" type="radio" id="__tabbed_4_2" /><label for="__tabbed_4_2">async</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Success</span><span class="p">,</span> <span class="n">story</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MixedStory</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="sd">&quot;&quot;&quot;An example of an invalid synchrnous story that incorporates an asynchronous sub-story.&quot;&quot;&quot;</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="nd">@story</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">example</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">asynchronous_step</span>
+<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">synchronous_substory</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">asynchronous_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">synchronous_substory</span> <span class="o">=</span> <span class="n">MixedSubstory</span><span class="p">()</span><span class="o">.</span><span class="n">synchronous_substory</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MixedSubstory</span><span class="p">:</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="nd">@story</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">synchronous_substory</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">synchronous_step</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">synchronous_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">MixedStory</span><span class="p">()</span><span class="o">.</span><span class="n">example</span>
+<span class="gt">Traceback (most recent call last):</span>
+  <span class="c">...</span>
+<span class="gr">_stories.exceptions.StoryDefinitionError</span>: <span class="n">Coroutine and function stories can not be injected into each other.</span>
+<span class="go">&lt;BLANKLINE&gt;</span>
+<span class="go">Story coroutine method: MixedStory.example</span>
+<span class="go">&lt;BLANKLINE&gt;</span>
+<span class="go">Substory function method: MixedSubstory.synchronous_substory</span>
+</code></pre></div></div>
+</div>
+</div>
+<h5 id="explanation_3">Explanation<a class="headerlink" href="#explanation_3" title="Permanent link">&para;</a></h5>
+<ol>
+<li>Running a synchronous step or sub-story in an asynchronous story may block the event loop.
+   If the event loop is blocked for too long the program's performance might suffer.</li>
+<li>Running a asynchronous step or sub-story in an synchronous story will cause an error
+   since the step returns a coroutine which is not one of the accepted return types for a step
+   or a sub-story.
+   In addition it will cause a coroutine leak since we don't <code>await</code> it.</li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is a limitation that will be lifted by a future version.</p>
+<p>When defining an asynchronous story, we will require you to explictly specify
+that the synchronous step or sub-story will execute in a worker thread.</p>
+<p>Likewise, when defining a synchronous story, we will require you to explictly specify
+that the asynchronous step or sub-story will execute in an event loop.</p>
+</div>
+<h2 id="failure-protocols">Failure protocols<a class="headerlink" href="#failure-protocols" title="Permanent link">&para;</a></h2>
+<p>To make failure handling a more manageable process we can define a
+<a href="../failure_protocol/">failure protocol</a>.</p>
+<div class="tabbed-set" data-tabs="5:2">
+<input name="__tabbed_5" type="radio" id="__tabbed_5_1" checked="checked" /><label for="__tabbed_5_1">sync</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">auto</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Failure</span><span class="p">,</span> <span class="n">Result</span><span class="p">,</span> <span class="n">Success</span><span class="p">,</span> <span class="n">arguments</span><span class="p">,</span> <span class="n">story</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">ShowCategory</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="sd">&quot;&quot;&quot;Show category entries.&quot;&quot;&quot;</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="nd">@story</span>
+<span class="gp">... </span>    <span class="nd">@arguments</span><span class="p">(</span><span class="s2">&quot;category_id&quot;</span><span class="p">,</span> <span class="s2">&quot;user_id&quot;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">find_subscription</span>
+<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">check_expiration</span>
+<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">find_category</span>
+<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">show_category</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">find_subscription</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="n">subscription</span> <span class="o">=</span> <span class="n">load_subscription</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">category_id</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="k">if</span> <span class="n">subscription</span><span class="p">:</span>
+<span class="gp">... </span>            <span class="n">ctx</span><span class="o">.</span><span class="n">subscription</span> <span class="o">=</span> <span class="n">subscription</span>
+<span class="gp">... </span>            <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+<span class="gp">... </span>        <span class="k">else</span><span class="p">:</span>
+<span class="gp">... </span>            <span class="k">return</span> <span class="n">Failure</span><span class="p">(</span><span class="n">Errors</span><span class="o">.</span><span class="n">forbidden</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">check_expiration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">subscription</span><span class="o">.</span><span class="n">is_expired</span><span class="p">():</span>
+<span class="gp">... </span>            <span class="k">return</span> <span class="n">Failure</span><span class="p">(</span><span class="n">Errors</span><span class="o">.</span><span class="n">forbidden</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="k">else</span><span class="p">:</span>
+<span class="gp">... </span>            <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">find_category</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="n">category</span> <span class="o">=</span> <span class="n">load_category</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">category_id</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="k">if</span> <span class="n">category</span><span class="p">:</span>
+<span class="gp">... </span>            <span class="n">ctx</span><span class="o">.</span><span class="n">category</span> <span class="o">=</span> <span class="n">category</span>
+<span class="gp">... </span>            <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+<span class="gp">... </span>        <span class="k">else</span><span class="p">:</span>
+<span class="gp">... </span>            <span class="k">return</span> <span class="n">Failure</span><span class="p">(</span><span class="n">Errors</span><span class="o">.</span><span class="n">not_found</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">show_category</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="n">Result</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">category</span><span class="p">)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="nd">@ShowCategory</span><span class="o">.</span><span class="n">show</span><span class="o">.</span><span class="n">failures</span>
+<span class="gp">... </span><span class="k">class</span> <span class="nc">Errors</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="n">forbidden</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+<span class="gp">... </span>    <span class="n">not_found</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+</code></pre></div></div>
+<input name="__tabbed_5" type="radio" id="__tabbed_5_2" /><label for="__tabbed_5_2">async</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">auto</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Failure</span><span class="p">,</span> <span class="n">Result</span><span class="p">,</span> <span class="n">Success</span><span class="p">,</span> <span class="n">arguments</span><span class="p">,</span> <span class="n">story</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">ShowCategory</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="sd">&quot;&quot;&quot;Show category entries.&quot;&quot;&quot;</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="nd">@story</span>
+<span class="gp">... </span>    <span class="nd">@arguments</span><span class="p">(</span><span class="s2">&quot;category_id&quot;</span><span class="p">,</span> <span class="s2">&quot;user_id&quot;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">find_subscription</span>
+<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">check_expiration</span>
+<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">find_category</span>
+<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">show_category</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">find_subscription</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="n">subscription</span> <span class="o">=</span> <span class="k">await</span> <span class="n">load_subscription</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">category_id</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="k">if</span> <span class="n">subscription</span><span class="p">:</span>
+<span class="gp">... </span>            <span class="n">ctx</span><span class="o">.</span><span class="n">subscription</span> <span class="o">=</span> <span class="n">subscription</span>
+<span class="gp">... </span>            <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+<span class="gp">... </span>        <span class="k">else</span><span class="p">:</span>
+<span class="gp">... </span>            <span class="k">return</span> <span class="n">Failure</span><span class="p">(</span><span class="n">Errors</span><span class="o">.</span><span class="n">forbidden</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">check_expiration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="k">if</span> <span class="k">await</span> <span class="n">ctx</span><span class="o">.</span><span class="n">subscription</span><span class="o">.</span><span class="n">is_expired</span><span class="p">():</span>
+<span class="gp">... </span>            <span class="k">return</span> <span class="n">Failure</span><span class="p">(</span><span class="n">Errors</span><span class="o">.</span><span class="n">forbidden</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="k">else</span><span class="p">:</span>
+<span class="gp">... </span>            <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">find_category</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="n">category</span> <span class="o">=</span> <span class="k">await</span> <span class="n">load_category</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">category_id</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="k">if</span> <span class="n">category</span><span class="p">:</span>
+<span class="gp">... </span>            <span class="n">ctx</span><span class="o">.</span><span class="n">category</span> <span class="o">=</span> <span class="n">category</span>
+<span class="gp">... </span>            <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+<span class="gp">... </span>        <span class="k">else</span><span class="p">:</span>
+<span class="gp">... </span>            <span class="k">return</span> <span class="n">Failure</span><span class="p">(</span><span class="n">Errors</span><span class="o">.</span><span class="n">not_found</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">show_category</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="n">Result</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">category</span><span class="p">)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="nd">@ShowCategory</span><span class="o">.</span><span class="n">show</span><span class="o">.</span><span class="n">failures</span>
+<span class="gp">... </span><span class="k">class</span> <span class="nc">Errors</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="n">forbidden</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+<span class="gp">... </span>    <span class="n">not_found</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+</code></pre></div></div>
+</div>
+<h3 id="explanation_4">Explanation<a class="headerlink" href="#explanation_4" title="Permanent link">&para;</a></h3>
+<ol>
+<li><code>Failure</code> marker takes optional <code>reason</code> argument. It can be used
+   in the caller code to handle this failure. For example, to show a
+   proper error code to the user.</li>
+<li>Failure protocol should be defined after the story to allow passing
+   <code>reason</code> in the <code>Failure</code> marker.</li>
+</ol>
+<p align="center">&mdash; ⭐️ &mdash;</p>
+
+<p align="center"><i>The stories library is part of the SOLID python family.</i></p>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href="../why/" title="Why" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Why
+              </div>
+            </div>
+          </a>
+        
+        
+          <a href="../usage/" title="Usage" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Usage
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../assets/javascripts/vendor.d710d30a.min.js"></script>
+      <script src="../assets/javascripts/bundle.5f27aba8.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
+      
+      <script>
+        app = initialize({
+          base: "..",
+          features: ["tabs"],
+          search: Object.assign({
+            worker: "../assets/javascripts/worker/search.27c6a5e6.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+      
+        <script src="../javascripts/extra.js"></script>
+      
+    
+  </body>
+</html>
