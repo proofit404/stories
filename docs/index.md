@@ -134,10 +134,5 @@ Subscription(primary_key=9)
 This code style allow you clearly separate actual business scenario from
 implementation details.
 
-!!! note
-
-    `stories` library was heavily inspired by
-    [dry-transaction](http://dry-rb.org/gems/dry-transaction/) ruby gem.
-
 <p align="center">&mdash; ⭐️ &mdash;</p>
 <p align="center"><i>The stories library is part of the SOLID python family.</i></p>
