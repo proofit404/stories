@@ -6,6 +6,8 @@
 
 The business transaction DSL.
 
+**[Documentation](https://proofit404.github.io/stories/)**
+
 ## Installation
 
 All released versions are hosted on the Python Package Index. You can
