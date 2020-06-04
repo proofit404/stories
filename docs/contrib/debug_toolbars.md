@@ -31,7 +31,7 @@ Add this lines to your developer's settings:
 
 You should see `stories` panel in your debug toolbar:
 
-![Django Debug Toolbar](https://raw.githubusercontent.com/dry-python/dry-python.github.io/develop/slides/pics/debug-toolbar.png)
+![Django Debug Toolbar](../images/django-debug-toolbar.png)
 
 ## Flask contrib
 
