@@ -273,10 +273,62 @@
       
     
     
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Home
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9h14V7H3v2m0 4h14v-2H3v2m0 4h14v-2H3v2m16 0h2v-2h-2v2m0-10v2h2V7h-2m0 6h2v-2h-2v2z"/></svg>
+        </span>
+      </label>
+    
     <a href="." title="Home" class="md-nav__link md-nav__link--active">
       Home
     </a>
     
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    Example
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#license" class="md-nav__link">
+    License
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="installation/" title="Installation" class="md-nav__link">
+      Installation
+    </a>
   </li>
 
         
@@ -506,6 +558,30 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    Example
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#license" class="md-nav__link">
+    License
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -524,7 +600,21 @@
 <p><a href="https://dev.azure.com/proofit404/stories/_build/latest?definitionId=3&amp;branchName=master"><img alt="azure-devops-builds" src="https://img.shields.io/azure-devops/build/proofit404/stories/3?style=flat-square" /></a>
 <a href="https://dev.azure.com/proofit404/stories/_build/latest?definitionId=3&amp;branchName=master"><img alt="azure-devops-coverage" src="https://img.shields.io/azure-devops/coverage/proofit404/stories/3?style=flat-square" /></a>
 <a href="https://pypi.python.org/pypi/stories/"><img alt="pypi" src="https://img.shields.io/pypi/v/stories?style=flat-square" /></a></p>
-<p>The business transaction DSL</p>
+<p>The business transaction DSL.</p>
+<p><strong><a href="https://proofit404.github.io/stories/">Documentation</a> | <a href="https://github.com/proofit404/stories">Source Code</a> | <a href="https://github.com/proofit404/stories/issues">Task Tracker</a></strong></p>
+<ul>
+<li>Define a user story in the business transaction DSL.</li>
+<li>Separate state, implementation and specification.</li>
+<li>Clean flow in the source code.</li>
+<li>Separate step implementation.</li>
+<li>Each step knows nothing about a neighbor.</li>
+<li>Easy reuse of code.</li>
+<li>Allows to instrument code easily.</li>
+<li>Explicit data contracts and relations in code.</li>
+<li>Data store independent.</li>
+<li>Catch errors when they occur.</li>
+<li>Not when they propagate to exception.</li>
+</ul>
 <p><code>stories</code> is a business transaction DSL. It provides a simple way to
 define a complex business transaction that includes processing over
 many steps and by many different objects. It makes error handling a
@@ -547,7 +637,7 @@ capturing and returning errors from any step in the transaction.</p>
 <li>Errors in any operation should be easily caught and handled as part
   of the normal application flow.</li>
 </ul>
-<h1 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h1>
+<h2 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h2>
 <p><code>stories</code> provide a simple way to define a complex business scenario
 that include many processing steps.</p>
 <div class="tabbed-set" data-tabs="1:2">
@@ -593,7 +683,7 @@ that include many processing steps.</p>
 <span class="gp">... </span>        <span class="k">return</span> <span class="n">Result</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">subscription</span><span class="p">)</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Subscribe</span><span class="p">()</span><span class="o">.</span><span class="n">buy</span><span class="p">(</span><span class="n">category_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">profile_id</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="go">Subscription(primary_key=10)</span>
+<span class="go">Subscription(primary_key=8)</span>
 </code></pre></div></div>
 <input name="__tabbed_1" type="radio" id="__tabbed_1_2" /><label for="__tabbed_1_2">async</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">story</span><span class="p">,</span> <span class="n">arguments</span><span class="p">,</span> <span class="n">Success</span><span class="p">,</span> <span class="n">Failure</span><span class="p">,</span> <span class="n">Result</span>
@@ -643,6 +733,8 @@ that include many processing steps.</p>
 </div>
 <p>This code style allow you clearly separate actual business scenario from
 implementation details.</p>
+<h2 id="license">License<a class="headerlink" href="#license" title="Permanent link">&para;</a></h2>
+<p>Stories library is offered under the two clause BSD license.</p>
 <p align="center">&mdash; ⭐️ &mdash;</p>
 
 <p align="center"><i>The stories library is part of the SOLID python family.</i></p>
@@ -665,13 +757,13 @@ implementation details.</p>
       <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
         
         
-          <a href="why/" title="Why" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="installation/" title="Installation" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-footer-nav__title">
               <div class="md-ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Why
+                Installation
               </div>
             </div>
             <div class="md-footer-nav__button md-icon">
