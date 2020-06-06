@@ -92,7 +92,7 @@ that include many processing steps.
 ...         return Result(ctx.subscription)
 
 >>> Subscribe().buy(category_id=1, profile_id=1)
-Subscription(primary_key=10)
+Subscription(primary_key=8)
 
 ```
 
