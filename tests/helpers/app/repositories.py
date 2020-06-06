@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from itertools import count
-
 from app.entities import Category
 from app.entities import Price
 from app.entities import Profile
@@ -49,11 +47,9 @@ def calculate_period(period):
     pass
 
 
-subscription_id_sequence = count(8)
-
-
 def create_subscription(profile, category, expires=None):
-    return Subscription(primary_key=next(subscription_id_sequence))
+    keys = {(1, 1): 8}
+    return Subscription(primary_key=keys[(profile.primary_key, category.primary_key)])
 
 
 def load_subscription(category_id, profile_id):
