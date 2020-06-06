@@ -3,15 +3,14 @@ name = "stories"
 version = "1.0.0"
 
 description = "Define a user story in the business transaction DSL"
-readme = "README.md"
+readme = "docs/index.md"
 license = "BSD-2-Clause"
 
+homepage = "https://pypi.org/project/stories/"
 repository = "https://github.com/proofit404/stories/"
 documentation = "https://proofit404.github.io/stories/"
 
-authors = [
-    "Artem Malyshev <proofit404@gmail.com>",
-]
+authors = ["Artem Malyshev <proofit404@gmail.com>"]
 
 classifiers = [
     "Development Status :: 5 - Production/Stable",

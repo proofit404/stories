@@ -4,7 +4,21 @@
 [![azure-devops-coverage](https://img.shields.io/azure-devops/coverage/proofit404/stories/3?style=flat-square)](https://dev.azure.com/proofit404/stories/_build/latest?definitionId=3&branchName=master)
 [![pypi](https://img.shields.io/pypi/v/stories?style=flat-square)](https://pypi.python.org/pypi/stories/)
 
-The business transaction DSL
+The business transaction DSL.
+
+**[Documentation](https://proofit404.github.io/stories/) | [Source Code](https://github.com/proofit404/stories) | [Task Tracker](https://github.com/proofit404/stories/issues)**
+
+- Define a user story in the business transaction DSL.
+- Separate state, implementation and specification.
+- Clean flow in the source code.
+- Separate step implementation.
+- Each step knows nothing about a neighbor.
+- Easy reuse of code.
+- Allows to instrument code easily.
+- Explicit data contracts and relations in code.
+- Data store independent.
+- Catch errors when they occur.
+- Not when they propagate to exception.
 
 `stories` is a business transaction DSL. It provides a simple way to
 define a complex business transaction that includes processing over
@@ -29,7 +43,7 @@ capturing and returning errors from any step in the transaction.
 - Errors in any operation should be easily caught and handled as part
   of the normal application flow.
 
-# Example
+## Example
 
 `stories` provide a simple way to define a complex business scenario
 that include many processing steps.
@@ -133,6 +147,10 @@ Subscription(primary_key=9)
 
 This code style allow you clearly separate actual business scenario from
 implementation details.
+
+## License
+
+Stories library is offered under the two clause BSD license.
 
 <p align="center">&mdash; ⭐️ &mdash;</p>
 <p align="center"><i>The stories library is part of the SOLID python family.</i></p>
