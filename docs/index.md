@@ -8,6 +8,15 @@ The business transaction DSL.
 
 **[Documentation](https://proofit404.github.io/stories/) | [Source Code](https://github.com/proofit404/stories) | [Task Tracker](https://github.com/proofit404/stories/issues)**
 
+`stories` is a business transaction DSL. It provides a simple way to
+define a complex business transaction that includes processing over
+many steps and by many different objects. It makes error handling a
+primary concern by taking a “[Railway Oriented
+Programming](http://fsharpforfunandprofit.com/rop/)” approach to
+capturing and returning errors from any step in the transaction.
+
+## Pros
+
 - Define a user story in the business transaction DSL.
 - Separate state, implementation and specification.
 - Clean flow in the source code.
@@ -19,13 +28,6 @@ The business transaction DSL.
 - Data store independent.
 - Catch errors when they occur.
 - Not when they propagate to exception.
-
-`stories` is a business transaction DSL. It provides a simple way to
-define a complex business transaction that includes processing over
-many steps and by many different objects. It makes error handling a
-primary concern by taking a “[Railway Oriented
-Programming](http://fsharpforfunandprofit.com/rop/)” approach to
-capturing and returning errors from any step in the transaction.
 
 `stories` is based on the following ideas:
 
@@ -147,6 +149,10 @@ Subscription(primary_key=9)
 
 This code style allow you clearly separate actual business scenario from
 implementation details.
+
+## Questions
+
+If you have any questions, feel free to create an issue in our [Task Tracker](https://github.com/proofit404/stories/issues). We have the [question label](https://github.com/proofit404/stories/issues?q=is%3Aopen+is%3Aissue+label%3Aquestion) exactly for this purpose.
 
 ## License
 
