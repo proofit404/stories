@@ -29,8 +29,9 @@ def test_signatures(r, x):
 def test_success(r, x):
     """Success marker semantics.
 
-    If story contains only success markers, it should execute every step
-    sequentially one by one.
+    If story contains only success markers, it should execute every step sequentially
+    one by one.
+
     """
 
     class T(x.Child, x.NormalMethod):
@@ -160,6 +161,7 @@ def test_return_type(r, x):
     """Story steps should return a marker.
 
     Any other value is denied.
+
     """
 
     with pytest.raises(AssertionError):
@@ -173,6 +175,7 @@ def test_inject_implementation(r, x):
     """Story steps should has access to the attributes of the instance.
 
     The class of the instance is the same where story defined in.
+
     """
 
     result = r(x.ImplementationDI(f=lambda arg: arg + 1).x)(foo=1)

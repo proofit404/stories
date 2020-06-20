@@ -18,8 +18,9 @@ def test_story_private_fields():
 def test_deny_empty_stories():
     """We can not define a story which does not have any steps.
 
-    This will make it impossible to determine the right executor in the
-    stories composition.
+    This will make it impossible to determine the right executor in the stories
+    composition.
+
     """
 
     with pytest.raises(StoryDefinitionError) as exc_info:
@@ -91,8 +92,7 @@ def test_deny_coroutine_stories(r, x):
 
 
 def test_deny_mix_coroutine_with_regular_methods(r, x):
-    """If all story steps are functions, we can not use coroutine method in
-    it."""
+    """If all story steps are functions, we can not use coroutine method in it."""
     r.skip_if_function()
 
     class T(x.Child, x.MixedCoroutineMethod):
@@ -132,8 +132,7 @@ Story method: T.x
 
 
 def test_deny_mix_function_with_coroutine_methods(r, x):
-    """If all story steps are functions, we can not use coroutine method in
-    it."""
+    """If all story steps are functions, we can not use coroutine method in it."""
     r.skip_if_function()
 
     class T(x.Child, x.MixedFunctionMethod):
@@ -173,8 +172,8 @@ Story method: T.x
 
 
 def test_deny_compose_coroutine_with_function_stories(r, x):
-    """If child story steps are coroutines, we can not inject this story in a
-    parent which steps are functions."""
+    """If child story steps are coroutines, we can not inject this story in a parent
+    which steps are functions."""
     r.skip_if_function()
 
     class T(x.Child, x.NormalMethod):
@@ -200,8 +199,8 @@ Substory coroutine method: T.x
 
 
 def test_deny_compose_function_with_coroutine_stories(r, x):
-    """If child story steps are functions, we can not inject this story in a
-    parent which steps are coroutines."""
+    """If child story steps are functions, we can not inject this story in a parent
+    which steps are coroutines."""
     r.skip_if_function()
 
     class T(x.Child, x.FunctionMethod):
