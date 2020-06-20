@@ -80,11 +80,12 @@ Context:
 
 
 def test_context_variables_normalization(r, m):
-    """We apply normalization to the context variables, if story defines
-    context contract.
+    """We apply normalization to the context variables, if story defines context
+    contract.
 
-    If story step returns a string holding a number, we should store a
-    number in the context.
+    If story step returns a string holding a number, we should store a number in the
+    context.
+
     """
 
     class T(m.Child, m.StringMethod):
@@ -122,8 +123,8 @@ def test_context_variables_normalization(r, m):
 def test_context_variables_normalization_conflict(r, m):
     """More than one substory can declare an argument with the same name.
 
-    This means validators of both substories should return the same
-    result.
+    This means validators of both substories should return the same result.
+
     """
 
     # FIXME: Normalization conflict can consist of two
@@ -171,11 +172,11 @@ Contract:
 
 
 def test_story_arguments_normalization(r, m):
-    """We apply normalization to the story arguments, if story defines context
-    contract.
+    """We apply normalization to the story arguments, if story defines context contract.
 
-    If story was called with a string argument holding a number, we
-    should store a number in the context.
+    If story was called with a string argument holding a number, we should store a
+    number in the context.
+
     """
 
     class T(m.ParamChild, m.NormalMethod):
@@ -261,9 +262,9 @@ def test_story_arguments_normalization_many_levels(r, m):
 def test_story_arguments_normalization_conflict(r, m):
     """Story and substory can have an argument with the same name.
 
-    They both will define validators for this argument.  If
-    normalization result of both contracts will mismatch we should raise
-    an error.
+    They both will define validators for this argument.  If normalization result of both
+    contracts will mismatch we should raise an error.
+
     """
 
     class T(m.ParamChild, m.NormalMethod):
@@ -377,10 +378,10 @@ Contract:
 
 
 def test_story_arguments_validation(r, m):
-    """We apply validators to the story arguments, if story defines context
-    contract.
+    """We apply validators to the story arguments, if story defines context contract.
 
     This is check performed during story call, not execution.
+
     """
 
     class T(m.ParamChild, m.ExceptionMethod):
@@ -463,8 +464,8 @@ Contract:
 
 
 def test_story_arguments_validation_many_levels(r, m):
-    """We apply contract validation to the story arguments on any levels of
-    story composition."""
+    """We apply contract validation to the story arguments on any levels of story
+    composition."""
 
     class T(m.ParamChild, m.NormalMethod):
         pass
@@ -634,8 +635,7 @@ Substory context contract: {contract_class_repr}
 
 
 def test_unknown_context_variable(r, m):
-    """Step can't use Success argument name which was not specified in the
-    contract."""
+    """Step can't use Success argument name which was not specified in the contract."""
 
     class T(m.Child, m.UnknownMethod):
         pass
@@ -979,8 +979,8 @@ Context()
 
 
 def test_parent_steps_set_story_arguments(r, m):
-    """Steps of parent stories should be able to set child stories arguments
-    with `Success` marker keyword arguments."""
+    """Steps of parent stories should be able to set child stories arguments with
+    `Success` marker keyword arguments."""
 
     class T(m.ParamChild, m.NormalMethod):
         pass
@@ -1026,8 +1026,9 @@ def test_parent_steps_set_story_arguments(r, m):
 def test_sequential_story_steps_set_story_arguments(r, m):
     """There are a few sequential substories with one common parent story.
 
-    One substory should be able to set variable to provide an argument
-    to the next sequential story.
+    One substory should be able to set variable to provide an argument to the next
+    sequential story.
+
     """
 
     class T(m.ChildWithShrink, m.StringMethod):
@@ -1055,8 +1056,7 @@ def test_sequential_story_steps_set_story_arguments(r, m):
 
 
 def test_arguments_should_be_declared_in_contract(r, m):
-    """We should require all story arguments to be declared in the context
-    contract."""
+    """We should require all story arguments to be declared in the context contract."""
 
     class T(m.ParamChildWithShrink, m.NormalMethod):
         pass
@@ -1098,11 +1098,11 @@ Story arguments: foo, bar, baz
 
 
 def test_story_variable_alias_normalization_store_same_object(r, m):
-    """When story step sets a set of variables some of them are aliases of each
-    other.
+    """When story step sets a set of variables some of them are aliases of each other.
 
-    If the type and the value of alias are equal to the origin value, we
-    should preserve the same reference to the value.
+    If the type and the value of alias are equal to the origin value, we should preserve
+    the same reference to the value.
+
     """
 
     class T(m.ChildAlias, m.AliasMethod):
@@ -1132,11 +1132,11 @@ def test_story_variable_alias_normalization_store_same_object(r, m):
 
 
 def test_story_argument_alias_normalization_store_same_object(r, m):
-    """When story has a set of arguments some of them are aliases of each
-    other.
+    """When story has a set of arguments some of them are aliases of each other.
 
-    If the type and the value of alias are equal to the origin value, we
-    should preserve the same reference to the value.
+    If the type and the value of alias are equal to the origin value, we should preserve
+    the same reference to the value.
+
     """
 
     class T(m.ParamChildAlias, m.NormalMethod):
@@ -1236,6 +1236,7 @@ def test_story_contract_representation_with_spec_with_args(r, m):
     """Show collected story composition contract as mounted story attribute.
 
     We show each story arguments.
+
     """
 
     class T(m.ParamChild, m.StringMethod):
@@ -1300,8 +1301,9 @@ Contract:
 def test_story_contract_representation_with_spec_with_args_conflict(r, m):
     """Show collected story composition contract as mounted story attribute.
 
-    We show each story arguments in multiline mode if the same name was
-    declared in multiple substories.
+    We show each story arguments in multiline mode if the same name was declared in
+    multiple substories.
+
     """
 
     class T(m.ParamChild, m.NormalMethod):
