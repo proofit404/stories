@@ -33,6 +33,24 @@ def test_deny_empty_stories():
     assert str(exc_info.value) == "Story should have at least one step defined"
 
 
+def test_deny_recursive_stories():
+    """Story can not call itself as step.
+
+    This should prevent recursion error at the wrapping step.
+
+    """
+    with pytest.raises(StoryDefinitionError) as exc_info:
+
+        class Action(object):
+            @story
+            def do(I):
+                I.one
+                I.do
+                I.two
+
+    assert str(exc_info.value) == "Story should not call itself recursively"
+
+
 def test_story_representation(x):
 
     story = repr(x.Simple().x)
