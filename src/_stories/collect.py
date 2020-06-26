@@ -17,5 +17,7 @@ def collect_story(f):
 
     if not calls:
         raise StoryDefinitionError("Story should have at least one step defined")
+    elif f.__name__ in calls:
+        raise StoryDefinitionError("Story should not call itself recursively")
 
     return calls
