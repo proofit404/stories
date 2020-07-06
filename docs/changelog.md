@@ -1,9 +1,8 @@
 ## [1.0.1](https://github.com/proofit404/stories/compare/1.0.0...1.0.1) (2020-06-26)
 
-
 ### Bug Fixes
 
-* prevent story to call itself recursively ([4a7007a](https://github.com/proofit404/stories/commit/4a7007a928713661ba73f9bf1edc509e3b3363a5))
+- prevent story to call itself recursively ([4a7007a](https://github.com/proofit404/stories/commit/4a7007a928713661ba73f9bf1edc509e3b3363a5))
 
 # [1.0.0](https://github.com/proofit404/stories/compare/0.15.0...1.0.0) (2020-05-22)
 
