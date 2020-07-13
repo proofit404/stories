@@ -2,8 +2,7 @@
 
 ![Py.Test](../images/pytest.png)
 
-Py.test plugin provides an additional report for failed tests. It
-contains:
+Py.test plugin provides an additional report for failed tests. It contains:
 
 1. Stories started by the failed test is chronological order.
 2. Exact execution path for each story.

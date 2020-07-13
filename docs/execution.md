@@ -2,20 +2,19 @@
 
 `stories` follow this executing rules to run:
 
-- Methods of the class will be called in the order as they were
-  written in the story
-- If the story calls another story in its body, methods of this
-  sub-story add to the caller in the order they occur in sub-story
-  body.
-- Each story method should return an instance of `Success`, `Failure`,
-  `Result` or `Skip` classes.
-- The execution of the story will change according to the type of the
-  return value.
+- Methods of the class will be called in the order as they were written in the
+  story
+- If the story calls another story in its body, methods of this sub-story add to
+  the caller in the order they occur in sub-story body.
+- Each story method should return an instance of `Success`, `Failure`, `Result`
+  or `Skip` classes.
+- The execution of the story will change according to the type of the return
+  value.
 
 ## Success
 
-If the story method returns `Success` execution of the whole story
-continues from the next step.
+If the story method returns `Success` execution of the whole story continues
+from the next step.
 
 ```pycon tab="sync"
 
@@ -88,8 +87,8 @@ three
 
 ```
 
-If sub-story last method returns `Success`, the execution continues in
-the next method of the parent story.
+If sub-story last method returns `Success`, the execution continues in the next
+method of the parent story.
 
 ```pycon tab="sync"
 
@@ -197,8 +196,8 @@ four
 
 ```
 
-Story method can assign attributes to the context to set some
-variables for future methods.
+Story method can assign attributes to the context to set some variables for
+future methods.
 
 ```pycon tab="sync"
 
@@ -262,8 +261,8 @@ variables for future methods.
 
 ## Failure
 
-If story method returns `Failure`, the whole story considered failed.
-Execution stops at this point.
+If story method returns `Failure`, the whole story considered failed. Execution
+stops at this point.
 
 ```pycon tab="sync"
 
@@ -435,14 +434,14 @@ True
 
 ```
 
-`Failure` has optional `reason` argument. We describe it in details in
-the [failure protocol](failure_protocol.md) chapter.
+`Failure` has optional `reason` argument. We describe it in details in the
+[failure protocol](failure_protocol.md) chapter.
 
 ## Result
 
 If the story method return `Result`, the whole story considered done. An
-optional argument passed to the `Result` constructor will be the return
-value of the story call.
+optional argument passed to the `Result` constructor will be the return value of
+the story call.
 
 ```pycon tab="sync"
 
@@ -633,8 +632,8 @@ three
 
 ## Skip
 
-If sub-story method returns `Skip` result, execution will be continued
-form the next method of the caller story.
+If sub-story method returns `Skip` result, execution will be continued form the
+next method of the caller story.
 
 ```pycon tab="sync"
 

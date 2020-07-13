@@ -1,8 +1,8 @@
 # Debug Toolbars
 
-Many frameworks provide debug toolbar add-ons. `stories` integrate with
-these toolbars to show the execution path and context variables of all
-business objects triggered by the framework handler.
+Many frameworks provide debug toolbar add-ons. `stories` integrate with these
+toolbars to show the execution path and context variables of all business
+objects triggered by the framework handler.
 
 ## Django contrib
 
@@ -36,8 +36,7 @@ You should see `stories` panel in your debug toolbar:
 ## Flask contrib
 
 To show a stories panel in flask_debugtoolbar, add the panel to the
-DEBUG_TB_PANELS config variable before initializing
-`DebugToolbarExtension`:
+DEBUG_TB_PANELS config variable before initializing `DebugToolbarExtension`:
 
 ```pycon
 

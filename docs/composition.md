@@ -1,9 +1,9 @@
 # Composition
 
-Sometimes you want to split your business logic into several parts
-inside a single story. Obviously, you want to do so to be able to reuse
-this parts in different stories. Or maybe your goal is grouping several
-steps into a sub-story for readability.
+Sometimes you want to split your business logic into several parts inside a
+single story. Obviously, you want to do so to be able to reuse this parts in
+different stories. Or maybe your goal is grouping several steps into a sub-story
+for readability.
 
 There are several ways to do it.
 
@@ -16,12 +16,12 @@ There are several ways to do it.
 ## Instance attributes
 
 We prefer to define our business logic in separate components with loose
-coupling. The final thing will be built later using composition. We use
-a well-known technique called [Constructor dependency
-injection](https://en.wikipedia.org/wiki/Dependency_injection#Constructor_injection)
-for it. The key point here: you can add story steps directly to the
-instance with attribute assignment. No matter where these steps come
-from, constructor or not.
+coupling. The final thing will be built later using composition. We use a
+well-known technique called
+[Constructor dependency injection](https://en.wikipedia.org/wiki/Dependency_injection#Constructor_injection)
+for it. The key point here: you can add story steps directly to the instance
+with attribute assignment. No matter where these steps come from, constructor or
+not.
 
 ```pycon
 
@@ -60,8 +60,8 @@ from, constructor or not.
 
 ```
 
-At this moment, story definition does not know what `find_promo_code`
-step should be.
+At this moment, story definition does not know what `find_promo_code` step
+should be.
 
 ```pycon
 
@@ -79,9 +79,8 @@ Subscription.buy
 
 ```
 
-And when we create an instance of the class we will specify this
-explicitly. Representation of the instance attribute will show us the
-complete story.
+And when we create an instance of the class we will specify this explicitly.
+Representation of the instance attribute will show us the complete story.
 
 ```pycon
 
@@ -104,20 +103,17 @@ Subscription.buy
 
 ## Delegate implementation
 
-We go even further in this approach. We compose not only stories, but
-the actual things we call in our steps come from outside.
+We go even further in this approach. We compose not only stories, but the actual
+things we call in our steps come from outside.
 
-> We never call methods of the `Django` model or `requests` package
-> directly!
+> We never call methods of the `Django` model or `requests` package directly!
 
 We use simple rules to write our steps.
 
-1. The only thing you can access inside story step is an instance
-   method.
-2. The return value of this call goes to the context with `Success`
-   marker.
-3. Decisions are made by comparison context variables to each other or
-   using methods of the context variable in the **next** story step.
+1. The only thing you can access inside story step is an instance method.
+2. The return value of this call goes to the context with `Success` marker.
+3. Decisions are made by comparison context variables to each other or using
+   methods of the context variable in the **next** story step.
 
 Here are some examples:
 
@@ -215,11 +211,11 @@ Here are some examples:
 ```
 
 This way you decouple your business logic from relation mapper models or
-networking library! There is no more vendor lock on a certain framework
-or database! Welcome to the good architecture utopia.
+networking library! There is no more vendor lock on a certain framework or
+database! Welcome to the good architecture utopia.
 
-You can group delegates into a single object to avoid complex
-constructors and names duplication.
+You can group delegates into a single object to avoid complex constructors and
+names duplication.
 
 ```pycon tab="sync"
 
@@ -243,8 +239,8 @@ constructors and names duplication.
 
 ```
 
-If you follow our mantra "decouple everything", you definitely should
-check the following libraries:
+If you follow our mantra "decouple everything", you definitely should check the
+following libraries:
 
 - [dependencies](https://dependencies.readthedocs.io/)
 - [attrs](https://www.attrs.org/)

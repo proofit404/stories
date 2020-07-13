@@ -1,12 +1,11 @@
 # Usage
 
-There are several methods to use business object defined with the
-`@story` decorator.
+There are several methods to use business object defined with the `@story`
+decorator.
 
 ## Call
 
-The most simple variant to execute story is to call it as a regular
-method.
+The most simple variant to execute story is to call it as a regular method.
 
 ### Result
 
@@ -29,8 +28,8 @@ Category(primary_key=1, name='Books', cost=7)
 
 ```
 
-The story was executed successfully. It returns an object we put into
-`Result` marker.
+The story was executed successfully. It returns an object we put into `Result`
+marker.
 
 ### Failure
 
@@ -56,17 +55,16 @@ _stories.exceptions.FailureError
 
 ```
 
-Story failed. The user does not have enough money to complete this
-purchase. `Failure` marker throws an exception when `call` method was
-used.
+Story failed. The user does not have enough money to complete this purchase.
+`Failure` marker throws an exception when `call` method was used.
 
 ## Run
 
-A more powerful way to inspect the result of the story is to use the
-`run` method instead.
+A more powerful way to inspect the result of the story is to use the `run`
+method instead.
 
-The `run` method always returns an object. This object contains a
-summary of the business object execution.
+The `run` method always returns an object. This object contains a summary of the
+business object execution.
 
 ### Result
 
@@ -99,8 +97,8 @@ Category(primary_key=1, name='Books', cost=7)
 
 ```
 
-If the story was executed successfully, its actual result will be
-available in the `value` attribute.
+If the story was executed successfully, its actual result will be available in
+the `value` attribute.
 
 ### Failure
 
@@ -170,12 +168,11 @@ datetime.date(2019, 1, 1)
 
 ```
 
-`run` does not raise an error. Even if the story returns `Failure`
-marker.
+`run` does not raise an error. Even if the story returns `Failure` marker.
 
-Instead, you can use methods like `failed_on` and `failed_because` to
-look for failed story method and exact reason. The argument used in
-the `failed_because` method will be described in more details in the
+Instead, you can use methods like `failed_on` and `failed_because` to look for
+failed story method and exact reason. The argument used in the `failed_because`
+method will be described in more details in the
 [failure protocol](failure_protocol.md) chapter.
 
 The context of the failed story is also available in the result object.
