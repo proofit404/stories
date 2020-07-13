@@ -2,35 +2,34 @@
 
 By default, `Failure` result has an empty `reason`.
 
-`failed_on` is the only thing you can do to understand what happened
-in the caller code. You should use the [run the story
-method](usage.md#run) to have access to the verbose result.
+`failed_on` is the only thing you can do to understand what happened in the
+caller code. You should use the [run the story method](usage.md#run) to have
+access to the verbose result.
 
-This is a fragile approach since it depends on method names. They tend
-to change in the future. Someone can find a better name for a certain
-method. And in some place, the `failed_on` call will not catch this
-failure because it's using an outdated method name.
+This is a fragile approach since it depends on method names. They tend to change
+in the future. Someone can find a better name for a certain method. And in some
+place, the `failed_on` call will not catch this failure because it's using an
+outdated method name.
 
-Also, one story step can fail for a number of reasons. For example,
-we're making an API call. We want to process `401` and `403` error
-codes differently. This is where `failed_on` method can't help.
+Also, one story step can fail for a number of reasons. For example, we're making
+an API call. We want to process `401` and `403` error codes differently. This is
+where `failed_on` method can't help.
 
 !!! note
 
     `Failure protocol` is the way to allow a certain set of values to be
     used as an argument to the `Failure` result.
 
-After that in the caller code, you can use the `failed_because` method
-to be sure you can understand the exact reason for failure.
+After that in the caller code, you can use the `failed_because` method to be
+sure you can understand the exact reason for failure.
 
 ## List of strings
 
-You can use string literals to mark the exact reason for the failure. In
-this case, failure protocol should be a collection of all allowed
-strings.
+You can use string literals to mark the exact reason for the failure. In this
+case, failure protocol should be a collection of all allowed strings.
 
-You can use these string literals to process different failures in a
-different way.
+You can use these string literals to process different failures in a different
+way.
 
 ```pycon tab="sync"
 
@@ -157,12 +156,12 @@ Promo code not found
 
 ## Enum
 
-You can use [enum](https://docs.python.org/3/library/enum.html) members
-to mark the exact reason for the failure. In this case, failure protocol
-should be [enum](https://docs.python.org/3/library/enum.html) subclass.
+You can use [enum](https://docs.python.org/3/library/enum.html) members to mark
+the exact reason for the failure. In this case, failure protocol should be
+[enum](https://docs.python.org/3/library/enum.html) subclass.
 
-You can use [enum](https://docs.python.org/3/library/enum.html)
-members to process different failures in a different way.
+You can use [enum](https://docs.python.org/3/library/enum.html) members to
+process different failures in a different way.
 
 ```pycon tab="sync"
 
@@ -290,32 +289,30 @@ Promo code not found
 
 ```
 
-On Python 2 you can use [enum34](https://pypi.org/project/enum34/)
-package:
+On Python 2 you can use [enum34](https://pypi.org/project/enum34/) package:
 
     pip install enum34
 
-When you [run the story method](usage.md#run) the actual failure
-protocol is available under `failures` property of that story
-method. So there is no need to import `Errors` class in the caller
-code.
+When you [run the story method](usage.md#run) the actual failure protocol is
+available under `failures` property of that story method. So there is no need to
+import `Errors` class in the caller code.
 
 ## Composition
 
-Failure protocols of parent and sub-story often mismatch. There is a
-good reason for that. Indeed they usually describe rules at different
-levels of abstraction. Failure of sub-story can tell us about some
-low-level error. And the failure of the parent story usually tells us
-something about high-level business rules violation.
+Failure protocols of parent and sub-story often mismatch. There is a good reason
+for that. Indeed they usually describe rules at different levels of abstraction.
+Failure of sub-story can tell us about some low-level error. And the failure of
+the parent story usually tells us something about high-level business rules
+violation.
 
 !!! note
 
     A story in the composition can return failures with only reasons match
     its own protocol.
 
-A composition of these two stories can fail both because of
-`low_balance` and `expired` reasons. For convenience, `failures`
-property will contain protocols composition. A new `enum` class.
+A composition of these two stories can fail both because of `low_balance` and
+`expired` reasons. For convenience, `failures` property will contain protocols
+composition. A new `enum` class.
 
 ```pycon tab="sync"
 
@@ -521,9 +518,9 @@ Promo code expired
 
 ```
 
-This composition rule works both for [class
-methods](composition.md#class-methods) with inheritance and [instance
-attributes](composition.md#instance-attributes) with dependency
+This composition rule works both for
+[class methods](composition.md#class-methods) with inheritance and
+[instance attributes](composition.md#instance-attributes) with dependency
 injection.
 
 <p align="center">&mdash; ⭐️ &mdash;</p>

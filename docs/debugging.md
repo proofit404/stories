@@ -2,13 +2,12 @@
 
 There is no perfect code.
 
-Here is the technique we use to debug our own code written with
-`stories`.
+Here is the technique we use to debug our own code written with `stories`.
 
 ## Code
 
-Our regular story looks like this. [You can read more on this topic
-here](composition.md#delegate-implementation).
+Our regular story looks like this.
+[You can read more on this topic here](composition.md#delegate-implementation).
 
 ```pycon
 
@@ -87,8 +86,8 @@ here](composition.md#delegate-implementation).
 
 ```
 
-It defines top-level logic without any implementation detail written in
-story methods.
+It defines top-level logic without any implementation detail written in story
+methods.
 
 We provide an implementation in a separate set of functions.
 
@@ -124,8 +123,8 @@ Oops... It's broken...
 We can take the magnifying glass and read through the whole source code
 meticulously.
 
-But let’s try to use a debugger instead! Type this in the same console
-right after traceback.
+But let’s try to use a debugger instead! Type this in the same console right
+after traceback.
 
 ```pycon
 
@@ -144,8 +143,8 @@ price = None
 
 ```
 
-It's clear it isn't our fault. Someone passes a wrong value to us. We'll
-go one frame upper in the call stack and look who does it.
+It's clear it isn't our fault. Someone passes a wrong value to us. We'll go one
+frame upper in the call stack and look who does it.
 
 ```pycon
 
@@ -161,16 +160,14 @@ go one frame upper in the call stack and look who does it.
 
 ```
 
-We can clearly see that the `price` attribute of the `category` context
-variable is `None`. But who set it this way? `PDB` has no answer to
-that.
+We can clearly see that the `price` attribute of the `category` context variable
+is `None`. But who set it this way? `PDB` has no answer to that.
 
-At this point usually, you will re-run the whole process to stop
-debugger earlier trying to find the place in your code where this `None`
-was defined.
+At this point usually, you will re-run the whole process to stop debugger
+earlier trying to find the place in your code where this `None` was defined.
 
-But fortunately, we're using `stories`! Its context has the full
-support of the introspection.
+But fortunately, we're using `stories`! Its context has the full support of the
+introspection.
 
 Let's print story context at the moment of the failure.
 
@@ -190,8 +187,8 @@ Context:
 
 ```
 
-We can tell that `category` was defined by `find_category` step. Let's
-take a closer look at it.
+We can tell that `category` was defined by `find_category` step. Let's take a
+closer look at it.
 
 ```pycon
 
@@ -223,8 +220,7 @@ These `orice` and `price` attribute looks suspicious.
 
 ```
 
-So we can quickly find mistyped argument name in the `Category`
-constructor.
+So we can quickly find mistyped argument name in the `Category` constructor.
 
 ## The second run
 

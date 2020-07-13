@@ -1,7 +1,7 @@
 # Sentry contrib
 
-This is a picture of the execution path and context variables of the
-business object shown in the error report breadcrumbs section:
+This is a picture of the execution path and context variables of the business
+object shown in the error report breadcrumbs section:
 
 ![Sentry](../images/sentry.png)
 
@@ -17,8 +17,8 @@ Import this module **before** import any Sentry related stuff:
 
 ## Django Settings
 
-If you use Django, you should add this section to your project config
-instead of the import statement documented above:
+If you use Django, you should add this section to your project config instead of
+the import statement documented above:
 
 ```pycon
 
