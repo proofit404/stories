@@ -627,11 +627,10 @@
                 
                 <h1 id="debugging">Debugging<a class="headerlink" href="#debugging" title="Permanent link">&para;</a></h1>
 <p>There is no perfect code.</p>
-<p>Here is the technique we use to debug our own code written with
-<code>stories</code>.</p>
+<p>Here is the technique we use to debug our own code written with <code>stories</code>.</p>
 <h2 id="code">Code<a class="headerlink" href="#code" title="Permanent link">&para;</a></h2>
-<p>Our regular story looks like this. <a href="../composition/#delegate-implementation">You can read more on this topic
-here</a>.</p>
+<p>Our regular story looks like this.
+<a href="../composition/#delegate-implementation">You can read more on this topic here</a>.</p>
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">story</span><span class="p">,</span> <span class="n">arguments</span><span class="p">,</span> <span class="n">Success</span><span class="p">,</span> <span class="n">Skip</span><span class="p">,</span> <span class="n">Result</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">ApplyPromoCode</span><span class="p">:</span>
@@ -706,8 +705,8 @@ here</a>.</p>
 <span class="gp">... </span>        <span class="k">return</span> <span class="n">price</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">fraction</span>
 </code></pre></div>
 
-<p>It defines top-level logic without any implementation detail written in
-story methods.</p>
+<p>It defines top-level logic without any implementation detail written in story
+methods.</p>
 <p>We provide an implementation in a separate set of functions.</p>
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">load_category</span><span class="p">(</span><span class="n">category_id</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">Category</span><span class="p">(</span><span class="n">orice</span><span class="o">=</span><span class="mi">715</span><span class="p">,</span> <span class="n">category_id</span><span class="o">=</span><span class="n">category_id</span><span class="p">)</span>
@@ -730,8 +729,8 @@ story methods.</p>
 <h2 id="pdb-walks-into-the-bar">PDB walks into the bar<a class="headerlink" href="#pdb-walks-into-the-bar" title="Permanent link">&para;</a></h2>
 <p>We can take the magnifying glass and read through the whole source code
 meticulously.</p>
-<p>But let’s try to use a debugger instead! Type this in the same console
-right after traceback.</p>
+<p>But let’s try to use a debugger instead! Type this in the same console right
+after traceback.</p>
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pdb</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">pdb</span><span class="o">.</span><span class="n">pm</span><span class="p">()</span>  <span class="c1"># doctest: +SKIP</span>
@@ -746,8 +745,8 @@ right after traceback.</p>
 <span class="go">price = None</span>
 </code></pre></div>
 
-<p>It's clear it isn't our fault. Someone passes a wrong value to us. We'll
-go one frame upper in the call stack and look who does it.</p>
+<p>It's clear it isn't our fault. Someone passes a wrong value to us. We'll go one
+frame upper in the call stack and look who does it.</p>
 <div class="highlight"><pre><span></span><code><span class="go">(Pdb) up</span>
 <span class="go">&gt; example.py(38)calculate_discount()</span>
 <span class="go">-&gt; discount = ctx.promo_code.apply_discount(ctx.category.price)</span>
@@ -759,14 +758,12 @@ go one frame upper in the call stack and look who does it.</p>
 <span class="go"> 39          return Success()</span>
 </code></pre></div>
 
-<p>We can clearly see that the <code>price</code> attribute of the <code>category</code> context
-variable is <code>None</code>. But who set it this way? <code>PDB</code> has no answer to
-that.</p>
-<p>At this point usually, you will re-run the whole process to stop
-debugger earlier trying to find the place in your code where this <code>None</code>
-was defined.</p>
-<p>But fortunately, we're using <code>stories</code>! Its context has the full
-support of the introspection.</p>
+<p>We can clearly see that the <code>price</code> attribute of the <code>category</code> context variable
+is <code>None</code>. But who set it this way? <code>PDB</code> has no answer to that.</p>
+<p>At this point usually, you will re-run the whole process to stop debugger
+earlier trying to find the place in your code where this <code>None</code> was defined.</p>
+<p>But fortunately, we're using <code>stories</code>! Its context has the full support of the
+introspection.</p>
 <p>Let's print story context at the moment of the failure.</p>
 <div class="highlight"><pre><span></span><code><span class="go">(Pdb) p ctx</span>
 <span class="go">ApplyPromoCode.apply</span>
@@ -781,8 +778,8 @@ support of the introspection.</p>
 <span class="go">  promo_code = &lt;example.PromoCode&gt;  # Set by ApplyPromoCode.find_promo_code</span>
 </code></pre></div>
 
-<p>We can tell that <code>category</code> was defined by <code>find_category</code> step. Let's
-take a closer look at it.</p>
+<p>We can tell that <code>category</code> was defined by <code>find_category</code> step. Let's take a
+closer look at it.</p>
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">find_category</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">ctx</span><span class="o">.</span><span class="n">category</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_category</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">category_id</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
@@ -802,8 +799,7 @@ take a closer look at it.</p>
 <span class="gp">... </span>    <span class="c1">#               `---- Root of all evil.</span>
 </code></pre></div>
 
-<p>So we can quickly find mistyped argument name in the <code>Category</code>
-constructor.</p>
+<p>So we can quickly find mistyped argument name in the <code>Category</code> constructor.</p>
 <h2 id="the-second-run">The second run<a class="headerlink" href="#the-second-run" title="Permanent link">&para;</a></h2>
 <p>Let's fix it.</p>
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">load_category</span><span class="p">(</span><span class="n">category_id</span><span class="p">):</span>

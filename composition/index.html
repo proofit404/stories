@@ -598,10 +598,10 @@
                 
                 
                 <h1 id="composition">Composition<a class="headerlink" href="#composition" title="Permanent link">&para;</a></h1>
-<p>Sometimes you want to split your business logic into several parts
-inside a single story. Obviously, you want to do so to be able to reuse
-this parts in different stories. Or maybe your goal is grouping several
-steps into a sub-story for readability.</p>
+<p>Sometimes you want to split your business logic into several parts inside a
+single story. Obviously, you want to do so to be able to reuse this parts in
+different stories. Or maybe your goal is grouping several steps into a sub-story
+for readability.</p>
 <p>There are several ways to do it.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -611,12 +611,12 @@ reasons for all protocols of all stories used in the composition.</p>
 </div>
 <h2 id="instance-attributes">Instance attributes<a class="headerlink" href="#instance-attributes" title="Permanent link">&para;</a></h2>
 <p>We prefer to define our business logic in separate components with loose
-coupling. The final thing will be built later using composition. We use
-a well-known technique called <a href="https://en.wikipedia.org/wiki/Dependency_injection#Constructor_injection">Constructor dependency
-injection</a>
-for it. The key point here: you can add story steps directly to the
-instance with attribute assignment. No matter where these steps come
-from, constructor or not.</p>
+coupling. The final thing will be built later using composition. We use a
+well-known technique called
+<a href="https://en.wikipedia.org/wiki/Dependency_injection#Constructor_injection">Constructor dependency injection</a>
+for it. The key point here: you can add story steps directly to the instance
+with attribute assignment. No matter where these steps come from, constructor or
+not.</p>
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">story</span><span class="p">,</span> <span class="n">arguments</span><span class="p">,</span> <span class="n">Success</span><span class="p">,</span> <span class="n">Failure</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">app.services</span> <span class="kn">import</span> <span class="n">MethodDefinitions</span>
 
@@ -651,8 +651,8 @@ from, constructor or not.</p>
 <span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">calculate_discount</span>
 </code></pre></div>
 
-<p>At this moment, story definition does not know what <code>find_promo_code</code>
-step should be.</p>
+<p>At this moment, story definition does not know what <code>find_promo_code</code> step
+should be.</p>
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">Subscription</span><span class="o">.</span><span class="n">buy</span>
 <span class="go">Subscription.buy</span>
 <span class="go">  find_category</span>
@@ -666,9 +666,8 @@ step should be.</p>
 <span class="go">  show_category</span>
 </code></pre></div>
 
-<p>And when we create an instance of the class we will specify this
-explicitly. Representation of the instance attribute will show us the
-complete story.</p>
+<p>And when we create an instance of the class we will specify this explicitly.
+Representation of the instance attribute will show us the complete story.</p>
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">Subscription</span><span class="p">(</span><span class="n">PromoCode</span><span class="p">()</span><span class="o">.</span><span class="n">find</span><span class="p">)</span><span class="o">.</span><span class="n">buy</span>
 <span class="go">Subscription.buy</span>
 <span class="go">  find_category</span>
@@ -686,20 +685,17 @@ complete story.</p>
 </code></pre></div>
 
 <h2 id="delegate-implementation">Delegate implementation<a class="headerlink" href="#delegate-implementation" title="Permanent link">&para;</a></h2>
-<p>We go even further in this approach. We compose not only stories, but
-the actual things we call in our steps come from outside.</p>
+<p>We go even further in this approach. We compose not only stories, but the actual
+things we call in our steps come from outside.</p>
 <blockquote>
-<p>We never call methods of the <code>Django</code> model or <code>requests</code> package
-directly!</p>
+<p>We never call methods of the <code>Django</code> model or <code>requests</code> package directly!</p>
 </blockquote>
 <p>We use simple rules to write our steps.</p>
 <ol>
-<li>The only thing you can access inside story step is an instance
-   method.</li>
-<li>The return value of this call goes to the context with <code>Success</code>
-   marker.</li>
-<li>Decisions are made by comparison context variables to each other or
-   using methods of the context variable in the <strong>next</strong> story step.</li>
+<li>The only thing you can access inside story step is an instance method.</li>
+<li>The return value of this call goes to the context with <code>Success</code> marker.</li>
+<li>Decisions are made by comparison context variables to each other or using
+   methods of the context variable in the <strong>next</strong> story step.</li>
 </ol>
 <p>Here are some examples:</p>
 <div class="tabbed-set" data-tabs="1:2">
@@ -790,10 +786,10 @@ directly!</p>
 </code></pre></div></div>
 </div>
 <p>This way you decouple your business logic from relation mapper models or
-networking library! There is no more vendor lock on a certain framework
-or database! Welcome to the good architecture utopia.</p>
-<p>You can group delegates into a single object to avoid complex
-constructors and names duplication.</p>
+networking library! There is no more vendor lock on a certain framework or
+database! Welcome to the good architecture utopia.</p>
+<p>You can group delegates into a single object to avoid complex constructors and
+names duplication.</p>
 <div class="tabbed-set" data-tabs="2:2">
 <input name="__tabbed_2" type="radio" id="__tabbed_2_1" checked="checked" /><label for="__tabbed_2_1">sync</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">find_price</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">ctx</span><span class="o">.</span><span class="n">price</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">impl</span><span class="o">.</span><span class="n">find_price</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">price_id</span><span class="p">)</span>
@@ -810,8 +806,8 @@ constructors and names duplication.</p>
 <span class="gp">... </span>    <span class="bp">self</span><span class="o">.</span><span class="n">impl</span> <span class="o">=</span> <span class="n">impl</span>
 </code></pre></div></div>
 </div>
-<p>If you follow our mantra "decouple everything", you definitely should
-check the following libraries:</p>
+<p>If you follow our mantra "decouple everything", you definitely should check the
+following libraries:</p>
 <ul>
 <li><a href="https://dependencies.readthedocs.io/">dependencies</a></li>
 <li><a href="https://www.attrs.org/">attrs</a></li>

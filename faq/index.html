@@ -660,19 +660,19 @@
 <p class="admonition-title">Note</p>
 <p>You can ignore convention. You can't ignore the tool.</p>
 </div>
-<p>A DSL with lots of possibilities is hard to reason about and maintain. A
-real programming language will go the same way without much attention to
-the structure of your project.</p>
-<p>Instead, we want <code>stories</code> DSL so limited, it forces users to explain
-their thoughts in a straightforward linear way.</p>
-<p>All complexity will go to the implementation steps. There you'll have
-the whole power of the Python.</p>
+<p>A DSL with lots of possibilities is hard to reason about and maintain. A real
+programming language will go the same way without much attention to the
+structure of your project.</p>
+<p>Instead, we want <code>stories</code> DSL so limited, it forces users to explain their
+thoughts in a straightforward linear way.</p>
+<p>All complexity will go to the implementation steps. There you'll have the whole
+power of the Python.</p>
 <h2 id="why-it-is-too-magic">Why it is too magic?<a class="headerlink" href="#why-it-is-too-magic" title="Permanent link">&para;</a></h2>
-<p>Careful programmers tend to avoid tools built on top of
-meta-programming. But we still use tools like
+<p>Careful programmers tend to avoid tools built on top of meta-programming. But we
+still use tools like
 <a href="https://docs.python.org/3/library/dataclasses.html">dataclasses</a>,
-<a href="https://www.attrs.org/">attrs</a> and <a href="https://docs.djangoproject.com/en/dev/topics/db/">django
-orm</a> because they
+<a href="https://www.attrs.org/">attrs</a> and
+<a href="https://docs.djangoproject.com/en/dev/topics/db/">django orm</a> because they
 improve developer experience a lot.</p>
 <p>This is what <code>stories</code> try very hard.</p>
 <div class="admonition note">
@@ -681,35 +681,34 @@ improve developer experience a lot.</p>
 magic at the lowest possible minimum.</p>
 </div>
 <h2 id="why-dsl-does-not-use-inheritance">Why DSL does not use inheritance?<a class="headerlink" href="#why-dsl-does-not-use-inheritance" title="Permanent link">&para;</a></h2>
-<p>Many tools like object relation mappers, web frameworks and task queues
-use inheritance from some base class as the core of API. We saw a few
-problems with this approach.</p>
-<p>First of all, you tend to put your business logic inside this
-subclasses. Fighting this evil was the initial idea behind <code>stories</code>
-library.</p>
-<p>Also, this approach restricts your possibilities to manage your own
-classes. We want you to be free at the decisions to put story definition
-anywhere. It is your right to place it inside the Django Model.</p>
+<p>Many tools like object relation mappers, web frameworks and task queues use
+inheritance from some base class as the core of API. We saw a few problems with
+this approach.</p>
+<p>First of all, you tend to put your business logic inside this subclasses.
+Fighting this evil was the initial idea behind <code>stories</code> library.</p>
+<p>Also, this approach restricts your possibilities to manage your own classes. We
+want you to be free at the decisions to put story definition anywhere. It is
+your right to place it inside the Django Model.</p>
 <h2 id="what-is-the-best-way-to-prototype-my-own-dsl-version">What is the best way to prototype my own DSL version?<a class="headerlink" href="#what-is-the-best-way-to-prototype-my-own-dsl-version" title="Permanent link">&para;</a></h2>
-<p>We receive a lot of complains and suggestions related to the DSL look
-and feel. We are open to all ideas! Please, experiment with DSL more!</p>
-<p>If you want to try to build another DSL version with the same semantics,
-here are the quickest way to prototype it:</p>
+<p>We receive a lot of complains and suggestions related to the DSL look and feel.
+We are open to all ideas! Please, experiment with DSL more!</p>
+<p>If you want to try to build another DSL version with the same semantics, here
+are the quickest way to prototype it:</p>
 <ol>
-<li>There is <code>examples</code> module in tests, where all possible DSL
-   expressions were written down.</li>
+<li>There is <code>examples</code> module in tests, where all possible DSL expressions were
+   written down.</li>
 <li>Rewrite each expression in your version of the DSL.</li>
-<li>Implement DSL inside <code>stories</code> module without touching a single
-   line of tests.</li>
+<li>Implement DSL inside <code>stories</code> module without touching a single line of
+   tests.</li>
 </ol>
 <p>Let us know if you stuck! We can do the redesign together!</p>
 <h2 id="why-we-need-arguments-decorator-instead-of-function-arguments">Why we need <code>@arguments</code> decorator instead of function arguments?<a class="headerlink" href="#why-we-need-arguments-decorator-instead-of-function-arguments" title="Permanent link">&para;</a></h2>
-<p>For the simplicity of implementation inside <code>@story</code> decorator.
-Otherwise, we will need to use <code>inspect</code> library to call the function.</p>
+<p>For the simplicity of implementation inside <code>@story</code> decorator. Otherwise, we
+will need to use <code>inspect</code> library to call the function.</p>
 <h2 id="can-i-use-self-instead-of-i-argument">Can I use <code>self</code> instead of <code>I</code> argument?<a class="headerlink" href="#can-i-use-self-instead-of-i-argument" title="Permanent link">&para;</a></h2>
-<p>Yes, you are free to use whatever name you want. We use this convention
-in our documentation and examples to keep in mind that <code>I</code>, <code>self</code> and
-<code>ctx</code> are three different things.</p>
+<p>Yes, you are free to use whatever name you want. We use this convention in our
+documentation and examples to keep in mind that <code>I</code>, <code>self</code> and <code>ctx</code> are three
+different things.</p>
 <p align="center">&mdash; ⭐️ &mdash;</p>
 
 <p align="center"><i>The stories library is part of the SOLID python family.</i></p>

@@ -586,93 +586,108 @@
                 <h2 id="101-2020-06-26"><a href="https://github.com/proofit404/stories/compare/1.0.0...1.0.1">1.0.1</a> (2020-06-26)<a class="headerlink" href="#101-2020-06-26" title="Permanent link">&para;</a></h2>
 <h3 id="bug-fixes">Bug Fixes<a class="headerlink" href="#bug-fixes" title="Permanent link">&para;</a></h3>
 <ul>
-<li>prevent story to call itself recursively (<a href="https://github.com/proofit404/stories/commit/4a7007a928713661ba73f9bf1edc509e3b3363a5">4a7007a</a>)</li>
+<li>prevent story to call itself recursively
+  (<a href="https://github.com/proofit404/stories/commit/4a7007a928713661ba73f9bf1edc509e3b3363a5">4a7007a</a>)</li>
 </ul>
 <h1 id="100-2020-05-22"><a href="https://github.com/proofit404/stories/compare/0.15.0...1.0.0">1.0.0</a> (2020-05-22)<a class="headerlink" href="#100-2020-05-22" title="Permanent link">&para;</a></h1>
 <h3 id="features">Features<a class="headerlink" href="#features" title="Permanent link">&para;</a></h3>
 <ul>
-<li>deprecate substories defined within the class (<a href="https://github.com/proofit404/stories/commit/c5d7930af4d0af3a510993b852aeee19335a4154">c5d7930</a>), closes <a href="https://github.com/proofit404/stories/issues/388">#388</a></li>
+<li>deprecate substories defined within the class
+  (<a href="https://github.com/proofit404/stories/commit/c5d7930af4d0af3a510993b852aeee19335a4154">c5d7930</a>),
+  closes <a href="https://github.com/proofit404/stories/issues/388">#388</a></li>
 </ul>
 <h3 id="breaking-changes">BREAKING CHANGES<a class="headerlink" href="#breaking-changes" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Substories defined in the same class do not deserve special treatment. From now they require to have different context contracts and failure protocols. They will be interpreted the same way as if they were defined in the other class. Shortcuts module have been removed.</li>
+<li>Substories defined in the same class do not deserve special treatment. From
+  now they require to have different context contracts and failure protocols.
+  They will be interpreted the same way as if they were defined in the other
+  class. Shortcuts module have been removed.</li>
 </ul>
 <h1 id="0150-2020-04-16"><a href="https://github.com/proofit404/stories/compare/0.14.0...0.15.0">0.15.0</a> (2020-04-16)<a class="headerlink" href="#0150-2020-04-16" title="Permanent link">&para;</a></h1>
 <h3 id="features_1">Features<a class="headerlink" href="#features_1" title="Permanent link">&para;</a></h3>
 <ul>
-<li>support Django 4.0 (<a href="https://github.com/proofit404/stories/commit/f02a3341c58b7885a2095c11ff5bef4acf626e94">f02a334</a>)</li>
+<li>support Django 4.0
+  (<a href="https://github.com/proofit404/stories/commit/f02a3341c58b7885a2095c11ff5bef4acf626e94">f02a334</a>)</li>
 </ul>
 <h1 id="0140-2020-03-21"><a href="https://github.com/proofit404/stories/compare/0.13.0...0.14.0">0.14.0</a> (2020-03-21)<a class="headerlink" href="#0140-2020-03-21" title="Permanent link">&para;</a></h1>
 <h3 id="features_2">Features<a class="headerlink" href="#features_2" title="Permanent link">&para;</a></h3>
 <ul>
-<li>support marshmallow v3 as a context contract definition (<a href="https://github.com/proofit404/stories/commit/a87c0c45cbb52e40fba872f57aa07a3550de6143">a87c0c4</a>)</li>
+<li>support marshmallow v3 as a context contract definition
+  (<a href="https://github.com/proofit404/stories/commit/a87c0c45cbb52e40fba872f57aa07a3550de6143">a87c0c4</a>)</li>
 </ul>
 <h1 id="0130-2020-03-14"><a href="https://github.com/proofit404/stories/compare/0.12.0...0.13.0">0.13.0</a> (2020-03-14)<a class="headerlink" href="#0130-2020-03-14" title="Permanent link">&para;</a></h1>
 <h3 id="features_3">Features<a class="headerlink" href="#features_3" title="Permanent link">&para;</a></h3>
 <ul>
-<li>use assignment expression instead of Success keyword arguments (<a href="https://github.com/proofit404/stories/commit/9756571237d56c52f8769c61f20f544ab389a211">9756571</a>)</li>
+<li>use assignment expression instead of Success keyword arguments
+  (<a href="https://github.com/proofit404/stories/commit/9756571237d56c52f8769c61f20f544ab389a211">9756571</a>)</li>
 </ul>
 <h1 id="0120-2020-03-06"><a href="https://github.com/proofit404/stories/compare/0.11.2...0.12.0">0.12.0</a> (2020-03-06)<a class="headerlink" href="#0120-2020-03-06" title="Permanent link">&para;</a></h1>
 <h3 id="features_4">Features<a class="headerlink" href="#features_4" title="Permanent link">&para;</a></h3>
 <ul>
-<li>support coroutine functions as story step definitions (<a href="https://github.com/proofit404/stories/commit/55cbfda33c61ca1395aaacf2d2d6a2c78f14ecde">55cbfda</a>)</li>
+<li>support coroutine functions as story step definitions
+  (<a href="https://github.com/proofit404/stories/commit/55cbfda33c61ca1395aaacf2d2d6a2c78f14ecde">55cbfda</a>)</li>
 </ul>
 <h2 id="0112-2020-03-02"><a href="https://github.com/proofit404/stories/compare/0.11.1...0.11.2">0.11.2</a> (2020-03-02)<a class="headerlink" href="#0112-2020-03-02" title="Permanent link">&para;</a></h2>
 <h3 id="bug-fixes_1">Bug Fixes<a class="headerlink" href="#bug-fixes_1" title="Permanent link">&para;</a></h3>
 <ul>
-<li>hide context private attributes in closure (<a href="https://github.com/proofit404/stories/commit/f8144aabd8629682f9c7368a23c80316bb10fddc">f8144aa</a>)</li>
-<li>hide failure and success summary private attributes in closure (<a href="https://github.com/proofit404/stories/commit/eae4e95bd89a2df8fd31f77fe665659c29feedd8">eae4e95</a>)</li>
-<li>hide FailureError private attributes in closure (<a href="https://github.com/proofit404/stories/commit/1fafcc1039775f2fbcc242b582181fab2d4e63d7">1fafcc1</a>)</li>
-<li>hide story private attributes in closure (<a href="https://github.com/proofit404/stories/commit/9e79e1417785db1e13ed01a1cd64613d5bf24a8a">9e79e14</a>)</li>
+<li>hide context private attributes in closure
+  (<a href="https://github.com/proofit404/stories/commit/f8144aabd8629682f9c7368a23c80316bb10fddc">f8144aa</a>)</li>
+<li>hide failure and success summary private attributes in closure
+  (<a href="https://github.com/proofit404/stories/commit/eae4e95bd89a2df8fd31f77fe665659c29feedd8">eae4e95</a>)</li>
+<li>hide FailureError private attributes in closure
+  (<a href="https://github.com/proofit404/stories/commit/1fafcc1039775f2fbcc242b582181fab2d4e63d7">1fafcc1</a>)</li>
+<li>hide story private attributes in closure
+  (<a href="https://github.com/proofit404/stories/commit/9e79e1417785db1e13ed01a1cd64613d5bf24a8a">9e79e14</a>)</li>
 </ul>
 <h2 id="0111-2020-02-28"><a href="https://github.com/proofit404/stories/compare/0.11.0...0.11.1">0.11.1</a> (2020-02-28)<a class="headerlink" href="#0111-2020-02-28" title="Permanent link">&para;</a></h2>
 <h3 id="bug-fixes_2">Bug Fixes<a class="headerlink" href="#bug-fixes_2" title="Permanent link">&para;</a></h3>
 <ul>
-<li>deny to define stories without steps (<a href="https://github.com/proofit404/stories/commit/5067546386df294db595fb0ee4e8968ee295c4b3">5067546</a>)</li>
+<li>deny to define stories without steps
+  (<a href="https://github.com/proofit404/stories/commit/5067546386df294db595fb0ee4e8968ee295c4b3">5067546</a>)</li>
 </ul>
 <h1 id="0110-2020-02-14"><a href="https://github.com/proofit404/stories/compare/0.10.2...0.11.0">0.11.0</a> (2020-02-14)<a class="headerlink" href="#0110-2020-02-14" title="Permanent link">&para;</a></h1>
 <h3 id="features_5">Features<a class="headerlink" href="#features_5" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Add context contract to the story. <code>Success</code> keyword arguments can
-  be validated by contract definition in the story.</li>
-<li>Raise <code>MutationError</code> when some story method tries to set or delete
-  context attribute directly.</li>
+<li>Add context contract to the story. <code>Success</code> keyword arguments can be
+  validated by contract definition in the story.</li>
+<li>Raise <code>MutationError</code> when some story method tries to set or delete context
+  attribute directly.</li>
 <li>Only keyword arguments are allowed to <code>call</code> and <code>run</code> the story.</li>
-<li>Raise <code>StoryDefinitionError</code> when <code>arguments</code> decorator is used
-  incorrectly.</li>
-<li>migrate to pydantic v1.x (<a href="https://github.com/proofit404/stories/commit/9049eae43c7b8db36708fc019a671a53bf4b578d">9049eae</a>)</li>
+<li>Raise <code>StoryDefinitionError</code> when <code>arguments</code> decorator is used incorrectly.</li>
+<li>migrate to pydantic v1.x
+  (<a href="https://github.com/proofit404/stories/commit/9049eae43c7b8db36708fc019a671a53bf4b578d">9049eae</a>)</li>
 </ul>
 <h2 id="0102-2020-02-11"><a href="https://github.com/proofit404/stories/compare/0.10.1...0.10.2">0.10.2</a> (2020-02-11)<a class="headerlink" href="#0102-2020-02-11" title="Permanent link">&para;</a></h2>
 <h3 id="bug-fixes_3">Bug Fixes<a class="headerlink" href="#bug-fixes_3" title="Permanent link">&para;</a></h3>
 <ul>
-<li>prevent generated changelog from style guide violation (<a href="https://github.com/proofit404/stories/commit/7d4047d10e4dacc10ec356700b1fc35161efa4c0">7d4047d</a>)</li>
+<li>prevent generated changelog from style guide violation
+  (<a href="https://github.com/proofit404/stories/commit/7d4047d10e4dacc10ec356700b1fc35161efa4c0">7d4047d</a>)</li>
 </ul>
 <h2 id="0101-2019-05-31">0.10.1 (2019-05-31)<a class="headerlink" href="#0101-2019-05-31" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Fix pytest reporter to work with fixture functions and <code>pytest-bdd</code>
-  plugin properly.</li>
+<li>Fix pytest reporter to work with fixture functions and <code>pytest-bdd</code> plugin
+  properly.</li>
 </ul>
 <h2 id="010-2019-02-27">0.10 (2019-02-27)<a class="headerlink" href="#010-2019-02-27" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Add failure protocol of the story. <code>Failure</code> argument should match
-  protocol definition in the story.</li>
+<li>Add failure protocol of the story. <code>Failure</code> argument should match protocol
+  definition in the story.</li>
 <li>Replace multiple <code>argument</code> decorators with single <code>arguments</code>.</li>
-<li>Raise <code>ContextContractError</code> when keyword argument given to
-  <code>Success</code> already exists in the context.</li>
-<li>Raise <code>ContextContractError</code> when the story can not find necessary
-  arguments in the context.</li>
+<li>Raise <code>ContextContractError</code> when keyword argument given to <code>Success</code> already
+  exists in the context.</li>
+<li>Raise <code>ContextContractError</code> when the story can not find necessary arguments
+  in the context.</li>
 <li>Make context an immutable object.</li>
 <li>Python 3.7 support.</li>
 </ul>
 <h2 id="09-2018-11-28">0.9 (2018-11-28)<a class="headerlink" href="#09-2018-11-28" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Enforce <code>I</code> noun with non callable attributes in the story
-  definition.</li>
+<li>Enforce <code>I</code> noun with non callable attributes in the story definition.</li>
 <li><code>Context</code> is passed as an argument into story step methods.</li>
 <li>Pass real class instances into step method.</li>
 <li>Show story execution path in the <code>Context</code> representation.</li>
-<li>Add Sentry, Py.test and Django Debug Toolbar plugins with <code>Context</code>
-  reporter built in.</li>
+<li>Add Sentry, Py.test and Django Debug Toolbar plugins with <code>Context</code> reporter
+  built in.</li>
 <li>Raise an exception on <code>Failure</code> when the story was called directly.</li>
 <li>Support iterable protocol in the <code>Context</code> class.</li>
 <li>Add <code>Failure</code> reason.</li>
@@ -699,8 +714,7 @@
 <h2 id="04-2018-04-07">0.4 (2018-04-07)<a class="headerlink" href="#04-2018-04-07" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Package was rewritten with linearization algorithm.</li>
-<li><code>Skip</code> result was added to finish nested stories without finish the
-  caller.</li>
+<li><code>Skip</code> result was added to finish nested stories without finish the caller.</li>
 </ul>
 <h2 id="003-2018-04-06">0.0.3 (2018-04-06)<a class="headerlink" href="#003-2018-04-06" title="Permanent link">&para;</a></h2>
 <ul>

@@ -630,13 +630,14 @@
 <a href="https://dev.azure.com/proofit404/stories/_build/latest?definitionId=3&amp;branchName=master"><img alt="azure-devops-coverage" src="https://img.shields.io/azure-devops/coverage/proofit404/stories/3?style=flat-square" /></a>
 <a href="https://pypi.python.org/pypi/stories/"><img alt="pypi" src="https://img.shields.io/pypi/v/stories?style=flat-square" /></a></p>
 <p>The business transaction DSL.</p>
-<p><strong><a href="https://proofit404.github.io/stories/">Documentation</a> | <a href="https://github.com/proofit404/stories">Source Code</a> | <a href="https://github.com/proofit404/stories/issues">Task Tracker</a></strong></p>
-<p><code>stories</code> is a business transaction DSL. It provides a simple way to
-define a complex business transaction that includes processing over
-many steps and by many different objects. It makes error handling a
-primary concern by taking a “<a href="http://fsharpforfunandprofit.com/rop/">Railway Oriented
-Programming</a>” approach to
-capturing and returning errors from any step in the transaction.</p>
+<p><strong><a href="https://proofit404.github.io/stories/">Documentation</a> |
+<a href="https://github.com/proofit404/stories">Source Code</a> |
+<a href="https://github.com/proofit404/stories/issues">Task Tracker</a></strong></p>
+<p><code>stories</code> is a business transaction DSL. It provides a simple way to define a
+complex business transaction that includes processing over many steps and by
+many different objects. It makes error handling a primary concern by taking a
+“<a href="http://fsharpforfunandprofit.com/rop/">Railway Oriented Programming</a>” approach
+to capturing and returning errors from any step in the transaction.</p>
 <h2 id="pros">Pros<a class="headerlink" href="#pros" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Define a user story in the business transaction DSL.</li>
@@ -653,23 +654,21 @@ capturing and returning errors from any step in the transaction.</p>
 </ul>
 <p><code>stories</code> is based on the following ideas:</p>
 <ul>
-<li>A business transaction is a series of operations where any can fail
-  and stop the processing.</li>
-<li>A business transaction can describe its steps on an abstract level
-  without being coupled to any details about how individual operations
-  work.</li>
+<li>A business transaction is a series of operations where any can fail and stop
+  the processing.</li>
+<li>A business transaction can describe its steps on an abstract level without
+  being coupled to any details about how individual operations work.</li>
 <li>A business transaction doesn’t have any state.</li>
-<li>Each operation shouldn’t accumulate state, instead it should receive
-  an input and return an output without causing any side-effects.</li>
+<li>Each operation shouldn’t accumulate state, instead it should receive an input
+  and return an output without causing any side-effects.</li>
 <li>The only interface of an operation is <code>ctx</code>.</li>
-<li>Each operation provides a meaningful piece of functionality and can
-  be reused.</li>
-<li>Errors in any operation should be easily caught and handled as part
-  of the normal application flow.</li>
+<li>Each operation provides a meaningful piece of functionality and can be reused.</li>
+<li>Errors in any operation should be easily caught and handled as part of the
+  normal application flow.</li>
 </ul>
 <h2 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h2>
-<p><code>stories</code> provide a simple way to define a complex business scenario
-that include many processing steps.</p>
+<p><code>stories</code> provide a simple way to define a complex business scenario that
+include many processing steps.</p>
 <div class="tabbed-set" data-tabs="1:2">
 <input name="__tabbed_1" type="radio" id="__tabbed_1_1" checked="checked" /><label for="__tabbed_1_1">sync</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">story</span><span class="p">,</span> <span class="n">arguments</span><span class="p">,</span> <span class="n">Success</span><span class="p">,</span> <span class="n">Failure</span><span class="p">,</span> <span class="n">Result</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">app.repositories</span> <span class="kn">import</span> <span class="n">load_category</span><span class="p">,</span> <span class="n">load_profile</span><span class="p">,</span> <span class="n">create_subscription</span>
@@ -764,7 +763,10 @@ that include many processing steps.</p>
 <p>This code style allow you clearly separate actual business scenario from
 implementation details.</p>
 <h2 id="questions">Questions<a class="headerlink" href="#questions" title="Permanent link">&para;</a></h2>
-<p>If you have any questions, feel free to create an issue in our <a href="https://github.com/proofit404/stories/issues">Task Tracker</a>. We have the <a href="https://github.com/proofit404/stories/issues?q=is%3Aopen+is%3Aissue+label%3Aquestion">question label</a> exactly for this purpose.</p>
+<p>If you have any questions, feel free to create an issue in our
+<a href="https://github.com/proofit404/stories/issues">Task Tracker</a>. We have the
+<a href="https://github.com/proofit404/stories/issues?q=is%3Aopen+is%3Aissue+label%3Aquestion">question label</a>
+exactly for this purpose.</p>
 <h2 id="license">License<a class="headerlink" href="#license" title="Permanent link">&para;</a></h2>
 <p>Stories library is offered under the two clause BSD license.</p>
 <p align="center">&mdash; ⭐️ &mdash;</p>

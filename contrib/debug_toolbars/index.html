@@ -598,9 +598,9 @@
                 
                 
                 <h1 id="debug-toolbars">Debug Toolbars<a class="headerlink" href="#debug-toolbars" title="Permanent link">&para;</a></h1>
-<p>Many frameworks provide debug toolbar add-ons. <code>stories</code> integrate with
-these toolbars to show the execution path and context variables of all
-business objects triggered by the framework handler.</p>
+<p>Many frameworks provide debug toolbar add-ons. <code>stories</code> integrate with these
+toolbars to show the execution path and context variables of all business
+objects triggered by the framework handler.</p>
 <h2 id="django-contrib">Django contrib<a class="headerlink" href="#django-contrib" title="Permanent link">&para;</a></h2>
 <p>Add this lines to your developer's settings:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">debug_toolbar.settings</span> <span class="kn">import</span> <span class="n">PANELS_DEFAULTS</span>
@@ -625,8 +625,7 @@ business objects triggered by the framework handler.</p>
 <p><img alt="Django Debug Toolbar" src="../../images/django-debug-toolbar.png" /></p>
 <h2 id="flask-contrib">Flask contrib<a class="headerlink" href="#flask-contrib" title="Permanent link">&para;</a></h2>
 <p>To show a stories panel in flask_debugtoolbar, add the panel to the
-DEBUG_TB_PANELS config variable before initializing
-<code>DebugToolbarExtension</code>:</p>
+DEBUG_TB_PANELS config variable before initializing <code>DebugToolbarExtension</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">flask_debugtoolbar</span> <span class="kn">import</span> <span class="n">DebugToolbarExtension</span>

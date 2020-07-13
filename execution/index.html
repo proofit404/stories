@@ -628,19 +628,18 @@
                 <h1 id="execution-rules">Execution rules<a class="headerlink" href="#execution-rules" title="Permanent link">&para;</a></h1>
 <p><code>stories</code> follow this executing rules to run:</p>
 <ul>
-<li>Methods of the class will be called in the order as they were
-  written in the story</li>
-<li>If the story calls another story in its body, methods of this
-  sub-story add to the caller in the order they occur in sub-story
-  body.</li>
-<li>Each story method should return an instance of <code>Success</code>, <code>Failure</code>,
-  <code>Result</code> or <code>Skip</code> classes.</li>
-<li>The execution of the story will change according to the type of the
-  return value.</li>
+<li>Methods of the class will be called in the order as they were written in the
+  story</li>
+<li>If the story calls another story in its body, methods of this sub-story add to
+  the caller in the order they occur in sub-story body.</li>
+<li>Each story method should return an instance of <code>Success</code>, <code>Failure</code>, <code>Result</code>
+  or <code>Skip</code> classes.</li>
+<li>The execution of the story will change according to the type of the return
+  value.</li>
 </ul>
 <h2 id="success">Success<a class="headerlink" href="#success" title="Permanent link">&para;</a></h2>
-<p>If the story method returns <code>Success</code> execution of the whole story
-continues from the next step.</p>
+<p>If the story method returns <code>Success</code> execution of the whole story continues
+from the next step.</p>
 <div class="tabbed-set" data-tabs="1:2">
 <input name="__tabbed_1" type="radio" id="__tabbed_1_1" checked="checked" /><label for="__tabbed_1_1">sync</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">story</span><span class="p">,</span> <span class="n">Success</span>
 
@@ -706,8 +705,8 @@ continues from the next step.</p>
 <span class="go">three</span>
 </code></pre></div></div>
 </div>
-<p>If sub-story last method returns <code>Success</code>, the execution continues in
-the next method of the parent story.</p>
+<p>If sub-story last method returns <code>Success</code>, the execution continues in the next
+method of the parent story.</p>
 <div class="tabbed-set" data-tabs="2:2">
 <input name="__tabbed_2" type="radio" id="__tabbed_2_1" checked="checked" /><label for="__tabbed_2_1">sync</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">story</span><span class="p">,</span> <span class="n">Success</span>
 
@@ -808,8 +807,8 @@ the next method of the parent story.</p>
 <span class="go">four</span>
 </code></pre></div></div>
 </div>
-<p>Story method can assign attributes to the context to set some
-variables for future methods.</p>
+<p>Story method can assign attributes to the context to set some variables for
+future methods.</p>
 <div class="tabbed-set" data-tabs="3:2">
 <input name="__tabbed_3" type="radio" id="__tabbed_3_1" checked="checked" /><label for="__tabbed_3_1">sync</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">story</span><span class="p">,</span> <span class="n">Success</span>
 
@@ -865,8 +864,8 @@ variables for future methods.</p>
 </code></pre></div></div>
 </div>
 <h2 id="failure">Failure<a class="headerlink" href="#failure" title="Permanent link">&para;</a></h2>
-<p>If story method returns <code>Failure</code>, the whole story considered failed.
-Execution stops at this point.</p>
+<p>If story method returns <code>Failure</code>, the whole story considered failed. Execution
+stops at this point.</p>
 <div class="tabbed-set" data-tabs="4:2">
 <input name="__tabbed_4" type="radio" id="__tabbed_4_1" checked="checked" /><label for="__tabbed_4_1">sync</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">story</span><span class="p">,</span> <span class="n">Success</span><span class="p">,</span> <span class="n">Failure</span>
 
@@ -1024,12 +1023,12 @@ Execution stops at this point.</p>
 <span class="go">True</span>
 </code></pre></div></div>
 </div>
-<p><code>Failure</code> has optional <code>reason</code> argument. We describe it in details in
-the <a href="../failure_protocol/">failure protocol</a> chapter.</p>
+<p><code>Failure</code> has optional <code>reason</code> argument. We describe it in details in the
+<a href="../failure_protocol/">failure protocol</a> chapter.</p>
 <h2 id="result">Result<a class="headerlink" href="#result" title="Permanent link">&para;</a></h2>
 <p>If the story method return <code>Result</code>, the whole story considered done. An
-optional argument passed to the <code>Result</code> constructor will be the return
-value of the story call.</p>
+optional argument passed to the <code>Result</code> constructor will be the return value of
+the story call.</p>
 <div class="tabbed-set" data-tabs="6:2">
 <input name="__tabbed_6" type="radio" id="__tabbed_6_1" checked="checked" /><label for="__tabbed_6_1">sync</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">story</span><span class="p">,</span> <span class="n">Success</span><span class="p">,</span> <span class="n">Result</span>
 
@@ -1205,8 +1204,8 @@ execution stops after the method returned <code>Result</code>.</p>
 </code></pre></div></div>
 </div>
 <h2 id="skip">Skip<a class="headerlink" href="#skip" title="Permanent link">&para;</a></h2>
-<p>If sub-story method returns <code>Skip</code> result, execution will be continued
-form the next method of the caller story.</p>
+<p>If sub-story method returns <code>Skip</code> result, execution will be continued form the
+next method of the caller story.</p>
 <div class="tabbed-set" data-tabs="8:2">
 <input name="__tabbed_8" type="radio" id="__tabbed_8_1" checked="checked" /><label for="__tabbed_8_1">sync</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">story</span><span class="p">,</span> <span class="n">Success</span><span class="p">,</span> <span class="n">Skip</span>
 

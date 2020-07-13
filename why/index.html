@@ -640,15 +640,15 @@
                 
                 
                 <h1 id="why">Why<a class="headerlink" href="#why" title="Permanent link">&para;</a></h1>
-<p>Good code is easy to understand and change. We build <code>stories</code> with
-this constrains in mind.</p>
+<p>Good code is easy to understand and change. We build <code>stories</code> with this
+constrains in mind.</p>
 <p><code>stories</code> force you to write structured, understandable code with right
 separation of concerns and responsibilities.</p>
 <p>Let's consider common troubles you meet in development.</p>
 <h2 id="micro-framework">Micro framework<a class="headerlink" href="#micro-framework" title="Permanent link">&para;</a></h2>
-<p>Micro frameworks don't offer too much structure to your project. The
-main goal is flexibility. And you're mostly on your own when it comes to
-organizing your code.</p>
+<p>Micro frameworks don't offer too much structure to your project. The main goal
+is flexibility. And you're mostly on your own when it comes to organizing your
+code.</p>
 <p>Most of the times you will end up with two problems:</p>
 <ol>
 <li>Long view functions.</li>
@@ -669,8 +669,8 @@ organizing your code.</p>
 </code></pre></div>
 
 <p>We do not have any information about this strange comparison expression.</p>
-<p>Let's consider we should process this data in a different way to
-complete our current task.</p>
+<p>Let's consider we should process this data in a different way to complete our
+current task.</p>
 <p>We decide to change this expression.</p>
 <p>Of course, we test all possible scenarios we can imagine.</p>
 <p>But after some time this error would happen in the production:</p>
@@ -679,18 +679,17 @@ complete our current task.</p>
 <span class="gr">ZeroDivisionError</span>: <span class="n">division by zero</span>
 </code></pre></div>
 
-<p>Turns out there were a lot more variants of incoming data than we can
-imagine. So our change failed in several business scenarios.</p>
+<p>Turns out there were a lot more variants of incoming data than we can imagine.
+So our change failed in several business scenarios.</p>
 <p>This happens because our code wasn't written to help us understand it.</p>
 <h2 id="macro-framework">Macro framework<a class="headerlink" href="#macro-framework" title="Permanent link">&para;</a></h2>
-<p>On the other side, there are a lot of technologies with strong opinions
-on how to structure programs written with their help.</p>
+<p>On the other side, there are a lot of technologies with strong opinions on how
+to structure programs written with their help.</p>
 <p>This approach also has its own cost.</p>
 <ol>
 <li>You need method flowchart to understand data flow in your system.</li>
-<li>Zig-zag traceback problem. It's hard to figure out the actual
-   execution path because your code always mixed with the code of the
-   framework.</li>
+<li>Zig-zag traceback problem. It's hard to figure out the actual execution path
+   because your code always mixed with the code of the framework.</li>
 <li>Framework internals leak into your code base.</li>
 </ol>
 <p>Let's consider this view:</p>
@@ -707,20 +706,19 @@ on how to structure programs written with their help.</p>
     <span class="n">filter_class</span> <span class="o">=</span> <span class="n">SubscriptionFilter</span>
 </code></pre></div>
 
-<p>The only thing we have clue about - it is somehow related to the
-subscription to our service.</p>
+<p>The only thing we have clue about - it is somehow related to the subscription to
+our service.</p>
 <p>But it does not tell us:</p>
 <ol>
 <li>What exactly does this class do?</li>
 <li>How to use it?</li>
 </ol>
-<p>We need to keep framework documentation close to the sources to figure
-this out.</p>
+<p>We need to keep framework documentation close to the sources to figure this out.</p>
 <p><img alt="REST Framework Method Flowchart" src="../images/rest-framework-method-flowchart.png" /></p>
-<p>After a few hours of digging, we will figure out there are about 17
-different ways to interact with this view.</p>
-<p>When we go to the <code>SubscriptionSerializer</code> class, we expect to see there
-a mapping of fields from the database model to the JSON object.</p>
+<p>After a few hours of digging, we will figure out there are about 17 different
+ways to interact with this view.</p>
+<p>When we go to the <code>SubscriptionSerializer</code> class, we expect to see there a
+mapping of fields from the database model to the JSON object.</p>
 <p>And we actually do.</p>
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">rest_framework.fields</span> <span class="kn">import</span> <span class="n">IntegerField</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">rest_framework.serializers</span> <span class="kn">import</span> <span class="n">Serializer</span>
@@ -749,8 +747,8 @@ a mapping of fields from the database model to the JSON object.</p>
 </ol>
 <p>It will take a few hours more to answer this questions.</p>
 <h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h2>
-<p>In both projects built with <code>micro</code> and <code>macro</code> frameworks we end up
-with actually the <strong>same</strong> situation:</p>
+<p>In both projects built with <code>micro</code> and <code>macro</code> frameworks we end up with
+actually the <strong>same</strong> situation:</p>
 <ol>
 <li>Our code is fragile. We afraid to change it.</li>
 <li>It is hard to reason about.</li>
@@ -758,13 +756,13 @@ with actually the <strong>same</strong> situation:</p>
 </ol>
 <p>But there is a solution for it!</p>
 <h2 id="business-logic">Business logic<a class="headerlink" href="#business-logic" title="Permanent link">&para;</a></h2>
-<p>The main problem with both approaches - it is completely unclear what
-the application actually does. What problems it is trying to solve?</p>
-<p>Most frameworks are busy with forms, serializers, transport layers,
-field mappings. And all these implementation details are not the right
-abstractions for decision making.</p>
-<p>Usually, our first thought will be moving our business logic from the
-view into a function.</p>
+<p>The main problem with both approaches - it is completely unclear what the
+application actually does. What problems it is trying to solve?</p>
+<p>Most frameworks are busy with forms, serializers, transport layers, field
+mappings. And all these implementation details are not the right abstractions
+for decision making.</p>
+<p>Usually, our first thought will be moving our business logic from the view into
+a function.</p>
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">buy_subscription</span><span class="p">(</span><span class="n">category_id</span><span class="p">,</span> <span class="n">price_id</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
 <span class="gp">...</span>
 <span class="gp">... </span>    <span class="n">category</span> <span class="o">=</span> <span class="n">find_category</span><span class="p">(</span><span class="n">category_id</span><span class="p">)</span>
@@ -781,31 +779,27 @@ view into a function.</p>
 
 <p>The author definitely has a few good points to write code this way.</p>
 <p>It is short, has clear names and intent.</p>
-<p>If you enjoy writing code like this, stop reading and go write it. I'm
-serious!</p>
+<p>If you enjoy writing code like this, stop reading and go write it. I'm serious!</p>
 <p>But we see a few disadvantages in it.</p>
 <ol>
-<li>Growth problem. In real life, functions like this will have ~50
-   lines of code, a lot of variables and nested <code>if</code>
-   statements. Eventually, a programmer will decide to hide its
-   complexity somewhere.</li>
-<li>Convert to the object. The main intent is hiding ~50 variables in
-     ~50 object attributes. This will improve the readability of the
-     main method. But will harm the understanding of where data came
-     from.</li>
-<li>Mixins. At some point, we will like to reuse parts of our
-     business logic. A mixin is the most common way to make code with
-     classes reusable. But it will lead to even more implicit source
-     of data. Attributes appear from nowhere.</li>
-<li>Top-down architecture. We call functions directly. They call other
-   low level functions directly. Our business logic has a very high
-   coupling with the way we talk to the database, SMS gateway or
-   notification server. This approach has zero flexibility.</li>
+<li>Growth problem. In real life, functions like this will have ~50 lines of
+   code, a lot of variables and nested <code>if</code> statements. Eventually, a programmer
+   will decide to hide its complexity somewhere.</li>
+<li>Convert to the object. The main intent is hiding ~50 variables in ~50
+     object attributes. This will improve the readability of the main method.
+     But will harm the understanding of where data came from.</li>
+<li>Mixins. At some point, we will like to reuse parts of our business logic. A
+     mixin is the most common way to make code with classes reusable. But it
+     will lead to even more implicit source of data. Attributes appear from
+     nowhere.</li>
+<li>Top-down architecture. We call functions directly. They call other low level
+   functions directly. Our business logic has a very high coupling with the way
+   we talk to the database, SMS gateway or notification server. This approach
+   has zero flexibility.</li>
 </ol>
 <p>There is a better way.</p>
 <h2 id="dsl">DSL<a class="headerlink" href="#dsl" title="Permanent link">&para;</a></h2>
-<p>Wouldn't it be nice if we can just read business logic as it was
-intended?</p>
+<p>Wouldn't it be nice if we can just read business logic as it was intended?</p>
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">story</span><span class="p">,</span> <span class="n">arguments</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Subscription</span><span class="p">:</span>
@@ -839,15 +833,15 @@ Context:
   category = &lt;Category: 1318&gt;  # Set by Subscription.find_category
 </code></pre></div>
 
-<p>Wouldn't it be nice to know which business scenario was executed by
-every line in the tests?</p>
+<p>Wouldn't it be nice to know which business scenario was executed by every line
+in the tests?</p>
 <p><img alt="Py.Test" src="../images/pytest.png" /></p>
 <p>Wouldn't it be nice to see the same details in the debug toolbar?</p>
 <p><img alt="Django Debug Toolbar" src="../images/django-debug-toolbar.png" /></p>
 <p>Wouldn't it be nice to have it when production fails?</p>
 <p><img alt="Sentry" src="../images/sentry.png" /></p>
-<p>Interesting, isn't it? Check out <a href="../definition/">Definition</a> guide to
-learn more.</p>
+<p>Interesting, isn't it? Check out <a href="../definition/">Definition</a> guide to learn
+more.</p>
 <p align="center">&mdash; ⭐️ &mdash;</p>
 
 <p align="center"><i>The stories library is part of the SOLID python family.</i></p>

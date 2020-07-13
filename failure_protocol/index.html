@@ -613,29 +613,28 @@
                 
                 <h1 id="failure-protocol">Failure Protocol<a class="headerlink" href="#failure-protocol" title="Permanent link">&para;</a></h1>
 <p>By default, <code>Failure</code> result has an empty <code>reason</code>.</p>
-<p><code>failed_on</code> is the only thing you can do to understand what happened
-in the caller code. You should use the <a href="../usage/#run">run the story
-method</a> to have access to the verbose result.</p>
-<p>This is a fragile approach since it depends on method names. They tend
-to change in the future. Someone can find a better name for a certain
-method. And in some place, the <code>failed_on</code> call will not catch this
-failure because it's using an outdated method name.</p>
-<p>Also, one story step can fail for a number of reasons. For example,
-we're making an API call. We want to process <code>401</code> and <code>403</code> error
-codes differently. This is where <code>failed_on</code> method can't help.</p>
+<p><code>failed_on</code> is the only thing you can do to understand what happened in the
+caller code. You should use the <a href="../usage/#run">run the story method</a> to have
+access to the verbose result.</p>
+<p>This is a fragile approach since it depends on method names. They tend to change
+in the future. Someone can find a better name for a certain method. And in some
+place, the <code>failed_on</code> call will not catch this failure because it's using an
+outdated method name.</p>
+<p>Also, one story step can fail for a number of reasons. For example, we're making
+an API call. We want to process <code>401</code> and <code>403</code> error codes differently. This is
+where <code>failed_on</code> method can't help.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><code>Failure protocol</code> is the way to allow a certain set of values to be
 used as an argument to the <code>Failure</code> result.</p>
 </div>
-<p>After that in the caller code, you can use the <code>failed_because</code> method
-to be sure you can understand the exact reason for failure.</p>
+<p>After that in the caller code, you can use the <code>failed_because</code> method to be
+sure you can understand the exact reason for failure.</p>
 <h2 id="list-of-strings">List of strings<a class="headerlink" href="#list-of-strings" title="Permanent link">&para;</a></h2>
-<p>You can use string literals to mark the exact reason for the failure. In
-this case, failure protocol should be a collection of all allowed
-strings.</p>
-<p>You can use these string literals to process different failures in a
-different way.</p>
+<p>You can use string literals to mark the exact reason for the failure. In this
+case, failure protocol should be a collection of all allowed strings.</p>
+<p>You can use these string literals to process different failures in a different
+way.</p>
 <div class="tabbed-set" data-tabs="1:2">
 <input name="__tabbed_1" type="radio" id="__tabbed_1_1" checked="checked" /><label for="__tabbed_1_1">sync</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">story</span><span class="p">,</span> <span class="n">arguments</span><span class="p">,</span> <span class="n">Success</span><span class="p">,</span> <span class="n">Failure</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">app.entities</span> <span class="kn">import</span> <span class="n">Category</span>
@@ -754,11 +753,11 @@ different way.</p>
 </code></pre></div></div>
 </div>
 <h2 id="enum">Enum<a class="headerlink" href="#enum" title="Permanent link">&para;</a></h2>
-<p>You can use <a href="https://docs.python.org/3/library/enum.html">enum</a> members
-to mark the exact reason for the failure. In this case, failure protocol
-should be <a href="https://docs.python.org/3/library/enum.html">enum</a> subclass.</p>
-<p>You can use <a href="https://docs.python.org/3/library/enum.html">enum</a>
-members to process different failures in a different way.</p>
+<p>You can use <a href="https://docs.python.org/3/library/enum.html">enum</a> members to mark
+the exact reason for the failure. In this case, failure protocol should be
+<a href="https://docs.python.org/3/library/enum.html">enum</a> subclass.</p>
+<p>You can use <a href="https://docs.python.org/3/library/enum.html">enum</a> members to
+process different failures in a different way.</p>
 <div class="tabbed-set" data-tabs="2:2">
 <input name="__tabbed_2" type="radio" id="__tabbed_2_1" checked="checked" /><label for="__tabbed_2_1">sync</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">auto</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">app.repositories</span> <span class="kn">import</span> <span class="n">load_promo_code</span>
@@ -879,30 +878,28 @@ members to process different failures in a different way.</p>
 <span class="go">Promo code not found</span>
 </code></pre></div></div>
 </div>
-<p>On Python 2 you can use <a href="https://pypi.org/project/enum34/">enum34</a>
-package:</p>
+<p>On Python 2 you can use <a href="https://pypi.org/project/enum34/">enum34</a> package:</p>
 <div class="codehilite"><pre><span></span><code>pip install enum34
 </code></pre></div>
 
 
-<p>When you <a href="../usage/#run">run the story method</a> the actual failure
-protocol is available under <code>failures</code> property of that story
-method. So there is no need to import <code>Errors</code> class in the caller
-code.</p>
+<p>When you <a href="../usage/#run">run the story method</a> the actual failure protocol is
+available under <code>failures</code> property of that story method. So there is no need to
+import <code>Errors</code> class in the caller code.</p>
 <h2 id="composition">Composition<a class="headerlink" href="#composition" title="Permanent link">&para;</a></h2>
-<p>Failure protocols of parent and sub-story often mismatch. There is a
-good reason for that. Indeed they usually describe rules at different
-levels of abstraction. Failure of sub-story can tell us about some
-low-level error. And the failure of the parent story usually tells us
-something about high-level business rules violation.</p>
+<p>Failure protocols of parent and sub-story often mismatch. There is a good reason
+for that. Indeed they usually describe rules at different levels of abstraction.
+Failure of sub-story can tell us about some low-level error. And the failure of
+the parent story usually tells us something about high-level business rules
+violation.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>A story in the composition can return failures with only reasons match
 its own protocol.</p>
 </div>
-<p>A composition of these two stories can fail both because of
-<code>low_balance</code> and <code>expired</code> reasons. For convenience, <code>failures</code>
-property will contain protocols composition. A new <code>enum</code> class.</p>
+<p>A composition of these two stories can fail both because of <code>low_balance</code> and
+<code>expired</code> reasons. For convenience, <code>failures</code> property will contain protocols
+composition. A new <code>enum</code> class.</p>
 <div class="tabbed-set" data-tabs="3:2">
 <input name="__tabbed_3" type="radio" id="__tabbed_3_1" checked="checked" /><label for="__tabbed_3_1">sync</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">app.repositories</span> <span class="kn">import</span> <span class="n">load_token</span>
 
@@ -1101,9 +1098,9 @@ property will contain protocols composition. A new <code>enum</code> class.</p>
 <span class="go">Promo code expired</span>
 </code></pre></div></div>
 </div>
-<p>This composition rule works both for <a href="../composition/#class-methods">class
-methods</a> with inheritance and <a href="../composition/#instance-attributes">instance
-attributes</a> with dependency
+<p>This composition rule works both for
+<a href="../composition/#class-methods">class methods</a> with inheritance and
+<a href="../composition/#instance-attributes">instance attributes</a> with dependency
 injection.</p>
 <p align="center">&mdash; ⭐️ &mdash;</p>
 
