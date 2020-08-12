@@ -13,7 +13,7 @@
       
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.5.0">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.5.5">
     
     
       
@@ -21,9 +21,9 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.b5d04df8.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.63b94e9e.min.css">
       
-        <link rel="stylesheet" href="../assets/stylesheets/palette.9ab2c1f8.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.7f672a1f.min.css">
       
       
         
@@ -805,138 +805,144 @@ not be mixed. All methods of the story should be of one type. If steps of the
 story are coroutines, you can await the story itself.</p>
 <h2 id="basics">Basics<a class="headerlink" href="#basics" title="Permanent link">&para;</a></h2>
 <p>As you can see, it is a business process of the subscription to our service.</p>
-<div class="tabbed-set" data-tabs="1:2">
-<input name="__tabbed_1" type="radio" id="__tabbed_1_1" checked="checked" /><label for="__tabbed_1_1">sync</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Failure</span><span class="p">,</span> <span class="n">Result</span><span class="p">,</span> <span class="n">Success</span><span class="p">,</span> <span class="n">arguments</span><span class="p">,</span> <span class="n">story</span>
+<p>```pycon tab="sync"</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>from stories import Failure, Result, Success, arguments, story</p>
+<p>class Subscription:
+...     """Buy subscription for certain category."""
+...
+...     @story
+...     @arguments("category_id", "price_id", "user_id")
+...     def buy(I):
+...
+...         I.find_category
+...         I.find_price
+...         I.find_profile
+...         I.check_balance
+...         I.persist_payment
+...         I.persist_subscription
+...         I.send_subscription_notification
+...         I.show_category
+...
+...     def find_category(self, ctx):
+...
+...         ctx.category = load_category(ctx.category_id)
+...         return Success()
+...
+...     def find_price(self, ctx):
+...
+...         ctx.price = load_price(ctx.price_id)
+...         return Success()
+...
+...     def find_profile(self, ctx):
+...
+...         ctx.profile = load_profile(ctx.user_id)
+...         return Success()
+...
+...     def check_balance(self, ctx):
+...
+...         if ctx.profile.balance &gt; ctx.price.cost:
+...             return Success()
+...         else:
+...             return Failure()
+...
+...     def persist_payment(self, ctx):
+...
+...         decrease_balance(ctx.profile, ctx.price.cost)
+...         save_profile(ctx.profile)
+...         return Success()
+...
+...     def persist_subscription(self, ctx):
+...
+...         expires = calculate_period(ctx.price.period)
+...         ctx.subscription = create_subscription(
+...             ctx.profile, ctx.category, expires
+...         )
+...         return Success()
+...
+...     def send_subscription_notification(self, ctx):
+...
+...         ctx.notification = send_notification(
+...             "subscription", ctx.profile, ctx.category.name
+...         )
+...         return Success()
+...
+...     def show_category(self, ctx):
+...
+...         return Result(ctx.category)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<div class="highlight"><pre><span></span><code>```pycon tab=&quot;async&quot;
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Subscription</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="sd">&quot;&quot;&quot;Buy subscription for certain category.&quot;&quot;&quot;</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="nd">@arguments</span><span class="p">(</span><span class="s2">&quot;category_id&quot;</span><span class="p">,</span> <span class="s2">&quot;price_id&quot;</span><span class="p">,</span> <span class="s2">&quot;user_id&quot;</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">buy</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">find_category</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">find_price</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">find_profile</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">check_balance</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">persist_payment</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">persist_subscription</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">send_subscription_notification</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">show_category</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">find_category</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">category</span> <span class="o">=</span> <span class="n">load_category</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">category_id</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">find_price</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">price</span> <span class="o">=</span> <span class="n">load_price</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">price_id</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">find_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">profile</span> <span class="o">=</span> <span class="n">load_profile</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">check_balance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">balance</span> <span class="o">&gt;</span> <span class="n">ctx</span><span class="o">.</span><span class="n">price</span><span class="o">.</span><span class="n">cost</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">... </span>        <span class="k">else</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Failure</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">persist_payment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">decrease_balance</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">profile</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">price</span><span class="o">.</span><span class="n">cost</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="n">save_profile</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">profile</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">persist_subscription</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">expires</span> <span class="o">=</span> <span class="n">calculate_period</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">price</span><span class="o">.</span><span class="n">period</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">subscription</span> <span class="o">=</span> <span class="n">create_subscription</span><span class="p">(</span>
-<span class="gp">... </span>            <span class="n">ctx</span><span class="o">.</span><span class="n">profile</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">category</span><span class="p">,</span> <span class="n">expires</span>
-<span class="gp">... </span>        <span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">send_subscription_notification</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">notification</span> <span class="o">=</span> <span class="n">send_notification</span><span class="p">(</span>
-<span class="gp">... </span>            <span class="s2">&quot;subscription&quot;</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">profile</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">category</span><span class="o">.</span><span class="n">name</span>
-<span class="gp">... </span>        <span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">show_category</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Result</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">category</span><span class="p">)</span>
-</code></pre></div></div>
-<input name="__tabbed_1" type="radio" id="__tabbed_1_2" /><label for="__tabbed_1_2">async</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Failure</span><span class="p">,</span> <span class="n">Result</span><span class="p">,</span> <span class="n">Success</span><span class="p">,</span> <span class="n">arguments</span><span class="p">,</span> <span class="n">story</span>
+&gt;&gt;&gt; from stories import Failure, Result, Success, arguments, story
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Subscription</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="sd">&quot;&quot;&quot;Buy subscription for certain category.&quot;&quot;&quot;</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="nd">@arguments</span><span class="p">(</span><span class="s2">&quot;category_id&quot;</span><span class="p">,</span> <span class="s2">&quot;price_id&quot;</span><span class="p">,</span> <span class="s2">&quot;user_id&quot;</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">buy</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">find_category</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">find_price</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">find_profile</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">check_balance</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">persist_payment</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">persist_subscription</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">send_subscription_notification</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">show_category</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">find_category</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">category</span> <span class="o">=</span> <span class="k">await</span> <span class="n">load_category</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">category_id</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">find_price</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">price</span> <span class="o">=</span> <span class="k">await</span> <span class="n">load_price</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">price_id</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">find_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">profile</span> <span class="o">=</span> <span class="k">await</span> <span class="n">load_profile</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">check_balance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">balance</span> <span class="o">&gt;</span> <span class="n">ctx</span><span class="o">.</span><span class="n">price</span><span class="o">.</span><span class="n">cost</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">... </span>        <span class="k">else</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Failure</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">persist_payment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">await</span> <span class="n">decrease_balance</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">profile</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">price</span><span class="o">.</span><span class="n">cost</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">await</span> <span class="n">save_profile</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">profile</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">persist_subscription</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">expires</span> <span class="o">=</span> <span class="k">await</span> <span class="n">calculate_period</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">price</span><span class="o">.</span><span class="n">period</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">subscription</span> <span class="o">=</span> <span class="k">await</span> <span class="n">create_subscription</span><span class="p">(</span>
-<span class="gp">... </span>            <span class="n">ctx</span><span class="o">.</span><span class="n">profile</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">category</span><span class="p">,</span> <span class="n">expires</span>
-<span class="gp">... </span>        <span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">send_subscription_notification</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">notification</span> <span class="o">=</span> <span class="k">await</span> <span class="n">send_notification</span><span class="p">(</span>
-<span class="gp">... </span>            <span class="s2">&quot;subscription&quot;</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">profile</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">category</span><span class="o">.</span><span class="n">name</span>
-<span class="gp">... </span>        <span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">show_category</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Result</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">category</span><span class="p">)</span>
-</code></pre></div></div>
-</div>
+&gt;&gt;&gt; class Subscription:
+...     &quot;&quot;&quot;Buy subscription for certain category.&quot;&quot;&quot;
+...
+...     @story
+...     @arguments(&quot;category_id&quot;, &quot;price_id&quot;, &quot;user_id&quot;)
+...     def buy(I):
+...
+...         I.find_category
+...         I.find_price
+...         I.find_profile
+...         I.check_balance
+...         I.persist_payment
+...         I.persist_subscription
+...         I.send_subscription_notification
+...         I.show_category
+...
+...     async def find_category(self, ctx):
+...
+...         ctx.category = await load_category(ctx.category_id)
+...         return Success()
+...
+...     async def find_price(self, ctx):
+...
+...         ctx.price = await load_price(ctx.price_id)
+...         return Success()
+...
+...     async def find_profile(self, ctx):
+...
+...         ctx.profile = await load_profile(ctx.user_id)
+...         return Success()
+...
+...     async def check_balance(self, ctx):
+...
+...         if ctx.profile.balance &gt; ctx.price.cost:
+...             return Success()
+...         else:
+...             return Failure()
+...
+...     async def persist_payment(self, ctx):
+...
+...         await decrease_balance(ctx.profile, ctx.price.cost)
+...         await save_profile(ctx.profile)
+...         return Success()
+...
+...     async def persist_subscription(self, ctx):
+...
+...         expires = await calculate_period(ctx.price.period)
+...         ctx.subscription = await create_subscription(
+...             ctx.profile, ctx.category, expires
+...         )
+...         return Success()
+...
+...     async def send_subscription_notification(self, ctx):
+...
+...         ctx.notification = await send_notification(
+...             &quot;subscription&quot;, ctx.profile, ctx.category.name
+...         )
+...         return Success()
+...
+...     async def show_category(self, ctx):
+...
+...         return Result(ctx.category)
+</code></pre></div>
+
 <h3 id="explanation">Explanation<a class="headerlink" href="#explanation" title="Permanent link">&para;</a></h3>
 <p>There are a few terms you should be familiar with:</p>
 <ol>
@@ -1050,146 +1056,155 @@ _stories.exceptions.StoryDefinitionError: Story should be a regular function
 <p class="admonition-title">All steps must either be synchronous or asynchronous</p>
 <p>Attempting to access a story with synchronous steps or sub-stories which contain
 such steps will raise a <code>StoryDefinitionError</code>.</p>
-<div class="tabbed-set" data-tabs="2:2">
-<input name="__tabbed_2" type="radio" id="__tabbed_2_1" checked="checked" /><label for="__tabbed_2_1">sync</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Success</span><span class="p">,</span> <span class="n">story</span>
+<p>```pycon tab="sync"</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>from stories import Success, story</p>
+<p>class MixedStory:
+...     """An example of an invalid synchrnous story that incorporates an asynchronous step."""
+...
+...     @story
+...     def example(I):
+...
+...         I.synchronous_step
+...         I.asynchronous_step
+...
+...     def synchronous_step(self, ctx):
+...
+...         return Success()
+...
+...     async def asynchronous_step(self, ctx):
+...
+...         return Success()</p>
+<p>MixedStory().example
+Traceback (most recent call last):
+  ...
+_stories.exceptions.StoryDefinitionError: Coroutines and functions can not be used together in story definition.
+<BLANKLINE>
+This method should be a function: MixedStory.asynchronous_step
+<BLANKLINE>
+Story method: MixedStory.example</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<div class="highlight"><pre><span></span><code>```pycon tab=&quot;async&quot;
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MixedStory</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="sd">&quot;&quot;&quot;An example of an invalid synchrnous story that incorporates an asynchronous step.&quot;&quot;&quot;</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">example</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">synchronous_step</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">asynchronous_step</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">synchronous_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">asynchronous_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+&gt;&gt;&gt; from stories import Success, story
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">MixedStory</span><span class="p">()</span><span class="o">.</span><span class="n">example</span>
-<span class="gt">Traceback (most recent call last):</span>
-  <span class="c">...</span>
-<span class="gr">_stories.exceptions.StoryDefinitionError</span>: <span class="n">Coroutines and functions can not be used together in story definition.</span>
-<span class="go">&lt;BLANKLINE&gt;</span>
-<span class="go">This method should be a function: MixedStory.asynchronous_step</span>
-<span class="go">&lt;BLANKLINE&gt;</span>
-<span class="go">Story method: MixedStory.example</span>
-</code></pre></div></div>
-<input name="__tabbed_2" type="radio" id="__tabbed_2_2" /><label for="__tabbed_2_2">async</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Success</span><span class="p">,</span> <span class="n">story</span>
+&gt;&gt;&gt; class MixedStory:
+...     &quot;&quot;&quot;An example of an invalid asynchrnous story that incorporates an synchronous step.&quot;&quot;&quot;
+...
+...     @story
+...     def example(I):
+...
+...         I.asynchronous_step
+...         I.synchronous_step
+...
+...     async def asynchronous_step(self, ctx):
+...
+...         return Success()
+...
+...     def synchronous_step(self, ctx):
+...
+...         return Success()
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MixedStory</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="sd">&quot;&quot;&quot;An example of an invalid asynchrnous story that incorporates an synchronous step.&quot;&quot;&quot;</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">example</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">asynchronous_step</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">synchronous_step</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">asynchronous_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">synchronous_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+&gt;&gt;&gt; MixedStory().example
+Traceback (most recent call last):
+  ...
+_stories.exceptions.StoryDefinitionError: Coroutines and functions can not be used together in story definition.
+&lt;BLANKLINE&gt;
+This method should be a coroutine: MixedStory.synchronous_step
+&lt;BLANKLINE&gt;
+Story method: MixedStory.example
+</code></pre></div>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">MixedStory</span><span class="p">()</span><span class="o">.</span><span class="n">example</span>
-<span class="gt">Traceback (most recent call last):</span>
-  <span class="c">...</span>
-<span class="gr">_stories.exceptions.StoryDefinitionError</span>: <span class="n">Coroutines and functions can not be used together in story definition.</span>
-<span class="go">&lt;BLANKLINE&gt;</span>
-<span class="go">This method should be a coroutine: MixedStory.synchronous_step</span>
-<span class="go">&lt;BLANKLINE&gt;</span>
-<span class="go">Story method: MixedStory.example</span>
-</code></pre></div></div>
-</div>
 <p>Likewise, injecting a synchronous sub-story to an asynchronous story
 or the contrary is also forbidden.</p>
-<div class="tabbed-set" data-tabs="3:2">
-<input name="__tabbed_3" type="radio" id="__tabbed_3_1" checked="checked" /><label for="__tabbed_3_1">sync</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Success</span><span class="p">,</span> <span class="n">story</span>
+<p>```pycon tab="sync"</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>from stories import Success, story</p>
+<p>class MixedStory:
+...     """An example of an invalid synchrnous story that incorporates an asynchronous sub-story."""
+...
+...     @story
+...     def example(I):
+...
+...         I.synchronous_step
+...         I.asynchronous_substory
+...
+...     def synchronous_step(self, ctx):
+...
+...         return Success()
+...
+...     def <strong>init</strong>(self):
+...
+...         self.asynchronous_substory = MixedSubstory().asynchronous_substory</p>
+<p>class MixedSubstory:
+...
+...     @story
+...     def asynchronous_substory(I):
+...
+...         I.asynchronous_step
+...
+...     async def asynchronous_step(self, ctx):
+...
+...         return Success()</p>
+<p>MixedStory().example
+Traceback (most recent call last):
+  ...
+_stories.exceptions.StoryDefinitionError: Coroutine and function stories can not be injected into each other.
+<BLANKLINE>
+Story function method: MixedStory.example
+<BLANKLINE>
+Substory coroutine method: MixedSubstory.asynchronous_substory</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<div class="highlight"><pre><span></span><code>```pycon tab=&quot;async&quot;
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MixedStory</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="sd">&quot;&quot;&quot;An example of an invalid synchrnous story that incorporates an asynchronous sub-story.&quot;&quot;&quot;</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">example</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">synchronous_step</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">asynchronous_substory</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">synchronous_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">asynchronous_substory</span> <span class="o">=</span> <span class="n">MixedSubstory</span><span class="p">()</span><span class="o">.</span><span class="n">asynchronous_substory</span>
+&gt;&gt;&gt; from stories import Success, story
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MixedSubstory</span><span class="p">:</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">asynchronous_substory</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">asynchronous_step</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">asynchronous_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+&gt;&gt;&gt; class MixedStory:
+...     &quot;&quot;&quot;An example of an invalid synchrnous story that incorporates an asynchronous sub-story.&quot;&quot;&quot;
+...
+...     @story
+...     def example(I):
+...
+...         I.asynchronous_step
+...         I.synchronous_substory
+...
+...     async def asynchronous_step(self, ctx):
+...
+...         return Success()
+...
+...     def __init__(self):
+...
+...         self.synchronous_substory = MixedSubstory().synchronous_substory
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">MixedStory</span><span class="p">()</span><span class="o">.</span><span class="n">example</span>
-<span class="gt">Traceback (most recent call last):</span>
-  <span class="c">...</span>
-<span class="gr">_stories.exceptions.StoryDefinitionError</span>: <span class="n">Coroutine and function stories can not be injected into each other.</span>
-<span class="go">&lt;BLANKLINE&gt;</span>
-<span class="go">Story function method: MixedStory.example</span>
-<span class="go">&lt;BLANKLINE&gt;</span>
-<span class="go">Substory coroutine method: MixedSubstory.asynchronous_substory</span>
-</code></pre></div></div>
-<input name="__tabbed_3" type="radio" id="__tabbed_3_2" /><label for="__tabbed_3_2">async</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Success</span><span class="p">,</span> <span class="n">story</span>
+&gt;&gt;&gt; class MixedSubstory:
+...
+...     @story
+...     def synchronous_substory(I):
+...
+...         I.synchronous_step
+...
+...     def synchronous_step(self, ctx):
+...
+...         return Success()
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MixedStory</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="sd">&quot;&quot;&quot;An example of an invalid synchrnous story that incorporates an asynchronous sub-story.&quot;&quot;&quot;</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">example</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">asynchronous_step</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">synchronous_substory</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">asynchronous_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">synchronous_substory</span> <span class="o">=</span> <span class="n">MixedSubstory</span><span class="p">()</span><span class="o">.</span><span class="n">synchronous_substory</span>
+&gt;&gt;&gt; MixedStory().example
+Traceback (most recent call last):
+  ...
+_stories.exceptions.StoryDefinitionError: Coroutine and function stories can not be injected into each other.
+&lt;BLANKLINE&gt;
+Story coroutine method: MixedStory.example
+&lt;BLANKLINE&gt;
+Substory function method: MixedSubstory.synchronous_substory
+</code></pre></div>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MixedSubstory</span><span class="p">:</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">synchronous_substory</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">synchronous_step</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">synchronous_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">MixedStory</span><span class="p">()</span><span class="o">.</span><span class="n">example</span>
-<span class="gt">Traceback (most recent call last):</span>
-  <span class="c">...</span>
-<span class="gr">_stories.exceptions.StoryDefinitionError</span>: <span class="n">Coroutine and function stories can not be injected into each other.</span>
-<span class="go">&lt;BLANKLINE&gt;</span>
-<span class="go">Story coroutine method: MixedStory.example</span>
-<span class="go">&lt;BLANKLINE&gt;</span>
-<span class="go">Substory function method: MixedSubstory.synchronous_substory</span>
-</code></pre></div></div>
-</div>
 </div>
 <h5 id="explanation_3">Explanation<a class="headerlink" href="#explanation_3" title="Permanent link">&para;</a></h5>
 <ol>
@@ -1212,108 +1227,113 @@ that the asynchronous step or sub-story will execute in an event loop.</p>
 <h2 id="failure-protocols">Failure protocols<a class="headerlink" href="#failure-protocols" title="Permanent link">&para;</a></h2>
 <p>To make failure handling a more manageable process we can define a
 <a href="../failure_protocol/">failure protocol</a>.</p>
-<div class="tabbed-set" data-tabs="4:2">
-<input name="__tabbed_4" type="radio" id="__tabbed_4_1" checked="checked" /><label for="__tabbed_4_1">sync</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">auto</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Failure</span><span class="p">,</span> <span class="n">Result</span><span class="p">,</span> <span class="n">Success</span><span class="p">,</span> <span class="n">arguments</span><span class="p">,</span> <span class="n">story</span>
+<p>```pycon tab="sync"</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>from enum import Enum, auto
+from stories import Failure, Result, Success, arguments, story</p>
+<p>class ShowCategory:
+...     """Show category entries."""
+...
+...     @story
+...     @arguments("category_id", "user_id")
+...     def show(I):
+...
+...         I.find_subscription
+...         I.check_expiration
+...         I.find_category
+...         I.show_category
+...
+...     def find_subscription(self, ctx):
+...
+...         subscription = load_subscription(ctx.category_id, ctx.user_id)
+...         if subscription:
+...             ctx.subscription = subscription
+...             return Success()
+...         else:
+...             return Failure(Errors.forbidden)
+...
+...     def check_expiration(self, ctx):
+...
+...         if ctx.subscription.is_expired():
+...             return Failure(Errors.forbidden)
+...         else:
+...             return Success()
+...
+...     def find_category(self, ctx):
+...
+...         category = load_category(ctx.category_id)
+...         if category:
+...             ctx.category = category
+...             return Success()
+...         else:
+...             return Failure(Errors.not_found)
+...
+...     def show_category(self, ctx):
+...
+...         return Result(ctx.category)</p>
+<p>@ShowCategory.show.failures
+... class Errors(Enum):
+...
+...     forbidden = auto()
+...     not_found = auto()</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<div class="highlight"><pre><span></span><code>```pycon tab=&quot;async&quot;
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">ShowCategory</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="sd">&quot;&quot;&quot;Show category entries.&quot;&quot;&quot;</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="nd">@arguments</span><span class="p">(</span><span class="s2">&quot;category_id&quot;</span><span class="p">,</span> <span class="s2">&quot;user_id&quot;</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">find_subscription</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">check_expiration</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">find_category</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">show_category</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">find_subscription</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">subscription</span> <span class="o">=</span> <span class="n">load_subscription</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">category_id</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">if</span> <span class="n">subscription</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="n">ctx</span><span class="o">.</span><span class="n">subscription</span> <span class="o">=</span> <span class="n">subscription</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">... </span>        <span class="k">else</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Failure</span><span class="p">(</span><span class="n">Errors</span><span class="o">.</span><span class="n">forbidden</span><span class="p">)</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">check_expiration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">subscription</span><span class="o">.</span><span class="n">is_expired</span><span class="p">():</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Failure</span><span class="p">(</span><span class="n">Errors</span><span class="o">.</span><span class="n">forbidden</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">else</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">find_category</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">category</span> <span class="o">=</span> <span class="n">load_category</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">category_id</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">if</span> <span class="n">category</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="n">ctx</span><span class="o">.</span><span class="n">category</span> <span class="o">=</span> <span class="n">category</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">... </span>        <span class="k">else</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Failure</span><span class="p">(</span><span class="n">Errors</span><span class="o">.</span><span class="n">not_found</span><span class="p">)</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">show_category</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Result</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">category</span><span class="p">)</span>
+&gt;&gt;&gt; from enum import Enum, auto
+&gt;&gt;&gt; from stories import Failure, Result, Success, arguments, story
 
-<span class="gp">&gt;&gt;&gt; </span><span class="nd">@ShowCategory</span><span class="o">.</span><span class="n">show</span><span class="o">.</span><span class="n">failures</span>
-<span class="gp">... </span><span class="k">class</span> <span class="nc">Errors</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="n">forbidden</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
-<span class="gp">... </span>    <span class="n">not_found</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
-</code></pre></div></div>
-<input name="__tabbed_4" type="radio" id="__tabbed_4_2" /><label for="__tabbed_4_2">async</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">auto</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Failure</span><span class="p">,</span> <span class="n">Result</span><span class="p">,</span> <span class="n">Success</span><span class="p">,</span> <span class="n">arguments</span><span class="p">,</span> <span class="n">story</span>
+&gt;&gt;&gt; class ShowCategory:
+...     &quot;&quot;&quot;Show category entries.&quot;&quot;&quot;
+...
+...     @story
+...     @arguments(&quot;category_id&quot;, &quot;user_id&quot;)
+...     def show(I):
+...
+...         I.find_subscription
+...         I.check_expiration
+...         I.find_category
+...         I.show_category
+...
+...     async def find_subscription(self, ctx):
+...
+...         subscription = await load_subscription(ctx.category_id, ctx.user_id)
+...         if subscription:
+...             ctx.subscription = subscription
+...             return Success()
+...         else:
+...             return Failure(Errors.forbidden)
+...
+...     async def check_expiration(self, ctx):
+...
+...         if await ctx.subscription.is_expired():
+...             return Failure(Errors.forbidden)
+...         else:
+...             return Success()
+...
+...     async def find_category(self, ctx):
+...
+...         category = await load_category(ctx.category_id)
+...         if category:
+...             ctx.category = category
+...             return Success()
+...         else:
+...             return Failure(Errors.not_found)
+...
+...     async def show_category(self, ctx):
+...
+...         return Result(ctx.category)
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">ShowCategory</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="sd">&quot;&quot;&quot;Show category entries.&quot;&quot;&quot;</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="nd">@arguments</span><span class="p">(</span><span class="s2">&quot;category_id&quot;</span><span class="p">,</span> <span class="s2">&quot;user_id&quot;</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">find_subscription</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">check_expiration</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">find_category</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">show_category</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">find_subscription</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">subscription</span> <span class="o">=</span> <span class="k">await</span> <span class="n">load_subscription</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">category_id</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">if</span> <span class="n">subscription</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="n">ctx</span><span class="o">.</span><span class="n">subscription</span> <span class="o">=</span> <span class="n">subscription</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">... </span>        <span class="k">else</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Failure</span><span class="p">(</span><span class="n">Errors</span><span class="o">.</span><span class="n">forbidden</span><span class="p">)</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">check_expiration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">if</span> <span class="k">await</span> <span class="n">ctx</span><span class="o">.</span><span class="n">subscription</span><span class="o">.</span><span class="n">is_expired</span><span class="p">():</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Failure</span><span class="p">(</span><span class="n">Errors</span><span class="o">.</span><span class="n">forbidden</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">else</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">find_category</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">category</span> <span class="o">=</span> <span class="k">await</span> <span class="n">load_category</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">category_id</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">if</span> <span class="n">category</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="n">ctx</span><span class="o">.</span><span class="n">category</span> <span class="o">=</span> <span class="n">category</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">... </span>        <span class="k">else</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Failure</span><span class="p">(</span><span class="n">Errors</span><span class="o">.</span><span class="n">not_found</span><span class="p">)</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">show_category</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Result</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">category</span><span class="p">)</span>
+&gt;&gt;&gt; @ShowCategory.show.failures
+... class Errors(Enum):
+...
+...     forbidden = auto()
+...     not_found = auto()
+</code></pre></div>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="nd">@ShowCategory</span><span class="o">.</span><span class="n">show</span><span class="o">.</span><span class="n">failures</span>
-<span class="gp">... </span><span class="k">class</span> <span class="nc">Errors</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="n">forbidden</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
-<span class="gp">... </span>    <span class="n">not_found</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
-</code></pre></div></div>
-</div>
 <h3 id="explanation_4">Explanation<a class="headerlink" href="#explanation_4" title="Permanent link">&para;</a></h3>
 <ol>
 <li><code>Failure</code> marker takes optional <code>reason</code> argument. It can be used in the
@@ -1391,15 +1411,15 @@ that the asynchronous step or sub-story will execute in an event loop.</p>
       
     </div>
     
-      <script src="../assets/javascripts/vendor.92ffa368.min.js"></script>
-      <script src="../assets/javascripts/bundle.5123e3d4.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
+      <script src="../assets/javascripts/vendor.d1f5a259.min.js"></script>
+      <script src="../assets/javascripts/bundle.f9edbbd5.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
       
       <script>
         app = initialize({
           base: "..",
           features: ["tabs"],
           search: Object.assign({
-            worker: "../assets/javascripts/worker/search.a68abb33.min.js"
+            worker: "../assets/javascripts/worker/search.fae956e7.min.js"
           }, typeof search !== "undefined" && search)
         })
       </script>

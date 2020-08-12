@@ -13,7 +13,7 @@
       
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.5.0">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.5.5">
     
     
       
@@ -21,9 +21,9 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.b5d04df8.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.63b94e9e.min.css">
       
-        <link rel="stylesheet" href="../assets/stylesheets/palette.9ab2c1f8.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.7f672a1f.min.css">
       
       
         
@@ -635,249 +635,253 @@ sure you can understand the exact reason for failure.</p>
 case, failure protocol should be a collection of all allowed strings.</p>
 <p>You can use these string literals to process different failures in a different
 way.</p>
-<div class="tabbed-set" data-tabs="1:2">
-<input name="__tabbed_1" type="radio" id="__tabbed_1_1" checked="checked" /><label for="__tabbed_1_1">sync</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">story</span><span class="p">,</span> <span class="n">arguments</span><span class="p">,</span> <span class="n">Success</span><span class="p">,</span> <span class="n">Failure</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">app.entities</span> <span class="kn">import</span> <span class="n">Category</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">app.repositories</span> <span class="kn">import</span> <span class="n">load_promo_code</span>
+<p>```pycon tab="sync"</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>from stories import story, arguments, Success, Failure
+from app.entities import Category
+from app.repositories import load_promo_code</p>
+<p>class ApplyPromoCode:
+...     """Calculate actual product discount, apply it to the price."""
+...
+...     @story
+...     @arguments("category")
+...     def apply(I):
+...
+...         I.find_promo_code
+...         I.check_promo_code_exists
+...         I.check_expiration
+...
+...     # Steps.
+...
+...     def find_promo_code(self, ctx):
+...
+...         ctx.promo_code = self.load_promo_code(ctx.category)
+...         return Success()
+...
+...     def check_promo_code_exists(self, ctx):
+...
+...         if ctx.promo_code is None:
+...             return Failure("not_found")
+...         else:
+...             return Success()
+...
+...     def check_expiration(self, ctx):
+...
+...         if ctx.promo_code.is_expired():
+...             return Failure("expired")
+...         else:
+...             return Success()
+...
+...     # Dependencies.
+...
+...     def <strong>init</strong>(self, load_promo_code):
+...
+...         self.load_promo_code = load_promo_code</p>
+<p>ApplyPromoCode.apply.failures(["not_found", "expired"])
+['not_found', 'expired']</p>
+<p>promo_code = ApplyPromoCode(load_promo_code=load_promo_code)</p>
+<p>result = promo_code.apply.run(category=Category(177, 'Drawing', 700))</p>
+<p>if result.is_success:
+...     print("Promo code applied")
+... elif result.failed_because("not_found"):
+...     print("Promo code not found")
+... elif result.failed_because("expired"):
+...     print("Promo code expired")
+Promo code not found</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<div class="highlight"><pre><span></span><code>```pycon tab=&quot;async&quot;
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">ApplyPromoCode</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="sd">&quot;&quot;&quot;Calculate actual product discount, apply it to the price.&quot;&quot;&quot;</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="nd">@arguments</span><span class="p">(</span><span class="s2">&quot;category&quot;</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">find_promo_code</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">check_promo_code_exists</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">check_expiration</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="c1"># Steps.</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">find_promo_code</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">promo_code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_promo_code</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">category</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">check_promo_code_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">promo_code</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Failure</span><span class="p">(</span><span class="s2">&quot;not_found&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">else</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">check_expiration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">promo_code</span><span class="o">.</span><span class="n">is_expired</span><span class="p">():</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Failure</span><span class="p">(</span><span class="s2">&quot;expired&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">else</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="c1"># Dependencies.</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">load_promo_code</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">load_promo_code</span> <span class="o">=</span> <span class="n">load_promo_code</span>
+&gt;&gt;&gt; import asyncio
+&gt;&gt;&gt; from stories import story, arguments, Success, Failure
+&gt;&gt;&gt; from app.entities import Category
+&gt;&gt;&gt; from aioapp.repositories import load_promo_code
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ApplyPromoCode</span><span class="o">.</span><span class="n">apply</span><span class="o">.</span><span class="n">failures</span><span class="p">([</span><span class="s2">&quot;not_found&quot;</span><span class="p">,</span> <span class="s2">&quot;expired&quot;</span><span class="p">])</span>
-<span class="go">[&#39;not_found&#39;, &#39;expired&#39;]</span>
+&gt;&gt;&gt; class ApplyPromoCode:
+...     &quot;&quot;&quot;Calculate actual product discount, apply it to the price.&quot;&quot;&quot;
+...
+...     @story
+...     @arguments(&quot;category&quot;)
+...     def apply(I):
+...
+...         I.find_promo_code
+...         I.check_promo_code_exists
+...         I.check_expiration
+...
+...     # Steps.
+...
+...     async def find_promo_code(self, ctx):
+...
+...         ctx.promo_code = await self.load_promo_code(ctx.category)
+...         return Success()
+...
+...     async def check_promo_code_exists(self, ctx):
+...
+...         if ctx.promo_code is None:
+...             return Failure(&quot;not_found&quot;)
+...         else:
+...             return Success()
+...
+...     async def check_expiration(self, ctx):
+...
+...         if ctx.promo_code.is_expired():
+...             return Failure(&quot;expired&quot;)
+...         else:
+...             return Success()
+...
+...     # Dependencies.
+...
+...     def __init__(self, load_promo_code):
+...
+...         self.load_promo_code = load_promo_code
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">promo_code</span> <span class="o">=</span> <span class="n">ApplyPromoCode</span><span class="p">(</span><span class="n">load_promo_code</span><span class="o">=</span><span class="n">load_promo_code</span><span class="p">)</span>
+&gt;&gt;&gt; ApplyPromoCode.apply.failures([&quot;not_found&quot;, &quot;expired&quot;])
+[&#39;not_found&#39;, &#39;expired&#39;]
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">promo_code</span><span class="o">.</span><span class="n">apply</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">category</span><span class="o">=</span><span class="n">Category</span><span class="p">(</span><span class="mi">177</span><span class="p">,</span> <span class="s1">&#39;Drawing&#39;</span><span class="p">,</span> <span class="mi">700</span><span class="p">))</span>
+&gt;&gt;&gt; promo_code = ApplyPromoCode(load_promo_code=load_promo_code)
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">is_success</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Promo code applied&quot;</span><span class="p">)</span>
-<span class="gp">... </span><span class="k">elif</span> <span class="n">result</span><span class="o">.</span><span class="n">failed_because</span><span class="p">(</span><span class="s2">&quot;not_found&quot;</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Promo code not found&quot;</span><span class="p">)</span>
-<span class="gp">... </span><span class="k">elif</span> <span class="n">result</span><span class="o">.</span><span class="n">failed_because</span><span class="p">(</span><span class="s2">&quot;expired&quot;</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Promo code expired&quot;</span><span class="p">)</span>
-<span class="go">Promo code not found</span>
-</code></pre></div></div>
-<input name="__tabbed_1" type="radio" id="__tabbed_1_2" /><label for="__tabbed_1_2">async</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">asyncio</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">story</span><span class="p">,</span> <span class="n">arguments</span><span class="p">,</span> <span class="n">Success</span><span class="p">,</span> <span class="n">Failure</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">app.entities</span> <span class="kn">import</span> <span class="n">Category</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">aioapp.repositories</span> <span class="kn">import</span> <span class="n">load_promo_code</span>
+&gt;&gt;&gt; result = asyncio.run(promo_code.apply.run(category=Category(177, &#39;Drawing&#39;, 700)))
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">ApplyPromoCode</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="sd">&quot;&quot;&quot;Calculate actual product discount, apply it to the price.&quot;&quot;&quot;</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="nd">@arguments</span><span class="p">(</span><span class="s2">&quot;category&quot;</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">find_promo_code</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">check_promo_code_exists</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">check_expiration</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="c1"># Steps.</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">find_promo_code</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">promo_code</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_promo_code</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">category</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">check_promo_code_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">promo_code</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Failure</span><span class="p">(</span><span class="s2">&quot;not_found&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">else</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">check_expiration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">promo_code</span><span class="o">.</span><span class="n">is_expired</span><span class="p">():</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Failure</span><span class="p">(</span><span class="s2">&quot;expired&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">else</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="c1"># Dependencies.</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">load_promo_code</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">load_promo_code</span> <span class="o">=</span> <span class="n">load_promo_code</span>
+&gt;&gt;&gt; if result.is_success:
+...     print(&quot;Promo code applied&quot;)
+... elif result.failed_because(&quot;not_found&quot;):
+...     print(&quot;Promo code not found&quot;)
+... elif result.failed_because(&quot;expired&quot;):
+...     print(&quot;Promo code expired&quot;)
+Promo code not found
+</code></pre></div>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ApplyPromoCode</span><span class="o">.</span><span class="n">apply</span><span class="o">.</span><span class="n">failures</span><span class="p">([</span><span class="s2">&quot;not_found&quot;</span><span class="p">,</span> <span class="s2">&quot;expired&quot;</span><span class="p">])</span>
-<span class="go">[&#39;not_found&#39;, &#39;expired&#39;]</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">promo_code</span> <span class="o">=</span> <span class="n">ApplyPromoCode</span><span class="p">(</span><span class="n">load_promo_code</span><span class="o">=</span><span class="n">load_promo_code</span><span class="p">)</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">promo_code</span><span class="o">.</span><span class="n">apply</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">category</span><span class="o">=</span><span class="n">Category</span><span class="p">(</span><span class="mi">177</span><span class="p">,</span> <span class="s1">&#39;Drawing&#39;</span><span class="p">,</span> <span class="mi">700</span><span class="p">)))</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">is_success</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Promo code applied&quot;</span><span class="p">)</span>
-<span class="gp">... </span><span class="k">elif</span> <span class="n">result</span><span class="o">.</span><span class="n">failed_because</span><span class="p">(</span><span class="s2">&quot;not_found&quot;</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Promo code not found&quot;</span><span class="p">)</span>
-<span class="gp">... </span><span class="k">elif</span> <span class="n">result</span><span class="o">.</span><span class="n">failed_because</span><span class="p">(</span><span class="s2">&quot;expired&quot;</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Promo code expired&quot;</span><span class="p">)</span>
-<span class="go">Promo code not found</span>
-</code></pre></div></div>
-</div>
 <h2 id="enum">Enum<a class="headerlink" href="#enum" title="Permanent link">&para;</a></h2>
 <p>You can use <a href="https://docs.python.org/3/library/enum.html">enum</a> members to mark
 the exact reason for the failure. In this case, failure protocol should be
 <a href="https://docs.python.org/3/library/enum.html">enum</a> subclass.</p>
 <p>You can use <a href="https://docs.python.org/3/library/enum.html">enum</a> members to
 process different failures in a different way.</p>
-<div class="tabbed-set" data-tabs="2:2">
-<input name="__tabbed_2" type="radio" id="__tabbed_2_1" checked="checked" /><label for="__tabbed_2_1">sync</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">auto</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">app.repositories</span> <span class="kn">import</span> <span class="n">load_promo_code</span>
+<p>```pycon tab="sync"</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>from enum import Enum, auto
+from app.repositories import load_promo_code</p>
+<p>class ApplyPromoCode:
+...     """Calculate actual product discount, apply it to the price."""
+...
+...     @story
+...     @arguments("category")
+...     def apply(I):
+...
+...         I.find_promo_code
+...         I.check_promo_code_exists
+...         I.check_expiration
+...
+...     # Steps.
+...
+...     def find_promo_code(self, ctx):
+...
+...         ctx.promo_code = self.load_promo_code(ctx.category)
+...         return Success()
+...
+...     def check_promo_code_exists(self, ctx):
+...
+...         if ctx.promo_code is None:
+...             return Failure(Errors.not_found)
+...         else:
+...             return Success()
+...
+...     def check_expiration(self, ctx):
+...
+...         if ctx.promo_code.is_expired():
+...             return Failure(Errors.expired)
+...         else:
+...             return Success()
+...
+...     # Dependencies.
+...
+...     def <strong>init</strong>(self, load_promo_code):
+...
+...         self.load_promo_code = load_promo_code</p>
+<p>@ApplyPromoCode.apply.failures
+... class Errors(Enum):
+...
+...     not_found = auto()
+...     expired = auto()</p>
+<p>promo_code = ApplyPromoCode(load_promo_code=load_promo_code)</p>
+<p>result = promo_code.apply.run(category=Category(177, 'Drawing', 700))</p>
+<p>if result.is_success:
+...     print("Promo code applied")
+... elif result.failed_because(promo_code.apply.failures.not_found):
+...     print("Promo code not found")
+... elif result.failed_because(promo_code.apply.failures.expired):
+...     print("Promo code expired")
+Promo code not found</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<div class="highlight"><pre><span></span><code>```pycon tab=&quot;async&quot;
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">ApplyPromoCode</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="sd">&quot;&quot;&quot;Calculate actual product discount, apply it to the price.&quot;&quot;&quot;</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="nd">@arguments</span><span class="p">(</span><span class="s2">&quot;category&quot;</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">find_promo_code</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">check_promo_code_exists</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">check_expiration</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="c1"># Steps.</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">find_promo_code</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">promo_code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_promo_code</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">category</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">check_promo_code_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">promo_code</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Failure</span><span class="p">(</span><span class="n">Errors</span><span class="o">.</span><span class="n">not_found</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">else</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">check_expiration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">promo_code</span><span class="o">.</span><span class="n">is_expired</span><span class="p">():</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Failure</span><span class="p">(</span><span class="n">Errors</span><span class="o">.</span><span class="n">expired</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">else</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="c1"># Dependencies.</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">load_promo_code</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">load_promo_code</span> <span class="o">=</span> <span class="n">load_promo_code</span>
+&gt;&gt;&gt; from enum import Enum, auto
+&gt;&gt;&gt; from aioapp.repositories import load_promo_code
 
-<span class="gp">&gt;&gt;&gt; </span><span class="nd">@ApplyPromoCode</span><span class="o">.</span><span class="n">apply</span><span class="o">.</span><span class="n">failures</span>
-<span class="gp">... </span><span class="k">class</span> <span class="nc">Errors</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="n">not_found</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
-<span class="gp">... </span>    <span class="n">expired</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+&gt;&gt;&gt; class ApplyPromoCode:
+...     &quot;&quot;&quot;Calculate actual product discount, apply it to the price.&quot;&quot;&quot;
+...
+...     @story
+...     @arguments(&quot;category&quot;)
+...     def apply(I):
+...
+...         I.find_promo_code
+...         I.check_promo_code_exists
+...         I.check_expiration
+...
+...     # Steps.
+...
+...     async def find_promo_code(self, ctx):
+...
+...         ctx.promo_code = await self.load_promo_code(ctx.category)
+...         return Success()
+...
+...     async def check_promo_code_exists(self, ctx):
+...
+...         if ctx.promo_code is None:
+...             return Failure(Errors.not_found)
+...         else:
+...             return Success()
+...
+...     async def check_expiration(self, ctx):
+...
+...         if ctx.promo_code.is_expired():
+...             return Failure(Errors.expired)
+...         else:
+...             return Success()
+...
+...     # Dependencies.
+...
+...     def __init__(self, load_promo_code):
+...
+...         self.load_promo_code = load_promo_code
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">promo_code</span> <span class="o">=</span> <span class="n">ApplyPromoCode</span><span class="p">(</span><span class="n">load_promo_code</span><span class="o">=</span><span class="n">load_promo_code</span><span class="p">)</span>
+&gt;&gt;&gt; @ApplyPromoCode.apply.failures
+... class Errors(Enum):
+...
+...     not_found = auto()
+...     expired = auto()
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">promo_code</span><span class="o">.</span><span class="n">apply</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">category</span><span class="o">=</span><span class="n">Category</span><span class="p">(</span><span class="mi">177</span><span class="p">,</span> <span class="s1">&#39;Drawing&#39;</span><span class="p">,</span> <span class="mi">700</span><span class="p">))</span>
+&gt;&gt;&gt; promo_code = ApplyPromoCode(load_promo_code=load_promo_code)
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">is_success</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Promo code applied&quot;</span><span class="p">)</span>
-<span class="gp">... </span><span class="k">elif</span> <span class="n">result</span><span class="o">.</span><span class="n">failed_because</span><span class="p">(</span><span class="n">promo_code</span><span class="o">.</span><span class="n">apply</span><span class="o">.</span><span class="n">failures</span><span class="o">.</span><span class="n">not_found</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Promo code not found&quot;</span><span class="p">)</span>
-<span class="gp">... </span><span class="k">elif</span> <span class="n">result</span><span class="o">.</span><span class="n">failed_because</span><span class="p">(</span><span class="n">promo_code</span><span class="o">.</span><span class="n">apply</span><span class="o">.</span><span class="n">failures</span><span class="o">.</span><span class="n">expired</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Promo code expired&quot;</span><span class="p">)</span>
-<span class="go">Promo code not found</span>
-</code></pre></div></div>
-<input name="__tabbed_2" type="radio" id="__tabbed_2_2" /><label for="__tabbed_2_2">async</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">auto</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">aioapp.repositories</span> <span class="kn">import</span> <span class="n">load_promo_code</span>
+&gt;&gt;&gt; result = asyncio.run(promo_code.apply.run(category=Category(177, &#39;Drawing&#39;, 700)))
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">ApplyPromoCode</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="sd">&quot;&quot;&quot;Calculate actual product discount, apply it to the price.&quot;&quot;&quot;</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="nd">@arguments</span><span class="p">(</span><span class="s2">&quot;category&quot;</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">find_promo_code</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">check_promo_code_exists</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">check_expiration</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="c1"># Steps.</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">find_promo_code</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">promo_code</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_promo_code</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">category</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">check_promo_code_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">promo_code</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Failure</span><span class="p">(</span><span class="n">Errors</span><span class="o">.</span><span class="n">not_found</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">else</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">check_expiration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">promo_code</span><span class="o">.</span><span class="n">is_expired</span><span class="p">():</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Failure</span><span class="p">(</span><span class="n">Errors</span><span class="o">.</span><span class="n">expired</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">else</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="c1"># Dependencies.</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">load_promo_code</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">load_promo_code</span> <span class="o">=</span> <span class="n">load_promo_code</span>
+&gt;&gt;&gt; if result.is_success:
+...     print(&quot;Promo code applied&quot;)
+... elif result.failed_because(promo_code.apply.failures.not_found):
+...     print(&quot;Promo code not found&quot;)
+... elif result.failed_because(promo_code.apply.failures.expired):
+...     print(&quot;Promo code expired&quot;)
+Promo code not found
+</code></pre></div>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="nd">@ApplyPromoCode</span><span class="o">.</span><span class="n">apply</span><span class="o">.</span><span class="n">failures</span>
-<span class="gp">... </span><span class="k">class</span> <span class="nc">Errors</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="n">not_found</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
-<span class="gp">... </span>    <span class="n">expired</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">promo_code</span> <span class="o">=</span> <span class="n">ApplyPromoCode</span><span class="p">(</span><span class="n">load_promo_code</span><span class="o">=</span><span class="n">load_promo_code</span><span class="p">)</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">promo_code</span><span class="o">.</span><span class="n">apply</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">category</span><span class="o">=</span><span class="n">Category</span><span class="p">(</span><span class="mi">177</span><span class="p">,</span> <span class="s1">&#39;Drawing&#39;</span><span class="p">,</span> <span class="mi">700</span><span class="p">)))</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">is_success</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Promo code applied&quot;</span><span class="p">)</span>
-<span class="gp">... </span><span class="k">elif</span> <span class="n">result</span><span class="o">.</span><span class="n">failed_because</span><span class="p">(</span><span class="n">promo_code</span><span class="o">.</span><span class="n">apply</span><span class="o">.</span><span class="n">failures</span><span class="o">.</span><span class="n">not_found</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Promo code not found&quot;</span><span class="p">)</span>
-<span class="gp">... </span><span class="k">elif</span> <span class="n">result</span><span class="o">.</span><span class="n">failed_because</span><span class="p">(</span><span class="n">promo_code</span><span class="o">.</span><span class="n">apply</span><span class="o">.</span><span class="n">failures</span><span class="o">.</span><span class="n">expired</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Promo code expired&quot;</span><span class="p">)</span>
-<span class="go">Promo code not found</span>
-</code></pre></div></div>
-</div>
 <p>On Python 2 you can use <a href="https://pypi.org/project/enum34/">enum34</a> package:</p>
 <div class="codehilite"><pre><span></span><code>pip install enum34
 </code></pre></div>
@@ -900,204 +904,205 @@ its own protocol.</p>
 <p>A composition of these two stories can fail both because of <code>low_balance</code> and
 <code>expired</code> reasons. For convenience, <code>failures</code> property will contain protocols
 composition. A new <code>enum</code> class.</p>
-<div class="tabbed-set" data-tabs="3:2">
-<input name="__tabbed_3" type="radio" id="__tabbed_3_1" checked="checked" /><label for="__tabbed_3_1">sync</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">app.repositories</span> <span class="kn">import</span> <span class="n">load_token</span>
+<p>```pycon tab="sync"</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>from app.repositories import load_token</p>
+<p>class Subscription:
+...
+...     @story
+...     def buy(I):
+...
+...         I.find_promo_code
+...         I.check_balance
+...         I.persist_payment
+...         I.show_category
+...
+...     # Steps.
+...
+...     def check_balance(self, ctx):
+...
+...         if ctx.user.balance &lt; ctx.category.price:
+...             return Failure(self.Errors.low_balance)
+...         else:
+...             return Success()
+...
+...     def persist_payment(self, ctx):
+...
+...         self.create_payment(ctx.user, ctx.category)
+...         return Success()
+...
+...     def show_category(self, ctx):
+...
+...         return Result(ctx.category)
+...
+...     # Protocols.
+...
+...     @buy.failures
+...     class Errors(Enum):
+...
+...         low_balance = auto()
+...
+...     # Dependencies.
+...
+...     def <strong>init</strong>(self, find_promo_code):
+...
+...         self.find_promo_code = find_promo_code</p>
+<p>class PromoCode:
+...
+...     @story
+...     def find(I):
+...
+...         I.find_token
+...         I.check_expiration
+...         I.calculate_discount
+...
+...     # Steps.
+...
+...     def find_token(self, ctx):
+...
+...         ctx.token = self.load_token()
+...         return Success()
+...
+...     def check_expiration(self, ctx):
+...
+...         if ctx.token.is_expired():
+...             return Failure(self.Errors.expired)
+...         else:
+...             return Success()
+...
+...     def calculate_discount(self, ctx):
+...
+...         ctx.discount = ctx.token.get_discount()
+...         return Success()
+...
+...     # Protocols.
+...
+...     @find.failures
+...     class Errors(Enum):
+...
+...         expired = auto()
+...
+...     # Dependencies.
+...
+...     def <strong>init</strong>(self, load_token):
+...
+...         self.load_token = load_token</p>
+<p>promo_code = PromoCode(load_token)</p>
+<p>subscription = Subscription(promo_code.find)</p>
+<p>result = subscription.buy.run()</p>
+<p>if result.is_success:
+...     print("Subscribed")
+... elif result.failed_because(subscription.buy.failures.low_balance):
+...     print("Low balance")
+... elif result.failed_because(subscription.buy.failures.expired):
+...     print("Promo code expired")
+Promo code expired</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<div class="highlight"><pre><span></span><code>```pycon tab=&quot;async&quot;
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Subscription</span><span class="p">:</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">buy</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">find_promo_code</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">check_balance</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">persist_payment</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">show_category</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="c1"># Steps.</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">check_balance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">balance</span> <span class="o">&lt;</span> <span class="n">ctx</span><span class="o">.</span><span class="n">category</span><span class="o">.</span><span class="n">price</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Failure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Errors</span><span class="o">.</span><span class="n">low_balance</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">else</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">persist_payment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">create_payment</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">category</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">show_category</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Result</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">category</span><span class="p">)</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="c1"># Protocols.</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@buy</span><span class="o">.</span><span class="n">failures</span>
-<span class="gp">... </span>    <span class="k">class</span> <span class="nc">Errors</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">low_balance</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="c1"># Dependencies.</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">find_promo_code</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">find_promo_code</span> <span class="o">=</span> <span class="n">find_promo_code</span>
+&gt;&gt;&gt; from aioapp.repositories import load_token
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">PromoCode</span><span class="p">:</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">find_token</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">check_expiration</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">calculate_discount</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="c1"># Steps.</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">find_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_token</span><span class="p">()</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">check_expiration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">is_expired</span><span class="p">():</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Failure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Errors</span><span class="o">.</span><span class="n">expired</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">else</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">calculate_discount</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">discount</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">get_discount</span><span class="p">()</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="c1"># Protocols.</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@find</span><span class="o">.</span><span class="n">failures</span>
-<span class="gp">... </span>    <span class="k">class</span> <span class="nc">Errors</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">expired</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="c1"># Dependencies.</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">load_token</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">load_token</span> <span class="o">=</span> <span class="n">load_token</span>
+&gt;&gt;&gt; class Subscription:
+...
+...     @story
+...     def buy(I):
+...
+...         I.find_promo_code
+...         I.check_balance
+...         I.persist_payment
+...         I.show_category
+...
+...     # Steps.
+...
+...     async def check_balance(self, ctx):
+...
+...         if ctx.user.balance &lt; ctx.category.price:
+...             return Failure(self.Errors.low_balance)
+...         else:
+...             return Success()
+...
+...     async def persist_payment(self, ctx):
+...
+...         await self.create_payment(ctx.user, ctx.category)
+...         return Success()
+...
+...     async def show_category(self, ctx):
+...
+...         return Result(ctx.category)
+...
+...     # Protocols.
+...
+...     @buy.failures
+...     class Errors(Enum):
+...
+...         low_balance = auto()
+...
+...     # Dependencies.
+...
+...     def __init__(self, find_promo_code):
+...
+...         self.find_promo_code = find_promo_code
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">promo_code</span> <span class="o">=</span> <span class="n">PromoCode</span><span class="p">(</span><span class="n">load_token</span><span class="p">)</span>
+&gt;&gt;&gt; class PromoCode:
+...
+...     @story
+...     def find(I):
+...
+...         I.find_token
+...         I.check_expiration
+...         I.calculate_discount
+...
+...     # Steps.
+...
+...     async def find_token(self, ctx):
+...
+...         ctx.token = await self.load_token()
+...         return Success()
+...
+...     async def check_expiration(self, ctx):
+...
+...         if ctx.token.is_expired():
+...             return Failure(self.Errors.expired)
+...         else:
+...             return Success()
+...
+...     async def calculate_discount(self, ctx):
+...
+...         ctx.discount = ctx.token.get_discount()
+...         return Success()
+...
+...     # Protocols.
+...
+...     @find.failures
+...     class Errors(Enum):
+...
+...         expired = auto()
+...
+...     # Dependencies.
+...
+...     def __init__(self, load_token):
+...
+...         self.load_token = load_token
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">subscription</span> <span class="o">=</span> <span class="n">Subscription</span><span class="p">(</span><span class="n">promo_code</span><span class="o">.</span><span class="n">find</span><span class="p">)</span>
+&gt;&gt;&gt; promo_code = PromoCode(load_token)
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">subscription</span><span class="o">.</span><span class="n">buy</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+&gt;&gt;&gt; subscription = Subscription(promo_code.find)
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">is_success</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Subscribed&quot;</span><span class="p">)</span>
-<span class="gp">... </span><span class="k">elif</span> <span class="n">result</span><span class="o">.</span><span class="n">failed_because</span><span class="p">(</span><span class="n">subscription</span><span class="o">.</span><span class="n">buy</span><span class="o">.</span><span class="n">failures</span><span class="o">.</span><span class="n">low_balance</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Low balance&quot;</span><span class="p">)</span>
-<span class="gp">... </span><span class="k">elif</span> <span class="n">result</span><span class="o">.</span><span class="n">failed_because</span><span class="p">(</span><span class="n">subscription</span><span class="o">.</span><span class="n">buy</span><span class="o">.</span><span class="n">failures</span><span class="o">.</span><span class="n">expired</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Promo code expired&quot;</span><span class="p">)</span>
-<span class="go">Promo code expired</span>
-</code></pre></div></div>
-<input name="__tabbed_3" type="radio" id="__tabbed_3_2" /><label for="__tabbed_3_2">async</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">aioapp.repositories</span> <span class="kn">import</span> <span class="n">load_token</span>
+&gt;&gt;&gt; result = asyncio.run(subscription.buy.run())
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Subscription</span><span class="p">:</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">buy</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">find_promo_code</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">check_balance</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">persist_payment</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">show_category</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="c1"># Steps.</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">check_balance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">balance</span> <span class="o">&lt;</span> <span class="n">ctx</span><span class="o">.</span><span class="n">category</span><span class="o">.</span><span class="n">price</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Failure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Errors</span><span class="o">.</span><span class="n">low_balance</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">else</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">persist_payment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_payment</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">user</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">category</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">show_category</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Result</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">category</span><span class="p">)</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="c1"># Protocols.</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@buy</span><span class="o">.</span><span class="n">failures</span>
-<span class="gp">... </span>    <span class="k">class</span> <span class="nc">Errors</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">low_balance</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="c1"># Dependencies.</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">find_promo_code</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">find_promo_code</span> <span class="o">=</span> <span class="n">find_promo_code</span>
+&gt;&gt;&gt; if result.is_success:
+...     print(&quot;Subscribed&quot;)
+... elif result.failed_because(subscription.buy.failures.low_balance):
+...     print(&quot;Low balance&quot;)
+... elif result.failed_because(subscription.buy.failures.expired):
+...     print(&quot;Promo code expired&quot;)
+Promo code expired
+</code></pre></div>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">PromoCode</span><span class="p">:</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">find_token</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">check_expiration</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">calculate_discount</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="c1"># Steps.</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">find_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_token</span><span class="p">()</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">check_expiration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">is_expired</span><span class="p">():</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Failure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Errors</span><span class="o">.</span><span class="n">expired</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">else</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">calculate_discount</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">discount</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">token</span><span class="o">.</span><span class="n">get_discount</span><span class="p">()</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="c1"># Protocols.</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@find</span><span class="o">.</span><span class="n">failures</span>
-<span class="gp">... </span>    <span class="k">class</span> <span class="nc">Errors</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">expired</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="c1"># Dependencies.</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">load_token</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">load_token</span> <span class="o">=</span> <span class="n">load_token</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">promo_code</span> <span class="o">=</span> <span class="n">PromoCode</span><span class="p">(</span><span class="n">load_token</span><span class="p">)</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">subscription</span> <span class="o">=</span> <span class="n">Subscription</span><span class="p">(</span><span class="n">promo_code</span><span class="o">.</span><span class="n">find</span><span class="p">)</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">subscription</span><span class="o">.</span><span class="n">buy</span><span class="o">.</span><span class="n">run</span><span class="p">())</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">is_success</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Subscribed&quot;</span><span class="p">)</span>
-<span class="gp">... </span><span class="k">elif</span> <span class="n">result</span><span class="o">.</span><span class="n">failed_because</span><span class="p">(</span><span class="n">subscription</span><span class="o">.</span><span class="n">buy</span><span class="o">.</span><span class="n">failures</span><span class="o">.</span><span class="n">low_balance</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Low balance&quot;</span><span class="p">)</span>
-<span class="gp">... </span><span class="k">elif</span> <span class="n">result</span><span class="o">.</span><span class="n">failed_because</span><span class="p">(</span><span class="n">subscription</span><span class="o">.</span><span class="n">buy</span><span class="o">.</span><span class="n">failures</span><span class="o">.</span><span class="n">expired</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Promo code expired&quot;</span><span class="p">)</span>
-<span class="go">Promo code expired</span>
-</code></pre></div></div>
-</div>
 <p>This composition rule works both for
 <a href="../composition/#class-methods">class methods</a> with inheritance and
 <a href="../composition/#instance-attributes">instance attributes</a> with dependency
@@ -1171,15 +1176,15 @@ injection.</p>
       
     </div>
     
-      <script src="../assets/javascripts/vendor.92ffa368.min.js"></script>
-      <script src="../assets/javascripts/bundle.5123e3d4.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
+      <script src="../assets/javascripts/vendor.d1f5a259.min.js"></script>
+      <script src="../assets/javascripts/bundle.f9edbbd5.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
       
       <script>
         app = initialize({
           base: "..",
           features: ["tabs"],
           search: Object.assign({
-            worker: "../assets/javascripts/worker/search.a68abb33.min.js"
+            worker: "../assets/javascripts/worker/search.fae956e7.min.js"
           }, typeof search !== "undefined" && search)
         })
       </script>

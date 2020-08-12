@@ -13,7 +13,7 @@
       
       
       <link rel="shortcut icon" href="assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.5.0">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.5.5">
     
     
       
@@ -21,9 +21,9 @@
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.b5d04df8.min.css">
+      <link rel="stylesheet" href="assets/stylesheets/main.63b94e9e.min.css">
       
-        <link rel="stylesheet" href="assets/stylesheets/palette.9ab2c1f8.min.css">
+        <link rel="stylesheet" href="assets/stylesheets/palette.7f672a1f.min.css">
       
       
         
@@ -322,6 +322,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#enterprise-support" class="md-nav__link">
+    Enterprise support
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#license" class="md-nav__link">
     License
   </a>
@@ -603,6 +610,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#enterprise-support" class="md-nav__link">
+    Enterprise support
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#license" class="md-nav__link">
     License
   </a>
@@ -669,97 +683,102 @@ to capturing and returning errors from any step in the transaction.</p>
 <h2 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h2>
 <p><code>stories</code> provide a simple way to define a complex business scenario that
 include many processing steps.</p>
-<div class="tabbed-set" data-tabs="1:2">
-<input name="__tabbed_1" type="radio" id="__tabbed_1_1" checked="checked" /><label for="__tabbed_1_1">sync</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">story</span><span class="p">,</span> <span class="n">arguments</span><span class="p">,</span> <span class="n">Success</span><span class="p">,</span> <span class="n">Failure</span><span class="p">,</span> <span class="n">Result</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">app.repositories</span> <span class="kn">import</span> <span class="n">load_category</span><span class="p">,</span> <span class="n">load_profile</span><span class="p">,</span> <span class="n">create_subscription</span>
+<p>```pycon tab="sync"</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>from stories import story, arguments, Success, Failure, Result
+from app.repositories import load_category, load_profile, create_subscription</p>
+<p>class Subscribe:
+...
+...     @story
+...     @arguments('category_id', 'profile_id')
+...     def buy(I):
+...
+...         I.find_category
+...         I.find_profile
+...         I.check_balance
+...         I.persist_subscription
+...         I.show_subscription
+...
+...     def find_category(self, ctx):
+...
+...         ctx.category = load_category(ctx.category_id)
+...         return Success()
+...
+...     def find_profile(self, ctx):
+...
+...         ctx.profile = load_profile(ctx.profile_id)
+...         return Success()
+...
+...     def check_balance(self, ctx):
+...
+...         if ctx.category.cost &lt; ctx.profile.balance:
+...             return Success()
+...         else:
+...             return Failure()
+...
+...     def persist_subscription(self, ctx):
+...
+...         ctx.subscription = create_subscription(category=ctx.category, profile=ctx.profile)
+...         return Success()
+...
+...     def show_subscription(self, ctx):
+...
+...         return Result(ctx.subscription)</p>
+<p>Subscribe().buy(category_id=1, profile_id=1)
+Subscription(primary_key=8)</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<div class="highlight"><pre><span></span><code>```pycon tab=&quot;async&quot;
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Subscribe</span><span class="p">:</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="nd">@arguments</span><span class="p">(</span><span class="s1">&#39;category_id&#39;</span><span class="p">,</span> <span class="s1">&#39;profile_id&#39;</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">buy</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">find_category</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">find_profile</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">check_balance</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">persist_subscription</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">show_subscription</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">find_category</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">category</span> <span class="o">=</span> <span class="n">load_category</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">category_id</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">find_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">profile</span> <span class="o">=</span> <span class="n">load_profile</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">profile_id</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">check_balance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">category</span><span class="o">.</span><span class="n">cost</span> <span class="o">&lt;</span> <span class="n">ctx</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">balance</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">... </span>        <span class="k">else</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Failure</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">persist_subscription</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">subscription</span> <span class="o">=</span> <span class="n">create_subscription</span><span class="p">(</span><span class="n">category</span><span class="o">=</span><span class="n">ctx</span><span class="o">.</span><span class="n">category</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="n">ctx</span><span class="o">.</span><span class="n">profile</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">show_subscription</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Result</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">subscription</span><span class="p">)</span>
+&gt;&gt;&gt; import asyncio
+&gt;&gt;&gt; from stories import story, arguments, Success, Failure, Result
+&gt;&gt;&gt; from aioapp.repositories import load_category, load_profile, create_subscription
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Subscribe</span><span class="p">()</span><span class="o">.</span><span class="n">buy</span><span class="p">(</span><span class="n">category_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">profile_id</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="go">Subscription(primary_key=8)</span>
-</code></pre></div></div>
-<input name="__tabbed_1" type="radio" id="__tabbed_1_2" /><label for="__tabbed_1_2">async</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">asyncio</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">story</span><span class="p">,</span> <span class="n">arguments</span><span class="p">,</span> <span class="n">Success</span><span class="p">,</span> <span class="n">Failure</span><span class="p">,</span> <span class="n">Result</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">aioapp.repositories</span> <span class="kn">import</span> <span class="n">load_category</span><span class="p">,</span> <span class="n">load_profile</span><span class="p">,</span> <span class="n">create_subscription</span>
+&gt;&gt;&gt; class Subscribe:
+...
+...     @story
+...     @arguments(&#39;category_id&#39;, &#39;profile_id&#39;)
+...     def buy(I):
+...
+...         I.find_category
+...         I.find_profile
+...         I.check_balance
+...         I.persist_subscription
+...         I.show_subscription
+...
+...     async def find_category(self, ctx):
+...
+...         ctx.category = await load_category(ctx.category_id)
+...         return Success()
+...
+...     async def find_profile(self, ctx):
+...
+...         ctx.profile = await load_profile(ctx.profile_id)
+...         return Success()
+...
+...     async def check_balance(self, ctx):
+...
+...         if ctx.category.cost &lt; ctx.profile.balance:
+...             return Success()
+...         else:
+...             return Failure()
+...
+...     async def persist_subscription(self, ctx):
+...
+...         ctx.subscription = await create_subscription(category=ctx.category, profile=ctx.profile)
+...         return Success()
+...
+...     async def show_subscription(self, ctx):
+...
+...         return Result(ctx.subscription)
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Subscribe</span><span class="p">:</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="nd">@arguments</span><span class="p">(</span><span class="s1">&#39;category_id&#39;</span><span class="p">,</span> <span class="s1">&#39;profile_id&#39;</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">buy</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">find_category</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">find_profile</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">check_balance</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">persist_subscription</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">show_subscription</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">find_category</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">category</span> <span class="o">=</span> <span class="k">await</span> <span class="n">load_category</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">category_id</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">find_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">profile</span> <span class="o">=</span> <span class="k">await</span> <span class="n">load_profile</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">profile_id</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">check_balance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">category</span><span class="o">.</span><span class="n">cost</span> <span class="o">&lt;</span> <span class="n">ctx</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">balance</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">... </span>        <span class="k">else</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Failure</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">persist_subscription</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">subscription</span> <span class="o">=</span> <span class="k">await</span> <span class="n">create_subscription</span><span class="p">(</span><span class="n">category</span><span class="o">=</span><span class="n">ctx</span><span class="o">.</span><span class="n">category</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="n">ctx</span><span class="o">.</span><span class="n">profile</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">show_subscription</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Result</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">subscription</span><span class="p">)</span>
+&gt;&gt;&gt; asyncio.run(Subscribe().buy(category_id=1, profile_id=1))
+Subscription(primary_key=9)
+</code></pre></div>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">Subscribe</span><span class="p">()</span><span class="o">.</span><span class="n">buy</span><span class="p">(</span><span class="n">category_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">profile_id</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
-<span class="go">Subscription(primary_key=9)</span>
-</code></pre></div></div>
-</div>
 <p>This code style allow you clearly separate actual business scenario from
 implementation details.</p>
 <h2 id="questions">Questions<a class="headerlink" href="#questions" title="Permanent link">&para;</a></h2>
@@ -767,6 +786,14 @@ implementation details.</p>
 <a href="https://github.com/proofit404/stories/issues">Task Tracker</a>. We have the
 <a href="https://github.com/proofit404/stories/issues?q=is%3Aopen+is%3Aissue+label%3Aquestion">question label</a>
 exactly for this purpose.</p>
+<h2 id="enterprise-support">Enterprise support<a class="headerlink" href="#enterprise-support" title="Permanent link">&para;</a></h2>
+<p>If you have an issue with any version of the library, you can apply for a paid
+enterprise support contract. This will guarantee you that no breaking changes
+will happen to you. No matter how old version you're using at the moment. All
+necessary features and bug fixes will be backported in a way that serves your
+needs.</p>
+<p>Please contact <a href="mailto:proofit404@gmail.com">proofit404@gmail.com</a> if you're
+interested in it.</p>
 <h2 id="license">License<a class="headerlink" href="#license" title="Permanent link">&para;</a></h2>
 <p>Stories library is offered under the two clause BSD license.</p>
 <p align="center">&mdash; ⭐️ &mdash;</p>
@@ -824,15 +851,15 @@ exactly for this purpose.</p>
       
     </div>
     
-      <script src="assets/javascripts/vendor.92ffa368.min.js"></script>
-      <script src="assets/javascripts/bundle.5123e3d4.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
+      <script src="assets/javascripts/vendor.d1f5a259.min.js"></script>
+      <script src="assets/javascripts/bundle.f9edbbd5.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
       
       <script>
         app = initialize({
           base: ".",
           features: ["tabs"],
           search: Object.assign({
-            worker: "assets/javascripts/worker/search.a68abb33.min.js"
+            worker: "assets/javascripts/worker/search.fae956e7.min.js"
           }, typeof search !== "undefined" && search)
         })
       </script>

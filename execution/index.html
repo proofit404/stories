@@ -13,7 +13,7 @@
       
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.5.0">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.5.5">
     
     
       
@@ -21,9 +21,9 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.b5d04df8.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.63b94e9e.min.css">
       
-        <link rel="stylesheet" href="../assets/stylesheets/palette.9ab2c1f8.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.7f672a1f.min.css">
       
       
         
@@ -640,719 +640,756 @@
 <h2 id="success">Success<a class="headerlink" href="#success" title="Permanent link">&para;</a></h2>
 <p>If the story method returns <code>Success</code> execution of the whole story continues
 from the next step.</p>
-<div class="tabbed-set" data-tabs="1:2">
-<input name="__tabbed_1" type="radio" id="__tabbed_1_1" checked="checked" /><label for="__tabbed_1_1">sync</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">story</span><span class="p">,</span> <span class="n">Success</span>
+<p>```pycon tab="sync"</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>from stories import story, Success</p>
+<p>class Action:
+...
+...     @story
+...     def do(I):
+...
+...         I.one
+...         I.two
+...         I.three
+...
+...     def one(self, ctx):
+...
+...         print("one")
+...         return Success()
+...
+...     def two(self, ctx):
+...
+...         print("two")
+...         return Success()
+...
+...     def three(self, ctx):
+...
+...         print("three")
+...         return Success()</p>
+<p>Action().do()
+one
+two
+three</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<div class="highlight"><pre><span></span><code>```pycon tab=&quot;async&quot;
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Action</span><span class="p">:</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">do</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">one</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">two</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">three</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;one&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">two</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;two&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">three</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;three&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+&gt;&gt;&gt; import asyncio
+&gt;&gt;&gt; from stories import story, Success
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Action</span><span class="p">()</span><span class="o">.</span><span class="n">do</span><span class="p">()</span>
-<span class="go">one</span>
-<span class="go">two</span>
-<span class="go">three</span>
-</code></pre></div></div>
-<input name="__tabbed_1" type="radio" id="__tabbed_1_2" /><label for="__tabbed_1_2">async</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">asyncio</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">story</span><span class="p">,</span> <span class="n">Success</span>
+&gt;&gt;&gt; class Action:
+...
+...     @story
+...     def do(I):
+...
+...         I.one
+...         I.two
+...         I.three
+...
+...     async def one(self, ctx):
+...
+...         print(&quot;one&quot;)
+...         return Success()
+...
+...     async def two(self, ctx):
+...
+...         print(&quot;two&quot;)
+...         return Success()
+...
+...     async def three(self, ctx):
+...
+...         print(&quot;three&quot;)
+...         return Success()
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Action</span><span class="p">:</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">do</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">one</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">two</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">three</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;one&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">two</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;two&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">three</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;three&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+&gt;&gt;&gt; asyncio.run(Action().do())
+one
+two
+three
+</code></pre></div>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">Action</span><span class="p">()</span><span class="o">.</span><span class="n">do</span><span class="p">())</span>
-<span class="go">one</span>
-<span class="go">two</span>
-<span class="go">three</span>
-</code></pre></div></div>
-</div>
 <p>If sub-story last method returns <code>Success</code>, the execution continues in the next
 method of the parent story.</p>
-<div class="tabbed-set" data-tabs="2:2">
-<input name="__tabbed_2" type="radio" id="__tabbed_2_1" checked="checked" /><label for="__tabbed_2_1">sync</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">story</span><span class="p">,</span> <span class="n">Success</span>
+<p>```pycon tab="sync"</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>from stories import story, Success</p>
+<p>class Action:
+...
+...     @story
+...     def do(I):
+...
+...         I.one
+...         I.sub
+...         I.four
+...
+...     def one(self, ctx):
+...
+...         print("one")
+...         return Success()
+...
+...     def four(self, ctx):
+...
+...         print("four")
+...         return Success()
+...
+...     def <strong>init</strong>(self):
+...
+...         self.sub = SubAction().sub</p>
+<p>class SubAction:
+...
+...     @story
+...     def sub(I):
+...
+...         I.two
+...         I.three
+...
+...     def two(self, ctx):
+...
+...         print("two")
+...         return Success()
+...
+...     def three(self, ctx):
+...
+...         print("three")
+...         return Success()</p>
+<p>Action().do()
+one
+two
+three
+four</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<div class="highlight"><pre><span></span><code>```pycon tab=&quot;async&quot;
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Action</span><span class="p">:</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">do</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">one</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">sub</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">four</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;one&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">four</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;four&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">sub</span> <span class="o">=</span> <span class="n">SubAction</span><span class="p">()</span><span class="o">.</span><span class="n">sub</span>
+&gt;&gt;&gt; from stories import story, Success
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">SubAction</span><span class="p">:</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">sub</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">two</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">three</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">two</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;two&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">three</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;three&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+&gt;&gt;&gt; class Action:
+...
+...     @story
+...     def do(I):
+...
+...         I.one
+...         I.sub
+...         I.four
+...
+...     async def one(self, ctx):
+...
+...         print(&quot;one&quot;)
+...         return Success()
+...
+...     async def four(self, ctx):
+...
+...         print(&quot;four&quot;)
+...         return Success()
+...
+...     def __init__(self):
+...
+...         self.sub = SubAction().sub
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Action</span><span class="p">()</span><span class="o">.</span><span class="n">do</span><span class="p">()</span>
-<span class="go">one</span>
-<span class="go">two</span>
-<span class="go">three</span>
-<span class="go">four</span>
-</code></pre></div></div>
-<input name="__tabbed_2" type="radio" id="__tabbed_2_2" /><label for="__tabbed_2_2">async</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">story</span><span class="p">,</span> <span class="n">Success</span>
+&gt;&gt;&gt; class SubAction:
+...
+...     @story
+...     def sub(I):
+...
+...         I.two
+...         I.three
+...
+...     async def two(self, ctx):
+...
+...         print(&quot;two&quot;)
+...         return Success()
+...
+...     async def three(self, ctx):
+...
+...         print(&quot;three&quot;)
+...         return Success()
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Action</span><span class="p">:</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">do</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">one</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">sub</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">four</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;one&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">four</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;four&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">sub</span> <span class="o">=</span> <span class="n">SubAction</span><span class="p">()</span><span class="o">.</span><span class="n">sub</span>
+&gt;&gt;&gt; asyncio.run(Action().do())
+one
+two
+three
+four
+</code></pre></div>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">SubAction</span><span class="p">:</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">sub</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">two</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">three</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">two</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;two&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">three</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;three&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">Action</span><span class="p">()</span><span class="o">.</span><span class="n">do</span><span class="p">())</span>
-<span class="go">one</span>
-<span class="go">two</span>
-<span class="go">three</span>
-<span class="go">four</span>
-</code></pre></div></div>
-</div>
 <p>Story method can assign attributes to the context to set some variables for
 future methods.</p>
-<div class="tabbed-set" data-tabs="3:2">
-<input name="__tabbed_3" type="radio" id="__tabbed_3_1" checked="checked" /><label for="__tabbed_3_1">sync</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">story</span><span class="p">,</span> <span class="n">Success</span>
+<p>```pycon tab="sync"</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>from stories import story, Success</p>
+<p>class Action:
+...
+...     @story
+...     def do(I):
+...
+...         I.one
+...         I.two
+...
+...     def one(self, ctx):
+...
+...         ctx.var_a = 1
+...         ctx.var_b = 2
+...         return Success()
+...
+...     def two(self, ctx):
+...
+...         print(ctx.var_a)
+...         print(ctx.var_b)
+...         return Success()</p>
+<p>Action().do()
+1
+2</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<div class="highlight"><pre><span></span><code>```pycon tab=&quot;async&quot;
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Action</span><span class="p">:</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">do</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">one</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">two</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">var_a</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">var_b</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">two</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">var_a</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">var_b</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+&gt;&gt;&gt; from stories import story, Success
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Action</span><span class="p">()</span><span class="o">.</span><span class="n">do</span><span class="p">()</span>
-<span class="go">1</span>
-<span class="go">2</span>
-</code></pre></div></div>
-<input name="__tabbed_3" type="radio" id="__tabbed_3_2" /><label for="__tabbed_3_2">async</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">story</span><span class="p">,</span> <span class="n">Success</span>
+&gt;&gt;&gt; class Action:
+...
+...     @story
+...     def do(I):
+...
+...         I.one
+...         I.two
+...
+...     async def one(self, ctx):
+...
+...         ctx.var_a = 1
+...         ctx.var_b = 2
+...         return Success()
+...
+...     async def two(self, ctx):
+...
+...         print(ctx.var_a)
+...         print(ctx.var_b)
+...         return Success()
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Action</span><span class="p">:</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">do</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">one</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">two</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">var_a</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">var_b</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">two</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">var_a</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">var_b</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+&gt;&gt;&gt; asyncio.run(Action().do())
+1
+2
+</code></pre></div>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">Action</span><span class="p">()</span><span class="o">.</span><span class="n">do</span><span class="p">())</span>
-<span class="go">1</span>
-<span class="go">2</span>
-</code></pre></div></div>
-</div>
 <h2 id="failure">Failure<a class="headerlink" href="#failure" title="Permanent link">&para;</a></h2>
 <p>If story method returns <code>Failure</code>, the whole story considered failed. Execution
 stops at this point.</p>
-<div class="tabbed-set" data-tabs="4:2">
-<input name="__tabbed_4" type="radio" id="__tabbed_4_1" checked="checked" /><label for="__tabbed_4_1">sync</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">story</span><span class="p">,</span> <span class="n">Success</span><span class="p">,</span> <span class="n">Failure</span>
+<p>```pycon tab="sync"</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>from stories import story, Success, Failure</p>
+<p>class Action:
+...
+...     @story
+...     def do(I):
+...
+...         I.one
+...         I.two
+...
+...     def one(self, ctx):
+...
+...         print("one")
+...         return Failure()
+...
+...     def two(self, ctx):
+...
+...         print("two")
+...         return Success()</p>
+<p>result = Action().do.run()
+one</p>
+<p>result.is_failure
+True</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<div class="highlight"><pre><span></span><code>```pycon tab=&quot;async&quot;
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Action</span><span class="p">:</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">do</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">one</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">two</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;one&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Failure</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">two</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;two&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+&gt;&gt;&gt; from stories import story, Success, Failure
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">Action</span><span class="p">()</span><span class="o">.</span><span class="n">do</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-<span class="go">one</span>
+&gt;&gt;&gt; class Action:
+...
+...     @story
+...     def do(I):
+...
+...         I.one
+...         I.two
+...
+...     async def one(self, ctx):
+...
+...         print(&quot;one&quot;)
+...         return Failure()
+...
+...     async def two(self, ctx):
+...
+...         print(&quot;two&quot;)
+...         return Success()
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span><span class="o">.</span><span class="n">is_failure</span>
-<span class="go">True</span>
-</code></pre></div></div>
-<input name="__tabbed_4" type="radio" id="__tabbed_4_2" /><label for="__tabbed_4_2">async</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">story</span><span class="p">,</span> <span class="n">Success</span><span class="p">,</span> <span class="n">Failure</span>
+&gt;&gt;&gt; result = asyncio.run(Action().do.run())
+one
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Action</span><span class="p">:</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">do</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">one</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">two</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;one&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Failure</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">two</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;two&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+&gt;&gt;&gt; result.is_failure
+True
+</code></pre></div>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">Action</span><span class="p">()</span><span class="o">.</span><span class="n">do</span><span class="o">.</span><span class="n">run</span><span class="p">())</span>
-<span class="go">one</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span><span class="o">.</span><span class="n">is_failure</span>
-<span class="go">True</span>
-</code></pre></div></div>
-</div>
 <p><code>Failure</code> of the sub-story will fail the whole story.</p>
-<div class="tabbed-set" data-tabs="5:2">
-<input name="__tabbed_5" type="radio" id="__tabbed_5_1" checked="checked" /><label for="__tabbed_5_1">sync</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">story</span><span class="p">,</span> <span class="n">Success</span><span class="p">,</span> <span class="n">Failure</span>
+<p>```pycon tab="sync"</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>from stories import story, Success, Failure</p>
+<p>class Action:
+...
+...     @story
+...     def do(I):
+...
+...         I.one
+...         I.sub
+...         I.four
+...
+...     def one(self, ctx):
+...
+...         print("one")
+...         return Success()
+...
+...     def four(self, ctx):
+...
+...         print("four")
+...         return Success()
+...
+...     def <strong>init</strong>(self):
+...
+...         self.sub = SubAction().sub</p>
+<p>class SubAction:
+...
+...     @story
+...     def sub(I):
+...
+...         I.two
+...         I.three
+...
+...     def two(self, ctx):
+...
+...         print("two")
+...         return Failure()
+...
+...     def three(self, ctx):
+...
+...         print("three")
+...         return Success()</p>
+<p>result = Action().do.run()
+one
+two</p>
+<p>result.is_failure
+True</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<div class="highlight"><pre><span></span><code>```pycon tab=&quot;async&quot;
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Action</span><span class="p">:</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">do</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">one</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">sub</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">four</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;one&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">four</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;four&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">sub</span> <span class="o">=</span> <span class="n">SubAction</span><span class="p">()</span><span class="o">.</span><span class="n">sub</span>
+&gt;&gt;&gt; from stories import story, Success, Failure
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">SubAction</span><span class="p">:</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">sub</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">two</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">three</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">two</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;two&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Failure</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">three</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;three&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+&gt;&gt;&gt; class Action:
+...
+...     @story
+...     def do(I):
+...
+...         I.one
+...         I.sub
+...         I.four
+...
+...     async def one(self, ctx):
+...
+...         print(&quot;one&quot;)
+...         return Success()
+...
+...     async def four(self, ctx):
+...
+...         print(&quot;four&quot;)
+...         return Success()
+...
+...     def __init__(self):
+...
+...         self.sub = SubAction().sub
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">Action</span><span class="p">()</span><span class="o">.</span><span class="n">do</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-<span class="go">one</span>
-<span class="go">two</span>
+&gt;&gt;&gt; class SubAction:
+...
+...     @story
+...     def sub(I):
+...
+...         I.two
+...         I.three
+...
+...     async def two(self, ctx):
+...
+...         print(&quot;two&quot;)
+...         return Failure()
+...
+...     async def three(self, ctx):
+...
+...         print(&quot;three&quot;)
+...         return Success()
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span><span class="o">.</span><span class="n">is_failure</span>
-<span class="go">True</span>
-</code></pre></div></div>
-<input name="__tabbed_5" type="radio" id="__tabbed_5_2" /><label for="__tabbed_5_2">async</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">story</span><span class="p">,</span> <span class="n">Success</span><span class="p">,</span> <span class="n">Failure</span>
+&gt;&gt;&gt; result = asyncio.run(Action().do.run())
+one
+two
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Action</span><span class="p">:</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">do</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">one</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">sub</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">four</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;one&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">four</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;four&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">sub</span> <span class="o">=</span> <span class="n">SubAction</span><span class="p">()</span><span class="o">.</span><span class="n">sub</span>
+&gt;&gt;&gt; result.is_failure
+True
+</code></pre></div>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">SubAction</span><span class="p">:</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">sub</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">two</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">three</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">two</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;two&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Failure</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">three</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;three&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">Action</span><span class="p">()</span><span class="o">.</span><span class="n">do</span><span class="o">.</span><span class="n">run</span><span class="p">())</span>
-<span class="go">one</span>
-<span class="go">two</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span><span class="o">.</span><span class="n">is_failure</span>
-<span class="go">True</span>
-</code></pre></div></div>
-</div>
 <p><code>Failure</code> has optional <code>reason</code> argument. We describe it in details in the
 <a href="../failure_protocol/">failure protocol</a> chapter.</p>
 <h2 id="result">Result<a class="headerlink" href="#result" title="Permanent link">&para;</a></h2>
 <p>If the story method return <code>Result</code>, the whole story considered done. An
 optional argument passed to the <code>Result</code> constructor will be the return value of
 the story call.</p>
-<div class="tabbed-set" data-tabs="6:2">
-<input name="__tabbed_6" type="radio" id="__tabbed_6_1" checked="checked" /><label for="__tabbed_6_1">sync</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">story</span><span class="p">,</span> <span class="n">Success</span><span class="p">,</span> <span class="n">Result</span>
+<p>```pycon tab="sync"</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>from stories import story, Success, Result</p>
+<p>class Action:
+...
+...     @story
+...     def do(I):
+...
+...         I.one
+...         I.two
+...         I.three
+...
+...     def one(self, ctx):
+...
+...         print("one")
+...         return Success()
+...
+...     def two(self, ctx):
+...
+...         print("two")
+...         return Result(1)
+...
+...     def three(self, ctx):
+...
+...         print("three")
+...         return Success()</p>
+<p>res = Action().do()
+one
+two</p>
+<p>res
+1</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<div class="highlight"><pre><span></span><code>```pycon tab=&quot;async&quot;
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Action</span><span class="p">:</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">do</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">one</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">two</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">three</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;one&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">two</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;two&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Result</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">three</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;three&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+&gt;&gt;&gt; from stories import story, Success, Result
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">Action</span><span class="p">()</span><span class="o">.</span><span class="n">do</span><span class="p">()</span>
-<span class="go">one</span>
-<span class="go">two</span>
+&gt;&gt;&gt; class Action:
+...
+...     @story
+...     def do(I):
+...
+...         I.one
+...         I.two
+...         I.three
+...
+...     async def one(self, ctx):
+...
+...         print(&quot;one&quot;)
+...         return Success()
+...
+...     async def two(self, ctx):
+...
+...         print(&quot;two&quot;)
+...         return Result(1)
+...
+...     async def three(self, ctx):
+...
+...         print(&quot;three&quot;)
+...         return Success()
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span>
-<span class="go">1</span>
-</code></pre></div></div>
-<input name="__tabbed_6" type="radio" id="__tabbed_6_2" /><label for="__tabbed_6_2">async</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">story</span><span class="p">,</span> <span class="n">Success</span><span class="p">,</span> <span class="n">Result</span>
+&gt;&gt;&gt; res = asyncio.run(Action().do())
+one
+two
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Action</span><span class="p">:</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">do</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">one</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">two</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">three</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;one&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">two</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;two&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Result</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">three</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;three&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+&gt;&gt;&gt; res
+1
+</code></pre></div>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">Action</span><span class="p">()</span><span class="o">.</span><span class="n">do</span><span class="p">())</span>
-<span class="go">one</span>
-<span class="go">two</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span>
-<span class="go">1</span>
-</code></pre></div></div>
-</div>
 <p>The <code>Result</code> of the sub-story will be the result of the whole story. The
 execution stops after the method returned <code>Result</code>.</p>
-<div class="tabbed-set" data-tabs="7:2">
-<input name="__tabbed_7" type="radio" id="__tabbed_7_1" checked="checked" /><label for="__tabbed_7_1">sync</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">story</span><span class="p">,</span> <span class="n">Success</span><span class="p">,</span> <span class="n">Result</span>
+<p>```pycon tab="sync"</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>from stories import story, Success, Result</p>
+<p>class Action:
+...
+...     @story
+...     def do(I):
+...
+...         I.one
+...         I.sub
+...         I.four
+...
+...     def one(self, ctx):
+...
+...         print("one")
+...         return Success()
+...
+...     def four(self, ctx):
+...
+...         print("four")
+...         return Success()
+...
+...     def <strong>init</strong>(self):
+...
+...         self.sub = SubAction().sub</p>
+<p>class SubAction:
+...
+...     @story
+...     def sub(I):
+...
+...         I.two
+...         I.three
+...
+...     def two(self, ctx):
+...
+...         print("two")
+...         return Success()
+...
+...     def three(self, ctx):
+...
+...         print("three")
+...         return Result(2)</p>
+<p>result = Action().do()
+one
+two
+three</p>
+<p>result
+2</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<div class="highlight"><pre><span></span><code>```pycon tab=&quot;async&quot;
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Action</span><span class="p">:</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">do</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">one</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">sub</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">four</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;one&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">four</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;four&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">sub</span> <span class="o">=</span> <span class="n">SubAction</span><span class="p">()</span><span class="o">.</span><span class="n">sub</span>
+&gt;&gt;&gt; from stories import story, Success, Result
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">SubAction</span><span class="p">:</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">sub</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">two</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">three</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">two</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;two&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">three</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;three&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Result</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+&gt;&gt;&gt; class Action:
+...
+...     @story
+...     def do(I):
+...
+...         I.one
+...         I.sub
+...         I.four
+...
+...     async def one(self, ctx):
+...
+...         print(&quot;one&quot;)
+...         return Success()
+...
+...     async def four(self, ctx):
+...
+...         print(&quot;four&quot;)
+...         return Success()
+...
+...     def __init__(self):
+...
+...         self.sub = SubAction().sub
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">Action</span><span class="p">()</span><span class="o">.</span><span class="n">do</span><span class="p">()</span>
-<span class="go">one</span>
-<span class="go">two</span>
-<span class="go">three</span>
+&gt;&gt;&gt; class SubAction:
+...
+...     @story
+...     def sub(I):
+...
+...         I.two
+...         I.three
+...
+...     async def two(self, ctx):
+...
+...         print(&quot;two&quot;)
+...         return Success()
+...
+...     async def three(self, ctx):
+...
+...         print(&quot;three&quot;)
+...         return Result(2)
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span>
-<span class="go">2</span>
-</code></pre></div></div>
-<input name="__tabbed_7" type="radio" id="__tabbed_7_2" /><label for="__tabbed_7_2">async</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">story</span><span class="p">,</span> <span class="n">Success</span><span class="p">,</span> <span class="n">Result</span>
+&gt;&gt;&gt; result = asyncio.run(Action().do())
+one
+two
+three
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Action</span><span class="p">:</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">do</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">one</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">sub</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">four</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;one&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">four</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;four&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">sub</span> <span class="o">=</span> <span class="n">SubAction</span><span class="p">()</span><span class="o">.</span><span class="n">sub</span>
+&gt;&gt;&gt; result
+2
+</code></pre></div>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">SubAction</span><span class="p">:</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">sub</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">two</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">three</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">two</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;two&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">three</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;three&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Result</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">Action</span><span class="p">()</span><span class="o">.</span><span class="n">do</span><span class="p">())</span>
-<span class="go">one</span>
-<span class="go">two</span>
-<span class="go">three</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span>
-<span class="go">2</span>
-</code></pre></div></div>
-</div>
 <h2 id="skip">Skip<a class="headerlink" href="#skip" title="Permanent link">&para;</a></h2>
 <p>If sub-story method returns <code>Skip</code> result, execution will be continued form the
 next method of the caller story.</p>
-<div class="tabbed-set" data-tabs="8:2">
-<input name="__tabbed_8" type="radio" id="__tabbed_8_1" checked="checked" /><label for="__tabbed_8_1">sync</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">story</span><span class="p">,</span> <span class="n">Success</span><span class="p">,</span> <span class="n">Skip</span>
+<p>```pycon tab="sync"</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>from stories import story, Success, Skip</p>
+<p>class Action:
+...
+...     @story
+...     def do(I):
+...
+...         I.one
+...         I.sub
+...         I.four
+...
+...     def one(self, ctx):
+...
+...         print("one")
+...         return Success()
+...
+...     def four(self, ctx):
+...
+...         print("four")
+...         return Success()
+...
+...     def <strong>init</strong>(self):
+...
+...         self.sub = SubAction().sub</p>
+<p>class SubAction:
+...
+...     @story
+...     def sub(I):
+...
+...         I.two
+...         I.three
+...
+...     def two(self, ctx):
+...
+...         print("two")
+...         return Skip()
+...
+...     def three(self, ctx):
+...
+...         print("three")
+...         return Success()</p>
+<p>Action().do()
+one
+two
+four</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<div class="highlight"><pre><span></span><code>```pycon tab=&quot;async&quot;
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Action</span><span class="p">:</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">do</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">one</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">sub</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">four</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;one&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">four</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;four&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">sub</span> <span class="o">=</span> <span class="n">SubAction</span><span class="p">()</span><span class="o">.</span><span class="n">sub</span>
+&gt;&gt;&gt; from stories import story, Success, Skip
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">SubAction</span><span class="p">:</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">sub</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">two</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">three</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">two</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;two&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Skip</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">three</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;three&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+&gt;&gt;&gt; class Action:
+...
+...     @story
+...     def do(I):
+...
+...         I.one
+...         I.sub
+...         I.four
+...
+...     async def one(self, ctx):
+...
+...         print(&quot;one&quot;)
+...         return Success()
+...
+...     async def four(self, ctx):
+...
+...         print(&quot;four&quot;)
+...         return Success()
+...
+...     def __init__(self):
+...
+...         self.sub = SubAction().sub
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Action</span><span class="p">()</span><span class="o">.</span><span class="n">do</span><span class="p">()</span>
-<span class="go">one</span>
-<span class="go">two</span>
-<span class="go">four</span>
-</code></pre></div></div>
-<input name="__tabbed_8" type="radio" id="__tabbed_8_2" /><label for="__tabbed_8_2">async</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">story</span><span class="p">,</span> <span class="n">Success</span><span class="p">,</span> <span class="n">Skip</span>
+&gt;&gt;&gt; class SubAction:
+...
+...     @story
+...     def sub(I):
+...
+...         I.two
+...         I.three
+...
+...     async def two(self, ctx):
+...
+...         print(&quot;two&quot;)
+...         return Skip()
+...
+...     async def three(self, ctx):
+...
+...         print(&quot;three&quot;)
+...         return Success()
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Action</span><span class="p">:</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">do</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">one</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">sub</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">four</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;one&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">four</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;four&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">sub</span> <span class="o">=</span> <span class="n">SubAction</span><span class="p">()</span><span class="o">.</span><span class="n">sub</span>
+&gt;&gt;&gt; asyncio.run(Action().do())
+one
+two
+four
+</code></pre></div>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">SubAction</span><span class="p">:</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">sub</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">two</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">three</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">two</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;two&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Skip</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">three</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;three&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">Action</span><span class="p">()</span><span class="o">.</span><span class="n">do</span><span class="p">())</span>
-<span class="go">one</span>
-<span class="go">two</span>
-<span class="go">four</span>
-</code></pre></div></div>
-</div>
 <p>If the topmost story returns <code>Skip</code> result, execution will end.</p>
-<div class="tabbed-set" data-tabs="9:2">
-<input name="__tabbed_9" type="radio" id="__tabbed_9_1" checked="checked" /><label for="__tabbed_9_1">sync</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">story</span><span class="p">,</span> <span class="n">Success</span><span class="p">,</span> <span class="n">Skip</span>
+<p>```pycon tab="sync"</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>from stories import story, Success, Skip</p>
+<p>class Action:
+...
+...     @story
+...     def do(I):
+...
+...         I.one
+...         I.two
+...
+...     def one(self, ctx):
+...
+...         print("one")
+...         return Skip()
+...
+...     def two(self, ctx):
+...
+...         print("two")
+...         return Success()</p>
+<p>Action().do()
+one</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<div class="highlight"><pre><span></span><code>```pycon tab=&quot;async&quot;
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Action</span><span class="p">:</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">do</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">one</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">two</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;one&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Skip</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">two</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;two&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+&gt;&gt;&gt; from stories import story, Success, Skip
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Action</span><span class="p">()</span><span class="o">.</span><span class="n">do</span><span class="p">()</span>
-<span class="go">one</span>
-</code></pre></div></div>
-<input name="__tabbed_9" type="radio" id="__tabbed_9_2" /><label for="__tabbed_9_2">async</label><div class="tabbed-content"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">story</span><span class="p">,</span> <span class="n">Success</span><span class="p">,</span> <span class="n">Skip</span>
+&gt;&gt;&gt; class Action:
+...
+...     @story
+...     def do(I):
+...
+...         I.one
+...         I.two
+...
+...     async def one(self, ctx):
+...
+...         print(&quot;one&quot;)
+...         return Skip()
+...
+...     async def two(self, ctx):
+...
+...         print(&quot;two&quot;)
+...         return Success()
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Action</span><span class="p">:</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">do</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">one</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">two</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;one&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Skip</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">two</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;two&quot;</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
+&gt;&gt;&gt; asyncio.run(Action().do())
+one
+</code></pre></div>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">Action</span><span class="p">()</span><span class="o">.</span><span class="n">do</span><span class="p">())</span>
-<span class="go">one</span>
-</code></pre></div></div>
-</div>
 <p align="center">&mdash; ⭐️ &mdash;</p>
 
 <p align="center"><i>The stories library is part of the SOLID python family.</i></p>
@@ -1422,15 +1459,15 @@ next method of the caller story.</p>
       
     </div>
     
-      <script src="../assets/javascripts/vendor.92ffa368.min.js"></script>
-      <script src="../assets/javascripts/bundle.5123e3d4.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
+      <script src="../assets/javascripts/vendor.d1f5a259.min.js"></script>
+      <script src="../assets/javascripts/bundle.f9edbbd5.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
       
       <script>
         app = initialize({
           base: "..",
           features: ["tabs"],
           search: Object.assign({
-            worker: "../assets/javascripts/worker/search.a68abb33.min.js"
+            worker: "../assets/javascripts/worker/search.fae956e7.min.js"
           }, typeof search !== "undefined" && search)
         })
       </script>
