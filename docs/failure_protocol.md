@@ -31,128 +31,132 @@ case, failure protocol should be a collection of all allowed strings.
 You can use these string literals to process different failures in a different
 way.
 
-```pycon tab="sync"
+=== "sync"
 
->>> from stories import story, arguments, Success, Failure
->>> from app.entities import Category
->>> from app.repositories import load_promo_code
+    ```pycon
 
->>> class ApplyPromoCode:
-...     """Calculate actual product discount, apply it to the price."""
-...
-...     @story
-...     @arguments("category")
-...     def apply(I):
-...
-...         I.find_promo_code
-...         I.check_promo_code_exists
-...         I.check_expiration
-...
-...     # Steps.
-...
-...     def find_promo_code(self, ctx):
-...
-...         ctx.promo_code = self.load_promo_code(ctx.category)
-...         return Success()
-...
-...     def check_promo_code_exists(self, ctx):
-...
-...         if ctx.promo_code is None:
-...             return Failure("not_found")
-...         else:
-...             return Success()
-...
-...     def check_expiration(self, ctx):
-...
-...         if ctx.promo_code.is_expired():
-...             return Failure("expired")
-...         else:
-...             return Success()
-...
-...     # Dependencies.
-...
-...     def __init__(self, load_promo_code):
-...
-...         self.load_promo_code = load_promo_code
+    >>> from stories import story, arguments, Success, Failure
+    >>> from app.entities import Category
+    >>> from app.repositories import load_promo_code
 
->>> ApplyPromoCode.apply.failures(["not_found", "expired"])
-['not_found', 'expired']
+    >>> class ApplyPromoCode:
+    ...     """Calculate actual product discount, apply it to the price."""
+    ...
+    ...     @story
+    ...     @arguments("category")
+    ...     def apply(I):
+    ...
+    ...         I.find_promo_code
+    ...         I.check_promo_code_exists
+    ...         I.check_expiration
+    ...
+    ...     # Steps.
+    ...
+    ...     def find_promo_code(self, ctx):
+    ...
+    ...         ctx.promo_code = self.load_promo_code(ctx.category)
+    ...         return Success()
+    ...
+    ...     def check_promo_code_exists(self, ctx):
+    ...
+    ...         if ctx.promo_code is None:
+    ...             return Failure("not_found")
+    ...         else:
+    ...             return Success()
+    ...
+    ...     def check_expiration(self, ctx):
+    ...
+    ...         if ctx.promo_code.is_expired():
+    ...             return Failure("expired")
+    ...         else:
+    ...             return Success()
+    ...
+    ...     # Dependencies.
+    ...
+    ...     def __init__(self, load_promo_code):
+    ...
+    ...         self.load_promo_code = load_promo_code
 
->>> promo_code = ApplyPromoCode(load_promo_code=load_promo_code)
+    >>> ApplyPromoCode.apply.failures(["not_found", "expired"])
+    ['not_found', 'expired']
 
->>> result = promo_code.apply.run(category=Category(177, 'Drawing', 700))
+    >>> promo_code = ApplyPromoCode(load_promo_code=load_promo_code)
 
->>> if result.is_success:
-...     print("Promo code applied")
-... elif result.failed_because("not_found"):
-...     print("Promo code not found")
-... elif result.failed_because("expired"):
-...     print("Promo code expired")
-Promo code not found
+    >>> result = promo_code.apply.run(category=Category(177, 'Drawing', 700))
 
-```
+    >>> if result.is_success:
+    ...     print("Promo code applied")
+    ... elif result.failed_because("not_found"):
+    ...     print("Promo code not found")
+    ... elif result.failed_because("expired"):
+    ...     print("Promo code expired")
+    Promo code not found
 
-```pycon tab="async"
+    ```
 
->>> import asyncio
->>> from stories import story, arguments, Success, Failure
->>> from app.entities import Category
->>> from aioapp.repositories import load_promo_code
+=== "async"
 
->>> class ApplyPromoCode:
-...     """Calculate actual product discount, apply it to the price."""
-...
-...     @story
-...     @arguments("category")
-...     def apply(I):
-...
-...         I.find_promo_code
-...         I.check_promo_code_exists
-...         I.check_expiration
-...
-...     # Steps.
-...
-...     async def find_promo_code(self, ctx):
-...
-...         ctx.promo_code = await self.load_promo_code(ctx.category)
-...         return Success()
-...
-...     async def check_promo_code_exists(self, ctx):
-...
-...         if ctx.promo_code is None:
-...             return Failure("not_found")
-...         else:
-...             return Success()
-...
-...     async def check_expiration(self, ctx):
-...
-...         if ctx.promo_code.is_expired():
-...             return Failure("expired")
-...         else:
-...             return Success()
-...
-...     # Dependencies.
-...
-...     def __init__(self, load_promo_code):
-...
-...         self.load_promo_code = load_promo_code
+    ```pycon
 
->>> ApplyPromoCode.apply.failures(["not_found", "expired"])
-['not_found', 'expired']
+    >>> import asyncio
+    >>> from stories import story, arguments, Success, Failure
+    >>> from app.entities import Category
+    >>> from aioapp.repositories import load_promo_code
 
->>> promo_code = ApplyPromoCode(load_promo_code=load_promo_code)
+    >>> class ApplyPromoCode:
+    ...     """Calculate actual product discount, apply it to the price."""
+    ...
+    ...     @story
+    ...     @arguments("category")
+    ...     def apply(I):
+    ...
+    ...         I.find_promo_code
+    ...         I.check_promo_code_exists
+    ...         I.check_expiration
+    ...
+    ...     # Steps.
+    ...
+    ...     async def find_promo_code(self, ctx):
+    ...
+    ...         ctx.promo_code = await self.load_promo_code(ctx.category)
+    ...         return Success()
+    ...
+    ...     async def check_promo_code_exists(self, ctx):
+    ...
+    ...         if ctx.promo_code is None:
+    ...             return Failure("not_found")
+    ...         else:
+    ...             return Success()
+    ...
+    ...     async def check_expiration(self, ctx):
+    ...
+    ...         if ctx.promo_code.is_expired():
+    ...             return Failure("expired")
+    ...         else:
+    ...             return Success()
+    ...
+    ...     # Dependencies.
+    ...
+    ...     def __init__(self, load_promo_code):
+    ...
+    ...         self.load_promo_code = load_promo_code
 
->>> result = asyncio.run(promo_code.apply.run(category=Category(177, 'Drawing', 700)))
+    >>> ApplyPromoCode.apply.failures(["not_found", "expired"])
+    ['not_found', 'expired']
 
->>> if result.is_success:
-...     print("Promo code applied")
-... elif result.failed_because("not_found"):
-...     print("Promo code not found")
-... elif result.failed_because("expired"):
-...     print("Promo code expired")
-Promo code not found
+    >>> promo_code = ApplyPromoCode(load_promo_code=load_promo_code)
 
-```
+    >>> result = asyncio.run(promo_code.apply.run(category=Category(177, 'Drawing', 700)))
+
+    >>> if result.is_success:
+    ...     print("Promo code applied")
+    ... elif result.failed_because("not_found"):
+    ...     print("Promo code not found")
+    ... elif result.failed_because("expired"):
+    ...     print("Promo code expired")
+    Promo code not found
+
+    ```
 
 ## Enum
 
@@ -163,131 +167,135 @@ the exact reason for the failure. In this case, failure protocol should be
 You can use [enum](https://docs.python.org/3/library/enum.html) members to
 process different failures in a different way.
 
-```pycon tab="sync"
+=== "sync"
 
->>> from enum import Enum, auto
->>> from app.repositories import load_promo_code
+    ```pycon
 
->>> class ApplyPromoCode:
-...     """Calculate actual product discount, apply it to the price."""
-...
-...     @story
-...     @arguments("category")
-...     def apply(I):
-...
-...         I.find_promo_code
-...         I.check_promo_code_exists
-...         I.check_expiration
-...
-...     # Steps.
-...
-...     def find_promo_code(self, ctx):
-...
-...         ctx.promo_code = self.load_promo_code(ctx.category)
-...         return Success()
-...
-...     def check_promo_code_exists(self, ctx):
-...
-...         if ctx.promo_code is None:
-...             return Failure(Errors.not_found)
-...         else:
-...             return Success()
-...
-...     def check_expiration(self, ctx):
-...
-...         if ctx.promo_code.is_expired():
-...             return Failure(Errors.expired)
-...         else:
-...             return Success()
-...
-...     # Dependencies.
-...
-...     def __init__(self, load_promo_code):
-...
-...         self.load_promo_code = load_promo_code
+    >>> from enum import Enum, auto
+    >>> from app.repositories import load_promo_code
 
->>> @ApplyPromoCode.apply.failures
-... class Errors(Enum):
-...
-...     not_found = auto()
-...     expired = auto()
+    >>> class ApplyPromoCode:
+    ...     """Calculate actual product discount, apply it to the price."""
+    ...
+    ...     @story
+    ...     @arguments("category")
+    ...     def apply(I):
+    ...
+    ...         I.find_promo_code
+    ...         I.check_promo_code_exists
+    ...         I.check_expiration
+    ...
+    ...     # Steps.
+    ...
+    ...     def find_promo_code(self, ctx):
+    ...
+    ...         ctx.promo_code = self.load_promo_code(ctx.category)
+    ...         return Success()
+    ...
+    ...     def check_promo_code_exists(self, ctx):
+    ...
+    ...         if ctx.promo_code is None:
+    ...             return Failure(Errors.not_found)
+    ...         else:
+    ...             return Success()
+    ...
+    ...     def check_expiration(self, ctx):
+    ...
+    ...         if ctx.promo_code.is_expired():
+    ...             return Failure(Errors.expired)
+    ...         else:
+    ...             return Success()
+    ...
+    ...     # Dependencies.
+    ...
+    ...     def __init__(self, load_promo_code):
+    ...
+    ...         self.load_promo_code = load_promo_code
 
->>> promo_code = ApplyPromoCode(load_promo_code=load_promo_code)
+    >>> @ApplyPromoCode.apply.failures
+    ... class Errors(Enum):
+    ...
+    ...     not_found = auto()
+    ...     expired = auto()
 
->>> result = promo_code.apply.run(category=Category(177, 'Drawing', 700))
+    >>> promo_code = ApplyPromoCode(load_promo_code=load_promo_code)
 
->>> if result.is_success:
-...     print("Promo code applied")
-... elif result.failed_because(promo_code.apply.failures.not_found):
-...     print("Promo code not found")
-... elif result.failed_because(promo_code.apply.failures.expired):
-...     print("Promo code expired")
-Promo code not found
+    >>> result = promo_code.apply.run(category=Category(177, 'Drawing', 700))
 
-```
+    >>> if result.is_success:
+    ...     print("Promo code applied")
+    ... elif result.failed_because(promo_code.apply.failures.not_found):
+    ...     print("Promo code not found")
+    ... elif result.failed_because(promo_code.apply.failures.expired):
+    ...     print("Promo code expired")
+    Promo code not found
 
-```pycon tab="async"
+    ```
 
->>> from enum import Enum, auto
->>> from aioapp.repositories import load_promo_code
+=== "async"
 
->>> class ApplyPromoCode:
-...     """Calculate actual product discount, apply it to the price."""
-...
-...     @story
-...     @arguments("category")
-...     def apply(I):
-...
-...         I.find_promo_code
-...         I.check_promo_code_exists
-...         I.check_expiration
-...
-...     # Steps.
-...
-...     async def find_promo_code(self, ctx):
-...
-...         ctx.promo_code = await self.load_promo_code(ctx.category)
-...         return Success()
-...
-...     async def check_promo_code_exists(self, ctx):
-...
-...         if ctx.promo_code is None:
-...             return Failure(Errors.not_found)
-...         else:
-...             return Success()
-...
-...     async def check_expiration(self, ctx):
-...
-...         if ctx.promo_code.is_expired():
-...             return Failure(Errors.expired)
-...         else:
-...             return Success()
-...
-...     # Dependencies.
-...
-...     def __init__(self, load_promo_code):
-...
-...         self.load_promo_code = load_promo_code
+    ```pycon
 
->>> @ApplyPromoCode.apply.failures
-... class Errors(Enum):
-...
-...     not_found = auto()
-...     expired = auto()
+    >>> from enum import Enum, auto
+    >>> from aioapp.repositories import load_promo_code
 
->>> promo_code = ApplyPromoCode(load_promo_code=load_promo_code)
+    >>> class ApplyPromoCode:
+    ...     """Calculate actual product discount, apply it to the price."""
+    ...
+    ...     @story
+    ...     @arguments("category")
+    ...     def apply(I):
+    ...
+    ...         I.find_promo_code
+    ...         I.check_promo_code_exists
+    ...         I.check_expiration
+    ...
+    ...     # Steps.
+    ...
+    ...     async def find_promo_code(self, ctx):
+    ...
+    ...         ctx.promo_code = await self.load_promo_code(ctx.category)
+    ...         return Success()
+    ...
+    ...     async def check_promo_code_exists(self, ctx):
+    ...
+    ...         if ctx.promo_code is None:
+    ...             return Failure(Errors.not_found)
+    ...         else:
+    ...             return Success()
+    ...
+    ...     async def check_expiration(self, ctx):
+    ...
+    ...         if ctx.promo_code.is_expired():
+    ...             return Failure(Errors.expired)
+    ...         else:
+    ...             return Success()
+    ...
+    ...     # Dependencies.
+    ...
+    ...     def __init__(self, load_promo_code):
+    ...
+    ...         self.load_promo_code = load_promo_code
 
->>> result = asyncio.run(promo_code.apply.run(category=Category(177, 'Drawing', 700)))
+    >>> @ApplyPromoCode.apply.failures
+    ... class Errors(Enum):
+    ...
+    ...     not_found = auto()
+    ...     expired = auto()
 
->>> if result.is_success:
-...     print("Promo code applied")
-... elif result.failed_because(promo_code.apply.failures.not_found):
-...     print("Promo code not found")
-... elif result.failed_because(promo_code.apply.failures.expired):
-...     print("Promo code expired")
-Promo code not found
+    >>> promo_code = ApplyPromoCode(load_promo_code=load_promo_code)
 
-```
+    >>> result = asyncio.run(promo_code.apply.run(category=Category(177, 'Drawing', 700)))
+
+    >>> if result.is_success:
+    ...     print("Promo code applied")
+    ... elif result.failed_because(promo_code.apply.failures.not_found):
+    ...     print("Promo code not found")
+    ... elif result.failed_because(promo_code.apply.failures.expired):
+    ...     print("Promo code expired")
+    Promo code not found
+
+    ```
 
 On Python 2 you can use [enum34](https://pypi.org/project/enum34/) package:
 
@@ -314,209 +322,213 @@ A composition of these two stories can fail both because of `low_balance` and
 `expired` reasons. For convenience, `failures` property will contain protocols
 composition. A new `enum` class.
 
-```pycon tab="sync"
+=== "sync"
 
->>> from app.repositories import load_token
+    ```pycon
 
->>> class Subscription:
-...
-...     @story
-...     def buy(I):
-...
-...         I.find_promo_code
-...         I.check_balance
-...         I.persist_payment
-...         I.show_category
-...
-...     # Steps.
-...
-...     def check_balance(self, ctx):
-...
-...         if ctx.user.balance < ctx.category.price:
-...             return Failure(self.Errors.low_balance)
-...         else:
-...             return Success()
-...
-...     def persist_payment(self, ctx):
-...
-...         self.create_payment(ctx.user, ctx.category)
-...         return Success()
-...
-...     def show_category(self, ctx):
-...
-...         return Result(ctx.category)
-...
-...     # Protocols.
-...
-...     @buy.failures
-...     class Errors(Enum):
-...
-...         low_balance = auto()
-...
-...     # Dependencies.
-...
-...     def __init__(self, find_promo_code):
-...
-...         self.find_promo_code = find_promo_code
+    >>> from app.repositories import load_token
 
->>> class PromoCode:
-...
-...     @story
-...     def find(I):
-...
-...         I.find_token
-...         I.check_expiration
-...         I.calculate_discount
-...
-...     # Steps.
-...
-...     def find_token(self, ctx):
-...
-...         ctx.token = self.load_token()
-...         return Success()
-...
-...     def check_expiration(self, ctx):
-...
-...         if ctx.token.is_expired():
-...             return Failure(self.Errors.expired)
-...         else:
-...             return Success()
-...
-...     def calculate_discount(self, ctx):
-...
-...         ctx.discount = ctx.token.get_discount()
-...         return Success()
-...
-...     # Protocols.
-...
-...     @find.failures
-...     class Errors(Enum):
-...
-...         expired = auto()
-...
-...     # Dependencies.
-...
-...     def __init__(self, load_token):
-...
-...         self.load_token = load_token
+    >>> class Subscription:
+    ...
+    ...     @story
+    ...     def buy(I):
+    ...
+    ...         I.find_promo_code
+    ...         I.check_balance
+    ...         I.persist_payment
+    ...         I.show_category
+    ...
+    ...     # Steps.
+    ...
+    ...     def check_balance(self, ctx):
+    ...
+    ...         if ctx.user.balance < ctx.category.price:
+    ...             return Failure(self.Errors.low_balance)
+    ...         else:
+    ...             return Success()
+    ...
+    ...     def persist_payment(self, ctx):
+    ...
+    ...         self.create_payment(ctx.user, ctx.category)
+    ...         return Success()
+    ...
+    ...     def show_category(self, ctx):
+    ...
+    ...         return Result(ctx.category)
+    ...
+    ...     # Protocols.
+    ...
+    ...     @buy.failures
+    ...     class Errors(Enum):
+    ...
+    ...         low_balance = auto()
+    ...
+    ...     # Dependencies.
+    ...
+    ...     def __init__(self, find_promo_code):
+    ...
+    ...         self.find_promo_code = find_promo_code
 
->>> promo_code = PromoCode(load_token)
+    >>> class PromoCode:
+    ...
+    ...     @story
+    ...     def find(I):
+    ...
+    ...         I.find_token
+    ...         I.check_expiration
+    ...         I.calculate_discount
+    ...
+    ...     # Steps.
+    ...
+    ...     def find_token(self, ctx):
+    ...
+    ...         ctx.token = self.load_token()
+    ...         return Success()
+    ...
+    ...     def check_expiration(self, ctx):
+    ...
+    ...         if ctx.token.is_expired():
+    ...             return Failure(self.Errors.expired)
+    ...         else:
+    ...             return Success()
+    ...
+    ...     def calculate_discount(self, ctx):
+    ...
+    ...         ctx.discount = ctx.token.get_discount()
+    ...         return Success()
+    ...
+    ...     # Protocols.
+    ...
+    ...     @find.failures
+    ...     class Errors(Enum):
+    ...
+    ...         expired = auto()
+    ...
+    ...     # Dependencies.
+    ...
+    ...     def __init__(self, load_token):
+    ...
+    ...         self.load_token = load_token
 
->>> subscription = Subscription(promo_code.find)
+    >>> promo_code = PromoCode(load_token)
 
->>> result = subscription.buy.run()
+    >>> subscription = Subscription(promo_code.find)
 
->>> if result.is_success:
-...     print("Subscribed")
-... elif result.failed_because(subscription.buy.failures.low_balance):
-...     print("Low balance")
-... elif result.failed_because(subscription.buy.failures.expired):
-...     print("Promo code expired")
-Promo code expired
+    >>> result = subscription.buy.run()
 
-```
+    >>> if result.is_success:
+    ...     print("Subscribed")
+    ... elif result.failed_because(subscription.buy.failures.low_balance):
+    ...     print("Low balance")
+    ... elif result.failed_because(subscription.buy.failures.expired):
+    ...     print("Promo code expired")
+    Promo code expired
 
-```pycon tab="async"
+    ```
 
->>> from aioapp.repositories import load_token
+=== "async"
 
->>> class Subscription:
-...
-...     @story
-...     def buy(I):
-...
-...         I.find_promo_code
-...         I.check_balance
-...         I.persist_payment
-...         I.show_category
-...
-...     # Steps.
-...
-...     async def check_balance(self, ctx):
-...
-...         if ctx.user.balance < ctx.category.price:
-...             return Failure(self.Errors.low_balance)
-...         else:
-...             return Success()
-...
-...     async def persist_payment(self, ctx):
-...
-...         await self.create_payment(ctx.user, ctx.category)
-...         return Success()
-...
-...     async def show_category(self, ctx):
-...
-...         return Result(ctx.category)
-...
-...     # Protocols.
-...
-...     @buy.failures
-...     class Errors(Enum):
-...
-...         low_balance = auto()
-...
-...     # Dependencies.
-...
-...     def __init__(self, find_promo_code):
-...
-...         self.find_promo_code = find_promo_code
+    ```pycon
 
->>> class PromoCode:
-...
-...     @story
-...     def find(I):
-...
-...         I.find_token
-...         I.check_expiration
-...         I.calculate_discount
-...
-...     # Steps.
-...
-...     async def find_token(self, ctx):
-...
-...         ctx.token = await self.load_token()
-...         return Success()
-...
-...     async def check_expiration(self, ctx):
-...
-...         if ctx.token.is_expired():
-...             return Failure(self.Errors.expired)
-...         else:
-...             return Success()
-...
-...     async def calculate_discount(self, ctx):
-...
-...         ctx.discount = ctx.token.get_discount()
-...         return Success()
-...
-...     # Protocols.
-...
-...     @find.failures
-...     class Errors(Enum):
-...
-...         expired = auto()
-...
-...     # Dependencies.
-...
-...     def __init__(self, load_token):
-...
-...         self.load_token = load_token
+    >>> from aioapp.repositories import load_token
 
->>> promo_code = PromoCode(load_token)
+    >>> class Subscription:
+    ...
+    ...     @story
+    ...     def buy(I):
+    ...
+    ...         I.find_promo_code
+    ...         I.check_balance
+    ...         I.persist_payment
+    ...         I.show_category
+    ...
+    ...     # Steps.
+    ...
+    ...     async def check_balance(self, ctx):
+    ...
+    ...         if ctx.user.balance < ctx.category.price:
+    ...             return Failure(self.Errors.low_balance)
+    ...         else:
+    ...             return Success()
+    ...
+    ...     async def persist_payment(self, ctx):
+    ...
+    ...         await self.create_payment(ctx.user, ctx.category)
+    ...         return Success()
+    ...
+    ...     async def show_category(self, ctx):
+    ...
+    ...         return Result(ctx.category)
+    ...
+    ...     # Protocols.
+    ...
+    ...     @buy.failures
+    ...     class Errors(Enum):
+    ...
+    ...         low_balance = auto()
+    ...
+    ...     # Dependencies.
+    ...
+    ...     def __init__(self, find_promo_code):
+    ...
+    ...         self.find_promo_code = find_promo_code
 
->>> subscription = Subscription(promo_code.find)
+    >>> class PromoCode:
+    ...
+    ...     @story
+    ...     def find(I):
+    ...
+    ...         I.find_token
+    ...         I.check_expiration
+    ...         I.calculate_discount
+    ...
+    ...     # Steps.
+    ...
+    ...     async def find_token(self, ctx):
+    ...
+    ...         ctx.token = await self.load_token()
+    ...         return Success()
+    ...
+    ...     async def check_expiration(self, ctx):
+    ...
+    ...         if ctx.token.is_expired():
+    ...             return Failure(self.Errors.expired)
+    ...         else:
+    ...             return Success()
+    ...
+    ...     async def calculate_discount(self, ctx):
+    ...
+    ...         ctx.discount = ctx.token.get_discount()
+    ...         return Success()
+    ...
+    ...     # Protocols.
+    ...
+    ...     @find.failures
+    ...     class Errors(Enum):
+    ...
+    ...         expired = auto()
+    ...
+    ...     # Dependencies.
+    ...
+    ...     def __init__(self, load_token):
+    ...
+    ...         self.load_token = load_token
 
->>> result = asyncio.run(subscription.buy.run())
+    >>> promo_code = PromoCode(load_token)
 
->>> if result.is_success:
-...     print("Subscribed")
-... elif result.failed_because(subscription.buy.failures.low_balance):
-...     print("Low balance")
-... elif result.failed_because(subscription.buy.failures.expired):
-...     print("Promo code expired")
-Promo code expired
+    >>> subscription = Subscription(promo_code.find)
 
-```
+    >>> result = asyncio.run(subscription.buy.run())
+
+    >>> if result.is_success:
+    ...     print("Subscribed")
+    ... elif result.failed_because(subscription.buy.failures.low_balance):
+    ...     print("Low balance")
+    ... elif result.failed_because(subscription.buy.failures.expired):
+    ...     print("Promo code expired")
+    Promo code expired
+
+    ```
 
 This composition rule works both for
 [class methods](composition.md#class-methods) with inheritance and

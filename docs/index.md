@@ -49,102 +49,106 @@ to capturing and returning errors from any step in the transaction.
 `stories` provide a simple way to define a complex business scenario that
 include many processing steps.
 
-```pycon tab="sync"
+=== "sync"
 
->>> from stories import story, arguments, Success, Failure, Result
->>> from app.repositories import load_category, load_profile, create_subscription
+    ```pycon
 
->>> class Subscribe:
-...
-...     @story
-...     @arguments('category_id', 'profile_id')
-...     def buy(I):
-...
-...         I.find_category
-...         I.find_profile
-...         I.check_balance
-...         I.persist_subscription
-...         I.show_subscription
-...
-...     def find_category(self, ctx):
-...
-...         ctx.category = load_category(ctx.category_id)
-...         return Success()
-...
-...     def find_profile(self, ctx):
-...
-...         ctx.profile = load_profile(ctx.profile_id)
-...         return Success()
-...
-...     def check_balance(self, ctx):
-...
-...         if ctx.category.cost < ctx.profile.balance:
-...             return Success()
-...         else:
-...             return Failure()
-...
-...     def persist_subscription(self, ctx):
-...
-...         ctx.subscription = create_subscription(category=ctx.category, profile=ctx.profile)
-...         return Success()
-...
-...     def show_subscription(self, ctx):
-...
-...         return Result(ctx.subscription)
+    >>> from stories import story, arguments, Success, Failure, Result
+    >>> from app.repositories import load_category, load_profile, create_subscription
 
->>> Subscribe().buy(category_id=1, profile_id=1)
-Subscription(primary_key=8)
+    >>> class Subscribe:
+    ...
+    ...     @story
+    ...     @arguments('category_id', 'profile_id')
+    ...     def buy(I):
+    ...
+    ...         I.find_category
+    ...         I.find_profile
+    ...         I.check_balance
+    ...         I.persist_subscription
+    ...         I.show_subscription
+    ...
+    ...     def find_category(self, ctx):
+    ...
+    ...         ctx.category = load_category(ctx.category_id)
+    ...         return Success()
+    ...
+    ...     def find_profile(self, ctx):
+    ...
+    ...         ctx.profile = load_profile(ctx.profile_id)
+    ...         return Success()
+    ...
+    ...     def check_balance(self, ctx):
+    ...
+    ...         if ctx.category.cost < ctx.profile.balance:
+    ...             return Success()
+    ...         else:
+    ...             return Failure()
+    ...
+    ...     def persist_subscription(self, ctx):
+    ...
+    ...         ctx.subscription = create_subscription(category=ctx.category, profile=ctx.profile)
+    ...         return Success()
+    ...
+    ...     def show_subscription(self, ctx):
+    ...
+    ...         return Result(ctx.subscription)
 
-```
+    >>> Subscribe().buy(category_id=1, profile_id=1)
+    Subscription(primary_key=8)
 
-```pycon tab="async"
+    ```
 
->>> import asyncio
->>> from stories import story, arguments, Success, Failure, Result
->>> from aioapp.repositories import load_category, load_profile, create_subscription
+=== "async"
 
->>> class Subscribe:
-...
-...     @story
-...     @arguments('category_id', 'profile_id')
-...     def buy(I):
-...
-...         I.find_category
-...         I.find_profile
-...         I.check_balance
-...         I.persist_subscription
-...         I.show_subscription
-...
-...     async def find_category(self, ctx):
-...
-...         ctx.category = await load_category(ctx.category_id)
-...         return Success()
-...
-...     async def find_profile(self, ctx):
-...
-...         ctx.profile = await load_profile(ctx.profile_id)
-...         return Success()
-...
-...     async def check_balance(self, ctx):
-...
-...         if ctx.category.cost < ctx.profile.balance:
-...             return Success()
-...         else:
-...             return Failure()
-...
-...     async def persist_subscription(self, ctx):
-...
-...         ctx.subscription = await create_subscription(category=ctx.category, profile=ctx.profile)
-...         return Success()
-...
-...     async def show_subscription(self, ctx):
-...
-...         return Result(ctx.subscription)
+    ```pycon
 
->>> asyncio.run(Subscribe().buy(category_id=1, profile_id=1))
-Subscription(primary_key=9)
+    >>> import asyncio
+    >>> from stories import story, arguments, Success, Failure, Result
+    >>> from aioapp.repositories import load_category, load_profile, create_subscription
 
-```
+    >>> class Subscribe:
+    ...
+    ...     @story
+    ...     @arguments('category_id', 'profile_id')
+    ...     def buy(I):
+    ...
+    ...         I.find_category
+    ...         I.find_profile
+    ...         I.check_balance
+    ...         I.persist_subscription
+    ...         I.show_subscription
+    ...
+    ...     async def find_category(self, ctx):
+    ...
+    ...         ctx.category = await load_category(ctx.category_id)
+    ...         return Success()
+    ...
+    ...     async def find_profile(self, ctx):
+    ...
+    ...         ctx.profile = await load_profile(ctx.profile_id)
+    ...         return Success()
+    ...
+    ...     async def check_balance(self, ctx):
+    ...
+    ...         if ctx.category.cost < ctx.profile.balance:
+    ...             return Success()
+    ...         else:
+    ...             return Failure()
+    ...
+    ...     async def persist_subscription(self, ctx):
+    ...
+    ...         ctx.subscription = await create_subscription(category=ctx.category, profile=ctx.profile)
+    ...         return Success()
+    ...
+    ...     async def show_subscription(self, ctx):
+    ...
+    ...         return Result(ctx.subscription)
+
+    >>> asyncio.run(Subscribe().buy(category_id=1, profile_id=1))
+    Subscription(primary_key=9)
+
+    ```
 
 This code style allow you clearly separate actual business scenario from
 implementation details.
