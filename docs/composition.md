@@ -117,98 +117,102 @@ We use simple rules to write our steps.
 
 Here are some examples:
 
-```pycon tab="sync"
+=== "sync"
 
->>> class Subscription:
-...
-...     @story
-...     @arguments("profile_id", "price_id")
-...     def buy(I):
-...
-...         I.find_profile
-...         I.find_price
-...         I.check_balance
-...
-...     def find_profile(self, ctx):
-...
-...         ctx.profile = self.load_profile(ctx.profile_id)
-...         return Success()
-...
-...     def find_price(self, ctx):
-...
-...         ctx.price = self.load_price(ctx.price_id)
-...         return Success()
-...
-...     def check_balance(self, ctx):
-...
-...         if ctx.profile.has_enough_balance(ctx.price):
-...             return Success()
-...         else:
-...             return Failure()
-...
-...     def __init__(self, load_profile, load_price):
-...
-...         self.load_profile = load_profile
-...         self.load_price = load_price
+    ```pycon
 
->>> from app.db import ProfileTable, PriceTable
+    >>> class Subscription:
+    ...
+    ...     @story
+    ...     @arguments("profile_id", "price_id")
+    ...     def buy(I):
+    ...
+    ...         I.find_profile
+    ...         I.find_price
+    ...         I.check_balance
+    ...
+    ...     def find_profile(self, ctx):
+    ...
+    ...         ctx.profile = self.load_profile(ctx.profile_id)
+    ...         return Success()
+    ...
+    ...     def find_price(self, ctx):
+    ...
+    ...         ctx.price = self.load_price(ctx.price_id)
+    ...         return Success()
+    ...
+    ...     def check_balance(self, ctx):
+    ...
+    ...         if ctx.profile.has_enough_balance(ctx.price):
+    ...             return Success()
+    ...         else:
+    ...             return Failure()
+    ...
+    ...     def __init__(self, load_profile, load_price):
+    ...
+    ...         self.load_profile = load_profile
+    ...         self.load_price = load_price
 
->>> def load_profile(profile_id):
-...     return ProfileTable.where(pk=profile_id).select()
+    >>> from app.db import ProfileTable, PriceTable
 
->>> def load_price(price_id):
-...     return PriceTable.where(pk=price_id).select()
+    >>> def load_profile(profile_id):
+    ...     return ProfileTable.where(pk=profile_id).select()
 
->>> Subscription(load_profile, load_price).buy(profile_id=1, price_id=7)
+    >>> def load_price(price_id):
+    ...     return PriceTable.where(pk=price_id).select()
 
-```
+    >>> Subscription(load_profile, load_price).buy(profile_id=1, price_id=7)
 
-```pycon tab="async"
+    ```
 
->>> class Subscription:
-...
-...     @story
-...     @arguments("profile_id", "price_id")
-...     def buy(I):
-...
-...         I.find_profile
-...         I.find_price
-...         I.check_balance
-...
-...     async def find_profile(self, ctx):
-...
-...         ctx.profile = await self.load_profile(ctx.profile_id)
-...         return Success()
-...
-...     async def find_price(self, ctx):
-...
-...         ctx.price = await self.load_price(ctx.price_id)
-...         return Success()
-...
-...     async def check_balance(self, ctx):
-...
-...         if ctx.profile.has_enough_balance(ctx.price):
-...             return Success()
-...         else:
-...             return Failure()
-...
-...     def __init__(self, load_profile, load_price):
-...
-...         self.load_profile = load_profile
-...         self.load_price = load_price
+=== "async"
 
->>> import asyncio
->>> from aioapp.db import ProfileTable, PriceTable
+    ```pycon
 
->>> async def load_profile(profile_id):
-...     return await ProfileTable.where(pk=profile_id).select()
+    >>> class Subscription:
+    ...
+    ...     @story
+    ...     @arguments("profile_id", "price_id")
+    ...     def buy(I):
+    ...
+    ...         I.find_profile
+    ...         I.find_price
+    ...         I.check_balance
+    ...
+    ...     async def find_profile(self, ctx):
+    ...
+    ...         ctx.profile = await self.load_profile(ctx.profile_id)
+    ...         return Success()
+    ...
+    ...     async def find_price(self, ctx):
+    ...
+    ...         ctx.price = await self.load_price(ctx.price_id)
+    ...         return Success()
+    ...
+    ...     async def check_balance(self, ctx):
+    ...
+    ...         if ctx.profile.has_enough_balance(ctx.price):
+    ...             return Success()
+    ...         else:
+    ...             return Failure()
+    ...
+    ...     def __init__(self, load_profile, load_price):
+    ...
+    ...         self.load_profile = load_profile
+    ...         self.load_price = load_price
 
->>> async def load_price(price_id):
-...     return await PriceTable.where(pk=price_id).select()
+    >>> import asyncio
+    >>> from aioapp.db import ProfileTable, PriceTable
 
->>> asyncio.run(Subscription(load_profile, load_price).buy(profile_id=1, price_id=7))
+    >>> async def load_profile(profile_id):
+    ...     return await ProfileTable.where(pk=profile_id).select()
 
-```
+    >>> async def load_price(price_id):
+    ...     return await PriceTable.where(pk=price_id).select()
+
+    >>> asyncio.run(Subscription(load_profile, load_price).buy(profile_id=1, price_id=7))
+
+    ```
 
 This way you decouple your business logic from relation mapper models or
 networking library! There is no more vendor lock on a certain framework or
@@ -217,27 +221,31 @@ database! Welcome to the good architecture utopia.
 You can group delegates into a single object to avoid complex constructors and
 names duplication.
 
-```pycon tab="sync"
+=== "sync"
 
->>> def find_price(self, ctx):
-...     ctx.price = self.impl.find_price(ctx.price_id)
-...     return Success()
+    ```pycon
 
->>> def __init__(self, impl):
-...     self.impl = impl
+    >>> def find_price(self, ctx):
+    ...     ctx.price = self.impl.find_price(ctx.price_id)
+    ...     return Success()
 
-```
+    >>> def __init__(self, impl):
+    ...     self.impl = impl
 
-```pycon tab="async"
+    ```
 
->>> async def find_price(self, ctx):
-...     ctx.price = await self.impl.find_price(ctx.price_id)
-...     return Success()
+=== "async"
 
->>> def __init__(self, impl):
-...     self.impl = impl
+    ```pycon
 
-```
+    >>> async def find_price(self, ctx):
+    ...     ctx.price = await self.impl.find_price(ctx.price_id)
+    ...     return Success()
+
+    >>> def __init__(self, impl):
+    ...     self.impl = impl
+
+    ```
 
 If you follow our mantra "decouple everything", you definitely should check the
 following libraries:

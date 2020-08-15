@@ -9,51 +9,59 @@ The most simple variant to execute story is to call it as a regular method.
 
 ### Result
 
-```pycon tab="sync"
+=== "sync"
 
->>> from app.services import Subscription
+    ```pycon
 
->>> Subscription().buy(category_id=1, price_id=1, profile_id=1)
-Category(primary_key=1, name='Books', cost=7)
+    >>> from app.services import Subscription
 
-```
+    >>> Subscription().buy(category_id=1, price_id=1, profile_id=1)
+    Category(primary_key=1, name='Books', cost=7)
 
-```pycon tab="async"
+    ```
 
->>> import asyncio
->>> from aioapp.services import Subscription
+=== "async"
 
->>> asyncio.run(Subscription().buy(category_id=1, price_id=1, profile_id=1))
-Category(primary_key=1, name='Books', cost=7)
+    ```pycon
 
-```
+    >>> import asyncio
+    >>> from aioapp.services import Subscription
+
+    >>> asyncio.run(Subscription().buy(category_id=1, price_id=1, profile_id=1))
+    Category(primary_key=1, name='Books', cost=7)
+
+    ```
 
 The story was executed successfully. It returns an object we put into `Result`
 marker.
 
 ### Failure
 
-```pycon tab="sync"
+=== "sync"
 
->>> from app.services import Subscription
+    ```pycon
 
->>> Subscription().buy(category_id=2, price_id=2, profile_id=1)
-Traceback (most recent call last):
-  ...
-_stories.exceptions.FailureError
+    >>> from app.services import Subscription
 
-```
+    >>> Subscription().buy(category_id=2, price_id=2, profile_id=1)
+    Traceback (most recent call last):
+      ...
+    _stories.exceptions.FailureError
 
-```pycon tab="async"
+    ```
 
->>> from aioapp.services import Subscription
+=== "async"
 
->>> asyncio.run(Subscription().buy(category_id=2, price_id=2, profile_id=1))
-Traceback (most recent call last):
-  ...
-_stories.exceptions.FailureError
+    ```pycon
 
-```
+    >>> from aioapp.services import Subscription
+
+    >>> asyncio.run(Subscription().buy(category_id=2, price_id=2, profile_id=1))
+    Traceback (most recent call last):
+      ...
+    _stories.exceptions.FailureError
+
+    ```
 
 Story failed. The user does not have enough money to complete this purchase.
 `Failure` marker throws an exception when `call` method was used.
@@ -68,105 +76,113 @@ business object execution.
 
 ### Result
 
-```pycon tab="sync"
+=== "sync"
 
->>> from app.services import ShowCategory
+    ```pycon
 
->>> result = ShowCategory().show.run(category_id=1, profile_id=1)
+    >>> from app.services import ShowCategory
 
->>> result.is_success
-True
+    >>> result = ShowCategory().show.run(category_id=1, profile_id=1)
 
->>> result.value
-Category(primary_key=1, name='Books', cost=7)
+    >>> result.is_success
+    True
 
-```
+    >>> result.value
+    Category(primary_key=1, name='Books', cost=7)
 
-```pycon tab="async"
+    ```
 
->>> import asyncio
->>> from aioapp.services import ShowCategory
+=== "async"
 
->>> result = asyncio.run(ShowCategory().show.run(category_id=1, profile_id=1))
+    ```pycon
 
->>> result.is_success
-True
+    >>> import asyncio
+    >>> from aioapp.services import ShowCategory
 
->>> result.value
-Category(primary_key=1, name='Books', cost=7)
+    >>> result = asyncio.run(ShowCategory().show.run(category_id=1, profile_id=1))
 
-```
+    >>> result.is_success
+    True
+
+    >>> result.value
+    Category(primary_key=1, name='Books', cost=7)
+
+    ```
 
 If the story was executed successfully, its actual result will be available in
 the `value` attribute.
 
 ### Failure
 
-```pycon tab="sync"
+=== "sync"
 
->>> from app.services import ShowCategory
+    ```pycon
 
->>> result = ShowCategory().show.run(category_id=2, profile_id=1)
+    >>> from app.services import ShowCategory
 
->>> result.is_failure
-True
+    >>> result = ShowCategory().show.run(category_id=2, profile_id=1)
 
->>> result.failed_on("check_expiration")
-True
+    >>> result.is_failure
+    True
 
->>> result.failed_because(ShowCategory().show.failures.forbidden)
-True
+    >>> result.failed_on("check_expiration")
+    True
 
->>> result.ctx
-ShowCategory.show
-  find_subscription
-  check_expiration (failed: <Errors.forbidden: 1>)
-<BLANKLINE>
-Context:
-  category_id: 2                             # Story argument
-  profile_id: 1                              # Story argument
-  subscription: Subscription(primary_key=7)  # Set by ShowCategory.find_subscription
+    >>> result.failed_because(ShowCategory().show.failures.forbidden)
+    True
 
->>> result.ctx.subscription.is_expired()
-True
+    >>> result.ctx
+    ShowCategory.show
+      find_subscription
+      check_expiration (failed: <Errors.forbidden: 1>)
+    <BLANKLINE>
+    Context:
+      category_id: 2                             # Story argument
+      profile_id: 1                              # Story argument
+      subscription: Subscription(primary_key=7)  # Set by ShowCategory.find_subscription
 
->>> result.ctx.subscription.created
-datetime.date(2019, 1, 1)
+    >>> result.ctx.subscription.is_expired()
+    True
 
-```
+    >>> result.ctx.subscription.created
+    datetime.date(2019, 1, 1)
 
-```pycon tab="async"
+    ```
 
->>> from aioapp.services import ShowCategory
+=== "async"
 
->>> result = asyncio.run(ShowCategory().show.run(category_id=2, profile_id=1))
+    ```pycon
 
->>> result.is_failure
-True
+    >>> from aioapp.services import ShowCategory
 
->>> result.failed_on("check_expiration")
-True
+    >>> result = asyncio.run(ShowCategory().show.run(category_id=2, profile_id=1))
 
->>> result.failed_because(ShowCategory().show.failures.forbidden)
-True
+    >>> result.is_failure
+    True
 
->>> result.ctx
-ShowCategory.show
-  find_subscription
-  check_expiration (failed: <Errors.forbidden: 1>)
-<BLANKLINE>
-Context:
-  category_id: 2                             # Story argument
-  profile_id: 1                              # Story argument
-  subscription: Subscription(primary_key=7)  # Set by ShowCategory.find_subscription
+    >>> result.failed_on("check_expiration")
+    True
 
->>> result.ctx.subscription.is_expired()
-True
+    >>> result.failed_because(ShowCategory().show.failures.forbidden)
+    True
 
->>> result.ctx.subscription.created
-datetime.date(2019, 1, 1)
+    >>> result.ctx
+    ShowCategory.show
+      find_subscription
+      check_expiration (failed: <Errors.forbidden: 1>)
+    <BLANKLINE>
+    Context:
+      category_id: 2                             # Story argument
+      profile_id: 1                              # Story argument
+      subscription: Subscription(primary_key=7)  # Set by ShowCategory.find_subscription
 
-```
+    >>> result.ctx.subscription.is_expired()
+    True
+
+    >>> result.ctx.subscription.created
+    datetime.date(2019, 1, 1)
+
+    ```
 
 `run` does not raise an error. Even if the story returns `Failure` marker.
 
