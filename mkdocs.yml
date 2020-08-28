@@ -47,6 +47,6 @@ nav:
       - Debugging: debugging.md
       - Composition: composition.md
   - Contrib:
-      - Py.test: contrib/pytest.md
-      - Debug toolbars: contrib/debug_toolbars.md
-      - Sentry: contrib/sentry.md
+      - Py.test: contrib_pytest.md
+      - Debug toolbars: contrib_debug_toolbars.md
+      - Sentry: contrib_sentry.md
