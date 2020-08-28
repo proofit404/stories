@@ -187,7 +187,7 @@
   
     <li class="md-tabs__item">
       
-        <a href="contrib/pytest/" class="md-tabs__link">
+        <a href="contrib_pytest/" class="md-tabs__link">
           Contrib
         </a>
       
@@ -528,7 +528,7 @@
 
 
   <li class="md-nav__item">
-    <a href="contrib/pytest/" title="Py.test" class="md-nav__link">
+    <a href="contrib_pytest/" title="Py.test" class="md-nav__link">
       Py.test
     </a>
   </li>
@@ -540,7 +540,7 @@
 
 
   <li class="md-nav__item">
-    <a href="contrib/debug_toolbars/" title="Debug toolbars" class="md-nav__link">
+    <a href="contrib_debug_toolbars/" title="Debug toolbars" class="md-nav__link">
       Debug toolbars
     </a>
   </li>
@@ -552,7 +552,7 @@
 
 
   <li class="md-nav__item">
-    <a href="contrib/sentry/" title="Sentry" class="md-nav__link">
+    <a href="contrib_sentry/" title="Sentry" class="md-nav__link">
       Sentry
     </a>
   </li>
@@ -683,7 +683,6 @@ to capturing and returning errors from any step in the transaction.</p>
 <h2 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h2>
 <p><code>stories</code> provide a simple way to define a complex business scenario that
 include many processing steps.</p>
-<div class="tabbed-set" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">sync</label><div class="tabbed-content">
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">story</span><span class="p">,</span> <span class="n">arguments</span><span class="p">,</span> <span class="n">Success</span><span class="p">,</span> <span class="n">Failure</span><span class="p">,</span> <span class="n">Result</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">app.repositories</span> <span class="kn">import</span> <span class="n">load_category</span><span class="p">,</span> <span class="n">load_profile</span><span class="p">,</span> <span class="n">create_subscription</span>
 
@@ -729,56 +728,6 @@ include many processing steps.</p>
 <span class="go">Subscription(primary_key=8)</span>
 </code></pre></div>
 
-</div>
-<input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><label for="__tabbed_1_2">async</label><div class="tabbed-content">
-<div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">asyncio</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">story</span><span class="p">,</span> <span class="n">arguments</span><span class="p">,</span> <span class="n">Success</span><span class="p">,</span> <span class="n">Failure</span><span class="p">,</span> <span class="n">Result</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">aioapp.repositories</span> <span class="kn">import</span> <span class="n">load_category</span><span class="p">,</span> <span class="n">load_profile</span><span class="p">,</span> <span class="n">create_subscription</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Subscribe</span><span class="p">:</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="nd">@story</span>
-<span class="gp">... </span>    <span class="nd">@arguments</span><span class="p">(</span><span class="s1">&#39;category_id&#39;</span><span class="p">,</span> <span class="s1">&#39;profile_id&#39;</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="k">def</span> <span class="nf">buy</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">find_category</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">find_profile</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">check_balance</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">persist_subscription</span>
-<span class="gp">... </span>        <span class="n">I</span><span class="o">.</span><span class="n">show_subscription</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">find_category</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">category</span> <span class="o">=</span> <span class="k">await</span> <span class="n">load_category</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">category_id</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">find_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">profile</span> <span class="o">=</span> <span class="k">await</span> <span class="n">load_profile</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">profile_id</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">check_balance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">category</span><span class="o">.</span><span class="n">cost</span> <span class="o">&lt;</span> <span class="n">ctx</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">balance</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">... </span>        <span class="k">else</span><span class="p">:</span>
-<span class="gp">... </span>            <span class="k">return</span> <span class="n">Failure</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">persist_subscription</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="n">ctx</span><span class="o">.</span><span class="n">subscription</span> <span class="o">=</span> <span class="k">await</span> <span class="n">create_subscription</span><span class="p">(</span><span class="n">category</span><span class="o">=</span><span class="n">ctx</span><span class="o">.</span><span class="n">category</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="n">ctx</span><span class="o">.</span><span class="n">profile</span><span class="p">)</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
-<span class="gp">...</span>
-<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">show_subscription</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
-<span class="gp">...</span>
-<span class="gp">... </span>        <span class="k">return</span> <span class="n">Result</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">subscription</span><span class="p">)</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">Subscribe</span><span class="p">()</span><span class="o">.</span><span class="n">buy</span><span class="p">(</span><span class="n">category_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">profile_id</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
-<span class="go">Subscription(primary_key=9)</span>
-</code></pre></div>
-
-</div>
-</div>
 <p>This code style allow you clearly separate actual business scenario from
 implementation details.</p>
 <h2 id="questions">Questions<a class="headerlink" href="#questions" title="Permanent link">&para;</a></h2>
