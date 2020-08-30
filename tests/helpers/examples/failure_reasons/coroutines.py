@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from enum import Enum
 
 from examples.failure_reasons import *  # noqa: F401, F403
@@ -9,7 +8,7 @@ from stories import Success
 # Mixins.
 
 
-class StringMethod(object):
+class StringMethod:
     async def one(self, ctx):
         return Failure("foo")
 
@@ -17,7 +16,7 @@ class StringMethod(object):
         return Failure("spam")
 
 
-class EnumMethod(object):
+class EnumMethod:
     async def one(self, ctx):
         Errors = Enum("Errors", "foo,bar,baz")
         return Failure(Errors.foo)
@@ -27,7 +26,7 @@ class EnumMethod(object):
         return Failure(Errors.spam)
 
 
-class NormalMethod(object):
+class NormalMethod:
     async def one(self, ctx):
         return Success()
 
@@ -35,7 +34,7 @@ class NormalMethod(object):
         return Success()
 
 
-class WrongMethod(object):
+class WrongMethod:
     async def one(self, ctx):
         return Failure("'foo' is too big")
 
@@ -43,7 +42,7 @@ class WrongMethod(object):
         return Failure("'foo' is too big")
 
 
-class NullMethod(object):
+class NullMethod:
     async def one(self, ctx):
         return Failure()
 
@@ -54,7 +53,7 @@ class NullMethod(object):
 # Parent mixins.
 
 
-class StringParentMethod(object):
+class StringParentMethod:
     async def before(self, ctx):
         return Failure("foo")
 
@@ -62,7 +61,7 @@ class StringParentMethod(object):
         return Success()
 
 
-class EnumParentMethod(object):
+class EnumParentMethod:
     async def before(self, ctx):
         Errors = Enum("Errors", "foo,bar,baz")
         return Failure(Errors.foo)
@@ -71,7 +70,7 @@ class EnumParentMethod(object):
         return Success()
 
 
-class NormalParentMethod(object):
+class NormalParentMethod:
     async def before(self, ctx):
         return Success()
 
@@ -79,7 +78,7 @@ class NormalParentMethod(object):
         return Success()
 
 
-class NullParentMethod(object):
+class NullParentMethod:
     async def before(self, ctx):
         return Failure()
 

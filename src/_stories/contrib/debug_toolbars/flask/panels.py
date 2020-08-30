@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from flask import render_template
 from flask_debugtoolbar.panels import DebugPanel
 
@@ -27,7 +26,7 @@ class StoriesPanel(DebugPanel):
     template = "stories/debug_toolbar/stories_panel.html"
 
     def __init__(self, *args, **kwargs):
-        super(StoriesPanel, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.storage = []
         self.enable_instrumentation()
 

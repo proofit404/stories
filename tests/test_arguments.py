@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import pytest
 
 from stories import arguments
@@ -11,7 +10,7 @@ def test_deny_empty_arguments():
 
     with pytest.raises(StoryDefinitionError) as exc_info:
 
-        class Action(object):
+        class Action:
             @story
             @arguments()
             def do(I):  # pragma: no cover
@@ -25,7 +24,7 @@ def test_deny_non_string_arguments():
 
     with pytest.raises(StoryDefinitionError) as exc_info:
 
-        class Action(object):
+        class Action:
             @story
             @arguments
             def do(I):  # pragma: no cover

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from typing import Dict
 from typing import List
 
@@ -25,7 +24,7 @@ representations = {
 # Child base classes.
 
 
-class Child(object):
+class Child:
     @story
     def x(I):
         I.one
@@ -37,13 +36,13 @@ class Child(object):
         baz: int
 
 
-class ChildWithNull(object):
+class ChildWithNull:
     @story
     def x(I):
         I.one
 
 
-class ChildWithShrink(object):
+class ChildWithShrink:
     @story
     def x(I):
         I.one
@@ -53,7 +52,7 @@ class ChildWithShrink(object):
         baz: int
 
 
-class ChildAlias(object):
+class ChildAlias:
     @story
     def x(I):
         I.one
@@ -65,7 +64,7 @@ class ChildAlias(object):
         baz: Dict[str, int]
 
 
-class ParamChild(object):
+class ParamChild:
     @story
     @arguments("foo", "bar")
     def x(I):
@@ -78,14 +77,14 @@ class ParamChild(object):
         baz: int
 
 
-class ParamChildWithNull(object):
+class ParamChildWithNull:
     @story
     @arguments("foo", "bar")
     def x(I):
         I.one
 
 
-class ParamChildWithShrink(object):
+class ParamChildWithShrink:
     @story
     @arguments("foo", "bar", "baz")
     def x(I):
@@ -96,7 +95,7 @@ class ParamChildWithShrink(object):
         baz: int
 
 
-class ParamChildAlias(object):
+class ParamChildAlias:
     @story
     @arguments("foo", "bar", "baz")
     def x(I):
@@ -112,7 +111,7 @@ class ParamChildAlias(object):
 # Next child base classes.
 
 
-class NextChildWithSame(object):
+class NextChildWithSame:
     @story
     def y(I):
         I.one
@@ -124,7 +123,7 @@ class NextChildWithSame(object):
         baz: int
 
 
-class NextParamChildWithString(object):
+class NextParamChildWithString:
     @story
     @arguments("foo", "bar")
     def y(I):
@@ -139,7 +138,7 @@ class NextParamChildWithString(object):
 # Parent base classes.
 
 
-class Parent(object):
+class Parent:
     @story
     def a(I):
         I.before
@@ -154,7 +153,7 @@ class Contract(BaseModel):
     beans: int
 
 
-class ParentWithNull(object):
+class ParentWithNull:
     @story
     def a(I):
         I.before
@@ -162,7 +161,7 @@ class ParentWithNull(object):
         I.after
 
 
-class ParentWithSame(object):
+class ParentWithSame:
     @story
     def a(I):
         I.before
@@ -177,7 +176,7 @@ class Contract(BaseModel):  # noqa: F811
     baz: int
 
 
-class SequentialParent(object):
+class SequentialParent:
     @story
     def a(I):
         I.before
@@ -190,7 +189,7 @@ class SequentialParent(object):
         pass
 
 
-class ParamParent(object):
+class ParamParent:
     @story
     @arguments("ham", "eggs")
     def a(I):
@@ -206,7 +205,7 @@ class Contract(BaseModel):  # noqa: F811
     beans: int
 
 
-class ParamParentWithNull(object):
+class ParamParentWithNull:
     @story
     @arguments("ham", "eggs")
     def a(I):
@@ -215,7 +214,7 @@ class ParamParentWithNull(object):
         I.after
 
 
-class ParamParentWithSame(object):
+class ParamParentWithSame:
     @story
     @arguments("foo", "bar", "baz")
     def a(I):
@@ -230,7 +229,7 @@ class Contract(BaseModel):  # noqa: F811
     baz: int
 
 
-class ParamParentWithSameWithString(object):
+class ParamParentWithSameWithString:
     @story
     @arguments("foo", "bar")
     def a(I):
@@ -248,7 +247,7 @@ class Contract(BaseModel):  # noqa: F811
 # Root base classes.
 
 
-class Root(object):
+class Root:
     @story
     def i(I):
         I.start
@@ -262,7 +261,7 @@ class Contract(BaseModel):  # noqa: F811
     buzz: int
 
 
-class RootWithSame(object):
+class RootWithSame:
     @story
     def i(I):
         I.start
@@ -277,7 +276,7 @@ class Contract(BaseModel):  # noqa: F811
     baz: int
 
 
-class SequentialRoot(object):
+class SequentialRoot:
     @story
     def i(I):
         I.start
@@ -292,7 +291,7 @@ class Contract(BaseModel):  # noqa: F811
     buzz: int
 
 
-class ParamRoot(object):
+class ParamRoot:
     @story
     @arguments("fizz")
     def i(I):

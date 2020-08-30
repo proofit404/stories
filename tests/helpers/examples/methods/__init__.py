@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 from stories import story
 
 
 # Child base classes.
 
 
-class Child(object):
+class Child:
     @story
     def x(I):
         I.one
@@ -16,7 +15,7 @@ class Child(object):
 # Parent base classes.
 
 
-class Parent(object):
+class Parent:
     @story
     def a(I):
         I.before

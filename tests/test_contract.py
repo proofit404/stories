@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import pytest
 
 from helpers import make_collector

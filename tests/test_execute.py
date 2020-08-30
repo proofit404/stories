@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import pytest
 
 from stories.exceptions import FailureError
@@ -7,23 +6,17 @@ from stories.exceptions import FailureError
 def test_signatures(r, x):
     """Story signature should not allow positional arguments."""
 
-    expected = {
-        "__call__() takes 1 positional argument but 2 were given",
-        "__call__() takes exactly 1 argument (2 given)",  # Python 2.
-    }
+    expected = "__call__() takes 1 positional argument but 2 were given"
 
     with pytest.raises(TypeError) as exc_info:
         r(x.Simple().x)(1)
-    assert str(exc_info.value) in expected
+    assert str(exc_info.value) == expected
 
-    expected = {
-        "run() takes 1 positional argument but 2 were given",
-        "run() takes exactly 1 argument (2 given)",  # Python 2.
-    }
+    expected = "run() takes 1 positional argument but 2 were given"
 
     with pytest.raises(TypeError) as exc_info:
         r(x.Simple().x.run)(1)
-    assert str(exc_info.value) in expected
+    assert str(exc_info.value) == expected
 
 
 def test_success(r, x):

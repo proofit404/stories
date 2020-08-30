@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
 import configparser
-import importlib
 import re
 import textwrap
 
@@ -26,22 +24,11 @@ def make_collector():
 
     def getter():
         length = len(storage)
-        error_message = "Context() was called {length} times".format(length=length)
+        error_message = f"Context() was called {length} times"
         assert length == 1, error_message
         return storage[0]
 
     return getter
-
-
-def is_installed(module, version=None):
-    try:
-        library = importlib.import_module(module)
-        if version is not None and library.__version_info__[0] != version:
-            return False
-    except ImportError:
-        return False
-    else:
-        return True
 
 
 def tox_info(var):

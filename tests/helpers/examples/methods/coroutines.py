@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from examples.methods import *  # noqa: F403
 from stories import arguments
 from stories import Failure
@@ -10,7 +9,7 @@ from stories import Success
 # Mixins.
 
 
-class MixedCoroutineMethod(object):
+class MixedCoroutineMethod:
     def one(self, ctx):
         pass  # pragma: no cover
 
@@ -21,7 +20,7 @@ class MixedCoroutineMethod(object):
         pass  # pragma: no cover
 
 
-class MixedFunctionMethod(object):
+class MixedFunctionMethod:
     async def one(self, ctx):
         pass  # pragma: no cover
 
@@ -32,7 +31,7 @@ class MixedFunctionMethod(object):
         pass  # pragma: no cover
 
 
-class NormalMethod(object):
+class NormalMethod:
     async def one(self, ctx):
         return Success()
 
@@ -43,7 +42,7 @@ class NormalMethod(object):
         return Success()
 
 
-class FunctionMethod(object):
+class FunctionMethod:
     def one(self, ctx):
         pass  # pragma: no cover
 
@@ -57,7 +56,7 @@ class FunctionMethod(object):
 # Parent mixins.
 
 
-class NormalParentMethod(object):
+class NormalParentMethod:
     async def before(self, ctx):
         return Success()
 
@@ -65,7 +64,7 @@ class NormalParentMethod(object):
         return Success()
 
 
-class FunctionParentMethod(object):
+class FunctionParentMethod:
     def before(self, ctx):
         pass  # pragma: no cover
 
@@ -77,7 +76,7 @@ class FunctionParentMethod(object):
 
 
 def define_coroutine_story():
-    class Action(object):
+    class Action:
         @story
         async def do(I):
             pass  # pragma: no cover
@@ -86,7 +85,7 @@ def define_coroutine_story():
 # Simple story.
 
 
-class Simple(object):
+class Simple:
     @story
     @arguments("foo", "bar")
     def x(I):
@@ -111,7 +110,7 @@ class Simple(object):
         return Result(ctx.bar - ctx.baz)
 
 
-class Pipe(object):
+class Pipe:
     @story
     def x(I):
         I.one
@@ -140,7 +139,7 @@ class Pipe(object):
         raise Exception()  # pragma: no cover
 
 
-class Branch(object):
+class Branch:
     @story
     @arguments("age")
     def show_content(I):
@@ -170,7 +169,7 @@ class Branch(object):
 # Dependency injection of the substory.
 
 
-class SubstoryDI(object):
+class SubstoryDI:
     def __init__(self, x):
         self.x = x
 
@@ -197,7 +196,7 @@ class SubstoryDI(object):
 # Method tries to return wrong type.
 
 
-class WrongResult(object):
+class WrongResult:
     @story
     def x(I):
         I.one
@@ -209,7 +208,7 @@ class WrongResult(object):
 # Dependency injection of the implementation methods.
 
 
-class ImplementationDI(object):
+class ImplementationDI:
     def __init__(self, f):
         self.f = f
 
@@ -225,7 +224,7 @@ class ImplementationDI(object):
 # Step error.
 
 
-class StepError(object):
+class StepError:
     @story
     def x(I):
         I.one
@@ -237,7 +236,7 @@ class StepError(object):
 # Access non-existent context attribute.
 
 
-class AttributeAccessError(object):
+class AttributeAccessError:
     @story
     def x(I):
         I.one

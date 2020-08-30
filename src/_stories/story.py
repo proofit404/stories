@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from _stories.argument import get_arguments
 from _stories.collect import collect_story
 from _stories.failures import check_data_type
@@ -11,17 +10,19 @@ def story(f):
     name = f.__name__
     arguments = get_arguments(f)
     collected = collect_story(f)
-    # Can't use non local keyword because of Python 2.
-    this = {"contract": None, "failures": None}
+    spec = None
+    protocol = None
 
     def contract_method(contract):
         # FIXME: Raise error on unsupported types.
-        this["contract"] = contract
+        nonlocal spec
+        spec = contract
         return contract
 
     def failures_method(failures):
         check_data_type(failures)
-        this["failures"] = failures
+        nonlocal protocol
+        protocol = failures
         return failures
 
     def get_method(self, obj, cls):
@@ -37,8 +38,8 @@ def story(f):
                 cls.__name__,
                 name,
                 obj,
-                this["contract"],
-                this["failures"],
+                spec,
+                protocol,
             )
             return MountedStory(
                 obj,

@@ -1,11 +1,9 @@
-# -*- coding: utf-8 -*-
 from inspect import isclass
 from operator import itemgetter
 
 from _stories.compat import CerberusSpec
-from _stories.compat import Marshmallow2Spec
-from _stories.compat import Marshmallow3Error
-from _stories.compat import Marshmallow3Spec
+from _stories.compat import MarshmallowError
+from _stories.compat import MarshmallowSpec
 from _stories.compat import PydanticError
 from _stories.compat import PydanticSpec
 from _stories.exceptions import ContextContractError
@@ -102,7 +100,7 @@ from _stories.exceptions import ContextContractError
 # Validators.
 
 
-class PydanticValidator(object):
+class PydanticValidator:
     def __init__(self, spec, field):
         self.spec = spec
         self.field = field
@@ -114,7 +112,7 @@ class PydanticValidator(object):
         return self.field._type_display()
 
 
-class Marshmallow3Validator(object):
+class MarshmallowValidator:
     def __init__(self, spec, field):
         self.spec = spec
         self.field = field
@@ -122,7 +120,7 @@ class Marshmallow3Validator(object):
     def __call__(self, value):
         try:
             return self.spec().load({self.field: value}).get(self.field), None
-        except Marshmallow3Error as error:
+        except MarshmallowError as error:
             return None, error.messages[self.field]
 
     def __repr__(self):
@@ -130,13 +128,7 @@ class Marshmallow3Validator(object):
         return field.__class__.__name__
 
 
-class Marshmallow2Validator(Marshmallow3Validator):
-    def __call__(self, value):
-        values, errors = self.spec().load({self.field: value})
-        return values.get(self.field), errors.get(self.field)
-
-
-class CerberusValidator(object):
+class CerberusValidator:
     def __init__(self, spec, field):
         self.spec = spec
         self.field = field
@@ -154,7 +146,7 @@ class CerberusValidator(object):
         return field_type
 
 
-class RawValidator(object):
+class RawValidator:
     def __init__(self, validator):
         self.validator = validator
 
@@ -175,18 +167,10 @@ def disassemble_pydantic(spec):
     return result
 
 
-def disassemble_marshmallow3(spec):
-    return disassemble_marshmallow(spec, Marshmallow3Validator)
-
-
-def disassemble_marshmallow2(spec):
-    return disassemble_marshmallow(spec, Marshmallow2Validator)
-
-
-def disassemble_marshmallow(spec, validator):
+def disassemble_marshmallow(spec):
     result = {}
     for name in spec._declared_fields:
-        result[name] = validator(spec, name)
+        result[name] = MarshmallowValidator(spec, name)
     return result
 
 
@@ -213,10 +197,8 @@ def make_contract(cls_name, name, arguments, spec):
         return NullContract(cls_name, name, arguments)
     elif isinstance(spec, PydanticSpec):
         disassembled = disassemble_pydantic(spec)
-    elif isinstance(spec, Marshmallow3Spec):
-        disassembled = disassemble_marshmallow3(spec)
-    elif isinstance(spec, Marshmallow2Spec):
-        disassembled = disassemble_marshmallow2(spec)
+    elif isinstance(spec, MarshmallowSpec):
+        disassembled = disassemble_marshmallow(spec)
     elif isinstance(spec, CerberusSpec):
         disassembled = disassemble_cerberus(spec)
     elif isinstance(spec, dict):
@@ -238,7 +220,7 @@ def check_arguments_definitions(cls_name, name, arguments, spec):
         raise ContextContractError(message)
 
 
-class NullContract(object):
+class NullContract:
     def __init__(self, cls_name, name, arguments):
         self.cls_name = cls_name
         self.name = name
@@ -303,7 +285,7 @@ class NullContract(object):
             # FIXME: This does not work for story composition when
             # many stories has the same argument.
             ((validator, cls_name, name),) = self.argset[argument]
-            lines.append("  {}  # Argument of {}.{}".format(argument, cls_name, name))
+            lines.append(f"  {argument}  # Argument of {cls_name}.{name}")
         return "\n".join(lines)
 
 
@@ -314,7 +296,7 @@ class SpecContract(NullContract):
     def __init__(self, cls_name, name, arguments, spec, origin):
         self.spec = spec
         self.origin = origin
-        super(SpecContract, self).__init__(cls_name, name, arguments)
+        super().__init__(cls_name, name, arguments)
         self.make_declared()
 
     def make_argset(self):
@@ -331,7 +313,7 @@ class SpecContract(NullContract):
 
     def check_story_call(self, kwargs, ns, seen):
         __tracebackhide__ = True
-        super(SpecContract, self).check_story_call(kwargs, ns, seen)
+        super().check_story_call(kwargs, ns, seen)
         result, errors = self.validate(kwargs, ns, seen)
         if errors:
             message = invalid_argument_template.format(
@@ -346,9 +328,7 @@ class SpecContract(NullContract):
 
     def check_assign_statement(self, method, ctx, ns, seen, name, value):
         __tracebackhide__ = True
-        super(SpecContract, self).check_assign_statement(
-            method, ctx, ns, seen, name, value
-        )
+        super().check_assign_statement(method, ctx, ns, seen, name, value)
         unknown = self.identify(name)
         if unknown:
             message = unknown_variable_template.format(
@@ -466,7 +446,7 @@ class SpecContract(NullContract):
                     % (argument, validator, cls_name, name)
                 )
             else:
-                lines.append("  {}:".format(argument))
+                lines.append(f"  {argument}:")
                 for validator in sorted(validators, key=itemgetter(1, 2)):
                     lines.append("    %r  # Argument of %s.%s" % validator)
         variables = sorted(

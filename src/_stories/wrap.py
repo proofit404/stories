@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from _stories.contract import combine_contract
 from _stories.contract import make_contract
 from _stories.contract import maybe_extend_downstream_argsets

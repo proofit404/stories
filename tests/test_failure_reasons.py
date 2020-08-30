@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import enum
 
 import pytest
@@ -14,7 +13,7 @@ from stories.exceptions import FailureProtocolError
 def test_wrong_definition():
     """We check types used in failures definition."""
 
-    class T(object):
+    class T:
         @story
         def x(I):
             I.one

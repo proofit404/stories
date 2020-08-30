@@ -1,7 +1,4 @@
-# -*- coding: utf-8 -*-
-
-
-class BeginningOfStory(object):
+class BeginningOfStory:
     def __init__(self, cls_name, name):
         self.cls_name = cls_name
         self.name = name
@@ -18,5 +15,5 @@ class BeginningOfStory(object):
         self.parent_name = parent_name
 
 
-class EndOfStory(object):
+class EndOfStory:
     pass

@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-from _stories.compat import iscoroutinefunction
+from asyncio import iscoroutinefunction
+
 from _stories.exceptions import StoryDefinitionError
 from _stories.execute import function
 

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from stories import Failure
 from stories import Result
 from stories import Skip

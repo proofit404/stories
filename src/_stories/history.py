@@ -1,7 +1,4 @@
-# -*- coding: utf-8 -*-
-
-
-class History(object):
+class History:
     def __init__(self):
         self.indent = 0
         self.lines = []

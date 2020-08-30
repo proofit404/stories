@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from cerberus import Validator
 
 from stories import arguments
@@ -28,7 +27,7 @@ representations = {
 # Child base classes.
 
 
-class Child(object):
+class Child:
     @story
     def x(I):
         I.one
@@ -44,13 +43,13 @@ class Child(object):
     )
 
 
-class ChildWithNull(object):
+class ChildWithNull:
     @story
     def x(I):
         I.one
 
 
-class ChildWithShrink(object):
+class ChildWithShrink:
     @story
     def x(I):
         I.one
@@ -58,7 +57,7 @@ class ChildWithShrink(object):
     x.contract(Validator({"baz": {"type": "integer", "coerce": int}}))
 
 
-class ChildAlias(object):
+class ChildAlias:
     @story
     def x(I):
         I.one
@@ -77,7 +76,7 @@ class ChildAlias(object):
     )
 
 
-class ParamChild(object):
+class ParamChild:
     @story
     @arguments("foo", "bar")
     def x(I):
@@ -94,14 +93,14 @@ class ParamChild(object):
     )
 
 
-class ParamChildWithNull(object):
+class ParamChildWithNull:
     @story
     @arguments("foo", "bar")
     def x(I):
         I.one
 
 
-class ParamChildWithShrink(object):
+class ParamChildWithShrink:
     @story
     @arguments("foo", "bar", "baz")
     def x(I):
@@ -110,7 +109,7 @@ class ParamChildWithShrink(object):
     x.contract(Validator({"baz": {"type": "integer", "coerce": int}}))
 
 
-class ParamChildAlias(object):
+class ParamChildAlias:
     @story
     @arguments("foo", "bar", "baz")
     def x(I):
@@ -133,7 +132,7 @@ class ParamChildAlias(object):
 # Next child base classes.
 
 
-class NextChildWithSame(object):
+class NextChildWithSame:
     @story
     def y(I):
         I.one
@@ -149,7 +148,7 @@ class NextChildWithSame(object):
     )
 
 
-class NextParamChildWithString(object):
+class NextParamChildWithString:
     @story
     @arguments("foo", "bar")
     def y(I):
@@ -168,7 +167,7 @@ class NextParamChildWithString(object):
 # Parent base classes.
 
 
-class Parent(object):
+class Parent:
     @story
     def a(I):
         I.before
@@ -187,7 +186,7 @@ Parent.a.contract(
 )
 
 
-class ParentWithNull(object):
+class ParentWithNull:
     @story
     def a(I):
         I.before
@@ -195,7 +194,7 @@ class ParentWithNull(object):
         I.after
 
 
-class ParentWithSame(object):
+class ParentWithSame:
     @story
     def a(I):
         I.before
@@ -214,7 +213,7 @@ ParentWithSame.a.contract(
 )
 
 
-class SequentialParent(object):
+class SequentialParent:
     @story
     def a(I):
         I.before
@@ -225,7 +224,7 @@ class SequentialParent(object):
     a.contract(Validator({}))
 
 
-class ParamParent(object):
+class ParamParent:
     @story
     @arguments("ham", "eggs")
     def a(I):
@@ -245,7 +244,7 @@ ParamParent.a.contract(
 )
 
 
-class ParamParentWithNull(object):
+class ParamParentWithNull:
     @story
     @arguments("ham", "eggs")
     def a(I):
@@ -254,7 +253,7 @@ class ParamParentWithNull(object):
         I.after
 
 
-class ParamParentWithSame(object):
+class ParamParentWithSame:
     @story
     @arguments("foo", "bar", "baz")
     def a(I):
@@ -273,7 +272,7 @@ ParamParentWithSame.a.contract(
 )
 
 
-class ParamParentWithSameWithString(object):
+class ParamParentWithSameWithString:
     @story
     @arguments("foo", "bar")
     def a(I):
@@ -295,7 +294,7 @@ ParamParentWithSameWithString.a.contract(
 # Root base classes.
 
 
-class Root(object):
+class Root:
     @story
     def i(I):
         I.start
@@ -313,7 +312,7 @@ Root.i.contract(
 )
 
 
-class RootWithSame(object):
+class RootWithSame:
     @story
     def i(I):
         I.start
@@ -332,7 +331,7 @@ RootWithSame.i.contract(
 )
 
 
-class SequentialRoot(object):
+class SequentialRoot:
     @story
     def i(I):
         I.start
@@ -351,7 +350,7 @@ SequentialRoot.i.contract(
 )
 
 
-class ParamRoot(object):
+class ParamRoot:
     @story
     @arguments("fizz")
     def i(I):

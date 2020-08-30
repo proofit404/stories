@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from debug_toolbar.panels import Panel
 
 import _stories.context
@@ -24,7 +23,7 @@ class StoriesPanel(Panel):
     template = "stories/debug_toolbar/stories_panel.html"
 
     def __init__(self, *args, **kwargs):
-        super(StoriesPanel, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.storage = []
 
     @property

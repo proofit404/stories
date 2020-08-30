@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import pytest
 
 from stories import story
@@ -25,7 +24,7 @@ def test_deny_empty_stories():
 
     with pytest.raises(StoryDefinitionError) as exc_info:
 
-        class Action(object):
+        class Action:
             @story
             def do(I):
                 pass
@@ -38,7 +37,7 @@ def test_deny_repeat_steps():
 
     with pytest.raises(StoryDefinitionError) as exc_info:
 
-        class Action(object):
+        class Action:
             @story
             def do(I):
                 I.foo
@@ -56,7 +55,7 @@ def test_deny_recursive_stories():
     """
     with pytest.raises(StoryDefinitionError) as exc_info:
 
-        class Action(object):
+        class Action:
             @story
             def do(I):
                 I.one

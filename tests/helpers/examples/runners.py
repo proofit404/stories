@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import importlib
 
 import pytest
@@ -25,7 +24,7 @@ _stories.mounted.MountedStory.__call__ = instrument(origin_call)
 _stories.mounted.MountedStory.run = instrument(origin_run)
 
 
-class Function(object):
+class Function:
     def __init__(self, story):
         self.story = story
 
@@ -45,7 +44,7 @@ class Function(object):
         pytest.skip("The test is not intended to check functions")
 
 
-class Coroutine(object):
+class Coroutine:
     def __init__(self, story):
         self.story = story
 

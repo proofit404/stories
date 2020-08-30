@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from operator import itemgetter
 
 from stories import arguments
@@ -72,7 +71,7 @@ def dict_of(k, v):
 # Child base classes.
 
 
-class Child(object):
+class Child:
     @story
     def x(I):
         I.one
@@ -80,13 +79,13 @@ class Child(object):
     x.contract({"foo": integer, "bar": list_of(integer), "baz": integer})
 
 
-class ChildWithNull(object):
+class ChildWithNull:
     @story
     def x(I):
         I.one
 
 
-class ChildWithShrink(object):
+class ChildWithShrink:
     @story
     def x(I):
         I.one
@@ -94,7 +93,7 @@ class ChildWithShrink(object):
     x.contract({"baz": integer})
 
 
-class ChildAlias(object):
+class ChildAlias:
     @story
     def x(I):
         I.one
@@ -108,7 +107,7 @@ class ChildAlias(object):
     )
 
 
-class ParamChild(object):
+class ParamChild:
     @story
     @arguments("foo", "bar")
     def x(I):
@@ -117,14 +116,14 @@ class ParamChild(object):
     x.contract({"foo": integer, "bar": list_of(integer), "baz": integer})
 
 
-class ParamChildWithNull(object):
+class ParamChildWithNull:
     @story
     @arguments("foo", "bar")
     def x(I):
         I.one
 
 
-class ParamChildWithShrink(object):
+class ParamChildWithShrink:
     @story
     @arguments("foo", "bar", "baz")
     def x(I):
@@ -133,7 +132,7 @@ class ParamChildWithShrink(object):
     x.contract({"baz": integer})
 
 
-class ParamChildAlias(object):
+class ParamChildAlias:
     @story
     @arguments("foo", "bar", "baz")
     def x(I):
@@ -151,7 +150,7 @@ class ParamChildAlias(object):
 # Next child base classes.
 
 
-class NextChildWithSame(object):
+class NextChildWithSame:
     @story
     def y(I):
         I.one
@@ -159,7 +158,7 @@ class NextChildWithSame(object):
     y.contract({"foo": integer, "bar": list_of(integer), "baz": integer})
 
 
-class NextParamChildWithString(object):
+class NextParamChildWithString:
     @story
     @arguments("foo", "bar")
     def y(I):
@@ -171,7 +170,7 @@ class NextParamChildWithString(object):
 # Parent base classes.
 
 
-class Parent(object):
+class Parent:
     @story
     def a(I):
         I.before
@@ -182,7 +181,7 @@ class Parent(object):
 Parent.a.contract({"ham": integer, "eggs": integer, "beans": integer})
 
 
-class ParentWithNull(object):
+class ParentWithNull:
     @story
     def a(I):
         I.before
@@ -190,7 +189,7 @@ class ParentWithNull(object):
         I.after
 
 
-class ParentWithSame(object):
+class ParentWithSame:
     @story
     def a(I):
         I.before
@@ -201,7 +200,7 @@ class ParentWithSame(object):
 ParentWithSame.a.contract({"foo": integer, "bar": list_of(integer), "baz": integer})
 
 
-class SequentialParent(object):
+class SequentialParent:
     @story
     def a(I):
         I.before
@@ -212,7 +211,7 @@ class SequentialParent(object):
     a.contract({})
 
 
-class ParamParent(object):
+class ParamParent:
     @story
     @arguments("ham", "eggs")
     def a(I):
@@ -224,7 +223,7 @@ class ParamParent(object):
 ParamParent.a.contract({"ham": integer, "eggs": integer, "beans": integer})
 
 
-class ParamParentWithNull(object):
+class ParamParentWithNull:
     @story
     @arguments("ham", "eggs")
     def a(I):
@@ -233,7 +232,7 @@ class ParamParentWithNull(object):
         I.after
 
 
-class ParamParentWithSame(object):
+class ParamParentWithSame:
     @story
     @arguments("foo", "bar", "baz")
     def a(I):
@@ -246,7 +245,7 @@ ParamParentWithSame.a.contract(
 )
 
 
-class ParamParentWithSameWithString(object):
+class ParamParentWithSameWithString:
     @story
     @arguments("foo", "bar")
     def a(I):
@@ -261,7 +260,7 @@ ParamParentWithSameWithString.a.contract({"foo": string, "bar": list_of(string)}
 # Root base classes.
 
 
-class Root(object):
+class Root:
     @story
     def i(I):
         I.start
@@ -272,7 +271,7 @@ class Root(object):
 Root.i.contract({"fizz": integer, "buzz": integer})
 
 
-class RootWithSame(object):
+class RootWithSame:
     @story
     def i(I):
         I.start
@@ -283,7 +282,7 @@ class RootWithSame(object):
 RootWithSame.i.contract({"foo": integer, "bar": list_of(integer), "baz": integer})
 
 
-class SequentialRoot(object):
+class SequentialRoot:
     @story
     def i(I):
         I.start
@@ -295,7 +294,7 @@ class SequentialRoot(object):
 SequentialRoot.i.contract({"fizz": integer, "buzz": integer})
 
 
-class ParamRoot(object):
+class ParamRoot:
     @story
     @arguments("fizz")
     def i(I):

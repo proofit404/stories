@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from _stories.marker import BeginningOfStory
 from _stories.marker import EndOfStory
 from _stories.returned import Failure

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import decimal
 
 import pytest
@@ -48,7 +47,7 @@ def test_context_dir(r, c):
 
     # Simple.
 
-    class Ctx(object):
+    class Ctx:
         bar = 2
 
     assert r(T().x)(bar=2) == dir(Ctx())
@@ -57,7 +56,7 @@ def test_context_dir(r, c):
 
     # Substory DI.
 
-    class Ctx(object):
+    class Ctx:
         foo = 1
         bar = 2
 
@@ -669,7 +668,7 @@ Context:
 def test_context_representation_multiline_variable(r, c):
     class userlist(list):
         def __repr__(self):
-            return "\n ".join(super(userlist, self).__repr__().split())
+            return "\n ".join(super().__repr__().split())
 
     class T(c.ParamChild, c.NormalMethod):
         foo = userlist(range(3))

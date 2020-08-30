@@ -297,10 +297,6 @@ process different failures in a different way.
 
     ```
 
-On Python 2 you can use [enum34](https://pypi.org/project/enum34/) package:
-
-    pip install enum34
-
 When you [run the story method](usage.md#run) the actual failure protocol is
 available under `failures` property of that story method. So there is no need to
 import `Errors` class in the caller code.
