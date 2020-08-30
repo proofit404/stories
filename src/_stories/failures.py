@@ -1,6 +1,6 @@
-# -*- coding: utf-8 -*-
-from _stories.compat import Enum
-from _stories.compat import EnumMeta
+from enum import Enum
+from enum import EnumMeta
+
 from _stories.exceptions import FailureProtocolError
 
 
@@ -58,7 +58,7 @@ def make_exec_protocol(failures):
         return NullExecProtocol()
 
 
-class NullExecProtocol(object):
+class NullExecProtocol:
     def check_return_statement(self, method, reason):
         if reason:
             message = null_protocol_template.format(
@@ -76,10 +76,10 @@ class DisabledNullExecProtocol(NullExecProtocol):
                 cls=method.__self__.__class__.__name__, method=method.__name__
             )
             raise FailureProtocolError(message)
-        super(DisabledNullExecProtocol, self).check_return_statement(method, reason)
+        super().check_return_statement(method, reason)
 
 
-class NotNullExecProtocol(object):
+class NotNullExecProtocol:
     def __init__(self, failures, contains_func):
         self.failures = failures
         self.contains_func = contains_func
@@ -119,7 +119,7 @@ def make_run_protocol(failures, cls_name, method_name):
         return NullRunProtocol(cls_name, method_name)
 
 
-class NullRunProtocol(object):
+class NullRunProtocol:
     def __init__(self, cls_name, method_name):
         self.cls_name = cls_name
         self.method_name = method_name
@@ -131,7 +131,7 @@ class NullRunProtocol(object):
         raise FailureProtocolError(message)
 
 
-class NotNullRunProtocol(object):
+class NotNullRunProtocol:
     def __init__(self, cls_name, method_name, failures, contains_func, compare_func):
         self.cls_name = cls_name
         self.method_name = method_name

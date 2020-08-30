@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from _stories.context import make_context
 from _stories.failures import make_run_protocol
 from _stories.history import History
@@ -8,7 +7,7 @@ from _stories.run import Call
 from _stories.run import Run
 
 
-class ClassMountedStory(object):
+class ClassMountedStory:
     def __init__(self, cls, name, collected, contract, failures):
         self.cls = cls
         self.name = name
@@ -22,7 +21,7 @@ class ClassMountedStory(object):
         return "\n".join(result)
 
 
-class MountedStory(object):
+class MountedStory:
     def __init__(
         self, obj, cls_name, name, arguments, methods, contract, failures, executor
     ):

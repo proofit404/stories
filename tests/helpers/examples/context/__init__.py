@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from stories import arguments
 from stories import story
 
@@ -6,20 +5,20 @@ from stories import story
 # Base classes.
 
 
-class Child(object):
+class Child:
     @story
     def x(I):
         I.one
 
 
-class ParamChild(object):
+class ParamChild:
     @story
     @arguments("bar")
     def x(I):
         I.one
 
 
-class Parent(object):
+class Parent:
     @story
     def a(I):
         I.before
@@ -27,7 +26,7 @@ class Parent(object):
         I.after
 
 
-class ParamParent(object):
+class ParamParent:
     @story
     @arguments("bar")
     def a(I):

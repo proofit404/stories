@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from examples.context import *  # noqa: F401, F403
 from stories import Result
 from stories import Success
@@ -7,29 +6,29 @@ from stories import Success
 # Mixins.
 
 
-class PrivateMethod(object):
+class PrivateMethod:
     def one(self, ctx):
         return Result(ctx.__dict__)
 
 
-class NormalMethod(object):
+class NormalMethod:
     def one(self, ctx):
         ctx.foo = self.foo
         return Success()
 
 
-class DeleteMethod(object):
+class DeleteMethod:
     def one(self, ctx):
         del ctx.foo
 
 
-class CompareMethod(object):
+class CompareMethod:
     def one(self, ctx):
         if ctx:
             pass  # pragma: no cover
 
 
-class DirMethod(object):
+class DirMethod:
     def one(self, ctx):
         return Result(dir(ctx))
 
@@ -37,7 +36,7 @@ class DirMethod(object):
 # Parent mixins.
 
 
-class NormalParentMethod(object):
+class NormalParentMethod:
     def before(self, ctx):
         return Success()
 
@@ -45,7 +44,7 @@ class NormalParentMethod(object):
         return Success()
 
 
-class DirParentMethod(object):
+class DirParentMethod:
     def before(self, ctx):
         return Success()
 

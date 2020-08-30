@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from app.entities import Category
 from app.entities import Price
 from app.entities import Profile

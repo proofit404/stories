@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 from collections import OrderedDict
 from decimal import Decimal
+from textwrap import indent
 
-from _stories.compat import indent
 from _stories.exceptions import MutationError
 
 
@@ -29,9 +28,7 @@ def make_context(contract, kwargs, history):
         contract = this["contract"]
         method = this["method"]
         ns[name] = contract.check_assign_statement(method, self, ns, seen, name, value)
-        lines.append(
-            "Set by {}.{}".format(method.__self__.__class__.__name__, method.__name__)
-        )
+        lines.append(f"Set by {method.__self__.__class__.__name__}.{method.__name__}")
 
     def repr_method(self):
         return (
@@ -65,7 +62,6 @@ def make_context(contract, kwargs, history):
                 "__repr__": repr_method,
                 "__dir__": dir_method,
                 "__bool__": bool_method,
-                "__nonzero__": bool_method,  # Python 2.
             },
         )(),
         ns,
@@ -91,7 +87,7 @@ def context_representation(ns, lines, repr_func=repr):
     for key, value in ns.items():
         for seen_key, seen_value in seen:
             if value is seen_value:
-                item = "`{}` alias".format(seen_key)
+                item = f"`{seen_key}` alias"
                 break
         else:
             item = repr_func(value)
@@ -101,7 +97,7 @@ def context_representation(ns, lines, repr_func=repr):
             head = key + ":"
             tail = "\n" + indent(item, "    ")
         else:
-            head = "{}: {}".format(key, item)
+            head = f"{key}: {item}"
             tail = ""
         if type(value) not in [type(None), bool, int, float, Decimal]:
             seen.append((key, value))

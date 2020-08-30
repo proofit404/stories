@@ -1,38 +1,37 @@
-# -*- coding: utf-8 -*-
 from stories import Success
 
 
 # Mixins.
 
 
-class NormalMethod(object):
+class NormalMethod:
     async def one(self, ctx):
         return Success()
 
 
-class StringMethod(object):
+class StringMethod:
     async def one(self, ctx):
         ctx.foo = "1"
         ctx.bar = ["2"]
         return Success()
 
 
-class WrongMethod(object):
+class WrongMethod:
     async def one(self, ctx):
         ctx.foo = "<boom>"
 
 
-class UnknownMethod(object):
+class UnknownMethod:
     async def one(self, ctx):
         ctx.spam = "0"
 
 
-class ExceptionMethod(object):
+class ExceptionMethod:
     async def one(self, ctx):
         raise Exception
 
 
-class AliasMethod(object):
+class AliasMethod:
     async def one(self, ctx):
         value = {"key": "1"}
         ctx.foo = value
@@ -44,7 +43,7 @@ class AliasMethod(object):
 # Next child mixins.
 
 
-class NormalNextMethod(object):
+class NormalNextMethod:
     async def two(self, ctx):
         return Success()
 
@@ -52,7 +51,7 @@ class NormalNextMethod(object):
 # Parent mixins.
 
 
-class NormalParentMethod(object):
+class NormalParentMethod:
     async def before(self, ctx):
         return Success()
 
@@ -60,7 +59,7 @@ class NormalParentMethod(object):
         return Success()
 
 
-class StringParentMethod(object):
+class StringParentMethod:
     async def before(self, ctx):
         ctx.foo = "1"
         ctx.bar = ["2"]
@@ -70,7 +69,7 @@ class StringParentMethod(object):
         return Success()
 
 
-class ExceptionParentMethod(object):
+class ExceptionParentMethod:
     async def before(self, ctx):
         raise Exception
 
@@ -81,7 +80,7 @@ class ExceptionParentMethod(object):
 # Root mixins.
 
 
-class NormalRootMethod(object):
+class NormalRootMethod:
     async def start(self, ctx):
         return Success()
 
@@ -89,7 +88,7 @@ class NormalRootMethod(object):
         return Success()
 
 
-class StringRootMethod(object):
+class StringRootMethod:
     async def start(self, ctx):
         ctx.foo = "1"
         ctx.bar = ["2"]
@@ -99,7 +98,7 @@ class StringRootMethod(object):
         return Success()
 
 
-class StringWideRootMethod(object):
+class StringWideRootMethod:
     async def start(self, ctx):
         ctx.foo = "1"
         ctx.bar = ["2"]
@@ -110,7 +109,7 @@ class StringWideRootMethod(object):
         return Success()
 
 
-class ExceptionRootMethod(object):
+class ExceptionRootMethod:
     async def start(self, ctx):
         raise Exception
 

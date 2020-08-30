@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-
 def make_failure_summary(protocol, ctx, failed_method, failure_reason):
     def failed_on_method(self, method_name):
         return method_name == failed_method

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from raven.breadcrumbs import libraryhook
 from raven.breadcrumbs import record
 

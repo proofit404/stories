@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from enum import Enum
 
 from stories import story
@@ -7,19 +6,19 @@ from stories import story
 # Base classes.
 
 
-class ChildWithNull(object):
+class ChildWithNull:
     @story
     def x(I):
         I.one
 
 
-class NextChildWithNull(object):
+class NextChildWithNull:
     @story
     def y(I):
         I.two
 
 
-class ParentWithNull(object):
+class ParentWithNull:
     @story
     def a(I):
         I.before
@@ -27,7 +26,7 @@ class ParentWithNull(object):
         I.after
 
 
-class SequenceParentWithNull(object):
+class SequenceParentWithNull:
     @story
     def a(I):
         I.before
@@ -36,7 +35,7 @@ class SequenceParentWithNull(object):
         I.after
 
 
-class ChildWithList(object):
+class ChildWithList:
     @story
     def x(I):
         I.one
@@ -45,7 +44,7 @@ class ChildWithList(object):
 ChildWithList.x.failures(["foo", "bar", "baz"])
 
 
-class NextChildWithList(object):
+class NextChildWithList:
     @story
     def y(I):
         I.two
@@ -54,7 +53,7 @@ class NextChildWithList(object):
 NextChildWithList.y.failures(["spam", "ham", "eggs"])
 
 
-class ParentWithList(object):
+class ParentWithList:
     @story
     def a(I):
         I.before
@@ -65,7 +64,7 @@ class ParentWithList(object):
 ParentWithList.a.failures(["foo", "bar", "baz"])
 
 
-class WideParentWithList(object):
+class WideParentWithList:
     @story
     def a(I):
         I.before
@@ -76,7 +75,7 @@ class WideParentWithList(object):
 WideParentWithList.a.failures(["foo", "bar", "baz", "quiz"])
 
 
-class ShrinkParentWithList(object):
+class ShrinkParentWithList:
     @story
     def a(I):
         I.before
@@ -87,7 +86,7 @@ class ShrinkParentWithList(object):
 ShrinkParentWithList.a.failures(["foo", "quiz"])
 
 
-class ChildWithEnum(object):
+class ChildWithEnum:
     @story
     def x(I):
         I.one
@@ -99,7 +98,7 @@ class ChildWithEnum(object):
         baz = 3
 
 
-class NextChildWithEnum(object):
+class NextChildWithEnum:
     @story
     def y(I):
         I.two
@@ -111,7 +110,7 @@ class NextChildWithEnum(object):
         eggs = 3
 
 
-class ParentWithEnum(object):
+class ParentWithEnum:
     @story
     def a(I):
         I.before
@@ -126,7 +125,7 @@ class Errors(Enum):
     baz = 3
 
 
-class WideParentWithEnum(object):
+class WideParentWithEnum:
     @story
     def a(I):
         I.before
@@ -142,7 +141,7 @@ class Errors(Enum):  # noqa: F811
     quiz = 4
 
 
-class ShrinkParentWithEnum(object):
+class ShrinkParentWithEnum:
     @story
     def a(I):
         I.before

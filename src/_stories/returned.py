@@ -1,7 +1,4 @@
-# -*- coding: utf-8 -*-
-
-
-class Result(object):
+class Result:
     def __init__(self, value=None):
         self.value = value
 
@@ -9,7 +6,7 @@ class Result(object):
         return "Result(" + repr(self.value) + ")"
 
 
-class Failure(object):
+class Failure:
     def __init__(self, reason=None):
         self.reason = reason
 
@@ -18,11 +15,11 @@ class Failure(object):
         return "Failure(" + reason + ")"
 
 
-class Success(object):
+class Success:
     def __repr__(self):
         return "Success()"
 
 
-class Skip(object):
+class Skip:
     def __repr__(self):
         return "Skip()"

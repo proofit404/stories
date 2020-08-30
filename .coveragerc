@@ -13,31 +13,7 @@ source =
 
 [paths]
 source =
-  .tox/py27-cerberus/lib/python2.7/site-packages
-  .tox/py35-cerberus/lib/python3.5/site-packages
-  .tox/py36-cerberus/lib/python3.6/site-packages
-  .tox/py37-cerberus/lib/python3.7/site-packages
-  .tox/py38-cerberus/lib/python3.8/site-packages
-  .tox/py27-marshmallow2/lib/python2.7/site-packages
-  .tox/py35-marshmallow2/lib/python3.5/site-packages
-  .tox/py36-marshmallow2/lib/python3.6/site-packages
-  .tox/py37-marshmallow2/lib/python3.7/site-packages
-  .tox/py38-marshmallow2/lib/python3.8/site-packages
-  .tox/py35-marshmallow3/lib/python3.5/site-packages
-  .tox/py36-marshmallow3/lib/python3.6/site-packages
-  .tox/py37-marshmallow3/lib/python3.7/site-packages
-  .tox/py38-marshmallow3/lib/python3.8/site-packages
-  .tox/py36-pydantic/lib/python3.6/site-packages
-  .tox/py37-pydantic/lib/python3.7/site-packages
-  .tox/py38-pydantic/lib/python3.8/site-packages
-  .tox/py27-django/lib/python2.7/site-packages
-  .tox/py35-django/lib/python3.5/site-packages
-  .tox/py36-django/lib/python3.6/site-packages
-  .tox/py37-django/lib/python3.7/site-packages
-  .tox/py38-django/lib/python3.8/site-packages
-  .tox/py27-flask/lib/python2.7/site-packages
-  .tox/py35-flask/lib/python3.5/site-packages
-  .tox/py36-flask/lib/python3.6/site-packages
-  .tox/py37-flask/lib/python3.7/site-packages
-  .tox/py38-flask/lib/python3.8/site-packages
+  .tox/py36/lib/python3.6/site-packages
+  .tox/py37/lib/python3.7/site-packages
+  .tox/py38/lib/python3.8/site-packages
   .tox/doctest/lib/python3.8/site-packages

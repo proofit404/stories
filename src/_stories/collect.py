@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-from _stories.compat import iscoroutinefunction
+from asyncio import iscoroutinefunction
+
 from _stories.exceptions import StoryDefinitionError
 
 
@@ -9,7 +9,7 @@ def collect_story(f):
 
     calls = []
 
-    class Collector(object):
+    class Collector:
         def __getattr__(self, name):
             if name in calls:
                 raise StoryDefinitionError("Story has repeated steps: " + name)

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import linecache
 import sys
 import textwrap
