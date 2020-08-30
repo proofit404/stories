@@ -1,3 +1,17 @@
+# [2.0.0](https://github.com/proofit404/stories/compare/1.0.2...2.0.0) (2020-08-30)
+
+
+### Code Refactoring
+
+* drop Python 2.7 and 3.4 support [#494](https://github.com/proofit404/stories/issues/494) ([0a6bf21](https://github.com/proofit404/stories/commit/0a6bf2158e53b4586b141953aeb46ed5ba01cb02))
+
+
+### BREAKING CHANGES
+
+* Due to the our new policy of enterprise user support
+we will drop abandoned version of python and libraries we are
+integrated with as soon as they reach official end of life.
+
 ## [1.0.2](https://github.com/proofit404/stories/compare/1.0.1...1.0.2) (2020-07-31)
 
 ### Bug Fixes
