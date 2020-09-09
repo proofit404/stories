@@ -1,5 +1,5 @@
 [flake8]
 max-line-length = 88
-ban-relative-imports = True
+ban-relative-imports = true
 ignore = E741, W503
 per-file-ignores =
