@@ -1,35 +1,30 @@
+[build-system]
+build-backend = "poetry.masonry.api"
+requires = ["poetry"]
+
 [tool.poetry]
-name = "stories"
-version = "2.0.0"
-
-description = "Define a user story in the business transaction DSL"
-readme = "docs/index.md"
-license = "BSD-2-Clause"
-
-homepage = "https://pypi.org/project/stories/"
-repository = "https://github.com/proofit404/stories/"
-documentation = "https://proofit404.github.io/stories/"
-
 authors = ["Artem Malyshev <proofit404@gmail.com>"]
-
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: BSD License",
     "Topic :: Software Development",
 ]
-
+description = "Define a user story in the business transaction DSL"
+documentation = "https://proofit404.github.io/stories/"
+homepage = "https://pypi.org/project/stories/"
+license = "BSD-2-Clause"
+name = "stories"
 packages = [
     { include = "_stories", from = "src" },
     { include = "stories", from = "src" },
 ]
+readme = "docs/index.md"
+repository = "https://github.com/proofit404/stories/"
+version = "2.0.0"
 
 [tool.poetry.dependencies]
 python = "3.6 || 3.7 || 3.8"
 
-[tool.poetry.plugins."pytest11"]
+[tool.poetry.plugins.pytest11]
 stories = "stories.contrib.pytest"
-
-[build-system]
-requires = ["poetry"]
-build-backend = "poetry.masonry.api"
