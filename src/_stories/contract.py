@@ -11,7 +11,7 @@ from _stories.exceptions import ContextContractError
 
 # FIXME: Handle protocol extension.  There should be way to say in the
 # substory contract "this variable should be an integer" and in
-# addition in the story "this integer should be greater then 7".  This
+# addition in the story "this integer should be greater than 7".  This
 # way we also can require a certain substory to declare context
 # variable for parent story.
 #
