@@ -1,22 +1,22 @@
 from stories import Failure
+from stories import Next
 from stories import Result
-from stories import Skip
 from stories import Success
 
 
 def test_result_representation():
 
-    result = Result(1)
-    assert repr(result) == "Result(1)"
+    marker = Result(1)
+    assert repr(marker) == "Result(1)"
 
 
 def test_failure_representation():
 
-    failure = Failure()
-    assert repr(failure) == "Failure()"
+    marker = Failure()
+    assert repr(marker) == "Failure()"
 
-    failure = Failure("test")
-    assert repr(failure) == "Failure('test')"
+    marker = Failure("test")
+    assert repr(marker) == "Failure('test')"
 
 
 def test_success_representation():
@@ -25,21 +25,19 @@ def test_success_representation():
     assert repr(success) == "Success()"
 
 
-def test_skip_representation():
+def test_next_representation():
 
-    skip = Skip()
-    assert repr(skip) == "Skip()"
+    marker = Next()
+    assert repr(marker) == "Next()"
 
 
 def test_failure_summary_representation(r, x):
 
-    expected = "Failure()"
-    result = r(x.Simple().x.run)(foo=2, bar=2)
-    assert repr(result) == expected
+    marker = r(x.Simple().x.run)(foo=2, bar=2)
+    assert repr(marker) == "Failure()"
 
 
 def test_success_summary_representation(r, x):
 
-    expected = "Success()"
-    result = r(x.Simple().x.run)(foo=1, bar=3)
-    assert repr(result) == expected
+    marker = r(x.Simple().x.run)(foo=1, bar=3)
+    assert repr(marker) == "Success()"

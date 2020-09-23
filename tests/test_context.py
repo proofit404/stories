@@ -397,7 +397,7 @@ Context:
     assert repr(getter()) == expected
 
 
-def test_context_representation_with_skip(r, x):
+def test_context_representation_with_next(r, x):
 
     expected = """
 Simple.x

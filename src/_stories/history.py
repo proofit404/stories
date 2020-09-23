@@ -15,7 +15,7 @@ class History:
         else:
             self.lines[-1] += " (failed)"
 
-    def on_skip(self):
+    def on_next(self):
         self.lines[-1] += " (skipped)"
         self.indent -= 1
 
