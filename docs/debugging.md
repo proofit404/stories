@@ -11,7 +11,7 @@ Our regular story looks like this.
 
 ```pycon
 
->>> from stories import story, arguments, Success, Skip, Result
+>>> from stories import story, arguments, Success, Next, Result
 
 >>> class ApplyPromoCode:
 ...     """Calculate actual product discount, apply it to the price."""
@@ -41,7 +41,7 @@ Our regular story looks like this.
 ...     def check_expiration(self, ctx):
 ...
 ...         if ctx.promo_code.is_expired():
-...             return Skip()
+...             return Next()
 ...         else:
 ...             return Success()
 ...

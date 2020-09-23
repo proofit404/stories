@@ -7,7 +7,7 @@
 - If the story calls another story in its body, methods of this sub-story add to
   the caller in the order they occur in sub-story body.
 - Each story method should return an instance of `Success`, `Failure`, `Result`
-  or `Skip` classes.
+  or `Next` classes.
 - The execution of the story will change according to the type of the return
   value.
 
@@ -658,16 +658,16 @@ execution stops after the method returned `Result`.
 
     ```
 
-## Skip
+## Next
 
-If sub-story method returns `Skip` result, execution will be continued form the
+If sub-story method returns `Next` result, execution will be continued form the
 next method of the caller story.
 
 === "sync"
 
     ```pycon
 
-    >>> from stories import story, Success, Skip
+    >>> from stories import story, Success, Next
 
     >>> class Action:
     ...
@@ -703,7 +703,7 @@ next method of the caller story.
     ...     def two(self, ctx):
     ...
     ...         print("two")
-    ...         return Skip()
+    ...         return Next()
     ...
     ...     def three(self, ctx):
     ...
@@ -721,7 +721,7 @@ next method of the caller story.
 
     ```pycon
 
-    >>> from stories import story, Success, Skip
+    >>> from stories import story, Success, Next
 
     >>> class Action:
     ...
@@ -757,7 +757,7 @@ next method of the caller story.
     ...     async def two(self, ctx):
     ...
     ...         print("two")
-    ...         return Skip()
+    ...         return Next()
     ...
     ...     async def three(self, ctx):
     ...
@@ -771,13 +771,13 @@ next method of the caller story.
 
     ```
 
-If the topmost story returns `Skip` result, execution will end.
+If the topmost story returns `Next` result, execution will end.
 
 === "sync"
 
     ```pycon
 
-    >>> from stories import story, Success, Skip
+    >>> from stories import story, Success, Next
 
     >>> class Action:
     ...
@@ -790,7 +790,7 @@ If the topmost story returns `Skip` result, execution will end.
     ...     def one(self, ctx):
     ...
     ...         print("one")
-    ...         return Skip()
+    ...         return Next()
     ...
     ...     def two(self, ctx):
     ...
@@ -806,7 +806,7 @@ If the topmost story returns `Skip` result, execution will end.
 
     ```pycon
 
-    >>> from stories import story, Success, Skip
+    >>> from stories import story, Success, Next
 
     >>> class Action:
     ...
@@ -819,7 +819,7 @@ If the topmost story returns `Skip` result, execution will end.
     ...     async def one(self, ctx):
     ...
     ...         print("one")
-    ...         return Skip()
+    ...         return Next()
     ...
     ...     async def two(self, ctx):
     ...
