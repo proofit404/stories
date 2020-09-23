@@ -122,8 +122,8 @@ def test_result(r, x):
     assert result.value == -1
 
 
-def test_skip(r, x):
-    """Skip marker semantics."""
+def test_next(r, x):
+    """Next marker semantics."""
 
     result = r(x.Simple().x)(foo=1, bar=-1)
     assert result is None

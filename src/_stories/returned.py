@@ -20,6 +20,6 @@ class Success:
         return "Success()"
 
 
-class Skip:
+class Next:
     def __repr__(self):
-        return "Skip()"
+        return "Next()"

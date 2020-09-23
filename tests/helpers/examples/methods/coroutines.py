@@ -1,8 +1,8 @@
 from examples.methods import *  # noqa: F403
 from stories import arguments
 from stories import Failure
+from stories import Next
 from stories import Result
-from stories import Skip
 from stories import story
 from stories import Success
 
@@ -101,7 +101,7 @@ class Simple:
             return Failure()
 
         if ctx.bar < 0:
-            return Skip()
+            return Next()
 
         ctx.baz = 4
         return Success()
@@ -133,7 +133,7 @@ class Pipe:
         return Success()
 
     async def before(self, ctx):
-        return Skip()
+        return Next()
 
     async def after(self, ctx):
         raise Exception()  # pragma: no cover

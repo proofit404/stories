@@ -1,8 +1,8 @@
 from _stories.marker import BeginningOfStory
 from _stories.marker import EndOfStory
 from _stories.returned import Failure
+from _stories.returned import Next
 from _stories.returned import Result
-from _stories.returned import Skip
 from _stories.returned import Success
 
 
@@ -45,7 +45,7 @@ async def execute(runner, ctx, ns, bind, history, methods):
             raise
 
         restype = type(result)
-        if restype not in (Result, Success, Failure, Skip):
+        if restype not in (Result, Success, Failure, Next):
             raise AssertionError
 
         if restype is Failure:
@@ -61,8 +61,8 @@ async def execute(runner, ctx, ns, bind, history, methods):
             history.on_result(result.value)
             return runner.got_result(result.value)
 
-        if restype is Skip:
-            history.on_skip()
+        if restype is Next:
+            history.on_next()
             skipped = 1
             continue
 
