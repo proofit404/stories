@@ -1,3 +1,16 @@
+# [3.0.0](https://github.com/proofit404/stories/compare/2.0.0...3.0.0) (2020-10-01)
+
+
+### Features
+
+* rename Skip marker to Next marker [#141](https://github.com/proofit404/stories/issues/141) ([5799aef](https://github.com/proofit404/stories/commit/5799aef516a35256ff7ae02c8dc5ec634e53b3d1))
+
+
+### BREAKING CHANGES
+
+* All usage of the `Skip()` marker should be replaced
+with `Next()` marker.
+
 # [2.0.0](https://github.com/proofit404/stories/compare/1.0.2...2.0.0) (2020-08-30)
 
 ### Code Refactoring
