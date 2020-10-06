@@ -2,6 +2,7 @@
 import collections
 import configparser
 import datetime
+import itertools
 import re
 import subprocess
 import textwrap
@@ -88,28 +89,6 @@ def test_coverage_include_all_packages():
     assert coverage_sources == sorted(packages) + sorted(helpers) + ["tests"]
 
 
-def test_coverage_paths_include_tox_environments():
-    """Coverage files should be merged together."""
-    coverage_environments = [
-        env
-        for env, commands in tox_config_values("commands")
-        if "coverage run" in commands
-    ]
-    tox_paths = [
-        ".tox/{name}/lib/{python}/site-packages".format(
-            name=e,
-            python=tox_ini()["testenv:" + e]["basepython"]
-            if "testenv:" + e in tox_ini()
-            else re.sub(
-                r"py(?P<major>\d)(?P<minor>\d)", r"python\g<major>.\g<minor>", e
-            ),
-        )
-        for e in coverage_environments
-    ]
-    coverage_paths = lines(coveragerc()["paths"]["source"])
-    assert coverage_paths == tox_paths
-
-
 def test_coverage_environment_runs_at_the_end():
     """Coverage report runs after all environments collecting coverage."""
     coverage_depends = [
@@ -150,11 +129,12 @@ def test_ini_files_indentation():
 
 def test_ini_files_boolean_case():
     """INI files should have boolean values written in lowercase."""
-    for ini_file in [tox_ini, coveragerc, flake8, importlinter, pytest_ini]:
-        for section in ini_file().values():
-            for value in section.values():
-                if value.lower() in {"true", "false"}:
-                    assert value == value.lower()
+    ini_files = [tox_ini, coveragerc, flake8, importlinter, pytest_ini]
+    sections = itertools.chain.from_iterable(ini().values() for ini in ini_files)
+    values = itertools.chain.from_iterable(section.values() for section in sections)
+    for value in values:
+        if value.lower() in {"true", "false"}:
+            assert value == value.lower()
 
 
 def test_lock_files_not_committed():
@@ -176,9 +156,6 @@ def test_license_year():
         if found:
             year = int(found[-1])
             assert year == current_year
-
-
-# Definition order.
 
 
 def test_tox_environments_are_ordered():
@@ -255,9 +232,6 @@ def test_yamllint_ignored_patterns_are_ordered():
     assert ignore == sorted(ignore)
 
 
-# Additional dependencies.
-
-
 def test_poetry_avoid_additional_dependencies():
     """Python package should not have any of additional dependencies."""
     deps = list(pyproject_toml()["tool"]["poetry"]["dependencies"])
@@ -268,9 +242,6 @@ def test_pre_commit_hooks_avoid_additional_dependencies():
     """Additional dependencies of the pre-commit should not be used."""
     hooks = (hook for repo in pre_commit_yaml()["repos"] for hook in repo["hooks"])
     assert all("additional_dependencies" not in hook for hook in hooks)
-
-
-# Version pinning.
 
 
 def test_tox_deps_not_pinned():
@@ -290,13 +261,8 @@ def test_pre_commit_hooks_not_pinned():
     assert all(repo["rev"] == "master" for repo in pre_commit_yaml()["repos"])
 
 
-# Utils.
-
-
 class Settings:
     """Tox settings definition."""
-
-    # Types.
 
     class Text:
         """Text type."""
@@ -313,13 +279,12 @@ class Settings:
 
         is_text = False
 
-    # Settings.
-
     keys = [
         ("envlist", Text),
         ("isolated_build", Boolean),
         ("basepython", String),
         ("skip_install", Boolean),
+        ("ignore_outcome", Boolean),
         ("install_command", String),
         ("setenv", Text),
         ("deps", Text),
@@ -327,8 +292,6 @@ class Settings:
         ("depends", Text),
         ("whitelist_externals", Text),
     ]
-
-    # Methods.
 
     def known(self):
         """Return a list of known tox settings."""
@@ -388,7 +351,6 @@ def tox_expand_names(string):
     ['doctest']
 
     """
-    # It's an incomplete implementation and works with current config only.
     if "{" not in string:
         yield string
     else:
@@ -440,9 +402,6 @@ def lines(value):
 def git_files():
     """List committed files."""
     return subprocess.check_output(["git", "ls-files"]).decode().splitlines()
-
-
-# Config files.
 
 
 def tox_ini():
