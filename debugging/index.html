@@ -11,7 +11,7 @@
       
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.0.1">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.0.2">
     
     
       
@@ -209,7 +209,7 @@
 
 
   <li class="md-nav__item">
-    <a href=".." title="Home" class="md-nav__link">
+    <a href=".." class="md-nav__link">
       Home
     </a>
   </li>
@@ -221,7 +221,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../installation/" title="Installation" class="md-nav__link">
+    <a href="../installation/" class="md-nav__link">
       Installation
     </a>
   </li>
@@ -233,7 +233,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../why/" title="Why" class="md-nav__link">
+    <a href="../why/" class="md-nav__link">
       Why
     </a>
   </li>
@@ -245,7 +245,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../definition/" title="Definition" class="md-nav__link">
+    <a href="../definition/" class="md-nav__link">
       Definition
     </a>
   </li>
@@ -257,7 +257,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../usage/" title="Usage" class="md-nav__link">
+    <a href="../usage/" class="md-nav__link">
       Usage
     </a>
   </li>
@@ -269,7 +269,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../execution/" title="Execution" class="md-nav__link">
+    <a href="../execution/" class="md-nav__link">
       Execution
     </a>
   </li>
@@ -281,7 +281,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../failure_protocol/" title="Failure protocol" class="md-nav__link">
+    <a href="../failure_protocol/" class="md-nav__link">
       Failure protocol
     </a>
   </li>
@@ -293,7 +293,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../faq/" title="FAQ" class="md-nav__link">
+    <a href="../faq/" class="md-nav__link">
       FAQ
     </a>
   </li>
@@ -305,7 +305,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../changelog/" title="Changelog" class="md-nav__link">
+    <a href="../changelog/" class="md-nav__link">
       Changelog
     </a>
   </li>
@@ -358,7 +358,7 @@
         <span class="md-nav__icon md-icon"></span>
       </label>
     
-    <a href="./" title="Debugging" class="md-nav__link md-nav__link--active">
+    <a href="./" class="md-nav__link md-nav__link--active">
       Debugging
     </a>
     
@@ -416,7 +416,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../composition/" title="Composition" class="md-nav__link">
+    <a href="../composition/" class="md-nav__link">
       Composition
     </a>
   </li>
@@ -454,7 +454,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../contrib_pytest/" title="Py.test" class="md-nav__link">
+    <a href="../contrib_pytest/" class="md-nav__link">
       Py.test
     </a>
   </li>
@@ -466,7 +466,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../contrib_debug_toolbars/" title="Debug toolbars" class="md-nav__link">
+    <a href="../contrib_debug_toolbars/" class="md-nav__link">
       Debug toolbars
     </a>
   </li>
@@ -478,7 +478,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../contrib_sentry/" title="Sentry" class="md-nav__link">
+    <a href="../contrib_sentry/" class="md-nav__link">
       Sentry
     </a>
   </li>
@@ -632,7 +632,6 @@
 <span class="gp">...</span>
 <span class="gp">... </span>        <span class="k">return</span> <span class="n">price</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">fraction</span>
 </code></pre></div>
-
 <p>It defines top-level logic without any implementation detail written in story
 methods.</p>
 <p>We provide an implementation in a separate set of functions.</p>
@@ -642,7 +641,6 @@ methods.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">load_promo_code</span><span class="p">(</span><span class="n">category</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">PromoCode</span><span class="p">(</span><span class="n">percent</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 </code></pre></div>
-
 <h2 id="the-first-run">The first run<a class="headerlink" href="#the-first-run" title="Permanent link">&para;</a></h2>
 <p>Looks good at the first view. Isn't it? Let's try to run this code.</p>
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">promo_code</span> <span class="o">=</span> <span class="n">ApplyPromoCode</span><span class="p">(</span><span class="n">load_category</span><span class="p">,</span> <span class="n">load_promo_code</span><span class="p">)</span>
@@ -652,7 +650,6 @@ methods.</p>
   <span class="c">...</span>
 <span class="gr">TypeError</span>: <span class="n">unsupported operand type(s) for *: &#39;NoneType&#39; and &#39;float&#39;</span>
 </code></pre></div>
-
 <p>Oops... It's broken...</p>
 <h2 id="pdb-walks-into-the-bar">PDB walks into the bar<a class="headerlink" href="#pdb-walks-into-the-bar" title="Permanent link">&para;</a></h2>
 <p>We can take the magnifying glass and read through the whole source code
@@ -672,7 +669,6 @@ after traceback.</p>
 <span class="go">self = &lt;example.PromoCode&gt;</span>
 <span class="go">price = None</span>
 </code></pre></div>
-
 <p>It's clear it isn't our fault. Someone passes a wrong value to us. We'll go one
 frame upper in the call stack and look who does it.</p>
 <div class="highlight"><pre><span></span><code><span class="go">(Pdb) up</span>
@@ -685,7 +681,6 @@ frame upper in the call stack and look who does it.</p>
 <span class="go"> 38  -&gt;      ctx.discount = ctx.promo_code.apply_discount(ctx.category.price)</span>
 <span class="go"> 39          return Success()</span>
 </code></pre></div>
-
 <p>We can clearly see that the <code>price</code> attribute of the <code>category</code> context variable
 is <code>None</code>. But who set it this way? <code>PDB</code> has no answer to that.</p>
 <p>At this point usually, you will re-run the whole process to stop debugger
@@ -705,14 +700,12 @@ introspection.</p>
 <span class="go">  category = &lt;example.Category&gt;     # Set by ApplyPromoCode.find_category</span>
 <span class="go">  promo_code = &lt;example.PromoCode&gt;  # Set by ApplyPromoCode.find_promo_code</span>
 </code></pre></div>
-
 <p>We can tell that <code>category</code> was defined by <code>find_category</code> step. Let's take a
 closer look at it.</p>
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">find_category</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ctx</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">ctx</span><span class="o">.</span><span class="n">category</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_category</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">category_id</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">Success</span><span class="p">()</span>
 </code></pre></div>
-
 <p>What are the <code>load_category</code> stands for?</p>
 <div class="highlight"><pre><span></span><code><span class="go">(Pdb) p self.load_category</span>
 <span class="go">&lt;function load_category&gt;</span>
@@ -720,20 +713,17 @@ closer look at it.</p>
 <span class="go">(Pdb) p dir(ctx.category)</span>
 <span class="go">[&#39;category_id&#39;, &#39;name&#39;, &#39;orice&#39;, &#39;price&#39;]</span>
 </code></pre></div>
-
 <p>These <code>orice</code> and <code>price</code> attribute looks suspicious.</p>
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">load_category</span><span class="p">(</span><span class="n">category_id</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">Category</span><span class="p">(</span><span class="n">orice</span><span class="o">=</span><span class="mi">715</span><span class="p">,</span> <span class="n">category_id</span><span class="o">=</span><span class="n">category_id</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="c1">#               `---- Root of all evil.</span>
 </code></pre></div>
-
 <p>So we can quickly find mistyped argument name in the <code>Category</code> constructor.</p>
 <h2 id="the-second-run">The second run<a class="headerlink" href="#the-second-run" title="Permanent link">&para;</a></h2>
 <p>Let's fix it.</p>
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">load_category</span><span class="p">(</span><span class="n">category_id</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">Category</span><span class="p">(</span><span class="n">price</span><span class="o">=</span><span class="mi">715</span><span class="p">,</span> <span class="n">category_id</span><span class="o">=</span><span class="n">category_id</span><span class="p">)</span>
 </code></pre></div>
-
 <p>And re-run our program.</p>
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">promo_code</span> <span class="o">=</span> <span class="n">ApplyPromoCode</span><span class="p">(</span><span class="n">load_category</span><span class="p">,</span> <span class="n">load_promo_code</span><span class="p">)</span>
 
@@ -742,10 +732,8 @@ closer look at it.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">result</span>
 <span class="go">679.25</span>
 </code></pre></div>
-
 <p>Hooray! It works.</p>
 <p align="center">&mdash; ⭐️ &mdash;</p>
-
 <p align="center"><i>The stories library is part of the SOLID python family.</i></p>
                 
               
@@ -765,7 +753,7 @@ closer look at it.</p>
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
         
-          <a href="../changelog/" title="Changelog" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../changelog/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-footer-nav__button md-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
             </div>
@@ -780,7 +768,7 @@ closer look at it.</p>
           </a>
         
         
-          <a href="../composition/" title="Composition" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../composition/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-footer-nav__title">
               <div class="md-ellipsis">
                 <span class="md-footer-nav__direction">
@@ -814,7 +802,7 @@ closer look at it.</p>
     </div>
     
       <script src="../assets/javascripts/vendor.77e55a48.min.js"></script>
-      <script src="../assets/javascripts/bundle.aa3f9871.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
+      <script src="../assets/javascripts/bundle.9554a270.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
       
       <script>
         app = initialize({
