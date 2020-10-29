@@ -13,8 +13,8 @@ theme:
     repo: fontawesome/brands/github
   language: en
   features:
-    - instant
-    - tabs
+    - navigation.instant
+    - navigation.tabs
 repo_name: proofit404/stories
 repo_url: https://github.com/proofit404/stories
 edit_uri: ""
