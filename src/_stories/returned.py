@@ -3,7 +3,8 @@ class Result:
         self.value = value
 
     def __repr__(self):
-        return "Result(" + repr(self.value) + ")"
+        value = repr(self.value) if self.value is not None else ''
+        return "Result(" + value + ")"
 
 
 class Failure:
@@ -25,4 +26,5 @@ class Next:
         self.value = value
 
     def __repr__(self):
-        return "Next(" + repr(self.value) + ")"
+        value = repr(self.value) if self.value is not None else ''
+        return "Next(" + value + ")"

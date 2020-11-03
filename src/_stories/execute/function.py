@@ -10,6 +10,8 @@ def execute(runner, ctx, ns, bind, history, methods):
     __tracebackhide__ = True
 
     skipped = 0
+    depth = 0
+    has_parent = True
 
     for method, contract, protocol in methods:
 
@@ -18,12 +20,18 @@ def execute(runner, ctx, ns, bind, history, methods):
         if skipped > 0:
             if method_type is EndOfStory:
                 skipped -= 1
+                depth -= 1
+                has_parent = depth > 1
             elif method_type is BeginningOfStory:
                 skipped += 1
+                depth += 1
+                has_parent = depth > 1
             continue
 
         if method_type is BeginningOfStory:
             history.on_substory_start(method.story_name)
+            depth += 1
+            has_parent = depth > 1
             try:
                 contract.check_substory_call(ctx, ns)
             except Exception as error:
@@ -33,6 +41,8 @@ def execute(runner, ctx, ns, bind, history, methods):
 
         if method_type is EndOfStory:
             history.on_substory_end()
+            depth -= 1
+            has_parent = depth > 1
             continue
 
         history.before_call(method.__name__)
@@ -63,7 +73,10 @@ def execute(runner, ctx, ns, bind, history, methods):
 
         if restype is Next:
             history.on_next(result.value)
-            skipped = 1
-            continue
+            if not has_parent and result.value is not None:
+                return runner.got_result(result.value)
+            else:
+                skipped = 1
+                continue
 
     return runner.finished()

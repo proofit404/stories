@@ -6,6 +6,9 @@ from stories import Success
 
 def test_result_representation():
 
+    marker = Result()
+    assert repr(marker) == "Result()"
+
     marker = Result(1)
     assert repr(marker) == "Result(1)"
 
@@ -28,7 +31,7 @@ def test_success_representation():
 def test_next_representation():
 
     marker = Next()
-    assert repr(marker) == "Next(None)"
+    assert repr(marker) == "Next()"
 
     marker = Next(1)
     assert repr(marker) == "Next(1)"

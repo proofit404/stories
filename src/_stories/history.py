@@ -16,7 +16,7 @@ class History:
             self.lines[-1] += " (failed)"
 
     def on_next(self, value):
-        if value:
+        if value is not None:
             self.lines[-1] += " (skipped: " + repr(value) + ")"
         else:
             self.lines[-1] += " (skipped)"
