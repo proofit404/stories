@@ -28,7 +28,10 @@ def test_success_representation():
 def test_next_representation():
 
     marker = Next()
-    assert repr(marker) == "Next()"
+    assert repr(marker) == "Next(None)"
+
+    marker = Next(1)
+    assert repr(marker) == "Next(1)"
 
 
 def test_failure_summary_representation(r, x):

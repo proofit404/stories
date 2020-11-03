@@ -62,7 +62,7 @@ def execute(runner, ctx, ns, bind, history, methods):
             return runner.got_result(result.value)
 
         if restype is Next:
-            history.on_next()
+            history.on_next(result.value)
             skipped = 1
             continue
 

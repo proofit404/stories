@@ -150,6 +150,35 @@ def test_next(r, x):
     assert result.value == -4
 
 
+def test_next_return_value(r, x):
+    """Next marker semantics return value."""
+
+    result = r(x.Simple().x)(foo=1, bar=-10)
+    assert result == -20
+
+    result = r(x.Simple().x.run)(foo=1, bar=-10)
+    assert result.is_success
+    assert not result.is_failure
+    assert not result.failed_on("two")
+    assert result.value == -20
+
+    result = r(x.SubstoryDI(x.Simple().x).y)(spam=-2)
+    assert result == -4
+
+    result = r(x.SubstoryDI(x.Simple().x).y.run)(spam=-2)
+    assert result.is_success
+    assert not result.is_failure
+    assert result.value == -4
+
+    result = r(x.SubstoryDI(x.Pipe().y).y)(spam=-2)
+    assert result == -4
+
+    result = r(x.SubstoryDI(x.Pipe().y).y.run)(spam=-2)
+    assert result.is_success
+    assert not result.is_failure
+    assert result.value == -4
+
+
 def test_return_type(r, x):
     """Story steps should return a marker.
 

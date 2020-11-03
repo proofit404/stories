@@ -21,5 +21,8 @@ class Success:
 
 
 class Next:
+    def __init__(self, value=None):
+        self.value = value
+
     def __repr__(self):
-        return "Next()"
+        return "Next(" + repr(self.value) + ")"

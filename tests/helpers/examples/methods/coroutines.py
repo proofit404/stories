@@ -103,6 +103,9 @@ class Simple:
         if ctx.bar < 0:
             return Next()
 
+        if ctx.bar == -10:
+            return Next(ctx.bar * 2)
+
         ctx.baz = 4
         return Success()
 
