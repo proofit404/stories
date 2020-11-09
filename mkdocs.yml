@@ -30,19 +30,24 @@ markdown_extensions:
   - pymdownx.tabbed
   - pymdownx.tasklist:
       custom_checkbox: true
+  - mkautodoc
+extra_css:
+  - stylesheets/extra.css
 extra_javascript:
   - javascripts/extra.js
 nav:
   - Home:
       - Home: index.md
       - Installation: installation.md
+      - Changelog: changelog.md
+  - Usage:
       - Why: why.md
       - Definition: definition.md
       - Usage: usage.md
       - Execution: execution.md
       - Failure protocol: failure_protocol.md
       - FAQ: faq.md
-      - Changelog: changelog.md
+      - Reference: reference.md
   - Guides:
       - Debugging: debugging.md
       - Composition: composition.md
