@@ -22,3 +22,7 @@ python = "~3.6 || ~3.7 || ~3.8"
 
 [tool.poetry.plugins.pytest11]
 stories = "stories.contrib.pytest"
+
+[tool.poetry.urls]
+Changelog = "https://proofit404.github.io/stories/"
+Issues = "https://github.com/proofit404/stories/issues"
