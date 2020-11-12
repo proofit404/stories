@@ -1,3 +1,15 @@
+# [4.0.0](https://github.com/proofit404/stories/compare/3.0.0...4.0.0) (2020-11-12)
+
+### Build System
+
+- add python 3.9 support
+  [#553](https://github.com/proofit404/stories/issues/553)
+  ([a48fec7](https://github.com/proofit404/stories/commit/a48fec72302099577ddfad4ba4f8ebf4d163cd33))
+
+### BREAKING CHANGES
+
+- drop python 3.6 support.
+
 # [3.0.0](https://github.com/proofit404/stories/compare/2.0.0...3.0.0) (2020-10-01)
 
 ### Features
