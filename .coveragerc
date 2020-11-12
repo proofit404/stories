@@ -6,6 +6,7 @@ source =
   stories
   aioapp
   app
+  configuration
   examples
   helpers
   mddoctest
