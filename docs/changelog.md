@@ -1,3 +1,11 @@
+# [4.1.0](https://github.com/proofit404/stories/compare/4.0.0...4.1.0) (2020-11-20)
+
+### Features
+
+- support pypy interpreter
+  [#42](https://github.com/proofit404/stories/issues/42)
+  ([08fe88a](https://github.com/proofit404/stories/commit/08fe88a3bc87acd4967c6b8ded2c7d8ace344c51))
+
 # [4.0.0](https://github.com/proofit404/stories/compare/3.0.0...4.0.0) (2020-11-12)
 
 ### Build System
