@@ -591,7 +591,7 @@ def test_substory_protocol_match_with_empty(r, f):
 
     # Substory DI.
 
-    J().a.failures is None
+    assert J().a.failures is None
 
     with pytest.raises(FailureError) as exc_info:
         r(J().a)()
