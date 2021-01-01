@@ -1,12 +1,4 @@
-"""
-stories
--------
-
-This module implements Business Transaction DSL.
-
-:copyright: (c) 2018-2020 Artem Malyshev.
-:license: BSD, see LICENSE for more details.
-"""
+"""This module implements Business Transaction DSL."""
 from _stories.argument import arguments
 from _stories.returned import Failure
 from _stories.returned import Next
