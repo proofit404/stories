@@ -25,7 +25,7 @@ A line of text explaining snippet below…
 
 ```pycon
 
->>> from stories import *
+>>> from stories.exceptions import StoryError
 
 ```
 
