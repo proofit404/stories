@@ -1,0 +1,32 @@
+---
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: master
+    hooks:
+      - id: no-commit-to-branch
+      - id: forbid-new-submodules
+      - id: check-added-large-files
+      - id: fix-byte-order-marker
+      - id: check-executables-have-shebangs
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+      - id: trailing-whitespace
+      - id: file-contents-sorter
+        files: ^(.gitignore|.python-version)$
+      - id: debug-statements
+      - id: check-builtin-literals
+        args:
+          - --no-allow-dict-kwargs
+      - id: check-json
+      - id: check-toml
+      - id: check-yaml
+  - repo: https://github.com/pre-commit/pygrep-hooks
+    rev: master
+    hooks:
+      - id: python-check-blanket-noqa
+      - id: python-check-mock-methods
+      - id: python-no-eval
+      - id: python-no-log-warn
+      - id: text-unicode-replacement-char
