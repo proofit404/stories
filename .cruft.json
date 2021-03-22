@@ -1,0 +1,31 @@
+{
+  "template": "https://github.com/proofit404/python-library-template",
+  "commit": "117c1043861330fb6c3048d0d3f220d3c734b8c1",
+  "context": {
+    "cookiecutter": {
+      "project_name": "stories",
+      "public_module_name": "stories",
+      "private_module_name": "_stories",
+      "exception_name": "StoryError",
+      "project_description": "Service objects designed with OOP in mind.",
+      "author_name": "Artem Malyshev",
+      "author_email": "proofit404@gmail.com",
+      "github_user": "proofit404",
+      "github_repository": "https://github.com/proofit404/stories",
+      "issues_url": "https://github.com/proofit404/stories/issues",
+      "documentation_url": "https://proofit404.github.io/stories",
+      "changelog_url": "https://proofit404.github.io/stories/changelog",
+      "twitter_url": "https://twitter.com/proofit404",
+      "pypi_project": "https://pypi.org/project/stories",
+      "azure_definition_id": "16",
+      "azure_build_url": "https://dev.azure.com/proofit404/stories/_build/latest?definitionId=16&branchName=master",
+      "azure_build_badge_url": "https://img.shields.io/azure-devops/build/proofit404/stories/16?style=flat-square",
+      "azure_coverage_url": "https://dev.azure.com/proofit404/stories/_build/latest?definitionId=16&branchName=master",
+      "azure_coverage_badge_url": "https://img.shields.io/azure-devops/coverage/proofit404/stories/16?style=flat-square",
+      "pypi_badge_url": "https://img.shields.io/pypi/v/stories?style=flat-square",
+      "python_version_badge_url": "https://img.shields.io/pypi/pyversions/stories?style=flat-square",
+      "_template": "https://github.com/proofit404/python-library-template"
+    }
+  },
+  "directory": null
+}
