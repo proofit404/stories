@@ -1,0 +1,3 @@
+class _Step:
+    def __getattr__(self, name):
+        ...
