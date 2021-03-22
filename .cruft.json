@@ -1,0 +1,26 @@
+{
+  "template": "https://github.com/proofit404/python-library-template",
+  "commit": "4b9d3932b778f1a36135084bcb05af3eca87069e",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "project_name": "stories",
+      "public_module_name": "stories",
+      "private_module_name": "_stories",
+      "exception_name": "StoryError",
+      "project_version": "4.1.0",
+      "project_description": "Service objects designed with OOP in mind.",
+      "author_name": "Artem Malyshev",
+      "author_email": "proofit404@gmail.com",
+      "github_user": "proofit404",
+      "github_repository": "https://github.com/proofit404/stories",
+      "issues_url": "https://github.com/proofit404/stories/issues",
+      "documentation_url": "https://proofit404.github.io/stories",
+      "changelog_url": "https://proofit404.github.io/stories/changelog",
+      "pypi_project": "https://pypi.org/project/stories",
+      "azure_definition_id": "16",
+      "_template": "https://github.com/proofit404/python-library-template"
+    }
+  },
+  "directory": null
+}

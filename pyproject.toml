@@ -1,0 +1,29 @@
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core"]
+
+[tool.poetry]
+authors = ["Artem Malyshev <proofit404@gmail.com>"]
+classifiers = [
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+]
+description = "Service objects designed with OOP in mind."
+documentation = "https://proofit404.github.io/stories"
+homepage = "https://pypi.org/project/stories"
+license = "BSD-2-Clause"
+name = "stories"
+packages = [
+    { include = "_stories", from = "src" },
+    { include = "stories", from = "src" },
+]
+readme = "docs/index.md"
+repository = "https://github.com/proofit404/stories"
+version = "4.1.0"
+
+[tool.poetry.dependencies]
+python = "~3.6 || ~3.7 || ~3.8 || ~3.9"
+
+[tool.poetry.urls]
+Changelog = "https://proofit404.github.io/stories/changelog"
+Issues = "https://github.com/proofit404/stories/issues"

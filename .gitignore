@@ -1,0 +1,10 @@
+.coverage
+.coverage.*
+.mutmut-cache
+.pytest_cache/
+.tox/
+__pycache__/
+coverage.xml
+dist/
+htmlcov/
+site/
