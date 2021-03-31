@@ -11,7 +11,7 @@ class _StoryType(type):
             return type.__new__(cls, class_name, bases, namespace)
         del namespace["I"]
         namespace["__call__"] = _get_executor(
-            [v for k, v in namespace.items() if k.endswith("s1")][0]
+            [v for v in namespace.values() if callable(v)][0]
         )
         return type.__new__(cls, class_name, bases, namespace)
 
