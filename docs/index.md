@@ -25,7 +25,49 @@ A line of text explaining snippet below…
 
 ```pycon
 
->>> from stories.exceptions import StoryError
+>>> from dataclasses import dataclass
+>>> from typing import Callable
+>>> from stories import Story, I, State
+>>> from app.repositories import load_category, load_profile, create_subscription
+
+>>> @dataclass
+... class Subscribe(Story):
+...     I.find_category
+...     I.find_profile
+...     I.check_balance
+...     I.persist_subscription
+...
+...     def find_category(self, state):
+...         state.category = self.load_category(state.category_id)
+...
+...     def find_profile(self, state):
+...         state.profile = self.load_profile(state.profile_id)
+...
+...     def check_balance(self, state):
+...         if not state.category.affordable_for(state.profile):
+...             raise Exception
+...
+...     def persist_subscription(self, state):
+...         state.subscription = self.create_subscription(category=state.category_id, profile=state.profile_id)
+...
+...     load_category: Callable
+...     load_profile: Callable
+...     create_subscription: Callable
+
+>>> subscribe = Subscribe(
+...     load_category=load_category,
+...     load_profile=load_profile,
+...     create_subscription=create_subscription,
+... )
+
+>>> state = State(category_id=1, profile_id=1)
+
+>>> subscribe(state)
+
+>>> state
+
+>>> state.subscription.is_expired()
+False
 
 ```
 

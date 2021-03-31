@@ -4,6 +4,7 @@ parallel = true
 source =
   _stories
   stories
+  app
   configuration
   examples
   helpers
