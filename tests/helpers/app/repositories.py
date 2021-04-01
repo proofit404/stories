@@ -3,6 +3,9 @@ from app.entities import Profile
 from app.entities import Subscription
 
 
+log = __builtins__["print"]
+
+
 def load_category(category_id):
     """Load category from db."""
     names = {1: "Books", 2: "Movies"}
@@ -20,3 +23,11 @@ def create_subscription(profile_id, category_id):
     """Save Subscription into db."""
     durations = {(1, 1): "30 days"}
     return Subscription(duration=durations[(profile_id, category_id)])
+
+
+def lock_item_query():
+    log("UPDATE 'items';")
+
+
+def charge_money_query():
+    log("UPDATE 'balance';")
