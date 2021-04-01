@@ -1,3 +1,5 @@
+# 🚧 [Under heavy redesign! Almost every existing API will be broken! Use with caution!](https://github.com/proofit404/stories/tree/develop) 🚧
+
 # Stories
 
 [![azure-devops-builds](https://img.shields.io/azure-devops/build/proofit404/stories/3?style=flat-square)](https://dev.azure.com/proofit404/stories/_build/latest?definitionId=3&branchName=master)
