@@ -1,4 +1,3 @@
-import asyncio
 import importlib
 
 import _stories.execute
@@ -29,8 +28,6 @@ _stories.execute.coroutine._execute = _instrumented_coroutine
 
 class _Function:
     def run(self, story, *args, **kwargs):
-        if asyncio.iscoroutinefunction(story.__call__):
-            raise Exception("A function executor expected")  # pragma: no cover
         _stories.execute.instrumented = True
         try:
             return story(*args, **kwargs)
@@ -43,8 +40,6 @@ class _Function:
 
 class _Coroutine:
     def run(self, story, *args, **kwargs):
-        if not asyncio.iscoroutinefunction(story.__call__):
-            raise Exception("A coroutine executor expected")  # pragma: no cover
         _stories.execute.instrumented = True
         try:
             story(*args, **kwargs).send(None)

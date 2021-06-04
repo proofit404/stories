@@ -7,12 +7,10 @@ class _StoryType(type):
         return {"I": _Step()}
 
     def __new__(cls, class_name, bases, namespace):
+        steps = namespace.pop("I").steps
         if not bases:
             return type.__new__(cls, class_name, bases, namespace)
-        del namespace["I"]
-        namespace["__call__"] = _get_executor(
-            [v for v in namespace.values() if callable(v)][0]
-        )
+        namespace["__call__"] = _get_executor(steps, namespace)
         return type.__new__(cls, class_name, bases, namespace)
 
 
