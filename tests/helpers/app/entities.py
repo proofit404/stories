@@ -1,31 +1,47 @@
 from dataclasses import dataclass
+from datetime import datetime
 
 
 @dataclass
-class Category:
-    """Category entity."""
+class Product:
+    """Entity."""
 
     name: str
-    cost: int
-
-    def affordable_for(self, profile):
-        """Check if profile could afford a category."""
-        return profile.balance > self.cost
 
 
 @dataclass
-class Profile:
-    """Profile entity."""
+class Cost:
+    """Entity."""
+
+    at: datetime
+    amount: int
+
+
+@dataclass
+class Order:
+    """Entity."""
+
+    product: Product
+    cost: Cost
+
+    def affordable_for(self, customer):
+        """Check if customer could afford an order."""
+        return customer.balance > self.cost.amount
+
+
+@dataclass
+class Customer:
+    """Entity."""
 
     balance: int
 
 
 @dataclass
-class Subscription:
-    """Subscription entity."""
+class Payment:
+    """Entity."""
 
-    duration: str
+    due_date: datetime
 
-    def is_expired(self):
-        """Check subscription expiraton."""
+    def was_received(self):
+        """Check if payment was received."""
         return False

@@ -8,7 +8,7 @@ If you need to wrap single story step in a database transaction, don't do that
 inside the step itself. Stories you write should not be aware of the database
 you use.
 
-Ideally, stories are written with composition in mind. So you'll be able to
+Ideally, stories are written with composition in mind. You'll be able to
 decorate injected function in the construction process.
 
 ```pycon
@@ -45,7 +45,7 @@ with transaction an injected functions.
 
 >>> from app.transactions import atomic
 >>> from app.repositories import lock_item_query, charge_money_query
->>> from app.messages import send_notification
+>>> from app.gateways import send_notification
 
 >>> purchase = Purchase(
 ...     lock_item_query=atomic(lock_item_query),
@@ -133,13 +133,40 @@ UPDATE 'items';
 UPDATE 'balance';
 COMMIT TRANSACTION;
 
+```
+
+You would see transaction rolling back if nested story fails in the middle of
+its execution.
+
+!!! note
+
+    As you may notice, `Persistence` is a stateful object. You need to
+    create a dedicated instance of the story for each call! If you
+    don't like such behavior consider to redesign `Persistence` class
+    to store its flags in the `State` object.
+
+```pycon
+
+>>> from app.tools import log
+
+>>> persistence = Persistence()
+
+>>> transactional = Transactional(
+...     persistence.start_transaction,
+...     purchase,
+...     persistence.end_transaction,
+... )
+
 >>> try:
 ...     transactional(State(user_id=2))
+... except Exception:
+...     log("ERROR")
 ... finally:
 ...     persistence.finalize()
 BEGIN TRANSACTION;
 UPDATE 'items';
 UPDATE 'balance';
+ERROR
 ROLLBACK TRANSACTION;
 
 ```
