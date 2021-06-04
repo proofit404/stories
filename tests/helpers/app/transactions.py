@@ -1,7 +1,9 @@
-log = __builtins__["print"]
+from app.tools import log
 
 
 def atomic(f):
+    """Manage transactions."""
+
     def wrapper(*args, **kwargs):
         start_transaction()
         result = f(*args, **kwargs)
@@ -12,12 +14,15 @@ def atomic(f):
 
 
 def start_transaction():
+    """Perform database query."""
     log("BEGIN TRANSACTION;")
 
 
 def end_transaction():
+    """Perform database query."""
     log("COMMIT TRANSACTION;")
 
 
 def cancel_transaction():
+    """Perform database query."""
     log("ROLLBACK TRANSACTION;")

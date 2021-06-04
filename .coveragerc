@@ -4,6 +4,7 @@ parallel = true
 source =
   _stories
   stories
+  aioapp
   app
   configuration
   examples
