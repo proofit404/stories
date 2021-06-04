@@ -28,47 +28,47 @@ A line of text explaining snippet below…
 >>> from dataclasses import dataclass
 >>> from typing import Callable
 >>> from stories import Story, I, State
->>> from app.repositories import load_category, load_profile, create_subscription
+>>> from app.repositories import load_order, load_customer, create_payment
 
 >>> @dataclass
-... class Subscribe(Story):
-...     I.find_category
-...     I.find_profile
+... class Purchase(Story):
+...     I.find_order
+...     I.find_customer
 ...     I.check_balance
-...     I.persist_subscription
+...     I.persist_payment
 ...
-...     def find_category(self, state):
-...         state.category = self.load_category(state.category_id)
+...     def find_order(self, state):
+...         state.order = self.load_order(state.order_id)
 ...
-...     def find_profile(self, state):
-...         state.profile = self.load_profile(state.profile_id)
+...     def find_customer(self, state):
+...         state.customer = self.load_customer(state.customer_id)
 ...
 ...     def check_balance(self, state):
-...         if not state.category.affordable_for(state.profile):
+...         if not state.order.affordable_for(state.customer):
 ...             raise Exception
 ...
-...     def persist_subscription(self, state):
-...         state.subscription = self.create_subscription(
-...             category=state.category_id, profile=state.profile_id
+...     def persist_payment(self, state):
+...         state.payment = self.create_payment(
+...             order_id=state.order_id, customer_id=state.customer_id
 ...         )
 ...
-...     load_category: Callable
-...     load_profile: Callable
-...     create_subscription: Callable
+...     load_order: Callable
+...     load_customer: Callable
+...     create_payment: Callable
 
->>> subscribe = Subscribe(
-...     load_category=load_category,
-...     load_profile=load_profile,
-...     create_subscription=create_subscription,
+>>> purchase = Purchase(
+...     load_order=load_order,
+...     load_customer=load_customer,
+...     create_payment=create_payment,
 ... )
 
->>> state = State(category_id=1, profile_id=1)
+>>> state = State(order_id=1, customer_id=1)
 
->>> subscribe(state)
+>>> purchase(state)
 
->>> state
+>>> state  # doctest: +SKIP
 
->>> state.subscription.is_expired()
+>>> state.payment.was_received()
 False
 
 ```
