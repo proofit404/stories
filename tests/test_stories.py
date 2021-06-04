@@ -12,17 +12,17 @@ def test_return_value(r, m):
         I.a1s2
         I.a1s3
 
-        a1s1 = m.normal_method
-        a1s2 = m.normal_method
-        a1s3 = m.normal_method
+        a1s1 = m._normal_method
+        a1s2 = m._normal_method
+        a1s3 = m._normal_method
 
     class B1(Story):
         I.b1s1
         I.a1
         I.b1s2
 
-        b1s1 = m.normal_method
-        b1s2 = m.normal_method
+        b1s1 = m._normal_method
+        b1s2 = m._normal_method
 
         def __init__(self):
             self.a1 = A1()
@@ -32,8 +32,8 @@ def test_return_value(r, m):
         I.b1
         I.c1s2
 
-        c1s1 = m.normal_method
-        c1s2 = m.normal_method
+        c1s1 = m._normal_method
+        c1s2 = m._normal_method
 
         def __init__(self):
             self.b1 = B1()
@@ -55,3 +55,59 @@ def test_return_value(r, m):
     story = C1()
     state = State()
     assert r.run(story, state) is None
+
+
+def test_execute_steps(r, m):
+    """Story steps should be executed according to the given order."""
+
+    class A1(Story):
+        I.a1s1
+        I.a1s2
+        I.a1s3
+
+        a1s1 = m._append_method("calls", "a1s1")
+        a1s2 = m._append_method("calls", "a1s2")
+        a1s3 = m._append_method("calls", "a1s3")
+
+    class B1(Story):
+        I.b1s1
+        I.a1
+        I.b1s2
+
+        b1s1 = m._append_method("calls", "b1s1")
+        b1s2 = m._append_method("calls", "b1s2")
+
+        def __init__(self):
+            self.a1 = A1()
+
+    class C1(Story):
+        I.c1s1
+        I.b1
+        I.c1s2
+
+        c1s1 = m._append_method("calls", "c1s1")
+        c1s2 = m._append_method("calls", "c1s2")
+
+        def __init__(self):
+            self.b1 = B1()
+
+    # First level.
+
+    story = A1()
+    state = State(calls=[])
+    r.run(story, state)
+    assert state.calls == ["a1s1", "a1s2", "a1s3"]
+
+    # Second level.
+
+    story = B1()
+    state = State(calls=[])
+    r.run(story, state)
+    assert state.calls == ["b1s1", "a1s1", "a1s2", "a1s3", "b1s2"]
+
+    # Third level.
+
+    story = C1()
+    state = State(calls=[])
+    r.run(story, state)
+    assert state.calls == ["c1s1", "b1s1", "a1s1", "a1s2", "a1s3", "b1s2", "c1s2"]
