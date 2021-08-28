@@ -1,22 +1,25 @@
 from asyncio import iscoroutinefunction
 from functools import partial
+from types import MethodType
 
 from _stories.execute import coroutine
 from _stories.execute import function
 
 
-def _get_executor(steps, namespace):
-    if iscoroutinefunction(namespace[steps[0]]):
-        func = coroutine._execute
-    else:
-        func = function._execute
-    return _Executor(func, steps)
-
-
 class _Executor:
-    def __init__(self, func, steps):
-        self.func = func
+    def __init__(self, steps):
         self.steps = steps
 
     def __get__(self, instance, klass):
-        return partial(self.func, self.steps, instance)
+        if instance is None:
+            return self
+        first_step = getattr(instance, self.steps[0])
+        if isinstance(first_step, MethodType):
+            step = first_step.__func__
+        else:
+            step = first_step.__call__.func
+        if iscoroutinefunction(step):
+            func = coroutine._execute
+        else:
+            func = function._execute
+        return partial(func, self.steps, instance)
