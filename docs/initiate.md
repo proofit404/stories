@@ -8,6 +8,9 @@ provides `@initiate` decorator.
 ## Principles
 
 - [All story steps would be used in class constructor arguments](#all-story-steps-would-be-used-in-class-constructor-arguments)
+- [Only `Story` subclasses could be initiated](#only-story-subclasses-could-be-initiated)
+- [Initiated `Story` class should not have step methods](#initiated-story-class-should-not-have-step-methods)
+- [Initiated `Story` class should not have constructor](#initiated-story-class-should-not-have-constructor)
 
 ### All story steps would be used in class constructor arguments
 
@@ -46,6 +49,73 @@ used as names for constructor arguments.
     ...         self.persist_payment = persist_payment
 
     ```
+
+### Only `Story` subclasses could be initiated
+
+Classes decorated by `@initiate` function should be subclasess of the `Story`.
+Otherwise, there is no steps to operate on.
+
+```pycon
+
+>>> @initiate
+... class Purchase:
+...     def find_order(self, state):
+...         state.order = self.load_order(state.order_id)
+...
+...     def find_customer(self, state):
+...         state.customer = self.load_customer(state.customer_id)
+...
+...     def persist_payment(self, state):
+...         self.create_payment(state.order_id, state.customer_id)
+Traceback (most recent call last):
+  ...
+_stories.exceptions.StoryError: @initiate can decorate Story subclasses only
+
+```
+
+### Initiated `Story` class should not have step methods
+
+`@initiate` decorator does not allow to mix step methods with nested stories on
+initiated classes. Usually, story steps defined by methods expects some
+additional dependencies to be passed in the constructor.
+
+```pycon
+
+>>> from stories import Story, I, initiate
+
+>>> @initiate
+... class Purchase(Story):
+...     I.find_order
+...     I.find_customer
+...     I.persist_payment
+...
+...     def find_order(self, state):
+...         state.order = self.load_order(state.order_id)
+Traceback (most recent call last):
+  ...
+_stories.exceptions.StoryError: Story decorated by @initiate can not have step methods
+
+```
+
+### Initiated `Story` class should not have constructor
+
+```pycon
+
+>>> from stories import Story, I, initiate
+
+>>> @initiate
+... class Purchase(Story):
+...     I.find_order
+...     I.find_customer
+...     I.persist_payment
+...
+...     def __init__(self):
+...         ...
+Traceback (most recent call last):
+  ...
+_stories.exceptions.StoryError: Story decorated by @initiate can not have constructor defined
+
+```
 
 <p align="center">&mdash; ⭐ &mdash;</p>
 <p align="center"><i>The <code>stories</code> library is part of the SOLID python family.</i></p>
