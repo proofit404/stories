@@ -35,8 +35,7 @@ used as names for constructor arguments.
 
     >>> from stories import Story, I
 
-    >>> @initiate
-    ... class Purchase(Story):
+    >>> class Purchase(Story):
     ...     I.find_order
     ...     I.find_customer
     ...     I.persist_payment
