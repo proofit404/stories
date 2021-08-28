@@ -1,4 +1,4 @@
-from _stories.execute import _get_executor
+from _stories.execute import _Executor
 from _stories.step import _Step
 
 
@@ -10,7 +10,7 @@ class _StoryType(type):
         steps = namespace.pop("I").steps
         if not bases:
             return type.__new__(cls, class_name, bases, namespace)
-        namespace["__call__"] = _get_executor(steps, namespace)
+        namespace["__call__"] = _Executor(steps)
         return type.__new__(cls, class_name, bases, namespace)
 
 
