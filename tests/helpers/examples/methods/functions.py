@@ -7,3 +7,14 @@ def _append_method(attribute, value):
         getattr(state, attribute).append(value)
 
     return method
+
+
+def _error_method(message):
+    def method(self, state):
+        raise _StepError(message)
+
+    return method
+
+
+class _StepError(Exception):
+    ...
