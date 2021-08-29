@@ -1,1 +1,1 @@
-I = None
+I = None  # pragma: no mutate
