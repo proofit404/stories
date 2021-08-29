@@ -4,6 +4,7 @@
 
 - [Story is a callable object](#story-is-a-callable-object)
 - [Steps executed in specified order](#steps-executed-in-specified-order)
+- [Exceptions would be propagated](#exceptions-would-be-propagated)
 
 ### Story is a callable object
 
@@ -156,20 +157,20 @@ The same as you do with regular coroutine methods defined on your classes.
     ...     I.persist_payment
     ...
     ...     def find_order(self, state):
-    ...         self.log("|> find order")
+    ...         self.log("==> find order")
     ...         state.order = self.load_order(state.order_id)
     ...
     ...     def find_customer(self, state):
-    ...         self.log("|> find customer")
+    ...         self.log("==> find customer")
     ...         state.customer = self.load_customer(state.customer_id)
     ...
     ...     def check_balance(self, state):
-    ...         self.log("|> check balance")
+    ...         self.log("==> check balance")
     ...         if not state.order.affordable_for(state.customer):
     ...             raise Exception
     ...
     ...     def persist_payment(self, state):
-    ...         self.log("|> persist payment")
+    ...         self.log("==> persist payment")
     ...         state.payment = self.create_payment(
     ...             order_id=state.order_id, customer_id=state.customer_id
     ...         )
@@ -189,10 +190,10 @@ The same as you do with regular coroutine methods defined on your classes.
     >>> state = State(order_id=1, customer_id=1)
 
     >>> purchase(state)
-    |> find order
-    |> find customer
-    |> check balance
-    |> persist payment
+    ==> find order
+    ==> find customer
+    ==> check balance
+    ==> persist payment
 
     ```
 
@@ -215,20 +216,20 @@ The same as you do with regular coroutine methods defined on your classes.
     ...     I.persist_payment
     ...
     ...     async def find_order(self, state):
-    ...         await self.log("|> find order")
+    ...         await self.log("==> find order")
     ...         state.order = await self.load_order(state.order_id)
     ...
     ...     async def find_customer(self, state):
-    ...         await self.log("|> find customer")
+    ...         await self.log("==> find customer")
     ...         state.customer = await self.load_customer(state.customer_id)
     ...
     ...     async def check_balance(self, state):
-    ...         await self.log("|> check balance")
+    ...         await self.log("==> check balance")
     ...         if not state.order.affordable_for(state.customer):
     ...             raise Exception
     ...
     ...     async def persist_payment(self, state):
-    ...         await self.log("|> persist payment")
+    ...         await self.log("==> persist payment")
     ...         state.payment = await self.create_payment(
     ...             order_id=state.order_id, customer_id=state.customer_id
     ...         )
@@ -248,10 +249,109 @@ The same as you do with regular coroutine methods defined on your classes.
     >>> state = State(order_id=1, customer_id=1)
 
     >>> asyncio.run(purchase(state))
-    |> find order
-    |> find customer
-    |> check balance
-    |> persist payment
+    ==> find order
+    ==> find customer
+    ==> check balance
+    ==> persist payment
+
+    ```
+
+### Exceptions would be propagated
+
+If exception was raised inside the step method, execution of the story would
+stop at that moment and exception would be raised to the caller code without any
+changes.
+
+=== "sync"
+
+    ```pycon
+
+    >>> from dataclasses import dataclass
+    >>> from typing import Callable
+    >>> from stories import Story, I, State
+    >>> from app.tools import log
+
+    >>> @dataclass
+    ... class Purchase(Story):
+    ...     I.find_order
+    ...     I.find_customer
+    ...     I.check_balance
+    ...     I.persist_payment
+    ...
+    ...     def find_order(self, state):
+    ...         self.log("==> find order")
+    ...
+    ...     def find_customer(self, state):
+    ...         self.log("==> find customer")
+    ...
+    ...     def check_balance(self, state):
+    ...         self.log("==> check balance")
+    ...         raise Exception("Not enough money")
+    ...
+    ...     def persist_payment(self, state):
+    ...         self.log("==> persist payment")
+    ...
+    ...     log: Callable
+
+    >>> purchase = Purchase(log=log)
+
+    >>> state = State()
+
+    >>> try:
+    ...     purchase(state)
+    ... except Exception as error:
+    ...     print(f"==> {error!r}")
+    ==> find order
+    ==> find customer
+    ==> check balance
+    ==> Exception('Not enough money')
+
+    ```
+
+=== "async"
+
+    ```pycon
+
+    >>> import asyncio
+    >>> from dataclasses import dataclass
+    >>> from typing import Coroutine
+    >>> from stories import Story, I, State
+    >>> from aioapp.tools import log
+
+    >>> @dataclass
+    ... class Purchase(Story):
+    ...     I.find_order
+    ...     I.find_customer
+    ...     I.check_balance
+    ...     I.persist_payment
+    ...
+    ...     async def find_order(self, state):
+    ...         await self.log("==> find order")
+    ...
+    ...     async def find_customer(self, state):
+    ...         await self.log("==> find customer")
+    ...
+    ...     async def check_balance(self, state):
+    ...         await self.log("==> check balance")
+    ...         raise Exception("Not enough money")
+    ...
+    ...     async def persist_payment(self, state):
+    ...         await self.log("==> persist payment")
+    ...
+    ...     log: Coroutine
+
+    >>> purchase = Purchase(log=log)
+
+    >>> state = State()
+
+    >>> try:
+    ...     asyncio.run(purchase(state))
+    ... except Exception as error:
+    ...     print(f"==> {error!r}")
+    ==> find order
+    ==> find customer
+    ==> check balance
+    ==> Exception('Not enough money')
 
     ```
 
