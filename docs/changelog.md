@@ -1,3 +1,31 @@
+# 5.0.0-rc.1 (2021-08-29)
+
+### Code Refactoring
+
+- earthquake [#627](https://github.com/proofit404/stories/issues/627) 1dfff33
+
+### Features
+
+- execute steps in given order
+  [#664](https://github.com/proofit404/stories/issues/664) 3c88b36
+- implement [@initiate](https://github.com/initiate) decorator
+  [#324](https://github.com/proofit404/stories/issues/324) bd3bacf
+- implement [@initiate](https://github.com/initiate) restrictions
+  [#649](https://github.com/proofit404/stories/issues/649) 94080cf
+- propagate exceptions [#631](https://github.com/proofit404/stories/issues/631)
+  abc34a9
+- story call should return none
+  [#630](https://github.com/proofit404/stories/issues/630) 5f860b4
+
+### BREAKING CHANGES
+
+- The old codebase was removed. The library was redesigned from scratch. A lot
+  of existed functionality was removed. Contrib integrations was moved to
+  separate repositories. The goal of the library stays the same. Allow to
+  express domain knowledge inside codebase with minimal friction. The approach
+  we took is very similar with the old one but most of design flaws was fixed in
+  new version.
+
 # [4.1.0](https://github.com/proofit404/stories/compare/4.0.0...4.1.0) (2020-11-20)
 
 ### Features
