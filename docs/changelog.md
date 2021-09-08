@@ -23,8 +23,8 @@
   of existed functionality was removed. Contrib integrations was moved to
   separate repositories. The goal of the library stays the same. Allow to
   express domain knowledge inside codebase with minimal friction. The approach
-  we took is very similar with the old one but most of design flaws was fixed in
-  new version.
+  we took is similar with the old one but most of design flaws was fixed in new
+  version.
 
 # [4.1.0](https://github.com/proofit404/stories/compare/4.0.0...4.1.0) (2020-11-20)
 
