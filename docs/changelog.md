@@ -1,3 +1,10 @@
+# 5.0.0-rc.2 (2021-09-14)
+
+### Features
+
+- add argument and variable placeholders
+  [#704](https://github.com/proofit404/stories/issues/704) 38afe3f
+
 # 5.0.0-rc.1 (2021-08-29)
 
 ### Code Refactoring
