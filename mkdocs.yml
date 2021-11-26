@@ -39,6 +39,7 @@ nav:
       - Changelog: changelog.md
   - Usage:
       - Story: story.md
+      - State: state.md
       - Initiate: initiate.md
   - Guides:
       - Transactions: transactions.md
