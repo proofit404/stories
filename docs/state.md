@@ -8,6 +8,7 @@ on it.
 ## Principles
 
 - [Variable allow attribute assignment](#variable-allow-attribute-assignment)
+- [Only declared variables could be assigned](#only-declared-variables-could-be-assigned)
 - [Attribute assignment validates variable value](#attribute-assignment-validates-variable-value)
 - [Validation errors are propagated as usual errors](#validation-errors-are-propagated-as-usual-errors)
 - [Validation could normalize value](#validation-could-normalize-value)
@@ -127,6 +128,82 @@ could be assignment once inside step method.
 
     >>> state.payment
     Payment(due_date=datetime.datetime(1999, 12, 31, 0, 0))
+
+    ```
+
+### Only declared variables could be assigned
+
+Variables with random names allowed to be assigned only if you would use plain
+`State` object. If you declare variables using inheritance from `State` class,
+only declared variables would be allowed to be assigned later by steps. If you
+try to assing unknown variable, an error would be raised.
+
+=== "sync"
+
+    ```pycon
+
+    >>> from dataclasses import dataclass
+    >>> from typing import Callable
+    >>> from stories import Story, I, State, Variable
+    >>> from app.repositories import load_order
+
+    >>> @dataclass
+    ... class Purchase(Story):
+    ...     I.find_order
+    ...
+    ...     def find_order(self, state):
+    ...         state.order = self.load_order(state.order_id)
+    ...
+    ...     load_order: Callable
+
+    >>> class PurchaseState(State):
+    ...     customer = Variable()
+
+    >>> purchase = Purchase(load_order=load_order)
+
+    >>> state = PurchaseState(order_id=1)
+
+    >>> purchase(state)
+    Traceback (most recent call last):
+      ...
+    _stories.exceptions.StateError: Unknown variable assignment: order
+    <BLANKLINE>
+    PurchaseState
+
+    ```
+
+=== "async"
+
+    ```pycon
+
+    >>> import asyncio
+    >>> from dataclasses import dataclass
+    >>> from typing import Coroutine
+    >>> from stories import Story, I, State, Variable
+    >>> from aioapp.repositories import load_order
+
+    >>> @dataclass
+    ... class Purchase(Story):
+    ...     I.find_order
+    ...
+    ...     async def find_order(self, state):
+    ...         state.order = await self.load_order(state.order_id)
+    ...
+    ...     load_order: Coroutine
+
+    >>> class PurchaseState(State):
+    ...     customer = Variable()
+
+    >>> purchase = Purchase(load_order=load_order)
+
+    >>> state = PurchaseState(order_id=1)
+
+    >>> asyncio.run(purchase(state))
+    Traceback (most recent call last):
+      ...
+    _stories.exceptions.StateError: Unknown variable assignment: order
+    <BLANKLINE>
+    PurchaseState
 
     ```
 
