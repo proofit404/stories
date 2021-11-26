@@ -1,10 +1,10 @@
 from datetime import datetime
 
-from app.entities import Cost
-from app.entities import Customer
-from app.entities import Order
-from app.entities import Payment
-from app.entities import Product
+from aioapp.entities import Cost
+from aioapp.entities import Customer
+from aioapp.entities import Order
+from aioapp.entities import Payment
+from aioapp.entities import Product
 
 
 async def load_order(order_id):
