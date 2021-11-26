@@ -2,6 +2,13 @@ def _normal_method(self, state):
     ...
 
 
+def _assign_method(attribute, value):
+    def method(self, state):
+        setattr(state, attribute, value)
+
+    return method
+
+
 def _append_method(attribute, value):
     def method(self, state):
         getattr(state, attribute).append(value)
