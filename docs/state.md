@@ -7,10 +7,128 @@ on it.
 
 ## Principles
 
+- [Variable allow attribute assignment](#variable-allow-attribute-assignment)
 - [Attribute assignment validates variable value](#attribute-assignment-validates-variable-value)
 - [Validation errors are propagated as usual errors](#validation-errors-are-propagated-as-usual-errors)
 - [Validation could normalize value](#validation-could-normalize-value)
 - [State union joins all defined variables](#state-union-joins-all-defined-variables)
+
+### Variable allow attribute assignment
+
+Classes inherited from `State` could reduce set of variables which allowed to be
+defined by attribute assignment. If you declare variable on the state class, it
+could be assignment once inside step method.
+
+=== "sync"
+
+    ```pycon
+
+    >>> from dataclasses import dataclass
+    >>> from typing import Callable
+    >>> from stories import Story, I, State, Variable
+    >>> from app.repositories import load_order, load_customer, create_payment
+
+    >>> @dataclass
+    ... class Purchase(Story):
+    ...     I.find_order
+    ...     I.find_customer
+    ...     I.check_balance
+    ...     I.persist_payment
+    ...
+    ...     def find_order(self, state):
+    ...         state.order = self.load_order(state.order_id)
+    ...
+    ...     def find_customer(self, state):
+    ...         state.customer = self.load_customer(state.customer_id)
+    ...
+    ...     def check_balance(self, state):
+    ...         if not state.order.affordable_for(state.customer):
+    ...             raise Exception
+    ...
+    ...     def persist_payment(self, state):
+    ...         state.payment = self.create_payment(
+    ...             order_id=state.order_id, customer_id=state.customer_id
+    ...         )
+    ...
+    ...     load_order: Callable
+    ...     load_customer: Callable
+    ...     create_payment: Callable
+
+    >>> class PurchaseState(State):
+    ...     order = Variable()
+    ...     customer = Variable()
+    ...     payment = Variable()
+
+    >>> purchase = Purchase(
+    ...     load_order=load_order,
+    ...     load_customer=load_customer,
+    ...     create_payment=create_payment,
+    ... )
+
+    >>> state = PurchaseState(order_id=1, customer_id=1)
+
+    >>> purchase(state)
+
+    >>> state.payment
+    Payment(due_date=datetime.datetime(1999, 12, 31, 0, 0))
+
+    ```
+
+=== "async"
+
+    ```pycon
+
+    >>> import asyncio
+    >>> from dataclasses import dataclass
+    >>> from typing import Coroutine
+    >>> from stories import Story, I, State, Variable
+    >>> from aioapp.repositories import load_order, load_customer, create_payment
+
+    >>> @dataclass
+    ... class Purchase(Story):
+    ...     I.find_order
+    ...     I.find_customer
+    ...     I.check_balance
+    ...     I.persist_payment
+    ...
+    ...     async def find_order(self, state):
+    ...         state.order = await self.load_order(state.order_id)
+    ...
+    ...     async def find_customer(self, state):
+    ...         state.customer = await self.load_customer(state.customer_id)
+    ...
+    ...     async def check_balance(self, state):
+    ...         if not state.order.affordable_for(state.customer):
+    ...             raise Exception
+    ...
+    ...     async def persist_payment(self, state):
+    ...         state.payment = await self.create_payment(
+    ...             order_id=state.order_id, customer_id=state.customer_id
+    ...         )
+    ...
+    ...     load_order: Coroutine
+    ...     load_customer: Coroutine
+    ...     create_payment: Coroutine
+
+    >>> class PurchaseState(State):
+    ...     order = Variable()
+    ...     customer = Variable()
+    ...     payment = Variable()
+
+    >>> purchase = Purchase(
+    ...     load_order=load_order,
+    ...     load_customer=load_customer,
+    ...     create_payment=create_payment,
+    ... )
+
+    >>> state = PurchaseState(order_id=1, customer_id=1)
+
+    >>> asyncio.run(purchase(state))
+
+    >>> state.payment
+    Payment(due_date=datetime.datetime(1999, 12, 31, 0, 0))
+
+    ```
 
 ### Attribute assignment validates variable value
 
