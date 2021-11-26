@@ -1,3 +1,4 @@
+from _stories.exceptions import StateError
 from _stories.variable import Variable
 
 
@@ -24,9 +25,16 @@ class _BoundValidateSetter:
         self.state = state
 
     def __call__(self, name, value):
+        if name not in self.variables:
+            message = unknown_variable_template.format(variable=name, state=self.state)
+            raise StateError(message)
         validator = self.variables[name]
         validated = validator(value)
         _setter(self.state, name, validated)
+
+
+def _representation(state):
+    return state.__class__.__name__
 
 
 class _StateType(type):
@@ -38,6 +46,7 @@ class _StateType(type):
             scope = {
                 "__setattr__": _ValidateSetter(variables),
                 "__init__": _initiator,  # pragma: no mutate
+                "__repr__": _representation,
             }
         else:
             scope = {
@@ -52,8 +61,15 @@ class _StateType(type):
             for state_class in [cls, other]
             for k, v in state_class.__setattr__.variables.items()
         }
-        return type(cls.__name__, (State,), union)
+        return type(cls.__name__ + " & " + other.__name__, (State,), union)
 
 
 class State(metaclass=_StateType):
     """Business process state."""
+
+
+unknown_variable_template = """
+Unknown variable assignment: {variable}
+
+{state!r}
+""".strip()
