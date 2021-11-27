@@ -45,14 +45,10 @@ class _StateType(type):
             }
             scope = {
                 "__setattr__": _ValidateSetter(variables),
-                "__init__": _initiator,  # pragma: no mutate
                 "__repr__": _representation,
             }
         else:
-            scope = {
-                "__setattr__": _setter,  # pragma: no mutate
-                "__init__": _initiator,
-            }
+            scope = {"__init__": _initiator}
         return type.__new__(cls, class_name, bases, scope)
 
     def __and__(cls, other):
