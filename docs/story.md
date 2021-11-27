@@ -4,6 +4,8 @@
 
 - [Story is a callable object](#story-is-a-callable-object)
 - [Steps executed in specified order](#steps-executed-in-specified-order)
+- [Steps could assign state variables](#steps-could-assign-state-variables)
+- [Story state would be available after its execution](#story-state-would-be-available-after-its-execution)
 - [Exceptions would be propagated](#exceptions-would-be-propagated)
 
 ### Story is a callable object
@@ -253,6 +255,227 @@ The same as you do with regular coroutine methods defined on your classes.
     ==> find customer
     ==> check balance
     ==> persist payment
+
+    ```
+
+### Steps could assign state variables
+
+Every step could assign variable in state object. Story steps executed
+afterwards would be able to access variables assigned earlier. If you use plain
+`State` object, you could use any variable names. No restrictions applied to
+allowed name of the variable or its value.
+
+As you could see in the example below, the `check_balance` step is able to
+access `order` and `customer` variables set by previous steps.
+
+=== "sync"
+
+    ```pycon
+
+    >>> from dataclasses import dataclass
+    >>> from typing import Callable
+    >>> from stories import Story, I, State
+    >>> from app.repositories import load_order, load_customer, create_payment
+
+    >>> @dataclass
+    ... class Purchase(Story):
+    ...     I.find_order
+    ...     I.find_customer
+    ...     I.check_balance
+    ...     I.persist_payment
+    ...
+    ...     def find_order(self, state):
+    ...         state.order = self.load_order(state.order_id)
+    ...
+    ...     def find_customer(self, state):
+    ...         state.customer = self.load_customer(state.customer_id)
+    ...
+    ...     def check_balance(self, state):
+    ...         if not state.order.affordable_for(state.customer):
+    ...             raise Exception
+    ...
+    ...     def persist_payment(self, state):
+    ...         state.payment = self.create_payment(
+    ...             order_id=state.order_id, customer_id=state.customer_id
+    ...         )
+    ...
+    ...     load_order: Callable
+    ...     load_customer: Callable
+    ...     create_payment: Callable
+
+    >>> purchase = Purchase(
+    ...     load_order=load_order,
+    ...     load_customer=load_customer,
+    ...     create_payment=create_payment,
+    ... )
+
+    >>> state = State(order_id=1, customer_id=1)
+
+    >>> purchase(state)
+
+    ```
+
+=== "async"
+
+    ```pycon
+
+    >>> import asyncio
+    >>> from dataclasses import dataclass
+    >>> from typing import Coroutine
+    >>> from stories import Story, I, State
+    >>> from aioapp.repositories import load_order, load_customer, create_payment
+
+    >>> @dataclass
+    ... class Purchase(Story):
+    ...     I.find_order
+    ...     I.find_customer
+    ...     I.check_balance
+    ...     I.persist_payment
+    ...
+    ...     async def find_order(self, state):
+    ...         state.order = await self.load_order(state.order_id)
+    ...
+    ...     async def find_customer(self, state):
+    ...         state.customer = await self.load_customer(state.customer_id)
+    ...
+    ...     async def check_balance(self, state):
+    ...         if not state.order.affordable_for(state.customer):
+    ...             raise Exception
+    ...
+    ...     async def persist_payment(self, state):
+    ...         state.payment = await self.create_payment(
+    ...             order_id=state.order_id, customer_id=state.customer_id
+    ...         )
+    ...
+    ...     load_order: Coroutine
+    ...     load_customer: Coroutine
+    ...     create_payment: Coroutine
+
+    >>> purchase = Purchase(
+    ...     load_order=load_order,
+    ...     load_customer=load_customer,
+    ...     create_payment=create_payment,
+    ... )
+
+    >>> state = State(order_id=1, customer_id=1)
+
+    >>> asyncio.run(purchase(state))
+
+    ```
+
+### Story state would be available after its execution
+
+After story execution all state variables would be available in the same state
+object you have passed to it.
+
+You would be able to access same objects that were assigned by story steps.
+
+=== "sync"
+
+    ```pycon
+
+    >>> from dataclasses import dataclass
+    >>> from typing import Callable
+    >>> from stories import Story, I, State
+    >>> from app.repositories import load_order, load_customer, create_payment
+
+    >>> @dataclass
+    ... class Purchase(Story):
+    ...     I.find_order
+    ...     I.find_customer
+    ...     I.persist_payment
+    ...
+    ...     def find_order(self, state):
+    ...         state.order = self.load_order(state.order_id)
+    ...
+    ...     def find_customer(self, state):
+    ...         state.customer = self.load_customer(state.customer_id)
+    ...
+    ...     def persist_payment(self, state):
+    ...         state.payment = self.create_payment(
+    ...             order_id=state.order_id, customer_id=state.customer_id
+    ...         )
+    ...
+    ...     load_order: Callable
+    ...     load_customer: Callable
+    ...     create_payment: Callable
+
+    >>> purchase = Purchase(
+    ...     load_order=load_order,
+    ...     load_customer=load_customer,
+    ...     create_payment=create_payment,
+    ... )
+
+    >>> state = State(order_id=1, customer_id=1)
+
+    >>> purchase(state)
+
+    >>> state.order
+    Order(product=Product(name='Books'), cost=Cost(at=datetime.datetime(1999, 12, 31, 0, 0), amount=7))
+
+    >>> state.order.product
+    Product(name='Books')
+
+    >>> state.customer
+    Customer(balance=8)
+
+    >>> state.payment
+    Payment(due_date=datetime.datetime(1999, 12, 31, 0, 0))
+
+    ```
+
+=== "async"
+
+    ```pycon
+
+    >>> import asyncio
+    >>> from dataclasses import dataclass
+    >>> from typing import Coroutine
+    >>> from stories import Story, I, State
+    >>> from aioapp.repositories import load_order, load_customer, create_payment
+
+    >>> @dataclass
+    ... class Purchase(Story):
+    ...     I.find_order
+    ...     I.find_customer
+    ...     I.persist_payment
+    ...
+    ...     async def find_order(self, state):
+    ...         state.order = await self.load_order(state.order_id)
+    ...
+    ...     async def find_customer(self, state):
+    ...         state.customer = await self.load_customer(state.customer_id)
+    ...
+    ...     async def persist_payment(self, state):
+    ...         state.payment = await self.create_payment(
+    ...             order_id=state.order_id, customer_id=state.customer_id
+    ...         )
+    ...
+    ...     load_order: Coroutine
+    ...     load_customer: Coroutine
+    ...     create_payment: Coroutine
+
+    >>> purchase = Purchase(
+    ...     load_order=load_order,
+    ...     load_customer=load_customer,
+    ...     create_payment=create_payment,
+    ... )
+
+    >>> state = State(order_id=1, customer_id=1)
+
+    >>> asyncio.run(purchase(state))
+
+    >>> state.order
+    Order(product=Product(name='Books'), cost=Cost(at=datetime.datetime(1999, 12, 31, 0, 0), amount=7))
+
+    >>> state.order.product
+    Product(name='Books')
+
+    >>> state.customer
+    Customer(balance=8)
+
+    >>> state.payment
+    Payment(due_date=datetime.datetime(1999, 12, 31, 0, 0))
 
     ```
 
