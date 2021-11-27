@@ -9,6 +9,13 @@ def _assign_method(attribute, value):
     return method
 
 
+def _assert_method(attribute, value):
+    async def method(self, state):
+        assert getattr(state, attribute) == value
+
+    return method
+
+
 def _append_method(attribute, value):
     async def method(self, state):
         getattr(state, attribute).append(value)
