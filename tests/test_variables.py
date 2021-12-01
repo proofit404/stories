@@ -1,6 +1,7 @@
 """Tests related to story variables."""
 import pytest
 
+from stories import Argument
 from stories import I
 from stories import State
 from stories import Story
@@ -11,7 +12,8 @@ from validators import _ValidationError
 
 
 @pytest.mark.parametrize("value", [1, "x", None])
-def test_no_validation(r, m, value):
+@pytest.mark.parametrize("definition", [Variable, Argument])
+def test_no_validation(r, m, value, definition):
     """Variable allow state attribute assignment to any value."""
 
     class A1(Story):
@@ -24,7 +26,7 @@ def test_no_validation(r, m, value):
         a1s3 = m._normal_method
 
     class A1State(State):
-        a1v1 = Variable()
+        a1v1 = definition()
 
     class B1(Story):
         I.b1s1
@@ -38,7 +40,7 @@ def test_no_validation(r, m, value):
             self.a1 = A1()
 
     class B1State(State):
-        b1v1 = Variable()
+        b1v1 = definition()
 
     class C1(Story):
         I.c1s1
@@ -52,7 +54,7 @@ def test_no_validation(r, m, value):
             self.b1 = B1()
 
     class C1State(State):
-        c1v1 = Variable()
+        c1v1 = definition()
 
     # First level.
 
