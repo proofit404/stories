@@ -1,3 +1,4 @@
+from _stories.argument import Argument
 from _stories.exceptions import StateError
 from _stories.variable import Variable
 
@@ -12,23 +13,23 @@ def _initiator(state, **arguments):
 
 
 class _ValidateSetter:
-    def __init__(self, variables):
-        self.variables = variables
+    def __init__(self, validators):
+        self.validators = validators
 
     def __get__(self, state, state_class):
-        return _BoundValidateSetter(self.variables, state)
+        return _BoundValidateSetter(self.validators, state)
 
 
 class _BoundValidateSetter:
-    def __init__(self, variables, state):
-        self.variables = variables
+    def __init__(self, validators, state):
+        self.validators = validators
         self.state = state
 
     def __call__(self, name, value):
-        if name not in self.variables:
+        if name not in self.validators:
             message = unknown_variable_template.format(variable=name, state=self.state)
             raise StateError(message)
-        validator = self.variables[name]
+        validator = self.validators[name]
         validated = validator(value)
         _setter(self.state, name, validated)
 
@@ -40,11 +41,13 @@ def _representation(state):
 class _StateType(type):
     def __new__(cls, class_name, bases, namespace):
         if bases:
-            variables = {
-                k: v.validate for k, v in namespace.items() if isinstance(v, Variable)
+            validators = {
+                k: v.validate
+                for k, v in namespace.items()
+                if isinstance(v, (Variable, Argument))
             }
             scope = {
-                "__setattr__": _ValidateSetter(variables),
+                "__setattr__": _ValidateSetter(validators),
                 "__repr__": _representation,
             }
         else:
@@ -55,7 +58,7 @@ class _StateType(type):
         union = {
             k: Variable(v)
             for state_class in [cls, other]
-            for k, v in state_class.__setattr__.variables.items()
+            for k, v in state_class.__setattr__.validators.items()
         }
         return type(cls.__name__ + " & " + other.__name__, (State,), union)
 
