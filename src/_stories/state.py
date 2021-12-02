@@ -21,11 +21,12 @@ class _ValidateSetter:
 
 
 class _ValidateInitiator:
-    def __init__(self, arguments):
+    def __init__(self, validators, arguments):
+        self.validators = validators
         self.arguments = arguments
 
     def __get__(self, state, state_class):
-        return _BoundValidateInitiator(self.arguments, state)
+        return _BoundValidateInitiator(self.validators, self.arguments, state)
 
 
 class _BoundValidateSetter:
@@ -43,18 +44,21 @@ class _BoundValidateSetter:
 
 
 class _BoundValidateInitiator:
-    def __init__(self, arguments, state):
+    def __init__(self, validators, arguments, state):
+        self.validators = validators
         self.arguments = arguments
         self.state = state
 
     def __call__(self, **arguments):
-        for argument in arguments:
+        for argument, value in arguments.items():
             if argument not in self.arguments:
                 message = unknown_argument_template.format(
                     argument=argument, state=self.state
                 )
                 raise StateError(message)
-        _initiator(self.state, **arguments)
+            validator = self.validators[argument]
+            validated = validator(value)
+            _setter(self.state, argument, validated)
 
 
 def _representation(state):
@@ -70,7 +74,7 @@ def _new_validate_state(namespace):
     arguments = {k for k, v in namespace.items() if isinstance(v, Argument)}
     scope = {
         "__setattr__": _ValidateSetter(validators),
-        "__init__": _ValidateInitiator(arguments),
+        "__init__": _ValidateInitiator(validators, arguments),
         "__repr__": _representation,
     }
     return scope
@@ -87,7 +91,7 @@ class _StateType(type):
     def __and__(cls, other):
         arguments = cls.__init__.arguments | other.__init__.arguments
         union = {
-            k: Argument() if k in arguments else Variable(v)
+            k: Argument(v) if k in arguments else Variable(v)
             for state_class in [cls, other]
             for k, v in state_class.__setattr__.validators.items()
         }

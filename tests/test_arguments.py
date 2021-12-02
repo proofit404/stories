@@ -7,6 +7,8 @@ from stories import State
 from stories import Story
 from stories import Variable
 from stories.exceptions import StateError
+from validators import _is_integer
+from validators import _ValidationError
 
 
 @pytest.mark.parametrize("value", [1, "x", None])
@@ -188,3 +190,167 @@ Unknown argument passed: c1v2
 C1State & B1State & A1State
     """.strip()
     )
+
+
+def test_successful_validation(r, m):
+    """Argument runs validation on state constructor argument."""
+
+    class A1(Story):
+        I.a1s1
+        I.a1s2
+        I.a1s3
+
+        a1s1 = m._normal_method
+        a1s2 = m._assert_method("a1a1", 1)
+        a1s3 = m._normal_method
+
+    class A1State(State):
+        a1a1 = Argument(_is_integer)
+
+    class B1(Story):
+        I.b1s1
+        I.a1
+        I.b1s2
+
+        b1s1 = m._assert_method("b1a1", 2)
+        b1s2 = m._normal_method
+
+        def __init__(self):
+            self.a1 = A1()
+
+    class B1State(State):
+        b1a1 = Argument(_is_integer)
+
+    class C1(Story):
+        I.c1s1
+        I.b1
+        I.c1s2
+
+        c1s1 = m._assert_method("c1a1", 3)
+        c1s2 = m._normal_method
+
+        def __init__(self):
+            self.b1 = B1()
+
+    class C1State(State):
+        c1a1 = Argument(_is_integer)
+
+    # First level.
+
+    story = A1()
+    state = A1State(a1a1=1)
+    r.run(story, state)
+    assert state.a1a1 == 1
+
+    # Second level.
+
+    story = B1()
+    state_class = B1State & A1State
+    state = state_class(b1a1=2, a1a1=1)
+    r.run(story, state)
+    assert state.b1a1 == 2
+
+    # Third level.
+
+    story = C1()
+    state_class = C1State & B1State & A1State
+    state = state_class(c1a1=3, b1a1=2, a1a1=1)
+    r.run(story, state)
+    assert state.c1a1 == 3
+
+
+def test_failed_validation(r, m):
+    """Validator function should raise an error."""
+
+    class A1State(State):
+        a1a1 = Argument(_is_integer)
+
+    class B1State(State):
+        b1a1 = Argument(_is_integer)
+
+    class C1State(State):
+        c1a1 = Argument(_is_integer)
+
+    # First level.
+
+    with pytest.raises(_ValidationError):
+        A1State(a1a1="foo")
+
+    # Second level.
+
+    state_class = B1State & A1State
+    with pytest.raises(_ValidationError):
+        state_class(b1a1="bar")
+
+    # Third level.
+
+    state_class = C1State & B1State & A1State
+    with pytest.raises(_ValidationError):
+        state_class(c1a1="baz")
+
+
+def test_value_normalization(r, m):
+    """Validator function should return normalized value."""
+
+    class A1(Story):
+        I.a1s1
+        I.a1s2
+        I.a1s3
+
+        a1s1 = m._normal_method
+        a1s2 = m._assert_method("a1a1", 1)
+        a1s3 = m._normal_method
+
+    class A1State(State):
+        a1a1 = Argument(_is_integer)
+
+    class B1(Story):
+        I.b1s1
+        I.a1
+        I.b1s2
+
+        b1s1 = m._assert_method("b1a1", 2)
+        b1s2 = m._normal_method
+
+        def __init__(self):
+            self.a1 = A1()
+
+    class B1State(State):
+        b1a1 = Argument(_is_integer)
+
+    class C1(Story):
+        I.c1s1
+        I.b1
+        I.c1s2
+
+        c1s1 = m._assert_method("c1a1", 3)
+        c1s2 = m._normal_method
+
+        def __init__(self):
+            self.b1 = B1()
+
+    class C1State(State):
+        c1a1 = Argument(_is_integer)
+
+    # First level.
+
+    story = A1()
+    state = A1State(a1a1="1")
+    r.run(story, state)
+    assert state.a1a1 == 1
+
+    # Second level.
+
+    story = B1()
+    state_class = B1State & A1State
+    state = state_class(b1a1="2", a1a1="1")
+    r.run(story, state)
+    assert state.b1a1 == 2
+
+    # Third level.
+
+    story = C1()
+    state_class = C1State & B1State & A1State
+    state = state_class(c1a1="3", b1a1="2", a1a1="1")
+    r.run(story, state)
+    assert state.c1a1 == 3
