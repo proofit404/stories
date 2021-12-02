@@ -80,7 +80,8 @@ def test_no_validation(r, m, value, definition):
     assert state.c1v1 == value
 
 
-def test_unknown_variable(r, m):
+@pytest.mark.parametrize("definition", [Variable, Argument])
+def test_unknown_variable(r, m, definition):
     """Deny attribute assignment not defined by Variable."""
 
     class A1(Story):
@@ -93,7 +94,7 @@ def test_unknown_variable(r, m):
         a1s3 = m._normal_method
 
     class A1State(State):
-        a1v1 = Variable()
+        a1v1 = definition()
 
     class B1(Story):
         I.b1s1
@@ -107,7 +108,7 @@ def test_unknown_variable(r, m):
             self.a1 = A1()
 
     class B1State(State):
-        b1v1 = Variable()
+        b1v1 = definition()
 
     class C1(Story):
         I.c1s1
@@ -121,7 +122,7 @@ def test_unknown_variable(r, m):
             self.b1 = B1()
 
     class C1State(State):
-        c1v1 = Variable()
+        c1v1 = definition()
 
     # First level.
 
