@@ -20,6 +20,14 @@ class _ValidateSetter:
         return _BoundValidateSetter(self.validators, state)
 
 
+class _ValidateInitiator:
+    def __init__(self, arguments):
+        self.arguments = arguments
+
+    def __get__(self, state, state_class):
+        return _BoundValidateInitiator(self.arguments, state)
+
+
 class _BoundValidateSetter:
     def __init__(self, validators, state):
         self.validators = validators
@@ -34,29 +42,52 @@ class _BoundValidateSetter:
         _setter(self.state, name, validated)
 
 
+class _BoundValidateInitiator:
+    def __init__(self, arguments, state):
+        self.arguments = arguments
+        self.state = state
+
+    def __call__(self, **arguments):
+        for argument in arguments:
+            if argument not in self.arguments:
+                message = unknown_argument_template.format(
+                    argument=argument, state=self.state
+                )
+                raise StateError(message)
+        _initiator(self.state, **arguments)
+
+
 def _representation(state):
     return state.__class__.__name__
+
+
+def _new_validate_state(namespace):
+    validators = {
+        k: v.validate
+        for k, v in namespace.items()
+        if isinstance(v, (Variable, Argument))
+    }
+    arguments = {k for k, v in namespace.items() if isinstance(v, Argument)}
+    scope = {
+        "__setattr__": _ValidateSetter(validators),
+        "__init__": _ValidateInitiator(arguments),
+        "__repr__": _representation,
+    }
+    return scope
 
 
 class _StateType(type):
     def __new__(cls, class_name, bases, namespace):
         if bases:
-            validators = {
-                k: v.validate
-                for k, v in namespace.items()
-                if isinstance(v, (Variable, Argument))
-            }
-            scope = {
-                "__setattr__": _ValidateSetter(validators),
-                "__repr__": _representation,
-            }
+            scope = _new_validate_state(namespace)
         else:
             scope = {"__init__": _initiator}
         return type.__new__(cls, class_name, bases, scope)
 
     def __and__(cls, other):
+        arguments = cls.__init__.arguments | other.__init__.arguments
         union = {
-            k: Variable(v)
+            k: Argument() if k in arguments else Variable(v)
             for state_class in [cls, other]
             for k, v in state_class.__setattr__.validators.items()
         }
@@ -69,6 +100,13 @@ class State(metaclass=_StateType):
 
 unknown_variable_template = """
 Unknown variable assignment: {variable}
+
+{state!r}
+""".strip()
+
+
+unknown_argument_template = """
+Unknown argument passed: {argument}
 
 {state!r}
 """.strip()
