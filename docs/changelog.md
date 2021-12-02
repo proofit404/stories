@@ -1,3 +1,10 @@
+# 5.0.0-rc.2 (2021-12-02)
+
+### Features
+
+- deny to pass undeclared arguments
+  [#681](https://github.com/proofit404/stories/issues/681) 17de140
+
 # 5.0.0-rc.1 (2021-12-02)
 
 ### Code Refactoring
