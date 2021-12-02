@@ -172,7 +172,8 @@ C1State & B1State & A1State
     )
 
 
-def test_successful_validation(r, m):
+@pytest.mark.parametrize("definition", [Variable, Argument])
+def test_successful_validation(r, m, definition):
     """Variable runs validation on state attribute assignment."""
 
     class A1(Story):
@@ -185,7 +186,7 @@ def test_successful_validation(r, m):
         a1s3 = m._normal_method
 
     class A1State(State):
-        a1v1 = Variable(_is_integer)
+        a1v1 = definition(_is_integer)
 
     class B1(Story):
         I.b1s1
@@ -199,7 +200,7 @@ def test_successful_validation(r, m):
             self.a1 = A1()
 
     class B1State(State):
-        b1v1 = Variable(_is_integer)
+        b1v1 = definition(_is_integer)
 
     class C1(Story):
         I.c1s1
@@ -213,7 +214,7 @@ def test_successful_validation(r, m):
             self.b1 = B1()
 
     class C1State(State):
-        c1v1 = Variable(_is_integer)
+        c1v1 = definition(_is_integer)
 
     # First level.
 
@@ -239,7 +240,8 @@ def test_successful_validation(r, m):
     assert state.c1v1 == 3
 
 
-def test_failed_validation(r, m):
+@pytest.mark.parametrize("definition", [Variable, Argument])
+def test_failed_validation(r, m, definition):
     """Validator function should raise an error."""
 
     class A1(Story):
@@ -252,7 +254,7 @@ def test_failed_validation(r, m):
         a1s3 = m._normal_method
 
     class A1State(State):
-        a1v1 = Variable(_is_integer)
+        a1v1 = definition(_is_integer)
 
     class B1(Story):
         I.b1s1
@@ -266,7 +268,7 @@ def test_failed_validation(r, m):
             self.a1 = A1()
 
     class B1State(State):
-        b1v1 = Variable(_is_integer)
+        b1v1 = definition(_is_integer)
 
     class C1(Story):
         I.c1s1
@@ -280,7 +282,7 @@ def test_failed_validation(r, m):
             self.b1 = B1()
 
     class C1State(State):
-        c1v1 = Variable(_is_integer)
+        c1v1 = definition(_is_integer)
 
     # First level.
 
@@ -312,7 +314,8 @@ def test_failed_validation(r, m):
     assert exc_info.value.args == ("baz",)
 
 
-def test_value_normalization(r, m):
+@pytest.mark.parametrize("definition", [Variable, Argument])
+def test_value_normalization(r, m, definition):
     """Validator function should return normalized value."""
 
     class A1(Story):
@@ -325,7 +328,7 @@ def test_value_normalization(r, m):
         a1s3 = m._normal_method
 
     class A1State(State):
-        a1v1 = Variable(_is_integer)
+        a1v1 = definition(_is_integer)
 
     class B1(Story):
         I.b1s1
@@ -339,7 +342,7 @@ def test_value_normalization(r, m):
             self.a1 = A1()
 
     class B1State(State):
-        b1v1 = Variable(_is_integer)
+        b1v1 = definition(_is_integer)
 
     class C1(Story):
         I.c1s1
@@ -353,7 +356,7 @@ def test_value_normalization(r, m):
             self.b1 = B1()
 
     class C1State(State):
-        c1v1 = Variable(_is_integer)
+        c1v1 = definition(_is_integer)
 
     # First level.
 
