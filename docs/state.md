@@ -12,7 +12,9 @@ on it.
 - [Only declared variables could be assigned](#only-declared-variables-could-be-assigned)
 - [Only declared arguments could be passed](#only-declared-arguments-could-be-passed)
 - [Attribute assignment validates variable value](#attribute-assignment-validates-variable-value)
+- [Constructor argument validates passed value](#constructor-argument-validates-passed-value)
 - [Validation errors are propagated as usual errors](#validation-errors-are-propagated-as-usual-errors)
+- [Validation errors would be raised by constructor](#validation-errors-would-be-raised-by-constructor)
 - [Validation could normalize value](#validation-could-normalize-value)
 - [State union joins all defined variables](#state-union-joins-all-defined-variables)
 
@@ -494,6 +496,109 @@ If validator returns a value, it will be assigned to the state attribute.
 
     ```
 
+### Constructor argument validates passed value
+
+When pass arguments to the state constructor, validator passed to the `Argument`
+would be applied to the value.
+
+Validator is a function of single argument. It should return argument value or
+raise exception if value is wrong.
+
+If validator returns a value, it will be assigned to the state attribute.
+
+=== "sync"
+
+    ```pycon
+
+    >>> from dataclasses import dataclass
+    >>> from typing import Callable
+    >>> from stories import Story, I, State, Argument
+    >>> from app.repositories import load_order
+    >>> from app.entities import Order
+
+    >>> def is_order_id(value):
+    ...     if isinstance(value, int):
+    ...         return value
+    ...     else:
+    ...         raise Exception(f"{value!r} is not valid order id")
+
+    >>> def is_order(value):
+    ...     if isinstance(value, Order):
+    ...         return value
+    ...     else:
+    ...         raise Exception(f"{value!r} is not valid order")
+
+    >>> @dataclass
+    ... class Purchase(Story):
+    ...     I.find_order
+    ...
+    ...     def find_order(self, state):
+    ...         state.order = self.load_order(state.order_id)
+    ...
+    ...     load_order: Callable
+
+    >>> class PurchaseState(State):
+    ...     order_id = Argument(is_order_id)
+    ...     order = Variable(is_order)
+
+    >>> purchase = Purchase(load_order=load_order)
+
+    >>> state = PurchaseState(order_id=1)
+
+    >>> purchase(state)
+
+    >>> state.order_id
+    1
+
+    ```
+
+=== "async"
+
+    ```pycon
+
+    >>> import asyncio
+    >>> from dataclasses import dataclass
+    >>> from typing import Coroutine
+    >>> from stories import Story, I, State, Argument
+    >>> from aioapp.repositories import load_order
+    >>> from aioapp.entities import Order
+
+    >>> def is_order_id(value):
+    ...     if isinstance(value, int):
+    ...         return value
+    ...     else:
+    ...         raise Exception(f'{value!r} is not valid order id')
+
+    >>> def is_order(value):
+    ...     if isinstance(value, Order):
+    ...         return value
+    ...     else:
+    ...         raise Exception(f'{value!r} is not valid order')
+
+    >>> @dataclass
+    ... class Purchase(Story):
+    ...     I.find_order
+    ...
+    ...     async def find_order(self, state):
+    ...         state.order = await self.load_order(state.order_id)
+    ...
+    ...     load_order: Coroutine
+
+    >>> class PurchaseState(State):
+    ...     order_id = Argument(is_order_id)
+    ...     order = Variable(is_order)
+
+    >>> purchase = Purchase(load_order=load_order)
+
+    >>> state = PurchaseState(order_id=1)
+
+    >>> asyncio.run(purchase(state))
+
+    >>> state.order_id
+    1
+
+    ```
+
 ### Validation errors are propagated as usual errors
 
 If validation function raises exception, story execution would stops. It would
@@ -565,12 +670,91 @@ be propagated as usual exception which could happend inside the step.
 
     ```
 
+### Validation errors would be raised by constructor
+
+If validation funcution raises exception, state constructor would propagate this
+error.
+
+=== "sync"
+
+    ```pycon
+
+    >>> from dataclasses import dataclass
+    >>> from typing import Callable
+    >>> from stories import Story, I, State, Argument
+    >>> from app.repositories import load_order
+
+    >>> def is_order_id(value):
+    ...     if isinstance(value, int):
+    ...         return value
+    ...     else:
+    ...         raise Exception(f"{value!r} is not valid order id")
+
+    >>> @dataclass
+    ... class Purchase(Story):
+    ...     I.find_order
+    ...
+    ...     def find_order(self, state):
+    ...         state.order = self.load_order(state.order_id)
+    ...
+    ...     load_order: Callable
+
+    >>> class PurchaseState(State):
+    ...     order_id = Argument(is_order_id)
+
+    >>> purchase = Purchase(load_order=load_order)
+
+    >>> PurchaseState(order_id='1')
+    Traceback (most recent call last):
+      ...
+    Exception: '1' is not valid order id
+
+    ```
+
+=== "async"
+
+    ```pycon
+
+    >>> from dataclasses import dataclass
+    >>> from typing import Coroutine
+    >>> from stories import Story, I, State, Argument
+    >>> from aioapp.repositories import load_order
+
+    >>> def is_order_id(value):
+    ...     if isinstance(value, int):
+    ...         return value
+    ...     else:
+    ...         raise Exception(f'{value!r} is not valid order id')
+
+    >>> @dataclass
+    ... class Purchase(Story):
+    ...     I.find_order
+    ...
+    ...     async def find_order(self, state):
+    ...         state.order = await self.load_order(state.order_id)
+    ...
+    ...     load_order: Coroutine
+
+    >>> class PurchaseState(State):
+    ...     order_id = Argument(is_order_id)
+
+    >>> purchase = Purchase(load_order=load_order)
+
+    >>> PurchaseState(order_id='1')
+    Traceback (most recent call last):
+      ...
+    Exception: '1' is not valid order id
+
+    ```
+
 ### Validation could normalize value
 
 Validator function could cast value passed to it to the new type. It's a similar
 process to normalization common to API schema libraries. To convert passed value
 to something new, just return new thing. New value returned by validator
 function would be assigned to the state attribute.
+
+This works both for `Variable` and `Argument` validators.
 
 === "sync"
 
