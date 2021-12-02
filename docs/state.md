@@ -10,6 +10,7 @@ on it.
 - [Variable allow attribute assignment](#variable-allow-attribute-assignment)
 - [Argument allow constructor usage](#argument-allow-constructor-usage)
 - [Only declared variables could be assigned](#only-declared-variables-could-be-assigned)
+- [Only declared arguments could be passed](#only-declared-arguments-could-be-passed)
 - [Attribute assignment validates variable value](#attribute-assignment-validates-variable-value)
 - [Validation errors are propagated as usual errors](#validation-errors-are-propagated-as-usual-errors)
 - [Validation could normalize value](#validation-could-normalize-value)
@@ -38,19 +39,17 @@ could be assignment once inside step method.
     ...     I.persist_payment
     ...
     ...     def find_order(self, state):
-    ...         state.order = self.load_order(state.order_id)
+    ...         state.order = self.load_order(order_id=1)
     ...
     ...     def find_customer(self, state):
-    ...         state.customer = self.load_customer(state.customer_id)
+    ...         state.customer = self.load_customer(customer_id=1)
     ...
     ...     def check_balance(self, state):
     ...         if not state.order.affordable_for(state.customer):
     ...             raise Exception
     ...
     ...     def persist_payment(self, state):
-    ...         state.payment = self.create_payment(
-    ...             order_id=state.order_id, customer_id=state.customer_id
-    ...         )
+    ...         state.payment = self.create_payment(order_id=1, customer_id=1)
     ...
     ...     load_order: Callable
     ...     load_customer: Callable
@@ -67,7 +66,7 @@ could be assignment once inside step method.
     ...     create_payment=create_payment,
     ... )
 
-    >>> state = PurchaseState(order_id=1, customer_id=1)
+    >>> state = PurchaseState()
 
     >>> purchase(state)
 
@@ -94,10 +93,10 @@ could be assignment once inside step method.
     ...     I.persist_payment
     ...
     ...     async def find_order(self, state):
-    ...         state.order = await self.load_order(state.order_id)
+    ...         state.order = await self.load_order(order_id=1)
     ...
     ...     async def find_customer(self, state):
-    ...         state.customer = await self.load_customer(state.customer_id)
+    ...         state.customer = await self.load_customer(customer_id=1)
     ...
     ...     async def check_balance(self, state):
     ...         if not state.order.affordable_for(state.customer):
@@ -105,7 +104,7 @@ could be assignment once inside step method.
     ...
     ...     async def persist_payment(self, state):
     ...         state.payment = await self.create_payment(
-    ...             order_id=state.order_id, customer_id=state.customer_id
+    ...             order_id=1, customer_id=1
     ...         )
     ...
     ...     load_order: Coroutine
@@ -123,7 +122,7 @@ could be assignment once inside step method.
     ...     create_payment=create_payment,
     ... )
 
-    >>> state = PurchaseState(order_id=1, customer_id=1)
+    >>> state = PurchaseState()
 
     >>> asyncio.run(purchase(state))
 
@@ -277,7 +276,7 @@ try to assing unknown variable, an error would be raised.
     ...     I.find_order
     ...
     ...     def find_order(self, state):
-    ...         state.order = self.load_order(state.order_id)
+    ...         state.order = self.load_order(order_id=1)
     ...
     ...     load_order: Callable
 
@@ -286,7 +285,7 @@ try to assing unknown variable, an error would be raised.
 
     >>> purchase = Purchase(load_order=load_order)
 
-    >>> state = PurchaseState(order_id=1)
+    >>> state = PurchaseState()
 
     >>> purchase(state)
     Traceback (most recent call last):
@@ -312,7 +311,7 @@ try to assing unknown variable, an error would be raised.
     ...     I.find_order
     ...
     ...     async def find_order(self, state):
-    ...         state.order = await self.load_order(state.order_id)
+    ...         state.order = await self.load_order(order_id=1)
     ...
     ...     load_order: Coroutine
 
@@ -321,12 +320,86 @@ try to assing unknown variable, an error would be raised.
 
     >>> purchase = Purchase(load_order=load_order)
 
-    >>> state = PurchaseState(order_id=1)
+    >>> state = PurchaseState()
 
     >>> asyncio.run(purchase(state))
     Traceback (most recent call last):
       ...
     _stories.exceptions.StateError: Unknown variable assignment: order
+    <BLANKLINE>
+    PurchaseState
+
+    ```
+
+### Only declared arguments could be passed
+
+If you try to pass an argument to the state class which was not declared using
+`Argument`, error would be thrown immediately. Even if you declare state
+attribute using `Variable` it will not be allowed to be used as state
+constructor argument.
+
+=== "sync"
+
+    ```pycon
+
+    >>> from dataclasses import dataclass
+    >>> from typing import Callable
+    >>> from stories import Story, I, State, Argument, Variable
+    >>> from app.repositories import load_order
+
+    >>> @dataclass
+    ... class Purchase(Story):
+    ...     I.find_order
+    ...
+    ...     def find_order(self, state):
+    ...         state.order = self.load_order(state.order_id)
+    ...
+    ...     load_order: Callable
+
+    >>> class PurchaseState(State):
+    ...     order_id = Argument()
+    ...     order = Variable()
+
+    >>> purchase = Purchase(load_order=load_order)
+
+    >>> PurchaseState(customer_id=1)
+    Traceback (most recent call last):
+      ...
+    _stories.exceptions.StateError: Unknown argument passed: customer_id
+    <BLANKLINE>
+    PurchaseState
+
+    ```
+
+=== "async"
+
+    ```pycon
+
+    >>> import asyncio
+    >>> from dataclasses import dataclass
+    >>> from typing import Coroutine
+    >>> from stories import Story, I, State, Argument, Variable
+    >>> from aioapp.repositories import load_order
+
+    >>> @dataclass
+    ... class Purchase(Story):
+    ...     I.find_order
+    ...
+    ...     async def find_order(self, state):
+    ...         state.order = await self.load_order(state.order_id)
+    ...
+    ...     load_order: Coroutine
+
+    >>> class PurchaseState(State):
+    ...     order_id = Argument()
+    ...     order = Variable()
+
+    >>> purchase = Purchase(load_order=load_order)
+
+    >>> PurchaseState(customer_id=1)
+    Traceback (most recent call last):
+      ...
+    _stories.exceptions.StateError: Unknown argument passed: customer_id
     <BLANKLINE>
     PurchaseState
 
@@ -363,7 +436,7 @@ If validator returns a value, it will be assigned to the state attribute.
     ...     I.find_order
     ...
     ...     def find_order(self, state):
-    ...         state.order = self.load_order(state.order_id)
+    ...         state.order = self.load_order(order_id=1)
     ...
     ...     load_order: Callable
 
@@ -372,7 +445,7 @@ If validator returns a value, it will be assigned to the state attribute.
 
     >>> purchase = Purchase(load_order=load_order)
 
-    >>> state = PurchaseState(order_id=1)
+    >>> state = PurchaseState()
 
     >>> purchase(state)
 
@@ -403,7 +476,7 @@ If validator returns a value, it will be assigned to the state attribute.
     ...     I.find_order
     ...
     ...     async def find_order(self, state):
-    ...         state.order = await self.load_order(state.order_id)
+    ...         state.order = await self.load_order(order_id=1)
     ...
     ...     load_order: Coroutine
 
@@ -412,7 +485,7 @@ If validator returns a value, it will be assigned to the state attribute.
 
     >>> purchase = Purchase(load_order=load_order)
 
-    >>> state = PurchaseState(order_id=1)
+    >>> state = PurchaseState()
 
     >>> asyncio.run(purchase(state))
 
@@ -439,7 +512,7 @@ be propagated as usual exception which could happend inside the step.
     ...     I.find_order
     ...
     ...     def find_order(self, state):
-    ...         state.order = self.load_order(state.order_id)
+    ...         state.order = self.load_order(order_id=1)
     ...
     ...     load_order: Callable
 
@@ -448,7 +521,7 @@ be propagated as usual exception which could happend inside the step.
 
     >>> purchase = Purchase(load_order=lambda order_id: None)
 
-    >>> state = PurchaseState(order_id=1)
+    >>> state = PurchaseState()
 
     >>> purchase(state)
     Traceback (most recent call last):
@@ -471,7 +544,7 @@ be propagated as usual exception which could happend inside the step.
     ...     I.find_order
     ...
     ...     async def find_order(self, state):
-    ...         state.order = await self.load_order(state.order_id)
+    ...         state.order = await self.load_order(order_id=1)
     ...
     ...     load_order: Coroutine
 
@@ -483,7 +556,7 @@ be propagated as usual exception which could happend inside the step.
 
     >>> purchase = Purchase(load_order=load_order)
 
-    >>> state = PurchaseState(order_id=1)
+    >>> state = PurchaseState()
 
     >>> asyncio.run(purchase(state))
     Traceback (most recent call last):
@@ -519,7 +592,7 @@ function would be assigned to the state attribute.
     ...     I.find_customer
     ...
     ...     def find_customer(self, state):
-    ...         state.customer = self.load_customer(state.customer_id)
+    ...         state.customer = self.load_customer(customer_id=1)
     ...
     ...     load_customer: Callable
 
@@ -531,7 +604,7 @@ function would be assigned to the state attribute.
 
     >>> purchase = Purchase(load_customer=load_customer)
 
-    >>> state = PurchaseState(customer_id=1)
+    >>> state = PurchaseState()
 
     >>> purchase(state)
 
@@ -561,7 +634,7 @@ function would be assigned to the state attribute.
     ...     I.find_customer
     ...
     ...     async def find_customer(self, state):
-    ...         state.customer = await self.load_customer(state.customer_id)
+    ...         state.customer = await self.load_customer(customer_id=1)
     ...
     ...     load_customer: Coroutine
 
@@ -573,7 +646,7 @@ function would be assigned to the state attribute.
 
     >>> purchase = Purchase(load_customer=load_customer)
 
-    >>> state = PurchaseState(customer_id=1)
+    >>> state = PurchaseState()
 
     >>> asyncio.run(purchase(state))
 
@@ -619,10 +692,10 @@ State union would include all variables defined in separate State classes.
     ...     I.pay
     ...
     ...     def find_order(self, state):
-    ...         state.order = self.load_order(state.order_id)
+    ...         state.order = self.load_order(order_id=1)
     ...
     ...     def find_customer(self, state):
-    ...         state.customer = self.load_customer(state.customer_id)
+    ...         state.customer = self.load_customer(customer_id=1)
     ...
     ...     load_order: Callable
     ...     load_customer: Callable
@@ -638,7 +711,7 @@ State union would include all variables defined in separate State classes.
     ...
     ...     def persist_payment(self, state):
     ...         state.payment = self.create_payment(
-    ...             order_id=state.order_id, customer_id=state.customer_id
+    ...             order_id=1, customer_id=1
     ...         )
     ...
     ...     create_payment: Callable
@@ -656,7 +729,7 @@ State union would include all variables defined in separate State classes.
 
     >>> state_class = PurchaseState & PayState
 
-    >>> state = state_class(order_id=1, customer_id=1)
+    >>> state = state_class()
 
     >>> purchase(state)
 
@@ -695,10 +768,10 @@ State union would include all variables defined in separate State classes.
     ...     I.pay
     ...
     ...     async def find_order(self, state):
-    ...         state.order = await self.load_order(state.order_id)
+    ...         state.order = await self.load_order(order_id=1)
     ...
     ...     async def find_customer(self, state):
-    ...         state.customer = await self.load_customer(state.customer_id)
+    ...         state.customer = await self.load_customer(customer_id=1)
     ...
     ...     load_order: Callable
     ...     load_customer: Callable
@@ -710,7 +783,7 @@ State union would include all variables defined in separate State classes.
     ...
     ...     async def persist_payment(self, state):
     ...         state.payment = await self.create_payment(
-    ...             order_id=state.order_id, customer_id=state.customer_id
+    ...             order_id=1, customer_id=1
     ...         )
     ...
     ...     create_payment: Callable
@@ -732,7 +805,7 @@ State union would include all variables defined in separate State classes.
 
     >>> state_class = PurchaseState & PayState
 
-    >>> state = state_class(order_id=1, customer_id=1)
+    >>> state = state_class()
 
     >>> asyncio.run(purchase(state))
 
