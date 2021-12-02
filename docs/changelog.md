@@ -1,3 +1,10 @@
+# 5.0.0-rc.3 (2021-12-02)
+
+### Features
+
+- declare argument including validation
+  [#605](https://github.com/proofit404/stories/issues/605) 0b5b173
+
 # 5.0.0-rc.2 (2021-12-02)
 
 ### Features
