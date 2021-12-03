@@ -64,6 +64,14 @@ def _representation(state):
     return state.__class__.__name__
 
 
+def _class_representation(state_class):
+    validators = state_class.__init__.validators
+    variables = "\n".join(
+        f"    {name} = Variable({validators[name]!r})" for name in sorted(validators)
+    )
+    return f"{state_class.__name__}:\n{variables}"
+
+
 def _new_validate_state(namespace):
     validators = {
         k: v.validate
@@ -87,14 +95,8 @@ class _StateType(type):
             scope = {"__init__": _initiator}
         return type.__new__(cls, class_name, bases, scope)
 
-    def __and__(cls, other):
-        arguments = cls.__init__.arguments | other.__init__.arguments
-        union = {
-            k: Argument(v) if k in arguments else Variable(v)
-            for state_class in [cls, other]
-            for k, v in state_class.__setattr__.validators.items()
-        }
-        return type(cls.__name__ + " & " + other.__name__, (State,), union)
+    def __repr__(cls):
+        return _class_representation(cls)
 
 
 class State(metaclass=_StateType):
