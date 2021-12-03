@@ -5,6 +5,7 @@ from stories import Argument
 from stories import I
 from stories import State
 from stories import Story
+from stories import Union
 from stories import Variable
 from stories.exceptions import StateError
 from validators import _is_integer
@@ -65,7 +66,7 @@ def test_no_validation(r, m, value):
     # Second level.
 
     story = B1()
-    state_class = B1State & A1State
+    state_class = Union(B1State, A1State)
     state = state_class(b1a1=value, a1a1=value)
     r.run(story, state)
     assert state.b1a1 == value
@@ -73,7 +74,7 @@ def test_no_validation(r, m, value):
     # Third level.
 
     story = C1()
-    state_class = C1State & B1State & A1State
+    state_class = Union(C1State, B1State, A1State)
     state = state_class(c1a1=value, b1a1=value, a1a1=value)
     r.run(story, state)
     assert state.c1a1 == value
@@ -106,7 +107,7 @@ A1State
 
     # Second level.
 
-    state_class = B1State & A1State
+    state_class = Union(B1State, A1State)
     with pytest.raises(StateError) as exc_info:
         state_class(b1a2=2)
     assert (
@@ -114,13 +115,13 @@ A1State
         == """
 Unknown argument passed: b1a2
 
-B1State & A1State
+Union(B1State, A1State)
     """.strip()
     )
 
     # Third level.
 
-    state_class = C1State & B1State & A1State
+    state_class = Union(C1State, B1State, A1State)
 
     with pytest.raises(StateError) as exc_info:
         state_class(c1a2=3)
@@ -129,7 +130,7 @@ B1State & A1State
         == """
 Unknown argument passed: c1a2
 
-C1State & B1State & A1State
+Union(C1State, B1State, A1State)
     """.strip()
     )
 
@@ -164,7 +165,7 @@ A1State
 
     # Second level.
 
-    state_class = B1State & A1State
+    state_class = Union(B1State, A1State)
     with pytest.raises(StateError) as exc_info:
         state_class(b1v2=2)
     assert (
@@ -172,13 +173,13 @@ A1State
         == """
 Unknown argument passed: b1v2
 
-B1State & A1State
+Union(B1State, A1State)
     """.strip()
     )
 
     # Third level.
 
-    state_class = C1State & B1State & A1State
+    state_class = Union(C1State, B1State, A1State)
 
     with pytest.raises(StateError) as exc_info:
         state_class(c1v2=3)
@@ -187,7 +188,7 @@ B1State & A1State
         == """
 Unknown argument passed: c1v2
 
-C1State & B1State & A1State
+Union(C1State, B1State, A1State)
     """.strip()
     )
 
@@ -245,7 +246,7 @@ def test_successful_validation(r, m):
     # Second level.
 
     story = B1()
-    state_class = B1State & A1State
+    state_class = Union(B1State, A1State)
     state = state_class(b1a1=2, a1a1=1)
     r.run(story, state)
     assert state.b1a1 == 2
@@ -253,7 +254,7 @@ def test_successful_validation(r, m):
     # Third level.
 
     story = C1()
-    state_class = C1State & B1State & A1State
+    state_class = Union(C1State, B1State, A1State)
     state = state_class(c1a1=3, b1a1=2, a1a1=1)
     r.run(story, state)
     assert state.c1a1 == 3
@@ -278,13 +279,13 @@ def test_failed_validation(r, m):
 
     # Second level.
 
-    state_class = B1State & A1State
+    state_class = Union(B1State, A1State)
     with pytest.raises(_ValidationError):
         state_class(b1a1="bar")
 
     # Third level.
 
-    state_class = C1State & B1State & A1State
+    state_class = Union(C1State, B1State, A1State)
     with pytest.raises(_ValidationError):
         state_class(c1a1="baz")
 
@@ -342,7 +343,7 @@ def test_value_normalization(r, m):
     # Second level.
 
     story = B1()
-    state_class = B1State & A1State
+    state_class = Union(B1State, A1State)
     state = state_class(b1a1="2", a1a1="1")
     r.run(story, state)
     assert state.b1a1 == 2
@@ -350,7 +351,7 @@ def test_value_normalization(r, m):
     # Third level.
 
     story = C1()
-    state_class = C1State & B1State & A1State
+    state_class = Union(C1State, B1State, A1State)
     state = state_class(c1a1="3", b1a1="2", a1a1="1")
     r.run(story, state)
     assert state.c1a1 == 3
