@@ -118,4 +118,3 @@ _stories.exceptions.StoryError: Story decorated by @initiate can not have constr
 ```
 
 <p align="center">&mdash; ⭐ &mdash;</p>
-<p align="center"><i>The <code>stories</code> library is part of the SOLID python family.</i></p>

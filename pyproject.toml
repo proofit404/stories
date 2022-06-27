@@ -3,7 +3,7 @@ build-backend = "poetry.core.masonry.api"
 requires = ["poetry-core"]
 
 [tool.poetry]
-authors = ["Artem Malyshev <proofit404@gmail.com>"]
+authors = ["Josiah Kaviani <proofit404@gmail.com>"]
 classifiers = [
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python :: Implementation :: PyPy",
@@ -22,7 +22,7 @@ repository = "https://github.com/proofit404/stories"
 version = "4.1.0"
 
 [tool.poetry.dependencies]
-python = "~3.6 || ~3.7 || ~3.8 || ~3.9"
+python = "*"
 
 [tool.poetry.urls]
 Changelog = "https://proofit404.github.io/stories/changelog"

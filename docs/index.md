@@ -1,9 +1,4 @@
-# Stories
-
-[![azure-devops-builds](https://img.shields.io/azure-devops/build/proofit404/stories/16?style=flat-square)](https://dev.azure.com/proofit404/stories/_build/latest?definitionId=16&branchName=release)
-[![azure-devops-coverage](https://img.shields.io/azure-devops/coverage/proofit404/stories/16?style=flat-square)](https://dev.azure.com/proofit404/stories/_build/latest?definitionId=16&branchName=release)
-[![pypi](https://img.shields.io/pypi/v/stories?style=flat-square)](https://pypi.org/project/stories)
-[![python](https://img.shields.io/pypi/pyversions/stories?style=flat-square)](https://pypi.org/project/stories)
+# Stories [![build](https://img.shields.io/github/workflow/status/proofit404/stories/release?style=flat-square)](https://github.com/proofit404/stories/actions/workflows/release.yml?query=branch%3Arelease) [![pypi](https://img.shields.io/pypi/v/stories?style=flat-square)](https://pypi.org/project/stories)
 
 Service objects designed with OOP in mind.
 
@@ -96,4 +91,3 @@ interested in it.
 `stories` library is offered under the two clause BSD license.
 
 <p align="center">&mdash; ⭐ &mdash;</p>
-<p align="center"><i>The <code>stories</code> library is part of the SOLID python family.</i></p>
