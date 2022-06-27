@@ -1,6 +1,7 @@
 {
   "template": "https://github.com/proofit404/python-library-template",
-  "commit": "de193ddda12ba31c9c8aac985f5cf007d815a33e",
+  "commit": "5be61c0a2d9c772d7f81fd4539244d0203eafa58",
+  "checkout": null,
   "context": {
     "cookiecutter": {
       "project_name": "stories",
@@ -8,7 +9,7 @@
       "private_module_name": "_stories",
       "exception_name": "StoryError",
       "project_description": "Service objects designed with OOP in mind.",
-      "author_name": "Artem Malyshev",
+      "author_name": "Josiah Kaviani",
       "author_email": "proofit404@gmail.com",
       "github_user": "proofit404",
       "github_repository": "https://github.com/proofit404/stories",
@@ -17,13 +18,11 @@
       "changelog_url": "https://proofit404.github.io/stories/changelog",
       "twitter_url": "https://twitter.com/proofit404",
       "pypi_project": "https://pypi.org/project/stories",
-      "azure_definition_id": "16",
-      "azure_build_url": "https://dev.azure.com/proofit404/stories/_build/latest?definitionId=16&branchName=release",
-      "azure_build_badge_url": "https://img.shields.io/azure-devops/build/proofit404/stories/16?style=flat-square",
-      "azure_coverage_url": "https://dev.azure.com/proofit404/stories/_build/latest?definitionId=16&branchName=release",
-      "azure_coverage_badge_url": "https://img.shields.io/azure-devops/coverage/proofit404/stories/16?style=flat-square",
+      "github_workflow": "release",
+      "github_workflow_url": "https://github.com/proofit404/stories/actions/workflows/release.yml?query=branch%3Arelease",
+      "github_workflow_badge_url": "https://img.shields.io/github/workflow/status/proofit404/stories/release?style=flat-square",
       "pypi_badge_url": "https://img.shields.io/pypi/v/stories?style=flat-square",
-      "python_version_badge_url": "https://img.shields.io/pypi/pyversions/stories?style=flat-square",
+      "danger_github_api_token": "Z2hwXzNOVkx3ZHBKbVNFWWttOUdjT2VTSmxpcWkxa3NJNTJDNTB4RAo=",
       "_template": "https://github.com/proofit404/python-library-template"
     }
   },

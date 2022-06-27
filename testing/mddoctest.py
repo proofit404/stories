@@ -1,5 +1,5 @@
 from doctest import testfile
-from sys import argv
+from glob import glob
 from sys import exit
 
 
@@ -8,9 +8,8 @@ def _setup():
 
 
 def _main():
-    markdown_files = argv[1:]
     exit_code = 0
-    for markdown_file in markdown_files:
+    for markdown_file in glob("docs/**/*.md", recursive=True):
         failed, attempted = testfile(markdown_file, module_relative=False)
         exit_code += failed
     exit(exit_code)

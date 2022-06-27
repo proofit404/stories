@@ -1,6 +1,8 @@
 [run]
 branch = true
 parallel = true
+disable_warnings =
+  module-not-imported
 source =
   _stories
   stories
@@ -8,7 +10,6 @@ source =
   app
   configuration
   examples
-  helpers
   mddoctest
   validators
   tests

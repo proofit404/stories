@@ -21,14 +21,17 @@ module.exports = {
       "@semantic-release/exec",
       {
         prepareCmd:
-          "tox -e prettier -- --write && poetry version ${nextRelease.version} && poetry build",
+          "./scripts/lint && " +
+          "poetry version ${nextRelease.version} && " +
+          "npm version --no-git-tag-version ${nextRelease.version} && " +
+          "poetry build",
         publishCmd: "poetry publish",
       },
     ],
     [
       "@semantic-release/git",
       {
-        assets: ["docs/changelog.md", "pyproject.toml"],
+        assets: ["docs/changelog.md", "pyproject.toml", "package.json"],
       },
     ],
     [
