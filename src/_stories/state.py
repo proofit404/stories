@@ -50,11 +50,10 @@ class _BoundValidateInitiator:
         self.state = state
 
     def __call__(self, **arguments):
+        template = unknown_argument_template
         for argument, value in arguments.items():
             if argument not in self.arguments:
-                message = unknown_argument_template.format(
-                    argument=argument, state=self.state
-                )
+                message = template.format(argument=argument, state=self.state)
                 raise StateError(message)
             validator = self.validators[argument]
             validated = validator(value)

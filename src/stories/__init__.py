@@ -7,4 +7,4 @@ from _stories.stubs import I
 from _stories.variable import Variable
 
 
-__all__ = ["Story", "State", "I", "initiate", "Argument", "Variable"]
+__all__ = ("Story", "State", "I", "initiate", "Argument", "Variable")
