@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://proofit404.github.io/stories/state/">
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.8">
+      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.9">
     
     
       
@@ -501,6 +501,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#state-union-joins-all-variable-validators" class="md-nav__link">
+    State union joins all variable validators
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -687,6 +694,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#state-union-joins-all-variable-validators" class="md-nav__link">
+    State union joins all variable validators
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -723,6 +737,7 @@ on it.</p>
 <li><a href="#validation-errors-would-be-raised-by-constructor">Validation errors would be raised by constructor</a></li>
 <li><a href="#validation-could-normalize-value">Validation could normalize value</a></li>
 <li><a href="#state-union-joins-all-defined-variables">State union joins all defined variables</a></li>
+<li><a href="#state-union-joins-all-variable-validators">State union joins all variable validators</a></li>
 </ul>
 <h3 id="variable-allow-attribute-assignment">Variable allow attribute assignment<a class="headerlink" href="#variable-allow-attribute-assignment" title="Permanent link">&para;</a></h3>
 <p>Classes inherited from <code>State</code> could reduce set of variables which allowed to be
@@ -1466,7 +1481,7 @@ stories, you could join variables with <code>State</code> union operation.</p>
 <div class="tabbed-set" data-tabs="10:2"><input checked="checked" id="__tabbed_10_1" name="__tabbed_10" type="radio" /><label for="__tabbed_10_1">sync</label><div class="tabbed-content">
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Story</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">State</span><span class="p">,</span> <span class="n">Variable</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Story</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">State</span><span class="p">,</span> <span class="n">Variable</span><span class="p">,</span> <span class="n">Union</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">app.repositories</span> <span class="kn">import</span> <span class="n">load_order</span><span class="p">,</span> <span class="n">load_customer</span><span class="p">,</span> <span class="n">create_payment</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">app.entities</span> <span class="kn">import</span> <span class="n">Order</span><span class="p">,</span> <span class="n">Customer</span><span class="p">,</span> <span class="n">Payment</span>
 
@@ -1498,10 +1513,6 @@ stories, you could join variables with <code>State</code> union operation.</p>
 <span class="gp">... </span>    <span class="n">load_customer</span><span class="p">:</span> <span class="n">Callable</span>
 <span class="gp">... </span>    <span class="n">pay</span><span class="p">:</span> <span class="n">Story</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">PurchaseState</span><span class="p">(</span><span class="n">State</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="n">order</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">is_order</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="n">customer</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">is_customer</span><span class="p">)</span>
-
 <span class="gp">&gt;&gt;&gt; </span><span class="nd">@dataclass</span>
 <span class="gp">... </span><span class="k">class</span> <span class="nc">Pay</span><span class="p">(</span><span class="n">Story</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">I</span><span class="o">.</span><span class="n">persist_payment</span>
@@ -1512,6 +1523,10 @@ stories, you could join variables with <code>State</code> union operation.</p>
 <span class="gp">... </span>        <span class="p">)</span>
 <span class="gp">...</span>
 <span class="gp">... </span>    <span class="n">create_payment</span><span class="p">:</span> <span class="n">Callable</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">PurchaseState</span><span class="p">(</span><span class="n">State</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">order</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">is_order</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">customer</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">is_customer</span><span class="p">)</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">PayState</span><span class="p">(</span><span class="n">State</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">payment</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">is_payment</span><span class="p">)</span>
@@ -1524,7 +1539,7 @@ stories, you could join variables with <code>State</code> union operation.</p>
 <span class="gp">... </span>    <span class="n">pay</span><span class="o">=</span><span class="n">pay</span><span class="p">,</span>
 <span class="gp">... </span><span class="p">)</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">state_class</span> <span class="o">=</span> <span class="n">PurchaseState</span> <span class="o">&amp;</span> <span class="n">PayState</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">state_class</span> <span class="o">=</span> <span class="n">Union</span><span class="p">(</span><span class="n">PurchaseState</span><span class="p">,</span> <span class="n">PayState</span><span class="p">)</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">state</span> <span class="o">=</span> <span class="n">state_class</span><span class="p">()</span>
 
@@ -1538,7 +1553,7 @@ stories, you could join variables with <code>State</code> union operation.</p>
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Coroutine</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Story</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">State</span><span class="p">,</span> <span class="n">Variable</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Story</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">State</span><span class="p">,</span> <span class="n">Variable</span><span class="p">,</span> <span class="n">Union</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">aioapp.repositories</span> <span class="kn">import</span> <span class="n">load_order</span><span class="p">,</span> <span class="n">load_customer</span><span class="p">,</span> <span class="n">create_payment</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">aioapp.entities</span> <span class="kn">import</span> <span class="n">Order</span><span class="p">,</span> <span class="n">Customer</span><span class="p">,</span> <span class="n">Payment</span>
 
@@ -1596,7 +1611,7 @@ stories, you could join variables with <code>State</code> union operation.</p>
 <span class="gp">... </span>    <span class="n">pay</span><span class="o">=</span><span class="n">pay</span><span class="p">,</span>
 <span class="gp">... </span><span class="p">)</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">state_class</span> <span class="o">=</span> <span class="n">PurchaseState</span> <span class="o">&amp;</span> <span class="n">PayState</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">state_class</span> <span class="o">=</span> <span class="n">Union</span><span class="p">(</span><span class="n">PurchaseState</span><span class="p">,</span> <span class="n">PayState</span><span class="p">)</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">state</span> <span class="o">=</span> <span class="n">state_class</span><span class="p">()</span>
 
@@ -1604,6 +1619,155 @@ stories, you could join variables with <code>State</code> union operation.</p>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">state</span><span class="o">.</span><span class="n">payment</span>
 <span class="go">Payment(due_date=datetime.datetime(1999, 12, 31, 0, 0))</span>
+</code></pre></div>
+</div>
+</div>
+<h3 id="state-union-joins-all-variable-validators">State union joins all variable validators<a class="headerlink" href="#state-union-joins-all-variable-validators" title="Permanent link">&para;</a></h3>
+<p>Sometimes you would define variable with the same name in different state
+classes. Usually, these variables would have different validation functions.
+Since different stories has different requirements for them. When you create a
+composition of these stories, you expect all requirements to the variable would
+be satisfied.</p>
+<p>State union would call all validators of the variable at the moment of it
+assignment. If at least one validator fails, execution of the story stops on
+that error.</p>
+<div class="tabbed-set" data-tabs="11:2"><input checked="checked" id="__tabbed_11_1" name="__tabbed_11" type="radio" /><label for="__tabbed_11_1">sync</label><div class="tabbed-content">
+<div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Story</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">State</span><span class="p">,</span> <span class="n">Variable</span><span class="p">,</span> <span class="n">Union</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">app.repositories</span> <span class="kn">import</span> <span class="n">load_order</span><span class="p">,</span> <span class="n">load_customer</span><span class="p">,</span> <span class="n">create_payment</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">app.entities</span> <span class="kn">import</span> <span class="n">Order</span><span class="p">,</span> <span class="n">Customer</span><span class="p">,</span> <span class="n">Payment</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">is_low_price</span><span class="p">(</span><span class="n">order</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">assert</span> <span class="n">order</span><span class="o">.</span><span class="n">cost</span><span class="o">.</span><span class="n">amount</span> <span class="o">&lt;</span> <span class="mi">500</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">order</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">is_recent_price</span><span class="p">(</span><span class="n">order</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">assert</span> <span class="n">order</span><span class="o">.</span><span class="n">cost</span><span class="o">.</span><span class="n">at</span> <span class="o">&gt;=</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">1999</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">order</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="nd">@dataclass</span>
+<span class="gp">... </span><span class="k">class</span> <span class="nc">Purchase</span><span class="p">(</span><span class="n">Story</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">I</span><span class="o">.</span><span class="n">find_order</span>
+<span class="gp">... </span>    <span class="n">I</span><span class="o">.</span><span class="n">find_customer</span>
+<span class="gp">... </span>    <span class="n">I</span><span class="o">.</span><span class="n">pay</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">find_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="n">state</span><span class="o">.</span><span class="n">order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_order</span><span class="p">(</span><span class="n">order_id</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">find_customer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="n">state</span><span class="o">.</span><span class="n">customer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_customer</span><span class="p">(</span><span class="n">customer_id</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="n">load_order</span><span class="p">:</span> <span class="n">Callable</span>
+<span class="gp">... </span>    <span class="n">load_customer</span><span class="p">:</span> <span class="n">Callable</span>
+<span class="gp">... </span>    <span class="n">pay</span><span class="p">:</span> <span class="n">Story</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="nd">@dataclass</span>
+<span class="gp">... </span><span class="k">class</span> <span class="nc">Pay</span><span class="p">(</span><span class="n">Story</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">I</span><span class="o">.</span><span class="n">persist_payment</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">persist_payment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="n">state</span><span class="o">.</span><span class="n">payment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_payment</span><span class="p">(</span>
+<span class="gp">... </span>            <span class="n">order_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">customer_id</span><span class="o">=</span><span class="mi">1</span>
+<span class="gp">... </span>        <span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="n">create_payment</span><span class="p">:</span> <span class="n">Callable</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">PurchaseState</span><span class="p">(</span><span class="n">State</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">order</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">is_low_price</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">customer</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">()</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">PayState</span><span class="p">(</span><span class="n">State</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">order</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">is_recent_price</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">payment</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">()</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pay</span> <span class="o">=</span> <span class="n">Pay</span><span class="p">(</span><span class="n">create_payment</span><span class="o">=</span><span class="n">create_payment</span><span class="p">)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">purchase</span> <span class="o">=</span> <span class="n">Purchase</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">load_order</span><span class="o">=</span><span class="n">load_order</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">load_customer</span><span class="o">=</span><span class="n">load_customer</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">pay</span><span class="o">=</span><span class="n">pay</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">state_class</span> <span class="o">=</span> <span class="n">Union</span><span class="p">(</span><span class="n">PurchaseState</span><span class="p">,</span> <span class="n">PayState</span><span class="p">)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">state</span> <span class="o">=</span> <span class="n">state_class</span><span class="p">()</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">purchase</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">state</span><span class="o">.</span><span class="n">order</span><span class="o">.</span><span class="n">cost</span>
+<span class="go">Cost(at=datetime.datetime(1999, 12, 31, 0, 0), amount=7)</span>
+</code></pre></div>
+</div>
+<input id="__tabbed_11_2" name="__tabbed_11" type="radio" /><label for="__tabbed_11_2">async</label><div class="tabbed-content">
+<div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Coroutine</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Story</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">State</span><span class="p">,</span> <span class="n">Variable</span><span class="p">,</span> <span class="n">Union</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">aioapp.repositories</span> <span class="kn">import</span> <span class="n">load_order</span><span class="p">,</span> <span class="n">load_customer</span><span class="p">,</span> <span class="n">create_payment</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">aioapp.entities</span> <span class="kn">import</span> <span class="n">Order</span><span class="p">,</span> <span class="n">Customer</span><span class="p">,</span> <span class="n">Payment</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">is_low_price</span><span class="p">(</span><span class="n">order</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">assert</span> <span class="n">order</span><span class="o">.</span><span class="n">cost</span><span class="o">.</span><span class="n">amount</span> <span class="o">&lt;</span> <span class="mi">500</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">order</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">is_recent_price</span><span class="p">(</span><span class="n">order</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">assert</span> <span class="n">order</span><span class="o">.</span><span class="n">cost</span><span class="o">.</span><span class="n">at</span> <span class="o">&gt;=</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">1999</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">order</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="nd">@dataclass</span>
+<span class="gp">... </span><span class="k">class</span> <span class="nc">Purchase</span><span class="p">(</span><span class="n">Story</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">I</span><span class="o">.</span><span class="n">find_order</span>
+<span class="gp">... </span>    <span class="n">I</span><span class="o">.</span><span class="n">find_customer</span>
+<span class="gp">... </span>    <span class="n">I</span><span class="o">.</span><span class="n">pay</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">find_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="n">state</span><span class="o">.</span><span class="n">order</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_order</span><span class="p">(</span><span class="n">order_id</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">find_customer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="n">state</span><span class="o">.</span><span class="n">customer</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_customer</span><span class="p">(</span><span class="n">customer_id</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="n">load_order</span><span class="p">:</span> <span class="n">Callable</span>
+<span class="gp">... </span>    <span class="n">load_customer</span><span class="p">:</span> <span class="n">Callable</span>
+<span class="gp">... </span>    <span class="n">pay</span><span class="p">:</span> <span class="n">Story</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="nd">@dataclass</span>
+<span class="gp">... </span><span class="k">class</span> <span class="nc">Pay</span><span class="p">(</span><span class="n">Story</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">I</span><span class="o">.</span><span class="n">persist_payment</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">async</span> <span class="k">def</span> <span class="nf">persist_payment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="n">state</span><span class="o">.</span><span class="n">payment</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_payment</span><span class="p">(</span>
+<span class="gp">... </span>            <span class="n">order_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">customer_id</span><span class="o">=</span><span class="mi">1</span>
+<span class="gp">... </span>        <span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="n">create_payment</span><span class="p">:</span> <span class="n">Callable</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">PurchaseState</span><span class="p">(</span><span class="n">State</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">order</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">is_low_price</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">customer</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">()</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">PayState</span><span class="p">(</span><span class="n">State</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">order</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">is_recent_price</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">payment</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">()</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pay</span> <span class="o">=</span> <span class="n">Pay</span><span class="p">(</span><span class="n">create_payment</span><span class="o">=</span><span class="n">create_payment</span><span class="p">)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">purchase</span> <span class="o">=</span> <span class="n">Purchase</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">load_order</span><span class="o">=</span><span class="n">load_order</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">load_customer</span><span class="o">=</span><span class="n">load_customer</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">pay</span><span class="o">=</span><span class="n">pay</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">state_class</span> <span class="o">=</span> <span class="n">Union</span><span class="p">(</span><span class="n">PurchaseState</span><span class="p">,</span> <span class="n">PayState</span><span class="p">)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">state</span> <span class="o">=</span> <span class="n">state_class</span><span class="p">()</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">purchase</span><span class="p">(</span><span class="n">state</span><span class="p">))</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">state</span><span class="o">.</span><span class="n">order</span><span class="o">.</span><span class="n">cost</span>
+<span class="go">Cost(at=datetime.datetime(1999, 12, 31, 0, 0), amount=7)</span>
 </code></pre></div>
 </div>
 </div>
@@ -1678,7 +1842,7 @@ stories, you could join variables with <code>State</code> union operation.</p>
     <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs"], "search": "../assets/javascripts/workers/search.b97dbffb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.0238f547.min.js"></script>
+      <script src="../assets/javascripts/bundle.6c7ad80a.min.js"></script>
       
         <script src="../javascripts/extra.js"></script>
       
