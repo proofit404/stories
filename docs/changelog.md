@@ -1,3 +1,10 @@
+# 5.0.0-rc.4 (2022-07-13)
+
+### Features
+
+- state union merge variable validators
+  [#688](https://github.com/proofit404/stories/issues/688) 8982c2f
+
 # 5.0.0-rc.3 (2021-12-02)
 
 ### Features
