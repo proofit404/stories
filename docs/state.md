@@ -17,6 +17,7 @@ on it.
 - [Validation errors would be raised by constructor](#validation-errors-would-be-raised-by-constructor)
 - [Validation could normalize value](#validation-could-normalize-value)
 - [State union joins all defined variables](#state-union-joins-all-defined-variables)
+- [State union joins all variable validators](#state-union-joins-all-variable-validators)
 
 ### Variable allow attribute assignment
 
@@ -853,7 +854,7 @@ State union would include all variables defined in separate State classes.
 
     >>> from dataclasses import dataclass
     >>> from typing import Callable
-    >>> from stories import Story, I, State, Variable
+    >>> from stories import Story, I, State, Variable, Union
     >>> from app.repositories import load_order, load_customer, create_payment
     >>> from app.entities import Order, Customer, Payment
 
@@ -885,10 +886,6 @@ State union would include all variables defined in separate State classes.
     ...     load_customer: Callable
     ...     pay: Story
 
-    >>> class PurchaseState(State):
-    ...     order = Variable(is_order)
-    ...     customer = Variable(is_customer)
-
     >>> @dataclass
     ... class Pay(Story):
     ...     I.persist_payment
@@ -899,6 +896,10 @@ State union would include all variables defined in separate State classes.
     ...         )
     ...
     ...     create_payment: Callable
+
+    >>> class PurchaseState(State):
+    ...     order = Variable(is_order)
+    ...     customer = Variable(is_customer)
 
     >>> class PayState(State):
     ...     payment = Variable(is_payment)
@@ -911,7 +912,7 @@ State union would include all variables defined in separate State classes.
     ...     pay=pay,
     ... )
 
-    >>> state_class = PurchaseState & PayState
+    >>> state_class = Union(PurchaseState, PayState)
 
     >>> state = state_class()
 
@@ -929,7 +930,7 @@ State union would include all variables defined in separate State classes.
     >>> import asyncio
     >>> from dataclasses import dataclass
     >>> from typing import Coroutine
-    >>> from stories import Story, I, State, Variable
+    >>> from stories import Story, I, State, Variable, Union
     >>> from aioapp.repositories import load_order, load_customer, create_payment
     >>> from aioapp.entities import Order, Customer, Payment
 
@@ -987,7 +988,7 @@ State union would include all variables defined in separate State classes.
     ...     pay=pay,
     ... )
 
-    >>> state_class = PurchaseState & PayState
+    >>> state_class = Union(PurchaseState, PayState)
 
     >>> state = state_class()
 
@@ -995,6 +996,165 @@ State union would include all variables defined in separate State classes.
 
     >>> state.payment
     Payment(due_date=datetime.datetime(1999, 12, 31, 0, 0))
+
+    ```
+
+### State union joins all variable validators
+
+Sometimes you would define variable with the same name in different state
+classes. Usually, these variables would have different validation functions.
+Since different stories has different requirements for them. When you create a
+composition of these stories, you expect all requirements to the variable would
+be satisfied.
+
+State union would call all validators of the variable at the moment of it
+assignment. If at least one validator fails, execution of the story stops on
+that error.
+
+=== "sync"
+
+    ```pycon
+
+    >>> from dataclasses import dataclass
+    >>> from datetime import datetime
+    >>> from typing import Callable
+    >>> from stories import Story, I, State, Variable, Union
+    >>> from app.repositories import load_order, load_customer, create_payment
+    >>> from app.entities import Order, Customer, Payment
+
+    >>> def is_low_price(order):
+    ...     assert order.cost.amount < 500
+    ...     return order
+
+    >>> def is_recent_price(order):
+    ...     assert order.cost.at >= datetime(1999, 1, 1)
+    ...     return order
+
+    >>> @dataclass
+    ... class Purchase(Story):
+    ...     I.find_order
+    ...     I.find_customer
+    ...     I.pay
+    ...
+    ...     def find_order(self, state):
+    ...         state.order = self.load_order(order_id=1)
+    ...
+    ...     def find_customer(self, state):
+    ...         state.customer = self.load_customer(customer_id=1)
+    ...
+    ...     load_order: Callable
+    ...     load_customer: Callable
+    ...     pay: Story
+
+    >>> @dataclass
+    ... class Pay(Story):
+    ...     I.persist_payment
+    ...
+    ...     def persist_payment(self, state):
+    ...         state.payment = self.create_payment(
+    ...             order_id=1, customer_id=1
+    ...         )
+    ...
+    ...     create_payment: Callable
+
+    >>> class PurchaseState(State):
+    ...     order = Variable(is_low_price)
+    ...     customer = Variable()
+
+    >>> class PayState(State):
+    ...     order = Variable(is_recent_price)
+    ...     payment = Variable()
+
+    >>> pay = Pay(create_payment=create_payment)
+
+    >>> purchase = Purchase(
+    ...     load_order=load_order,
+    ...     load_customer=load_customer,
+    ...     pay=pay,
+    ... )
+
+    >>> state_class = Union(PurchaseState, PayState)
+
+    >>> state = state_class()
+
+    >>> purchase(state)
+
+    >>> state.order.cost
+    Cost(at=datetime.datetime(1999, 12, 31, 0, 0), amount=7)
+
+    ```
+
+=== "async"
+
+    ```pycon
+
+    >>> import asyncio
+    >>> from dataclasses import dataclass
+    >>> from datetime import datetime
+    >>> from typing import Coroutine
+    >>> from stories import Story, I, State, Variable, Union
+    >>> from aioapp.repositories import load_order, load_customer, create_payment
+    >>> from aioapp.entities import Order, Customer, Payment
+
+    >>> def is_low_price(order):
+    ...     assert order.cost.amount < 500
+    ...     return order
+
+    >>> def is_recent_price(order):
+    ...     assert order.cost.at >= datetime(1999, 1, 1)
+    ...     return order
+
+    >>> @dataclass
+    ... class Purchase(Story):
+    ...     I.find_order
+    ...     I.find_customer
+    ...     I.pay
+    ...
+    ...     async def find_order(self, state):
+    ...         state.order = await self.load_order(order_id=1)
+    ...
+    ...     async def find_customer(self, state):
+    ...         state.customer = await self.load_customer(customer_id=1)
+    ...
+    ...     load_order: Callable
+    ...     load_customer: Callable
+    ...     pay: Story
+
+    >>> @dataclass
+    ... class Pay(Story):
+    ...     I.persist_payment
+    ...
+    ...     async def persist_payment(self, state):
+    ...         state.payment = await self.create_payment(
+    ...             order_id=1, customer_id=1
+    ...         )
+    ...
+    ...     create_payment: Callable
+
+    >>> class PurchaseState(State):
+    ...     order = Variable(is_low_price)
+    ...     customer = Variable()
+
+    >>> class PayState(State):
+    ...     order = Variable(is_recent_price)
+    ...     payment = Variable()
+
+    >>> pay = Pay(create_payment=create_payment)
+
+    >>> purchase = Purchase(
+    ...     load_order=load_order,
+    ...     load_customer=load_customer,
+    ...     pay=pay,
+    ... )
+
+    >>> state_class = Union(PurchaseState, PayState)
+
+    >>> state = state_class()
+
+    >>> asyncio.run(purchase(state))
+
+    >>> state.order.cost
+    Cost(at=datetime.datetime(1999, 12, 31, 0, 0), amount=7)
 
     ```
 
