@@ -1,3 +1,49 @@
+# 5.0.0 (2022-07-21)
+
+### Code Refactoring
+
+- earthquake [#627](https://github.com/proofit404/stories/issues/627) f2b793f
+
+### Features
+
+- add argument and variable placeholders
+  [#704](https://github.com/proofit404/stories/issues/704) 24ed603
+- declare argument including validation
+  [#605](https://github.com/proofit404/stories/issues/605) ccc0308
+- declare argument without validation
+  [#602](https://github.com/proofit404/stories/issues/602) a599aec
+- declare variable including validation
+  [#606](https://github.com/proofit404/stories/issues/606) 670f879
+- declare variable without validation
+  [#591](https://github.com/proofit404/stories/issues/591) d760230
+- deny to assign undeclared variable
+  [#680](https://github.com/proofit404/stories/issues/680) b1a99aa
+- deny to pass undeclared arguments
+  [#681](https://github.com/proofit404/stories/issues/681) 9705232
+- execute steps in given order
+  [#664](https://github.com/proofit404/stories/issues/664) 076c656
+- implement [@initiate](https://github.com/initiate) decorator
+  [#324](https://github.com/proofit404/stories/issues/324) f747b5d
+- implement [@initiate](https://github.com/initiate) restrictions
+  [#649](https://github.com/proofit404/stories/issues/649) d4d24d4
+- propagate exceptions [#631](https://github.com/proofit404/stories/issues/631)
+  fbb87b4
+- state union merge variable validators
+  [#688](https://github.com/proofit404/stories/issues/688) cf9afc4
+- story call should return none
+  [#630](https://github.com/proofit404/stories/issues/630) 0622d21
+- story steps could assign state variable
+  [#693](https://github.com/proofit404/stories/issues/693) 0c30861
+
+### BREAKING CHANGES
+
+- The old codebase was removed. The library was redesigned from scratch. A lot
+  of existed functionality was removed. Contrib integrations was moved to
+  separate repositories. The goal of the library stays the same. Allow to
+  express domain knowledge inside codebase with minimal friction. The approach
+  we took is very similar with the old one but most of design flaws was fixed in
+  new version.
+
 # [4.1.0](https://github.com/proofit404/stories/compare/4.0.0...4.1.0) (2020-11-20)
 
 ### Features

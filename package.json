@@ -1,6 +1,6 @@
 {
   "name": "stories",
-  "version": "0.0.1dev0",
+  "version": "5.0.0",
   "private": true,
   "devDependencies": {
     "@commitlint/cli": "*",
