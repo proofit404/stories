@@ -23,7 +23,6 @@ It's up to you whether or not to use libraries like `attrs`, `dataclasses`,
 
     ```pycon
 
-    >>> from typing import Callable
     >>> from attr import attrs, attrib
     >>> from stories import Story, I
 
