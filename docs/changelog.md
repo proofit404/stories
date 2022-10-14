@@ -1,3 +1,10 @@
+# 5.1.0 (2022-10-14)
+
+### Features
+
+- story could define its actor
+  [#696](https://github.com/proofit404/stories/issues/696) 5547ada
+
 # 5.0.0 (2022-07-21)
 
 ### Code Refactoring
