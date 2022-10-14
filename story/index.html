@@ -670,7 +670,9 @@ hood.</p>
 <p>As you may notice, we don't require any specific way to instantiate the class.
 It's up to you whether or not to use libraries like <code>attrs</code>, <code>dataclasses</code>,
 <code>pydantic</code> or use plain <code>__init__</code> method instead.</p>
-<div class="tabbed-set" data-tabs="1:4"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">attrs</label><div class="tabbed-content">
+<div class="tabbed-set tabbed-alternate" data-tabs="1:4"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><input id="__tabbed_1_4" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">attrs</label><label for="__tabbed_1_2">dataclasses</label><label for="__tabbed_1_3">pydantic</label><label for="__tabbed_1_4"><code>__init__</code></label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">attr</span> <span class="kn">import</span> <span class="n">attrs</span><span class="p">,</span> <span class="n">attrib</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Story</span><span class="p">,</span> <span class="n">I</span>
 
@@ -694,7 +696,7 @@ It's up to you whether or not to use libraries like <code>attrs</code>, <code>da
 <span class="gp">... </span>    <span class="n">create_payment</span> <span class="o">=</span> <span class="n">attrib</span><span class="p">()</span>
 </code></pre></div>
 </div>
-<input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><label for="__tabbed_1_2">dataclasses</label><div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Story</span><span class="p">,</span> <span class="n">I</span>
@@ -719,7 +721,7 @@ It's up to you whether or not to use libraries like <code>attrs</code>, <code>da
 <span class="gp">... </span>    <span class="n">create_payment</span><span class="p">:</span> <span class="n">Callable</span>
 </code></pre></div>
 </div>
-<input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><label for="__tabbed_1_3">pydantic</label><div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pydantic.dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Story</span><span class="p">,</span> <span class="n">I</span>
@@ -744,7 +746,7 @@ It's up to you whether or not to use libraries like <code>attrs</code>, <code>da
 <span class="gp">... </span>    <span class="n">create_payment</span><span class="p">:</span> <span class="n">Callable</span>
 </code></pre></div>
 </div>
-<input id="__tabbed_1_4" name="__tabbed_1" type="radio" /><label for="__tabbed_1_4"><code>__init__</code></label><div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Story</span><span class="p">,</span> <span class="n">I</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Purchase</span><span class="p">(</span><span class="n">Story</span><span class="p">):</span>
@@ -768,12 +770,15 @@ It's up to you whether or not to use libraries like <code>attrs</code>, <code>da
 </code></pre></div>
 </div>
 </div>
+</div>
 <h3 id="steps-executed-in-specified-order">Steps executed in specified order<a class="headerlink" href="#steps-executed-in-specified-order" title="Permanent link">&para;</a></h3>
 <p>To call the story, you need to instantiate the class first. After that you could
 pass <code>State</code> object to the story call and story would be executed.</p>
 <p>If methods of the story are coroutines, you need to <code>await</code> story call as well.
 The same as you do with regular coroutine methods defined on your classes.</p>
-<div class="tabbed-set" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><label for="__tabbed_2_1">sync</label><div class="tabbed-content">
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">sync</label><label for="__tabbed_2_2">async</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Story</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">State</span>
@@ -827,7 +832,7 @@ The same as you do with regular coroutine methods defined on your classes.</p>
 <span class="go">==&gt; persist payment</span>
 </code></pre></div>
 </div>
-<input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><label for="__tabbed_2_2">async</label><div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Coroutine</span>
@@ -883,6 +888,7 @@ The same as you do with regular coroutine methods defined on your classes.</p>
 </code></pre></div>
 </div>
 </div>
+</div>
 <h3 id="steps-could-assign-state-variables">Steps could assign state variables<a class="headerlink" href="#steps-could-assign-state-variables" title="Permanent link">&para;</a></h3>
 <p>Every step could assign variable in state object. Story steps executed
 afterwards would be able to access variables assigned earlier. If you use plain
@@ -890,7 +896,9 @@ afterwards would be able to access variables assigned earlier. If you use plain
 allowed name of the variable or its value.</p>
 <p>As you could see in the example below, the <code>check_balance</code> step is able to
 access <code>order</code> and <code>customer</code> variables set by previous steps.</p>
-<div class="tabbed-set" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><label for="__tabbed_3_1">sync</label><div class="tabbed-content">
+<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">sync</label><label for="__tabbed_3_2">async</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Story</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">State</span>
@@ -933,7 +941,7 @@ access <code>order</code> and <code>customer</code> variables set by previous st
 <span class="gp">&gt;&gt;&gt; </span><span class="n">purchase</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
 </code></pre></div>
 </div>
-<input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><label for="__tabbed_3_2">async</label><div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Coroutine</span>
@@ -978,11 +986,14 @@ access <code>order</code> and <code>customer</code> variables set by previous st
 </code></pre></div>
 </div>
 </div>
+</div>
 <h3 id="story-state-would-be-available-after-its-execution">Story state would be available after its execution<a class="headerlink" href="#story-state-would-be-available-after-its-execution" title="Permanent link">&para;</a></h3>
 <p>After story execution all state variables would be available in the same state
 object you have passed to it.</p>
 <p>You would be able to access same objects that were assigned by story steps.</p>
-<div class="tabbed-set" data-tabs="4:2"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><label for="__tabbed_4_1">sync</label><div class="tabbed-content">
+<div class="tabbed-set tabbed-alternate" data-tabs="4:2"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">sync</label><label for="__tabbed_4_2">async</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Story</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">State</span>
@@ -1032,7 +1043,7 @@ object you have passed to it.</p>
 <span class="go">Payment(due_date=datetime.datetime(1999, 12, 31, 0, 0))</span>
 </code></pre></div>
 </div>
-<input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><label for="__tabbed_4_2">async</label><div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Coroutine</span>
@@ -1084,11 +1095,14 @@ object you have passed to it.</p>
 </code></pre></div>
 </div>
 </div>
+</div>
 <h3 id="exceptions-would-be-propagated">Exceptions would be propagated<a class="headerlink" href="#exceptions-would-be-propagated" title="Permanent link">&para;</a></h3>
 <p>If exception was raised inside the step method, execution of the story would
 stop at that moment and exception would be raised to the caller code without any
 changes.</p>
-<div class="tabbed-set" data-tabs="5:2"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><label for="__tabbed_5_1">sync</label><div class="tabbed-content">
+<div class="tabbed-set tabbed-alternate" data-tabs="5:2"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">sync</label><label for="__tabbed_5_2">async</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Story</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">State</span>
@@ -1130,7 +1144,7 @@ changes.</p>
 <span class="go">==&gt; Exception(&#39;Not enough money&#39;)</span>
 </code></pre></div>
 </div>
-<input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><label for="__tabbed_5_2">async</label><div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Coroutine</span>
@@ -1172,6 +1186,7 @@ changes.</p>
 <span class="go">==&gt; check balance</span>
 <span class="go">==&gt; Exception(&#39;Not enough money&#39;)</span>
 </code></pre></div>
+</div>
 </div>
 </div>
 <p align="center">&mdash; ⭐ &mdash;</p>

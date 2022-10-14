@@ -760,7 +760,9 @@ on it.</p>
 <p>Classes inherited from <code>State</code> could reduce set of variables which allowed to be
 defined by attribute assignment. If you declare variable on the state class, it
 could be assignment once inside step method.</p>
-<div class="tabbed-set" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">sync</label><div class="tabbed-content">
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">sync</label><label for="__tabbed_1_2">async</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Story</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">State</span><span class="p">,</span> <span class="n">Variable</span>
@@ -809,7 +811,7 @@ could be assignment once inside step method.</p>
 <span class="go">Payment(due_date=datetime.datetime(1999, 12, 31, 0, 0))</span>
 </code></pre></div>
 </div>
-<input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><label for="__tabbed_1_2">async</label><div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Coroutine</span>
@@ -862,13 +864,16 @@ could be assignment once inside step method.</p>
 </code></pre></div>
 </div>
 </div>
+</div>
 <h3 id="argument-allow-constructor-usage">Argument allow constructor usage<a class="headerlink" href="#argument-allow-constructor-usage" title="Permanent link">&para;</a></h3>
 <p>Argument declaration is superset of the Variable declaration. All rules applied
 to Variable applies to Argument as well. For example, variable declared as
 Argument is allowed to be assigned as attribute by one of the story step.</p>
 <p>However, Argument declaration allows variable with that name to be passed to the
 state constructor before story execution would even starts.</p>
-<div class="tabbed-set" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><label for="__tabbed_2_1">sync</label><div class="tabbed-content">
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">sync</label><label for="__tabbed_2_2">async</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Story</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">State</span><span class="p">,</span> <span class="n">Argument</span><span class="p">,</span> <span class="n">Variable</span>
@@ -921,7 +926,7 @@ state constructor before story execution would even starts.</p>
 <span class="go">Payment(due_date=datetime.datetime(1999, 12, 31, 0, 0))</span>
 </code></pre></div>
 </div>
-<input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><label for="__tabbed_2_2">async</label><div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Coroutine</span>
@@ -976,12 +981,15 @@ state constructor before story execution would even starts.</p>
 </code></pre></div>
 </div>
 </div>
+</div>
 <h3 id="only-declared-variables-could-be-assigned">Only declared variables could be assigned<a class="headerlink" href="#only-declared-variables-could-be-assigned" title="Permanent link">&para;</a></h3>
 <p>Variables with random names allowed to be assigned only if you would use plain
 <code>State</code> object. If you declare variables using inheritance from <code>State</code> class,
 only declared variables would be allowed to be assigned later by steps. If you
 try to assing unknown variable, an error would be raised.</p>
-<div class="tabbed-set" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><label for="__tabbed_3_1">sync</label><div class="tabbed-content">
+<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">sync</label><label for="__tabbed_3_2">async</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Story</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">State</span><span class="p">,</span> <span class="n">Variable</span>
@@ -1011,7 +1019,7 @@ try to assing unknown variable, an error would be raised.</p>
 <span class="go">PurchaseState</span>
 </code></pre></div>
 </div>
-<input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><label for="__tabbed_3_2">async</label><div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Coroutine</span>
@@ -1043,12 +1051,15 @@ try to assing unknown variable, an error would be raised.</p>
 </code></pre></div>
 </div>
 </div>
+</div>
 <h3 id="only-declared-arguments-could-be-passed">Only declared arguments could be passed<a class="headerlink" href="#only-declared-arguments-could-be-passed" title="Permanent link">&para;</a></h3>
 <p>If you try to pass an argument to the state class which was not declared using
 <code>Argument</code>, error would be thrown immediately. Even if you declare state
 attribute using <code>Variable</code> it will not be allowed to be used as state
 constructor argument.</p>
-<div class="tabbed-set" data-tabs="4:2"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><label for="__tabbed_4_1">sync</label><div class="tabbed-content">
+<div class="tabbed-set tabbed-alternate" data-tabs="4:2"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">sync</label><label for="__tabbed_4_2">async</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Story</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">State</span><span class="p">,</span> <span class="n">Argument</span><span class="p">,</span> <span class="n">Variable</span>
@@ -1077,7 +1088,7 @@ constructor argument.</p>
 <span class="go">PurchaseState</span>
 </code></pre></div>
 </div>
-<input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><label for="__tabbed_4_2">async</label><div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Coroutine</span>
@@ -1108,13 +1119,16 @@ constructor argument.</p>
 </code></pre></div>
 </div>
 </div>
+</div>
 <h3 id="attribute-assignment-validates-variable-value">Attribute assignment validates variable value<a class="headerlink" href="#attribute-assignment-validates-variable-value" title="Permanent link">&para;</a></h3>
 <p>When story step assign attributes to the state, validator passed to the
 <code>Variable</code> would be applied to the value.</p>
 <p>Validator is a function of single argument. It should return attribute value or
 raise exception if value is wrong.</p>
 <p>If validator returns a value, it will be assigned to the state attribute.</p>
-<div class="tabbed-set" data-tabs="5:2"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><label for="__tabbed_5_1">sync</label><div class="tabbed-content">
+<div class="tabbed-set tabbed-alternate" data-tabs="5:2"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">sync</label><label for="__tabbed_5_2">async</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Story</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">State</span><span class="p">,</span> <span class="n">Variable</span>
@@ -1149,7 +1163,7 @@ raise exception if value is wrong.</p>
 <span class="go">Order(product=Product(name=&#39;Books&#39;), cost=Cost(at=datetime.datetime(1999, 12, 31, 0, 0), amount=7))</span>
 </code></pre></div>
 </div>
-<input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><label for="__tabbed_5_2">async</label><div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Coroutine</span>
@@ -1186,13 +1200,16 @@ raise exception if value is wrong.</p>
 </code></pre></div>
 </div>
 </div>
+</div>
 <h3 id="constructor-argument-validates-passed-value">Constructor argument validates passed value<a class="headerlink" href="#constructor-argument-validates-passed-value" title="Permanent link">&para;</a></h3>
 <p>When pass arguments to the state constructor, validator passed to the <code>Argument</code>
 would be applied to the value.</p>
 <p>Validator is a function of single argument. It should return argument value or
 raise exception if value is wrong.</p>
 <p>If validator returns a value, it will be assigned to the state attribute.</p>
-<div class="tabbed-set" data-tabs="6:2"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><label for="__tabbed_6_1">sync</label><div class="tabbed-content">
+<div class="tabbed-set tabbed-alternate" data-tabs="6:2"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><input id="__tabbed_6_2" name="__tabbed_6" type="radio" /><div class="tabbed-labels"><label for="__tabbed_6_1">sync</label><label for="__tabbed_6_2">async</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Story</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">State</span><span class="p">,</span> <span class="n">Argument</span>
@@ -1234,7 +1251,7 @@ raise exception if value is wrong.</p>
 <span class="go">1</span>
 </code></pre></div>
 </div>
-<input id="__tabbed_6_2" name="__tabbed_6" type="radio" /><label for="__tabbed_6_2">async</label><div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Coroutine</span>
@@ -1278,10 +1295,13 @@ raise exception if value is wrong.</p>
 </code></pre></div>
 </div>
 </div>
+</div>
 <h3 id="validation-errors-are-propagated-as-usual-errors">Validation errors are propagated as usual errors<a class="headerlink" href="#validation-errors-are-propagated-as-usual-errors" title="Permanent link">&para;</a></h3>
 <p>If validation function raises exception, story execution would stops. It would
 be propagated as usual exception which could happend inside the step.</p>
-<div class="tabbed-set" data-tabs="7:2"><input checked="checked" id="__tabbed_7_1" name="__tabbed_7" type="radio" /><label for="__tabbed_7_1">sync</label><div class="tabbed-content">
+<div class="tabbed-set tabbed-alternate" data-tabs="7:2"><input checked="checked" id="__tabbed_7_1" name="__tabbed_7" type="radio" /><input id="__tabbed_7_2" name="__tabbed_7" type="radio" /><div class="tabbed-labels"><label for="__tabbed_7_1">sync</label><label for="__tabbed_7_2">async</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Story</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">State</span><span class="p">,</span> <span class="n">Variable</span>
@@ -1308,7 +1328,7 @@ be propagated as usual exception which could happend inside the step.</p>
 <span class="gr">Exception</span>: <span class="n">None is not valid order</span>
 </code></pre></div>
 </div>
-<input id="__tabbed_7_2" name="__tabbed_7" type="radio" /><label for="__tabbed_7_2">async</label><div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Coroutine</span>
@@ -1340,10 +1360,13 @@ be propagated as usual exception which could happend inside the step.</p>
 </code></pre></div>
 </div>
 </div>
+</div>
 <h3 id="validation-errors-would-be-raised-by-constructor">Validation errors would be raised by constructor<a class="headerlink" href="#validation-errors-would-be-raised-by-constructor" title="Permanent link">&para;</a></h3>
 <p>If validation funcution raises exception, state constructor would propagate this
 error.</p>
-<div class="tabbed-set" data-tabs="8:2"><input checked="checked" id="__tabbed_8_1" name="__tabbed_8" type="radio" /><label for="__tabbed_8_1">sync</label><div class="tabbed-content">
+<div class="tabbed-set tabbed-alternate" data-tabs="8:2"><input checked="checked" id="__tabbed_8_1" name="__tabbed_8" type="radio" /><input id="__tabbed_8_2" name="__tabbed_8" type="radio" /><div class="tabbed-labels"><label for="__tabbed_8_1">sync</label><label for="__tabbed_8_2">async</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Story</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">State</span><span class="p">,</span> <span class="n">Argument</span>
@@ -1375,7 +1398,7 @@ error.</p>
 <span class="gr">Exception</span>: <span class="n">&#39;1&#39; is not valid order id</span>
 </code></pre></div>
 </div>
-<input id="__tabbed_8_2" name="__tabbed_8" type="radio" /><label for="__tabbed_8_2">async</label><div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Coroutine</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Story</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">State</span><span class="p">,</span> <span class="n">Argument</span>
@@ -1408,13 +1431,16 @@ error.</p>
 </code></pre></div>
 </div>
 </div>
+</div>
 <h3 id="validation-could-normalize-value">Validation could normalize value<a class="headerlink" href="#validation-could-normalize-value" title="Permanent link">&para;</a></h3>
 <p>Validator function could cast value passed to it to the new type. It's a similar
 process to normalization common to API schema libraries. To convert passed value
 to something new, just return new thing. New value returned by validator
 function would be assigned to the state attribute.</p>
 <p>This works both for <code>Variable</code> and <code>Argument</code> validators.</p>
-<div class="tabbed-set" data-tabs="9:2"><input checked="checked" id="__tabbed_9_1" name="__tabbed_9" type="radio" /><label for="__tabbed_9_1">sync</label><div class="tabbed-content">
+<div class="tabbed-set tabbed-alternate" data-tabs="9:2"><input checked="checked" id="__tabbed_9_1" name="__tabbed_9" type="radio" /><input id="__tabbed_9_2" name="__tabbed_9" type="radio" /><div class="tabbed-labels"><label for="__tabbed_9_1">sync</label><label for="__tabbed_9_2">async</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Story</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">State</span>
@@ -1451,7 +1477,7 @@ function would be assigned to the state attribute.</p>
 <span class="go">Customer(balance=100)</span>
 </code></pre></div>
 </div>
-<input id="__tabbed_9_2" name="__tabbed_9" type="radio" /><label for="__tabbed_9_2">async</label><div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Coroutine</span>
@@ -1490,12 +1516,15 @@ function would be assigned to the state attribute.</p>
 </code></pre></div>
 </div>
 </div>
+</div>
 <h3 id="state-union-joins-all-defined-variables">State union joins all defined variables<a class="headerlink" href="#state-union-joins-all-defined-variables" title="Permanent link">&para;</a></h3>
 <p>Story composition requires complicated state object which would define variables
 necessary for both stories. If you defined separate state classes for both
 stories, you could join variables with <code>State</code> union operation.</p>
 <p>State union would include all variables defined in separate State classes.</p>
-<div class="tabbed-set" data-tabs="10:2"><input checked="checked" id="__tabbed_10_1" name="__tabbed_10" type="radio" /><label for="__tabbed_10_1">sync</label><div class="tabbed-content">
+<div class="tabbed-set tabbed-alternate" data-tabs="10:2"><input checked="checked" id="__tabbed_10_1" name="__tabbed_10" type="radio" /><input id="__tabbed_10_2" name="__tabbed_10" type="radio" /><div class="tabbed-labels"><label for="__tabbed_10_1">sync</label><label for="__tabbed_10_2">async</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">stories</span> <span class="kn">import</span> <span class="n">Story</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">State</span><span class="p">,</span> <span class="n">Variable</span><span class="p">,</span> <span class="n">Union</span>
@@ -1566,7 +1595,7 @@ stories, you could join variables with <code>State</code> union operation.</p>
 <span class="go">Payment(due_date=datetime.datetime(1999, 12, 31, 0, 0))</span>
 </code></pre></div>
 </div>
-<input id="__tabbed_10_2" name="__tabbed_10" type="radio" /><label for="__tabbed_10_2">async</label><div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Coroutine</span>
@@ -1637,6 +1666,7 @@ stories, you could join variables with <code>State</code> union operation.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">state</span><span class="o">.</span><span class="n">payment</span>
 <span class="go">Payment(due_date=datetime.datetime(1999, 12, 31, 0, 0))</span>
 </code></pre></div>
+</div>
 </div>
 </div>
 <h3 id="state-union-joins-all-variable-validators">State union joins all variable validators<a class="headerlink" href="#state-union-joins-all-variable-validators" title="Permanent link">&para;</a></h3>
@@ -1648,7 +1678,9 @@ be satisfied.</p>
 <p>State union would call all validators of the variable at the moment of it
 assignment. If at least one validator fails, execution of the story stops on
 that error.</p>
-<div class="tabbed-set" data-tabs="11:2"><input checked="checked" id="__tabbed_11_1" name="__tabbed_11" type="radio" /><label for="__tabbed_11_1">sync</label><div class="tabbed-content">
+<div class="tabbed-set tabbed-alternate" data-tabs="11:2"><input checked="checked" id="__tabbed_11_1" name="__tabbed_11" type="radio" /><input id="__tabbed_11_2" name="__tabbed_11" type="radio" /><div class="tabbed-labels"><label for="__tabbed_11_1">sync</label><label for="__tabbed_11_2">async</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
@@ -1717,7 +1749,7 @@ that error.</p>
 <span class="go">Cost(at=datetime.datetime(1999, 12, 31, 0, 0), amount=7)</span>
 </code></pre></div>
 </div>
-<input id="__tabbed_11_2" name="__tabbed_11" type="radio" /><label for="__tabbed_11_2">async</label><div class="tabbed-content">
+<div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
@@ -1786,6 +1818,7 @@ that error.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">state</span><span class="o">.</span><span class="n">order</span><span class="o">.</span><span class="n">cost</span>
 <span class="go">Cost(at=datetime.datetime(1999, 12, 31, 0, 0), amount=7)</span>
 </code></pre></div>
+</div>
 </div>
 </div>
 <p align="center">&mdash; ⭐ &mdash;</p>
