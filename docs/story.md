@@ -23,10 +23,10 @@ It's up to you whether or not to use libraries like `attrs`, `dataclasses`,
 
     ```pycon
 
-    >>> from attr import attrs, attrib
+    >>> from attrs import define, field
     >>> from stories import Story, I
 
-    >>> @attrs
+    >>> @define(slots=False)
     ... class Purchase(Story):
     ...     I.find_order
     ...     I.find_customer
@@ -41,9 +41,9 @@ It's up to you whether or not to use libraries like `attrs`, `dataclasses`,
     ...     def persist_payment(self, state):
     ...         self.create_payment(state.order_id, state.customer_id)
     ...
-    ...     load_order = attrib()
-    ...     load_customer = attrib()
-    ...     create_payment = attrib()
+    ...     load_order = field()
+    ...     load_customer = field()
+    ...     create_payment = field()
 
     ```
 
