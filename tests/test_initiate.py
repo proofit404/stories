@@ -1,9 +1,10 @@
 """Tests related to @initiate decorator."""
+from types import SimpleNamespace
+
 import pytest
 
 from stories import I
 from stories import initiate
-from stories import State
 from stories import Story
 from stories.exceptions import StoryError
 
@@ -61,21 +62,21 @@ def test_initiate(r, m):
     # First level.
 
     story = A1()
-    state = State(calls=[])
+    state = SimpleNamespace(calls=[])
     r.run(story, state)
     assert state.calls == ["a1s1", "a1s2", "a1s3"]
 
     # Second level.
 
     story = B1(a1=A1(), a2=A2())
-    state = State(calls=[])
+    state = SimpleNamespace(calls=[])
     r.run(story, state)
     assert state.calls == ["a1s1", "a1s2", "a1s3", "a2s1", "a2s2", "a2s3"]
 
     # Third level.
 
     story = C1(b1=B1(a1=A1(), a2=A2()), b2=B2(a3=A3(), a4=A4()))
-    state = State(calls=[])
+    state = SimpleNamespace(calls=[])
     r.run(story, state)
     assert state.calls == [
         "a1s1",

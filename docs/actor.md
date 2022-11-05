@@ -21,8 +21,9 @@ for the reader. And please **do not call it User**. It is always a user.
     ```pycon
 
     >>> from dataclasses import dataclass
+    >>> from types import SimpleNamespace
     >>> from typing import Callable
-    >>> from stories import Story, I, State, Actor
+    >>> from stories import Story, I, Actor
     >>> from app.repositories import load_order, load_customer, create_payment
 
     >>> class Customer(Actor):
@@ -60,7 +61,7 @@ for the reader. And please **do not call it User**. It is always a user.
     ...     create_payment=create_payment,
     ... )
 
-    >>> state = State(order_id=1, customer_id=1)
+    >>> state = SimpleNamespace(order_id=1, customer_id=1)
 
     >>> purchase(state)
 
@@ -72,8 +73,9 @@ for the reader. And please **do not call it User**. It is always a user.
 
     >>> import asyncio
     >>> from dataclasses import dataclass
+    >>> from types import SimpleNamespace
     >>> from typing import Coroutine
-    >>> from stories import Story, I, State, Actor
+    >>> from stories import Story, I, Actor
     >>> from aioapp.repositories import load_order, load_customer, create_payment
 
     >>> class Customer(Actor):
@@ -111,7 +113,7 @@ for the reader. And please **do not call it User**. It is always a user.
     ...     create_payment=create_payment,
     ... )
 
-    >>> state = State(order_id=1, customer_id=1)
+    >>> state = SimpleNamespace(order_id=1, customer_id=1)
 
     >>> asyncio.run(purchase(state))
 

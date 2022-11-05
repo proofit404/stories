@@ -14,8 +14,9 @@ decorate injected function in the construction process.
 ```pycon
 
 >>> from dataclasses import dataclass
+>>> from types import SimpleNamespace
 >>> from typing import Callable
->>> from stories import Story, I, State
+>>> from stories import Story, I
 
 >>> @dataclass
 ... class Purchase(Story):
@@ -53,7 +54,7 @@ with transaction an injected functions.
 ...     send_notification=send_notification,
 ... )
 
->>> purchase(State(user_id=1))
+>>> purchase(SimpleNamespace(user_id=1))
 BEGIN TRANSACTION;
 UPDATE 'items';
 COMMIT TRANSACTION;
@@ -125,7 +126,7 @@ infrastructure level that compose decorated story.
 ... )
 
 >>> try:
-...     transactional(State(user_id=1))
+...     transactional(SimpleNamespace(user_id=1))
 ... finally:
 ...     persistence.finalize()
 BEGIN TRANSACTION;
@@ -158,7 +159,7 @@ its execution.
 ... )
 
 >>> try:
-...     transactional(State(user_id=2))
+...     transactional(SimpleNamespace(user_id=2))
 ... except Exception:
 ...     log("ERROR")
 ... finally:

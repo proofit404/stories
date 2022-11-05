@@ -21,8 +21,9 @@ A line of text explaining snippet below…
 ```pycon
 
 >>> from dataclasses import dataclass
+>>> from types import SimpleNamespace
 >>> from typing import Callable
->>> from stories import Story, I, State
+>>> from stories import Story, I
 >>> from app.repositories import load_order, load_customer, create_payment
 
 >>> @dataclass
@@ -57,11 +58,12 @@ A line of text explaining snippet below…
 ...     create_payment=create_payment,
 ... )
 
->>> state = State(order_id=1, customer_id=1)
+>>> state = SimpleNamespace(order_id=1, customer_id=1)
 
 >>> purchase(state)
 
->>> state  # doctest: +SKIP
+>>> state
+namespace(order_id=1, customer_id=1, order=Order(product=Product(name='Books'), cost=Cost(at=datetime.datetime(1999, 12, 31, 0, 0), amount=7)), customer=Customer(balance=8), payment=Payment(due_date=datetime.datetime(1999, 12, 31, 0, 0)))
 
 >>> state.payment.was_received()
 False

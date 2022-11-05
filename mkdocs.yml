@@ -40,7 +40,6 @@ nav:
       - Changelog: changelog.md
   - Usage:
       - Story: story.md
-      - State: state.md
       - Actor: actor.md
       - Initiate: initiate.md
   - Guides:
