@@ -4,23 +4,24 @@ from dataclasses import dataclass
 from dataclasses import field
 
 from stories import story
+from stories.typing import Persona
 
 
 def test_execute_steps() -> None:
     @story
-    def a1(it: A1Steps, state: State) -> None:
+    def a1(it: Persona, state: State) -> None:
         it.a1s1(state)
         it.a1s2(state)
         it.a1s3(state)
 
     @story
-    def b1(it: B1Steps, state: State) -> None:
+    def b1(it: Persona, state: State) -> None:
         it.b1s1(state)
         it.a1(state)
         it.b1s2(state)
 
     @story
-    def c1(it: C1Steps, state: State) -> None:
+    def c1(it: Persona, state: State) -> None:
         it.c1s1(state)
         it.b1(state)
         it.c1s2(state)
