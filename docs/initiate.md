@@ -116,5 +116,3 @@ Traceback (most recent call last):
 _stories.exceptions.StoryError: Story decorated by @initiate can not have constructor defined
 
 ```
-
-<p align="center">&mdash; ⭐ &mdash;</p>

@@ -170,5 +170,3 @@ ERROR
 ROLLBACK TRANSACTION;
 
 ```
-
-<p align="center">&mdash; ⭐ &mdash;</p>

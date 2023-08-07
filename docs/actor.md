@@ -116,5 +116,3 @@ for the reader. And please **do not call it User**. It is always a user.
     >>> asyncio.run(purchase(state))
 
     ```
-
-<p align="center">&mdash; ⭐ &mdash;</p>
