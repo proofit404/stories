@@ -1,5 +1,3 @@
-# Installation
-
 The `stories` library is available on PyPI.
 
 To install it run:

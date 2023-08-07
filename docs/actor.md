@@ -1,10 +1,4 @@
-# Actor
-
-## Principles
-
-- [Story could define an actor](#story-could-define-an-actor)
-
-### Story could define an actor
+## Story could define an actor
 
 Complicated business process is always a composition of smaller business
 processes. Sometimes these smaller processes would be executed by different

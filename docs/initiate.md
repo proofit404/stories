@@ -1,18 +1,9 @@
-# @initiate
-
 Sometimes high-level wrapping stories consist from inner stories completely. In
 that case it's tedious to copy-paste steps definition into constructor
 arguments. To reduce level of boilerplace code in such cases, stories library
 provides `@initiate` decorator.
 
-## Principles
-
-- [All story steps would be used in class constructor arguments](#all-story-steps-would-be-used-in-class-constructor-arguments)
-- [Only `Story` subclasses could be initiated](#only-story-subclasses-could-be-initiated)
-- [Initiated `Story` class should not have step methods](#initiated-story-class-should-not-have-step-methods)
-- [Initiated `Story` class should not have constructor](#initiated-story-class-should-not-have-constructor)
-
-### All story steps would be used in class constructor arguments
+## All story steps would be used in class constructor arguments
 
 When you decorate story class with `@initiate` decorator, in addition to the
 `__call__` method it would add `__init__` method as well. Story steps would be
@@ -50,7 +41,7 @@ used as names for constructor arguments.
 
     ```
 
-### Only `Story` subclasses could be initiated
+## Only `Story` subclasses could be initiated
 
 Classes decorated by `@initiate` function should be subclasess of the `Story`.
 Otherwise, there is no steps to operate on.
@@ -73,7 +64,7 @@ _stories.exceptions.StoryError: @initiate can decorate Story subclasses only
 
 ```
 
-### Initiated `Story` class should not have step methods
+## Initiated `Story` class should not have step methods
 
 `@initiate` decorator does not allow to mix step methods with nested stories on
 initiated classes. Usually, story steps defined by methods expects some
@@ -97,7 +88,7 @@ _stories.exceptions.StoryError: Story decorated by @initiate can not have step m
 
 ```
 
-### Initiated `Story` class should not have constructor
+## Initiated `Story` class should not have constructor
 
 ```pycon
 

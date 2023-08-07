@@ -1,14 +1,4 @@
-# Story
-
-## Principles
-
-- [Story is a callable object](#story-is-a-callable-object)
-- [Steps executed in specified order](#steps-executed-in-specified-order)
-- [Steps could assign state variables](#steps-could-assign-state-variables)
-- [Story state would be available after its execution](#story-state-would-be-available-after-its-execution)
-- [Exceptions would be propagated](#exceptions-would-be-propagated)
-
-### Story is a callable object
+## Story is a callable object
 
 Story is an object which you should call if you want to execute story steps.
 When you inherit from `Story` class, you basically define `__call__` and
@@ -134,7 +124,7 @@ It's up to you whether or not to use libraries like `attrs`, `dataclasses`,
 
     ```
 
-### Steps executed in specified order
+## Steps executed in specified order
 
 To call the story, you need to instantiate the class first. After that you could
 pass state object to the story call and story would be executed.
@@ -261,7 +251,7 @@ The same as you do with regular coroutine methods defined on your classes.
 
     ```
 
-### Steps could assign state variables
+## Steps could assign state variables
 
 Every step could assign variable in state object. Story steps executed
 afterwards would be able to access variables assigned earlier. If you use plain
@@ -368,7 +358,7 @@ access `order` and `customer` variables set by previous steps.
 
     ```
 
-### Story state would be available after its execution
+## Story state would be available after its execution
 
 After story execution all state variables would be available in the same state
 object you have passed to it.
@@ -486,7 +476,7 @@ You would be able to access same objects that were assigned by story steps.
 
     ```
 
-### Exceptions would be propagated
+## Exceptions would be propagated
 
 If exception was raised inside the step method, execution of the story would
 stop at that moment and exception would be raised to the caller code without any

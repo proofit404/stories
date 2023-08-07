@@ -1,5 +1,3 @@
-# Transaction management
-
 It's possible to handle database transactions in different ways inside stories.
 
 ## Single steps
