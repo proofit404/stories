@@ -8,38 +8,38 @@ from stories import Story
 from stories.exceptions import StoryError
 
 
-def test_initiate(r, m):
+def test_initiate(s):
     class A1(Story):
         I.a1s1
         I.a1s2
         I.a1s3
 
-        a1s1 = m._append_method("calls", "a1s1")
-        a1s2 = m._append_method("calls", "a1s2")
-        a1s3 = m._append_method("calls", "a1s3")
+        a1s1 = s.append_method("calls", "a1s1")
+        a1s2 = s.append_method("calls", "a1s2")
+        a1s3 = s.append_method("calls", "a1s3")
 
     class A2(Story):
         I.a2s1
         I.a2s2
         I.a2s3
 
-        a2s1 = m._append_method("calls", "a2s1")
-        a2s2 = m._append_method("calls", "a2s2")
-        a2s3 = m._append_method("calls", "a2s3")
+        a2s1 = s.append_method("calls", "a2s1")
+        a2s2 = s.append_method("calls", "a2s2")
+        a2s3 = s.append_method("calls", "a2s3")
 
     class A3(Story):
         I.a3s1
         I.a3s2
         I.a3s3
 
-        a3s1 = m._append_method("calls", "a3s1")
-        a3s2 = m._append_method("calls", "a3s2")
-        a3s3 = m._append_method("calls", "a3s3")
+        a3s1 = s.append_method("calls", "a3s1")
+        a3s2 = s.append_method("calls", "a3s2")
+        a3s3 = s.append_method("calls", "a3s3")
 
     class A4(Story):
         I.a4s1
 
-        a4s1 = m._append_method("calls", "a4s1")
+        a4s1 = s.append_method("calls", "a4s1")
 
     @initiate
     class B1(Story):
@@ -60,21 +60,21 @@ def test_initiate(r, m):
 
     story = A1()
     state = SimpleNamespace(calls=[])
-    r.run(story, state)
+    s.run(story, state)
     assert state.calls == ["a1s1", "a1s2", "a1s3"]
 
     # Second level.
 
     story = B1(a1=A1(), a2=A2())
     state = SimpleNamespace(calls=[])
-    r.run(story, state)
+    s.run(story, state)
     assert state.calls == ["a1s1", "a1s2", "a1s3", "a2s1", "a2s2", "a2s3"]
 
     # Third level.
 
     story = C1(b1=B1(a1=A1(), a2=A2()), b2=B2(a3=A3(), a4=A4()))
     state = SimpleNamespace(calls=[])
-    r.run(story, state)
+    s.run(story, state)
     assert state.calls == [
         "a1s1",
         "a1s2",
@@ -93,7 +93,7 @@ def test_deny_functions():
     with pytest.raises(StoryError) as exc_info:
 
         @initiate
-        def a1():
+        def a1():  # pragma: no branch
             raise RuntimeError
 
     assert str(exc_info.value) == "@initiate can decorate Story subclasses only"
@@ -109,7 +109,7 @@ def test_deny_non_story_classes():
     assert str(exc_info.value) == "@initiate can decorate Story subclasses only"
 
 
-def test_deny_step_definitions(m):
+def test_deny_step_definitions(s):
     with pytest.raises(StoryError) as exc_info:
 
         @initiate
@@ -118,7 +118,7 @@ def test_deny_step_definitions(m):
             I.a1s2
             I.a1s3
 
-            a1s1 = m._normal_method
+            a1s1 = s.normal_method
 
     expected = "Story decorated by @initiate can not have step methods"
 
