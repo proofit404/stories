@@ -1,1 +1,1 @@
-I = None  # pragma: no mutate
+I = None  # noqa: E741

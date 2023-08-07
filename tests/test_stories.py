@@ -1,14 +1,12 @@
-"""Tests related to stories module."""
+from types import SimpleNamespace
+
 import pytest
 
 from stories import I
-from stories import State
 from stories import Story
 
 
 def test_return_value(r, m):
-    """Story should not return any value."""
-
     class A1(Story):
         I.a1s1
         I.a1s2
@@ -43,25 +41,23 @@ def test_return_value(r, m):
     # First level.
 
     story = A1()
-    state = State()
+    state = SimpleNamespace()
     assert r.run(story, state) is None
 
     # Second level.
 
     story = B1()
-    state = State()
+    state = SimpleNamespace()
     assert r.run(story, state) is None
 
     # Third level.
 
     story = C1()
-    state = State()
+    state = SimpleNamespace()
     assert r.run(story, state) is None
 
 
 def test_execute_steps(r, m):
-    """Story steps should be executed according to the given order."""
-
     class A1(Story):
         I.a1s1
         I.a1s2
@@ -96,28 +92,26 @@ def test_execute_steps(r, m):
     # First level.
 
     story = A1()
-    state = State(calls=[])
+    state = SimpleNamespace(calls=[])
     r.run(story, state)
     assert state.calls == ["a1s1", "a1s2", "a1s3"]
 
     # Second level.
 
     story = B1()
-    state = State(calls=[])
+    state = SimpleNamespace(calls=[])
     r.run(story, state)
     assert state.calls == ["b1s1", "a1s1", "a1s2", "a1s3", "b1s2"]
 
     # Third level.
 
     story = C1()
-    state = State(calls=[])
+    state = SimpleNamespace(calls=[])
     r.run(story, state)
     assert state.calls == ["c1s1", "b1s1", "a1s1", "a1s2", "a1s3", "b1s2", "c1s2"]
 
 
 def test_assign_state_attribute(r, m):
-    """Variables assigned by previous steps are available in current step."""
-
     class A1(Story):
         I.a1s1
         I.a1s2
@@ -150,25 +144,23 @@ def test_assign_state_attribute(r, m):
     # First level.
 
     story = A1()
-    state = State()
+    state = SimpleNamespace()
     r.run(story, state)
 
     # Second level.
 
     story = B1()
-    state = State()
+    state = SimpleNamespace()
     r.run(story, state)
 
     # Third level.
 
     story = C1()
-    state = State()
+    state = SimpleNamespace()
     r.run(story, state)
 
 
 def test_access_state_attributes(r, m):
-    """State changed made by story should be available to caller code."""
-
     class A1(Story):
         I.a1s1
         I.a1s2
@@ -203,14 +195,14 @@ def test_access_state_attributes(r, m):
     # First level.
 
     story = A1()
-    state = State()
+    state = SimpleNamespace()
     r.run(story, state)
     assert state.a1v1 == 1
 
     # Second level.
 
     story = B1()
-    state = State()
+    state = SimpleNamespace()
     r.run(story, state)
     assert state.a1v1 == 1
     assert state.b1v1 == 2
@@ -218,7 +210,7 @@ def test_access_state_attributes(r, m):
     # Third level.
 
     story = C1()
-    state = State()
+    state = SimpleNamespace()
     r.run(story, state)
     assert state.a1v1 == 1
     assert state.b1v1 == 2
@@ -226,8 +218,6 @@ def test_access_state_attributes(r, m):
 
 
 def test_propagate_exceptions(r, m):
-    """Exceptions raised by story steps should be propagated to the caller."""
-
     class A1(Story):
         I.a1s1
         I.a1s2
@@ -262,7 +252,7 @@ def test_propagate_exceptions(r, m):
     # First level.
 
     story = A1()
-    state = State()
+    state = SimpleNamespace()
     with pytest.raises(m._StepError) as exc_info:
         r.run(story, state)
     assert isinstance(exc_info.value, m._StepError)
@@ -271,7 +261,7 @@ def test_propagate_exceptions(r, m):
     # Second level.
 
     story = B1()
-    state = State()
+    state = SimpleNamespace()
     with pytest.raises(m._StepError) as exc_info:
         r.run(story, state)
     assert isinstance(exc_info.value, m._StepError)
@@ -280,7 +270,7 @@ def test_propagate_exceptions(r, m):
     # Third level.
 
     story = C1()
-    state = State()
+    state = SimpleNamespace()
     with pytest.raises(m._StepError) as exc_info:
         r.run(story, state)
     assert isinstance(exc_info.value, m._StepError)

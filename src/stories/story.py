@@ -1,5 +1,5 @@
-from _stories.execute import _Executor
-from _stories.step import _Step
+from stories.execute import _Executor
+from stories.step import _Step
 
 
 class _StoryType(type):

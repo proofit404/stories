@@ -1,8 +1,8 @@
 from dataclasses import make_dataclass
 from inspect import isclass
 
-from _stories.exceptions import StoryError
-from _stories.story import Story
+from stories.exceptions import StoryError
+from stories.story import Story
 
 
 def initiate(cls):

@@ -1,4 +1,3 @@
-"""Tests related to @initiate decorator."""
 import pytest
 
 from stories import I
@@ -9,8 +8,6 @@ from stories.exceptions import StoryError
 
 
 def test_initiate(r, m):
-    """All story steps could be nested stories."""
-
     class A1(Story):
         I.a1s1
         I.a1s2
@@ -92,7 +89,6 @@ def test_initiate(r, m):
 
 
 def test_deny_functions():
-    """Deny to decorate functions by @initiate decorator."""
     with pytest.raises(StoryError) as exc_info:
 
         @initiate
@@ -103,7 +99,6 @@ def test_deny_functions():
 
 
 def test_deny_non_story_classes():
-    """Deny to decorate regular classes by @initiate decorator."""
     with pytest.raises(StoryError) as exc_info:
 
         @initiate
@@ -114,7 +109,6 @@ def test_deny_non_story_classes():
 
 
 def test_deny_step_definitions(m):
-    """Deny to define steps on story decorated by @initiate decorator."""
     with pytest.raises(StoryError) as exc_info:
 
         @initiate
@@ -131,7 +125,6 @@ def test_deny_step_definitions(m):
 
 
 def test_deny_constructor_definition():
-    """Deny to define constructor method on story decorated by @initiate decorator."""
     with pytest.raises(StoryError) as exc_info:
 
         @initiate

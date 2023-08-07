@@ -1,13 +1,11 @@
-"""Tests related to actors module."""
+from types import SimpleNamespace
+
 from stories import Actor
 from stories import I
-from stories import State
 from stories import Story
 
 
 def test_define_actor(r, m):
-    """Story could be written for certain actor."""
-
     class User(Actor):
         ...
 
@@ -45,20 +43,20 @@ def test_define_actor(r, m):
     # First level.
 
     story = A1()
-    state = State()
+    state = SimpleNamespace()
     r.run(story, state)
     assert isinstance(story, User)
 
     # Second level.
 
     story = B1()
-    state = State()
+    state = SimpleNamespace()
     r.run(story, state)
     assert isinstance(story, User)
 
     # Third level.
 
     story = C1()
-    state = State()
+    state = SimpleNamespace()
     r.run(story, state)
     assert isinstance(story, User)
