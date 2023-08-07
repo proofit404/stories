@@ -6,15 +6,12 @@ Service objects designed with OOP in mind.
 [Source Code](https://github.com/proofit404/stories) |
 [Task Tracker](https://github.com/proofit404/stories/issues)**
 
-## Example
-
-A line of text explaining snippet below…
-
 ```pycon
 
 >>> from dataclasses import dataclass
+>>> from types import SimpleNamespace
 >>> from typing import Callable
->>> from stories import Story, I, State
+>>> from stories import Story, I
 >>> from app.repositories import load_order, load_customer, create_payment
 
 >>> @dataclass
@@ -49,11 +46,11 @@ A line of text explaining snippet below…
 ...     create_payment=create_payment,
 ... )
 
->>> state = State(order_id=1, customer_id=1)
+>>> state = SimpleNamespace(order_id=1, customer_id=1)
 
 >>> purchase(state)
 
->>> state  # doctest: +SKIP
+>>> state
 
 >>> state.payment.was_received()
 False
