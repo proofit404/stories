@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
+from typing import NewType
 
 
 @dataclass
@@ -17,6 +18,9 @@ class Cost:
     amount: int
 
 
+OrderId = NewType("OrderId", int)
+
+
 @dataclass
 class Order:
     """Entity."""
@@ -27,6 +31,9 @@ class Order:
     def affordable_for(self, customer):
         """Check if customer could afford an order."""
         return customer.balance > self.cost.amount
+
+
+CustomerId = NewType("CustomerId", int)
 
 
 @dataclass

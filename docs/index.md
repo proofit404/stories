@@ -6,55 +6,12 @@ Service objects designed with OOP in mind.
 [Source Code](https://github.com/proofit404/stories) |
 [Task Tracker](https://github.com/proofit404/stories/issues)**
 
-```pycon
+```python
+--8<-- "examples/purchase.py"
+```
 
->>> from dataclasses import dataclass
->>> from types import SimpleNamespace
->>> from typing import Callable
->>> from stories import Story, I
->>> from app.repositories import load_order, load_customer, create_payment
-
->>> @dataclass
-... class Purchase(Story):
-...     I.find_order
-...     I.find_customer
-...     I.check_balance
-...     I.persist_payment
-...
-...     def find_order(self, state):
-...         state.order = self.load_order(state.order_id)
-...
-...     def find_customer(self, state):
-...         state.customer = self.load_customer(state.customer_id)
-...
-...     def check_balance(self, state):
-...         if not state.order.affordable_for(state.customer):
-...             raise Exception
-...
-...     def persist_payment(self, state):
-...         state.payment = self.create_payment(
-...             order_id=state.order_id, customer_id=state.customer_id
-...         )
-...
-...     load_order: Callable
-...     load_customer: Callable
-...     create_payment: Callable
-
->>> purchase = Purchase(
-...     load_order=load_order,
-...     load_customer=load_customer,
-...     create_payment=create_payment,
-... )
-
->>> state = SimpleNamespace(order_id=1, customer_id=1)
-
->>> purchase(state)
-
->>> state
-
->>> state.payment.was_received()
-False
-
+```text
+--8<-- "examples/purchase.log"
 ```
 
 ## Questions
