@@ -15,7 +15,7 @@ export default async (): undefined => {
   }
 
   const commitTest = danger.git.commits.map((commit) =>
-    commit.message.match(/^(\w+):/)
+    commit.message.match(/^(\w+):/),
   );
 
   if (!commitTest.every((match) => match)) {
@@ -37,13 +37,14 @@ export default async (): undefined => {
       .concat(danger.git.modified_files)
       .concat(danger.git.deleted_files),
     hasDocsChanges = commitFiles.some(
-      (fileName) => fileName.startsWith("docs/") || fileName === "mkdocs.yml"
+      (fileName) => fileName.startsWith("docs/") || fileName === "mkdocs.yml",
     ),
     hasTestChanges = commitFiles.some(
-      (fileName) => fileName.startsWith("tests/") || fileName === "pytest.ini"
+      (fileName) => fileName.startsWith("tests/") || fileName === "pytest.ini",
     ),
     hasSourceChanges = commitFiles.some(
-      (fileName) => fileName.startsWith("src/") || fileName === "pyproject.toml"
+      (fileName) =>
+        fileName.startsWith("src/") || fileName === "pyproject.toml",
     );
 
   if (hasDocsCommit & !hasDocsChanges) {
@@ -67,7 +68,7 @@ export default async (): undefined => {
   }
 
   const isSnapshotBranch = Boolean(
-    danger.github.pr.head.ref.match(/^snapshot$/)
+    danger.github.pr.head.ref.match(/^snapshot$/),
   );
 
   if (!isSnapshotBranch) {
@@ -131,7 +132,7 @@ export default async (): undefined => {
     }
 
     const issueLabels = new Set(
-        issueJSON.data.labels.map((label) => label.name)
+        issueJSON.data.labels.map((label) => label.name),
       ),
       hasIncompatibleLabel = issueLabels.has("backward incompatible"),
       hasFeatureLabel = issueLabels.has("feature"),
@@ -147,7 +148,7 @@ export default async (): undefined => {
 
     if (hasIncompatibleLabel ^ hasBreakingCommit) {
       fail(
-        "Only issue marked as backward incompatible is allowed to have breaking changes"
+        "Only issue marked as backward incompatible is allowed to have breaking changes",
       );
       return;
     }

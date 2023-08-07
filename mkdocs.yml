@@ -14,7 +14,9 @@ theme:
     repo: fontawesome/brands/github
   language: en
   features:
+    - navigation.footer
     - navigation.tabs
+    - navigation.tabs.sticky
 repo_name: proofit404/stories
 repo_url: https://github.com/proofit404/stories
 edit_uri: ""
@@ -26,7 +28,12 @@ markdown_extensions:
   - pymdownx.highlight
   - pymdownx.inlinehilite
   - pymdownx.keys
-  - pymdownx.superfences
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.tabbed:
       alternate_style: true
   - pymdownx.tasklist:

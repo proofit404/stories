@@ -1,18 +1,10 @@
-# Stories [![build](https://img.shields.io/github/workflow/status/proofit404/stories/release?style=flat-square)](https://github.com/proofit404/stories/actions/workflows/release.yml?query=branch%3Arelease) [![pypi](https://img.shields.io/pypi/v/stories?style=flat-square)](https://pypi.org/project/stories)
+# stories [![build](https://img.shields.io/github/actions/workflow/status/proofit404/stories/release.yml?branch=release&style=flat-square)](https://github.com/proofit404/stories/actions/workflows/release.yml?query=branch%3Arelease) [![pypi](https://img.shields.io/pypi/v/stories?style=flat-square)](https://pypi.org/project/stories)
 
 Service objects designed with OOP in mind.
 
 **[Documentation](https://proofit404.github.io/stories) |
 [Source Code](https://github.com/proofit404/stories) |
 [Task Tracker](https://github.com/proofit404/stories/issues)**
-
-A paragraph of text explaining the goal of the library…
-
-## Pros
-
-- A feature
-- B feature
-- etc
 
 ## Example
 
@@ -89,5 +81,3 @@ interested in it.
 ## License
 
 `stories` library is offered under the two clause BSD license.
-
-<p align="center">&mdash; ⭐ &mdash;</p>
