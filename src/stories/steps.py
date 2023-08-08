@@ -1,6 +1,6 @@
 class Steps:
-    def __init__(self):
-        self.__steps__ = []
+    def __init__(self) -> None:
+        self.__steps__: list[str] = []
 
-    def __getattr__(self, name):
+    def __getattr__(self, name: str) -> None:
         self.__steps__.append(name)

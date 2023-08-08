@@ -22,13 +22,20 @@ OrderId = NewType("OrderId", int)
 
 
 @dataclass
+class Customer:
+    """Entity."""
+
+    balance: int
+
+
+@dataclass
 class Order:
     """Entity."""
 
     product: Product
     cost: Cost
 
-    def affordable_for(self, customer):
+    def affordable_for(self, customer: Customer) -> bool:
         """Check if customer could afford an order."""
         return customer.balance > self.cost.amount
 
@@ -37,18 +44,11 @@ CustomerId = NewType("CustomerId", int)
 
 
 @dataclass
-class Customer:
-    """Entity."""
-
-    balance: int
-
-
-@dataclass
 class Payment:
     """Entity."""
 
     due_date: datetime
 
-    def was_received(self):
+    def was_received(self) -> bool:
         """Check if payment was received."""
-        return False
+        return bool(self.due_date)

@@ -1,1 +1,1 @@
-log = __builtins__["print"]
+log = __builtins__["print"]  # type: ignore[index]
