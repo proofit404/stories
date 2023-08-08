@@ -22,22 +22,30 @@ class Purchase(Story):
     I.check_balance
     I.persist_payment
 
-    def find_order(self, state: State) -> None:
+    class PurchaseState(State):
+        order_id: OrderId
+        customer_id: CustomerId
+
+        order: Order
+        customer: Customer
+        payment: Payment
+
+    def find_order(self, state: PurchaseState) -> None:
         state.order = self.load_order(state.order_id)
 
-    def find_customer(self, state: State) -> None:
+    def find_customer(self, state: PurchaseState) -> None:
         state.customer = self.load_customer(state.customer_id)
 
-    def check_balance(self, state: State) -> None:
+    def check_balance(self, state: PurchaseState) -> None:
         if not state.order.affordable_for(state.customer):
             raise Exception
 
-    def persist_payment(self, state: State) -> None:
-        state.payment = self.create_payment(state.order_id, state.customer_id)
+    def persist_payment(self, state: PurchaseState) -> None:
+        state.payment = self.create_payment(state.customer_id, state.order_id)
 
     load_order: Callable[[OrderId], Order]
     load_customer: Callable[[CustomerId], Customer]
-    create_payment: Callable[[OrderId, CustomerId], Payment]
+    create_payment: Callable[[CustomerId, OrderId], Payment]
 
 
 purchase = Purchase(
@@ -46,12 +54,9 @@ purchase = Purchase(
     create_payment=create_payment,
 )
 
-
-state = State(order_id=1, customer_id=1)
-
+state = purchase.PurchaseState(order_id=1, customer_id=1)
 
 purchase(state)
-
 
 assert_type(state.payment, Payment)
 print(state.payment.was_received())
