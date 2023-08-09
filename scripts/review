@@ -8,6 +8,6 @@ set -o pipefail
 
 export DANGER_GITHUB_API_TOKEN=$(echo $DANGER_GITHUB_API_TOKEN | base64 --decode)
 
-npx danger ci
+danger ci
 
 cruft check

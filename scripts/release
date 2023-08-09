@@ -6,6 +6,6 @@ set -o pipefail
 
 . venv/bin/activate
 
-npx semantic-release
+semantic-release
 
 mkdocs gh-deploy --force

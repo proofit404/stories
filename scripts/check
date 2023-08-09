@@ -6,50 +6,8 @@ set -o pipefail
 
 . venv/bin/activate
 
-git ls-files -z | xargs -0 check-added-large-files
-git ls-files -z | xargs -0 grep -Z -I -l '' | xargs -0 fix-byte-order-marker
-git ls-files -z | xargs -0 grep -Z -I -l '' | xargs -0 check-merge-conflict
-git ls-files -z | xargs -0 check-symlinks
-git ls-files -z | xargs -0 grep -Z -I -l '' | xargs -0 end-of-file-fixer
-git ls-files -z | xargs -0 grep -Z -I -l '' | xargs -0 mixed-line-ending --fix=lf
-git ls-files -z | xargs -0 grep -Z -I -l '' | xargs -0 trailing-whitespace-fixer
-file-contents-sorter .gitignore requirements.txt
-git ls-files -z '*.py' | xargs -0 debug-statement-hook
-git ls-files -z '*.py' | xargs -0 check-builtin-literals --no-allow-dict-kwargs
-git ls-files -z '*.json' | xargs -0 check-json
-git ls-files -z '*.toml' | xargs -0 check-toml
-git ls-files -z '*.yaml' '*.yml' | xargs -0 check-yaml --unsafe
-
-git ls-files -z '*.py' | xargs -0 pyupgrade --py311-plus
-
-git ls-files -z '*.py' | xargs -0 reorder-python-imports --py311-plus --application-directories=src
-
-git ls-files -z '*.py' | xargs -0 docformatter --wrap-summaries 88 --wrap-descriptions 88 --blank --check
-
-git ls-files -z '*.py' | xargs -0 eradicate --aggressive --in-place --error
-
-git ls-files -z '*.py' | xargs -0 black --target-version=py311 --quiet --diff --check
-
-git ls-files -z '*.js' '*.ts' '*.md' | xargs -0 npx prettier --prose-wrap=always --check
-
-git ls-files -z '*.py' | xargs -0 flake8
-
-git ls-files -z '*.py' | xargs -0 yesqa
-
-git ls-files -z '*.py' | xargs -0 mypy
-
-git ls-files -z '*.py' | xargs -0 xenon --max-absolute A --max-modules A --max-average A
+pre-commit run --all
 
 mkdocs build
 
-git ls-files -z '*.md' | xargs -0 npx remark --frail
-
-git ls-files -z '*.ts' '*.js' '*.json' | xargs -0 npx eslint --no-ignore
-
-git ls-files -z '*.yaml' '*.yml' | xargs -0 yamllint --strict
-
-git ls-files -z '*.toml' | xargs -0 toml-sort --all --no-header --check
-
-git ls-files -z | xargs -0 npx jscpd
-
-npx commitlint --from $(( git branch --show-current | grep -q develop || git branch --show-current | grep -q issue && git branch --list develop | grep -q develop ) && echo develop || echo release)
+commitlint --from $(( git branch --show-current | grep -q develop || git branch --show-current | grep -q issue && git branch --list develop | grep -q develop ) && echo develop || echo release)

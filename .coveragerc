@@ -9,3 +9,4 @@ disable_warnings =
 exclude_lines =
   pragma: no cover
   raise RuntimeError
+  return NotImplemented

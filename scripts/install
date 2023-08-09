@@ -12,4 +12,13 @@ pip install -r requirements.txt
 
 pip install -e .
 
+echo $PWD/testing > venv/lib/python3.11/site-packages/testing.pth
+
 npm install
+
+pushd venv/bin
+for i in ../../node_modules/.bin/*
+do
+    ln -s $i $(basename $i)
+done
+popd

@@ -22,6 +22,7 @@ mkdocs
 mkdocs-material
 mypy
 poetry
+pre-commit
 pre-commit-hooks
 pytest
 pyupgrade
