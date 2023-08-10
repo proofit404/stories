@@ -1,15 +1,13 @@
 from types import SimpleNamespace
 
-from stories import Actor
 from stories import I
-from stories import Story
 
 
 def test_define_actor(s):
-    class User(Actor):
+    class User(s.Actor):
         ...
 
-    class A1(Story, User):
+    class A1(s.Story, User):
         I.a1s1
         I.a1s2
         I.a1s3
@@ -18,7 +16,7 @@ def test_define_actor(s):
         a1s2 = s.normal_method
         a1s3 = s.normal_method
 
-    class B1(Story, User):
+    class B1(s.Story, User):
         I.b1s1
         I.a1
         I.b1s2
@@ -29,7 +27,7 @@ def test_define_actor(s):
         def __init__(self):
             self.a1 = A1()
 
-    class C1(Story, User):
+    class C1(s.Story, User):
         I.c1s1
         I.b1
         I.c1s2

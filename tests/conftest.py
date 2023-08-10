@@ -4,6 +4,8 @@ import pytest
 
 
 def functions():
+    from stories import Story, initiate, Actor
+
     def run(story, state):
         return story(state)
 
@@ -38,6 +40,9 @@ def functions():
         ...
 
     return SimpleNamespace(
+        Story=Story,
+        initiate=initiate,
+        Actor=Actor,
         run=run,
         normal_method=normal_method,
         assign_method=assign_method,
@@ -50,6 +55,7 @@ def functions():
 
 def coroutines():
     import asyncio
+    from aiostories import Story, initiate, Actor
 
     def run(story, state):
         return asyncio.run(story(state))
@@ -85,6 +91,9 @@ def coroutines():
         ...
 
     return SimpleNamespace(
+        Story=Story,
+        initiate=initiate,
+        Actor=Actor,
         run=run,
         normal_method=normal_method,
         assign_method=assign_method,

@@ -3,11 +3,10 @@ from types import SimpleNamespace
 import pytest
 
 from stories import I
-from stories import Story
 
 
 def test_return_value(s):
-    class A1(Story):
+    class A1(s.Story):
         I.a1s1
         I.a1s2
         I.a1s3
@@ -16,7 +15,7 @@ def test_return_value(s):
         a1s2 = s.normal_method
         a1s3 = s.normal_method
 
-    class B1(Story):
+    class B1(s.Story):
         I.b1s1
         I.a1
         I.b1s2
@@ -27,7 +26,7 @@ def test_return_value(s):
         def __init__(self):
             self.a1 = A1()
 
-    class C1(Story):
+    class C1(s.Story):
         I.c1s1
         I.b1
         I.c1s2
@@ -58,7 +57,7 @@ def test_return_value(s):
 
 
 def test_execute_steps(s):
-    class A1(Story):
+    class A1(s.Story):
         I.a1s1
         I.a1s2
         I.a1s3
@@ -67,7 +66,7 @@ def test_execute_steps(s):
         a1s2 = s.append_method("calls", "a1s2")
         a1s3 = s.append_method("calls", "a1s3")
 
-    class B1(Story):
+    class B1(s.Story):
         I.b1s1
         I.a1
         I.b1s2
@@ -78,7 +77,7 @@ def test_execute_steps(s):
         def __init__(self):
             self.a1 = A1()
 
-    class C1(Story):
+    class C1(s.Story):
         I.c1s1
         I.b1
         I.c1s2
@@ -112,14 +111,14 @@ def test_execute_steps(s):
 
 
 def test_assign_state_attribute(s):
-    class A1(Story):
+    class A1(s.Story):
         I.a1s1
         I.a1s2
 
         a1s1 = s.assign_method("a1v1", 1)
         a1s2 = s.assert_method("a1v1", 1)
 
-    class B1(Story):
+    class B1(s.Story):
         I.b1s1
         I.a1
         I.b1s2
@@ -130,7 +129,7 @@ def test_assign_state_attribute(s):
         def __init__(self):
             self.a1 = A1()
 
-    class C1(Story):
+    class C1(s.Story):
         I.c1s1
         I.b1
         I.c1s2
@@ -161,7 +160,7 @@ def test_assign_state_attribute(s):
 
 
 def test_access_state_attributes(s):
-    class A1(Story):
+    class A1(s.Story):
         I.a1s1
         I.a1s2
         I.a1s3
@@ -170,7 +169,7 @@ def test_access_state_attributes(s):
         a1s2 = s.assign_method("a1v1", 1)
         a1s3 = s.normal_method
 
-    class B1(Story):
+    class B1(s.Story):
         I.b1s1
         I.a1
         I.b1s2
@@ -181,7 +180,7 @@ def test_access_state_attributes(s):
         def __init__(self):
             self.a1 = A1()
 
-    class C1(Story):
+    class C1(s.Story):
         I.c1s1
         I.b1
         I.c1s2
@@ -218,7 +217,7 @@ def test_access_state_attributes(s):
 
 
 def test_propagate_exceptions(s):
-    class A1(Story):
+    class A1(s.Story):
         I.a1s1
         I.a1s2
         I.a1s3
@@ -227,7 +226,7 @@ def test_propagate_exceptions(s):
         a1s2 = s.normal_method
         a1s3 = s.error_method("error in a1s3")
 
-    class B1(Story):
+    class B1(s.Story):
         I.b1s1
         I.a1
         I.b1s2
@@ -238,7 +237,7 @@ def test_propagate_exceptions(s):
         def __init__(self):
             self.a1 = A1()
 
-    class C1(Story):
+    class C1(s.Story):
         I.c1s1
         I.b1
         I.c1s2

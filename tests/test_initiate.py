@@ -3,13 +3,11 @@ from types import SimpleNamespace
 import pytest
 
 from stories import I
-from stories import initiate
-from stories import Story
 from stories.exceptions import StoryError
 
 
 def test_initiate(s):
-    class A1(Story):
+    class A1(s.Story):
         I.a1s1
         I.a1s2
         I.a1s3
@@ -18,7 +16,7 @@ def test_initiate(s):
         a1s2 = s.append_method("calls", "a1s2")
         a1s3 = s.append_method("calls", "a1s3")
 
-    class A2(Story):
+    class A2(s.Story):
         I.a2s1
         I.a2s2
         I.a2s3
@@ -27,7 +25,7 @@ def test_initiate(s):
         a2s2 = s.append_method("calls", "a2s2")
         a2s3 = s.append_method("calls", "a2s3")
 
-    class A3(Story):
+    class A3(s.Story):
         I.a3s1
         I.a3s2
         I.a3s3
@@ -36,23 +34,23 @@ def test_initiate(s):
         a3s2 = s.append_method("calls", "a3s2")
         a3s3 = s.append_method("calls", "a3s3")
 
-    class A4(Story):
+    class A4(s.Story):
         I.a4s1
 
         a4s1 = s.append_method("calls", "a4s1")
 
-    @initiate
-    class B1(Story):
+    @s.initiate
+    class B1(s.Story):
         I.a1
         I.a2
 
-    @initiate
-    class B2(Story):
+    @s.initiate
+    class B2(s.Story):
         I.a3
         I.a4
 
-    @initiate
-    class C1(Story):
+    @s.initiate
+    class C1(s.Story):
         I.b1
         I.b2
 
@@ -89,20 +87,20 @@ def test_initiate(s):
     ]
 
 
-def test_deny_functions():
+def test_deny_functions(s):
     with pytest.raises(StoryError) as exc_info:
 
-        @initiate
+        @s.initiate
         def a1():  # pragma: no branch
             raise RuntimeError
 
     assert str(exc_info.value) == "@initiate can decorate Story subclasses only"
 
 
-def test_deny_non_story_classes():
+def test_deny_non_story_classes(s):
     with pytest.raises(StoryError) as exc_info:
 
-        @initiate
+        @s.initiate
         class A1:
             pass
 
@@ -112,8 +110,8 @@ def test_deny_non_story_classes():
 def test_deny_step_definitions(s):
     with pytest.raises(StoryError) as exc_info:
 
-        @initiate
-        class A1(Story):
+        @s.initiate
+        class A1(s.Story):
             I.a1s1
             I.a1s2
             I.a1s3
@@ -125,11 +123,11 @@ def test_deny_step_definitions(s):
     assert str(exc_info.value) == expected
 
 
-def test_deny_constructor_definition():
+def test_deny_constructor_definition(s):
     with pytest.raises(StoryError) as exc_info:
 
-        @initiate
-        class A1(Story):
+        @s.initiate
+        class A1(s.Story):
             I.a1s1
             I.a1s2
             I.a1s3

@@ -11,7 +11,6 @@ from app.entities import Payment
 from app.repositories import create_payment
 from app.repositories import load_customer
 from app.repositories import load_order
-
 from stories import I
 from stories import Story
 
