@@ -5,10 +5,10 @@ from stories import I
 
 
 def test_define_actor(s: Any) -> None:
-    class User(s.Actor):  # type: ignore[misc,no-any-unimported]
+    class User(s.Actor):
         ...
 
-    class A1(s.Story, User):  # type: ignore[misc,no-any-unimported]
+    class A1(s.Story, User):
         I.a1s1
         I.a1s2
         I.a1s3
@@ -17,7 +17,7 @@ def test_define_actor(s: Any) -> None:
         a1s2 = s.normal_method
         a1s3 = s.normal_method
 
-    class B1(s.Story, User):  # type: ignore[misc,no-any-unimported]
+    class B1(s.Story, User):
         I.b1s1
         I.a1
         I.b1s2
@@ -28,7 +28,7 @@ def test_define_actor(s: Any) -> None:
         def __init__(self) -> None:
             self.a1 = A1()
 
-    class C1(s.Story, User):  # type: ignore[misc,no-any-unimported]
+    class C1(s.Story, User):
         I.c1s1
         I.b1
         I.c1s2

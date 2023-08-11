@@ -7,7 +7,7 @@ from stories import I
 
 
 def test_return_value(s: Any) -> None:
-    class A1(s.Story):  # type: ignore[misc,no-any-unimported]
+    class A1(s.Story):
         I.a1s1
         I.a1s2
         I.a1s3
@@ -16,7 +16,7 @@ def test_return_value(s: Any) -> None:
         a1s2 = s.normal_method
         a1s3 = s.normal_method
 
-    class B1(s.Story):  # type: ignore[misc,no-any-unimported]
+    class B1(s.Story):
         I.b1s1
         I.a1
         I.b1s2
@@ -27,7 +27,7 @@ def test_return_value(s: Any) -> None:
         def __init__(self) -> None:
             self.a1 = A1()
 
-    class C1(s.Story):  # type: ignore[misc,no-any-unimported]
+    class C1(s.Story):
         I.c1s1
         I.b1
         I.c1s2
@@ -58,7 +58,7 @@ def test_return_value(s: Any) -> None:
 
 
 def test_execute_steps(s: Any) -> None:
-    class A1(s.Story):  # type: ignore[misc,no-any-unimported]
+    class A1(s.Story):
         I.a1s1
         I.a1s2
         I.a1s3
@@ -67,7 +67,7 @@ def test_execute_steps(s: Any) -> None:
         a1s2 = s.append_method("calls", "a1s2")
         a1s3 = s.append_method("calls", "a1s3")
 
-    class B1(s.Story):  # type: ignore[misc,no-any-unimported]
+    class B1(s.Story):
         I.b1s1
         I.a1
         I.b1s2
@@ -78,7 +78,7 @@ def test_execute_steps(s: Any) -> None:
         def __init__(self) -> None:
             self.a1 = A1()
 
-    class C1(s.Story):  # type: ignore[misc,no-any-unimported]
+    class C1(s.Story):
         I.c1s1
         I.b1
         I.c1s2
@@ -112,14 +112,14 @@ def test_execute_steps(s: Any) -> None:
 
 
 def test_assign_state_attribute(s: Any) -> None:
-    class A1(s.Story):  # type: ignore[misc,no-any-unimported]
+    class A1(s.Story):
         I.a1s1
         I.a1s2
 
         a1s1 = s.assign_method("a1v1", 1)
         a1s2 = s.assert_method("a1v1", 1)
 
-    class B1(s.Story):  # type: ignore[misc,no-any-unimported]
+    class B1(s.Story):
         I.b1s1
         I.a1
         I.b1s2
@@ -130,7 +130,7 @@ def test_assign_state_attribute(s: Any) -> None:
         def __init__(self) -> None:
             self.a1 = A1()
 
-    class C1(s.Story):  # type: ignore[misc,no-any-unimported]
+    class C1(s.Story):
         I.c1s1
         I.b1
         I.c1s2
@@ -161,7 +161,7 @@ def test_assign_state_attribute(s: Any) -> None:
 
 
 def test_access_state_attributes(s: Any) -> None:
-    class A1(s.Story):  # type: ignore[misc,no-any-unimported]
+    class A1(s.Story):
         I.a1s1
         I.a1s2
         I.a1s3
@@ -170,7 +170,7 @@ def test_access_state_attributes(s: Any) -> None:
         a1s2 = s.assign_method("a1v1", 1)
         a1s3 = s.normal_method
 
-    class B1(s.Story):  # type: ignore[misc,no-any-unimported]
+    class B1(s.Story):
         I.b1s1
         I.a1
         I.b1s2
@@ -181,7 +181,7 @@ def test_access_state_attributes(s: Any) -> None:
         def __init__(self) -> None:
             self.a1 = A1()
 
-    class C1(s.Story):  # type: ignore[misc,no-any-unimported]
+    class C1(s.Story):
         I.c1s1
         I.b1
         I.c1s2
@@ -218,7 +218,7 @@ def test_access_state_attributes(s: Any) -> None:
 
 
 def test_propagate_exceptions(s: Any) -> None:
-    class A1(s.Story):  # type: ignore[misc,no-any-unimported]
+    class A1(s.Story):
         I.a1s1
         I.a1s2
         I.a1s3
@@ -227,7 +227,7 @@ def test_propagate_exceptions(s: Any) -> None:
         a1s2 = s.normal_method
         a1s3 = s.error_method("error in a1s3")
 
-    class B1(s.Story):  # type: ignore[misc,no-any-unimported]
+    class B1(s.Story):
         I.b1s1
         I.a1
         I.b1s2
@@ -238,7 +238,7 @@ def test_propagate_exceptions(s: Any) -> None:
         def __init__(self) -> None:
             self.a1 = A1()
 
-    class C1(s.Story):  # type: ignore[misc,no-any-unimported]
+    class C1(s.Story):
         I.c1s1
         I.b1
         I.c1s2
