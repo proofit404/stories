@@ -8,7 +8,7 @@ from stories.exceptions import StoryError
 
 
 def test_initiate(s: Any) -> None:
-    class A1(s.Story):  # type: ignore[misc,no-any-unimported]
+    class A1(s.Story):
         I.a1s1
         I.a1s2
         I.a1s3
@@ -17,7 +17,7 @@ def test_initiate(s: Any) -> None:
         a1s2 = s.append_method("calls", "a1s2")
         a1s3 = s.append_method("calls", "a1s3")
 
-    class A2(s.Story):  # type: ignore[misc,no-any-unimported]
+    class A2(s.Story):
         I.a2s1
         I.a2s2
         I.a2s3
@@ -26,7 +26,7 @@ def test_initiate(s: Any) -> None:
         a2s2 = s.append_method("calls", "a2s2")
         a2s3 = s.append_method("calls", "a2s3")
 
-    class A3(s.Story):  # type: ignore[misc,no-any-unimported]
+    class A3(s.Story):
         I.a3s1
         I.a3s2
         I.a3s3
@@ -35,23 +35,23 @@ def test_initiate(s: Any) -> None:
         a3s2 = s.append_method("calls", "a3s2")
         a3s3 = s.append_method("calls", "a3s3")
 
-    class A4(s.Story):  # type: ignore[misc,no-any-unimported]
+    class A4(s.Story):
         I.a4s1
 
         a4s1 = s.append_method("calls", "a4s1")
 
     @s.initiate
-    class B1(s.Story):  # type: ignore[misc,no-any-unimported]
+    class B1(s.Story):
         I.a1
         I.a2
 
     @s.initiate
-    class B2(s.Story):  # type: ignore[misc,no-any-unimported]
+    class B2(s.Story):
         I.a3
         I.a4
 
     @s.initiate
-    class C1(s.Story):  # type: ignore[misc,no-any-unimported]
+    class C1(s.Story):
         I.b1
         I.b2
 
@@ -91,7 +91,7 @@ def test_initiate(s: Any) -> None:
 def test_deny_functions(s: Any) -> None:
     with pytest.raises(StoryError) as exc_info:
 
-        @s.initiate  # type: ignore[misc]
+        @s.initiate
         def a1() -> None:  # pragma: no branch
             raise RuntimeError
 
@@ -112,7 +112,7 @@ def test_deny_step_definitions(s: Any) -> None:
     with pytest.raises(StoryError) as exc_info:
 
         @s.initiate
-        class A1(s.Story):  # type: ignore[misc,no-any-unimported]
+        class A1(s.Story):
             I.a1s1
             I.a1s2
             I.a1s3
@@ -128,7 +128,7 @@ def test_deny_constructor_definition(s: Any) -> None:
     with pytest.raises(StoryError) as exc_info:
 
         @s.initiate
-        class A1(s.Story):  # type: ignore[misc,no-any-unimported]
+        class A1(s.Story):
             I.a1s1
             I.a1s2
             I.a1s3
