@@ -6,7 +6,7 @@ from stories import I
 from stories.exceptions import StoryError
 
 
-def test_initiate(s):
+def test_initiate(s) -> None:
     class A1(s.Story):
         I.a1s1
         I.a1s2
@@ -87,7 +87,7 @@ def test_initiate(s):
     ]
 
 
-def test_deny_functions(s):
+def test_deny_functions(s) -> None:
     with pytest.raises(StoryError) as exc_info:
 
         @s.initiate
@@ -97,7 +97,7 @@ def test_deny_functions(s):
     assert str(exc_info.value) == "@initiate can decorate Story subclasses only"
 
 
-def test_deny_non_story_classes(s):
+def test_deny_non_story_classes(s) -> None:
     with pytest.raises(StoryError) as exc_info:
 
         @s.initiate
@@ -107,7 +107,7 @@ def test_deny_non_story_classes(s):
     assert str(exc_info.value) == "@initiate can decorate Story subclasses only"
 
 
-def test_deny_step_definitions(s):
+def test_deny_step_definitions(s) -> None:
     with pytest.raises(StoryError) as exc_info:
 
         @s.initiate
@@ -123,7 +123,7 @@ def test_deny_step_definitions(s):
     assert str(exc_info.value) == expected
 
 
-def test_deny_constructor_definition(s):
+def test_deny_constructor_definition(s) -> None:
     with pytest.raises(StoryError) as exc_info:
 
         @s.initiate

@@ -5,7 +5,7 @@ import pytest
 from stories import I
 
 
-def test_return_value(s):
+def test_return_value(s) -> None:
     class A1(s.Story):
         I.a1s1
         I.a1s2
@@ -56,7 +56,7 @@ def test_return_value(s):
     assert s.run(story, state) is None
 
 
-def test_execute_steps(s):
+def test_execute_steps(s) -> None:
     class A1(s.Story):
         I.a1s1
         I.a1s2
@@ -110,7 +110,7 @@ def test_execute_steps(s):
     assert state.calls == ["c1s1", "b1s1", "a1s1", "a1s2", "a1s3", "b1s2", "c1s2"]
 
 
-def test_assign_state_attribute(s):
+def test_assign_state_attribute(s) -> None:
     class A1(s.Story):
         I.a1s1
         I.a1s2
@@ -159,7 +159,7 @@ def test_assign_state_attribute(s):
     s.run(story, state)
 
 
-def test_access_state_attributes(s):
+def test_access_state_attributes(s) -> None:
     class A1(s.Story):
         I.a1s1
         I.a1s2
@@ -216,7 +216,7 @@ def test_access_state_attributes(s):
     assert state.c1v1 == 3
 
 
-def test_propagate_exceptions(s):
+def test_propagate_exceptions(s) -> None:
     class A1(s.Story):
         I.a1s1
         I.a1s2

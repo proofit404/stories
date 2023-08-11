@@ -3,7 +3,7 @@ from types import SimpleNamespace
 from stories import I
 
 
-def test_define_actor(s):
+def test_define_actor(s) -> None:
     class User(s.Actor):
         ...
 
