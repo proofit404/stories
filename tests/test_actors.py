@@ -1,10 +1,9 @@
 from types import SimpleNamespace
-from typing import Any
 
 from stories import I
 
 
-def test_define_actor(s: Any) -> None:
+def test_define_actor(s) -> None:
     class User(s.Actor):
         ...
 

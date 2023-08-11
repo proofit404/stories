@@ -5,50 +5,38 @@ from typing import NewType
 
 @dataclass
 class Product:
-    """Entity."""
-
     name: str
 
 
 @dataclass
 class Cost:
-    """Entity."""
-
     at: datetime
     amount: int
-
-
-OrderId = NewType("OrderId", int)
-
-
-@dataclass
-class Customer:
-    """Entity."""
-
-    balance: int
-
-
-@dataclass
-class Order:
-    """Entity."""
-
-    product: Product
-    cost: Cost
-
-    def affordable_for(self, customer: Customer) -> bool:
-        """Check if customer could afford an order."""
-        return customer.balance > self.cost.amount
 
 
 CustomerId = NewType("CustomerId", int)
 
 
 @dataclass
-class Payment:
-    """Entity."""
+class Customer:
+    balance: int
 
+
+OrderId = NewType("OrderId", int)
+
+
+@dataclass
+class Order:
+    product: Product
+    cost: Cost
+
+    def affordable_for(self, customer: Customer) -> bool:
+        return customer.balance > self.cost.amount
+
+
+@dataclass
+class Payment:
     due_date: datetime
 
     def was_received(self) -> bool:
-        """Check if payment was received."""
-        return bool(self.due_date)
+        return False

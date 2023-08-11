@@ -1,12 +1,11 @@
 from types import SimpleNamespace
-from typing import Any
 
 import pytest
 
 from stories import I
 
 
-def test_return_value(s: Any) -> None:
+def test_return_value(s) -> None:
     class A1(s.Story):
         I.a1s1
         I.a1s2
@@ -57,7 +56,7 @@ def test_return_value(s: Any) -> None:
     assert s.run(story_c, state_c) is None
 
 
-def test_execute_steps(s: Any) -> None:
+def test_execute_steps(s) -> None:
     class A1(s.Story):
         I.a1s1
         I.a1s2
@@ -111,7 +110,7 @@ def test_execute_steps(s: Any) -> None:
     assert state_c.calls == ["c1s1", "b1s1", "a1s1", "a1s2", "a1s3", "b1s2", "c1s2"]
 
 
-def test_assign_state_attribute(s: Any) -> None:
+def test_assign_state_attribute(s) -> None:
     class A1(s.Story):
         I.a1s1
         I.a1s2
@@ -160,7 +159,7 @@ def test_assign_state_attribute(s: Any) -> None:
     s.run(story_c, state_c)
 
 
-def test_access_state_attributes(s: Any) -> None:
+def test_access_state_attributes(s) -> None:
     class A1(s.Story):
         I.a1s1
         I.a1s2
@@ -217,7 +216,7 @@ def test_access_state_attributes(s: Any) -> None:
     assert state_c.c1v1 == 3
 
 
-def test_propagate_exceptions(s: Any) -> None:
+def test_propagate_exceptions(s) -> None:
     class A1(s.Story):
         I.a1s1
         I.a1s2

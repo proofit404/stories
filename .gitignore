@@ -1,9 +1,7 @@
 .coverage
 .coverage.*
-.idea/
 .pytest_cache/
 __pycache__/
-app/*
 dist/
 htmlcov/
 node_modules/

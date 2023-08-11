@@ -1,5 +1,4 @@
 from types import SimpleNamespace
-from typing import Any
 
 import pytest
 
@@ -7,7 +6,7 @@ from stories import I
 from stories.exceptions import StoryError
 
 
-def test_initiate(s: Any) -> None:
+def test_initiate(s) -> None:
     class A1(s.Story):
         I.a1s1
         I.a1s2
@@ -88,7 +87,7 @@ def test_initiate(s: Any) -> None:
     ]
 
 
-def test_deny_functions(s: Any) -> None:
+def test_deny_functions(s) -> None:
     with pytest.raises(StoryError) as exc_info:
 
         @s.initiate
@@ -98,7 +97,7 @@ def test_deny_functions(s: Any) -> None:
     assert str(exc_info.value) == "@initiate can decorate Story subclasses only"
 
 
-def test_deny_non_story_classes(s: Any) -> None:
+def test_deny_non_story_classes(s) -> None:
     with pytest.raises(StoryError) as exc_info:
 
         @s.initiate
@@ -108,7 +107,7 @@ def test_deny_non_story_classes(s: Any) -> None:
     assert str(exc_info.value) == "@initiate can decorate Story subclasses only"
 
 
-def test_deny_step_definitions(s: Any) -> None:
+def test_deny_step_definitions(s) -> None:
     with pytest.raises(StoryError) as exc_info:
 
         @s.initiate
@@ -124,7 +123,7 @@ def test_deny_step_definitions(s: Any) -> None:
     assert str(exc_info.value) == expected
 
 
-def test_deny_constructor_definition(s: Any) -> None:
+def test_deny_constructor_definition(s) -> None:
     with pytest.raises(StoryError) as exc_info:
 
         @s.initiate

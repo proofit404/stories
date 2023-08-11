@@ -1,15 +1,12 @@
 from collections.abc import Callable
 from typing import TypeVar
 
-from app.tools import log
 
-RetType = TypeVar("RetType")
+T = TypeVar("T")
 
 
-def atomic(f: Callable[..., RetType]) -> Callable[..., RetType]:
-    """Manage transactions."""
-
-    def wrapper(*args: object, **kwargs: object) -> RetType:
+def atomic(f: Callable[..., T]) -> Callable[..., T]:
+    def wrapper(*args, **kwargs) -> T:
         start_transaction()
         result = f(*args, **kwargs)
         end_transaction()
@@ -19,15 +16,12 @@ def atomic(f: Callable[..., RetType]) -> Callable[..., RetType]:
 
 
 def start_transaction() -> None:
-    """Perform database query."""
-    log("BEGIN TRANSACTION;")
+    print("BEGIN TRANSACTION;")
 
 
 def end_transaction() -> None:
-    """Perform database query."""
-    log("COMMIT TRANSACTION;")
+    print("COMMIT TRANSACTION;")
 
 
 def cancel_transaction() -> None:
-    """Perform database query."""
-    log("ROLLBACK TRANSACTION;")
+    print("ROLLBACK TRANSACTION;")
