@@ -23,7 +23,7 @@ def test_return_value(s) -> None:
         b1s1 = s.normal_method
         b1s2 = s.normal_method
 
-        def __init__(self):
+        def __init__(self) -> None:
             self.a1 = A1()
 
     class C1(s.Story):
@@ -34,7 +34,7 @@ def test_return_value(s) -> None:
         c1s1 = s.normal_method
         c1s2 = s.normal_method
 
-        def __init__(self):
+        def __init__(self) -> None:
             self.b1 = B1()
 
     # First level.
@@ -74,7 +74,7 @@ def test_execute_steps(s) -> None:
         b1s1 = s.append_method("calls", "b1s1")
         b1s2 = s.append_method("calls", "b1s2")
 
-        def __init__(self):
+        def __init__(self) -> None:
             self.a1 = A1()
 
     class C1(s.Story):
@@ -85,7 +85,7 @@ def test_execute_steps(s) -> None:
         c1s1 = s.append_method("calls", "c1s1")
         c1s2 = s.append_method("calls", "c1s2")
 
-        def __init__(self):
+        def __init__(self) -> None:
             self.b1 = B1()
 
     # First level.
@@ -126,7 +126,7 @@ def test_assign_state_attribute(s) -> None:
         b1s1 = s.assign_method("b1v1", 2)
         b1s2 = s.assert_method("b1v1", 2)
 
-        def __init__(self):
+        def __init__(self) -> None:
             self.a1 = A1()
 
     class C1(s.Story):
@@ -137,7 +137,7 @@ def test_assign_state_attribute(s) -> None:
         c1s1 = s.assign_method("c1v1", 3)
         c1s2 = s.assert_method("c1v1", 3)
 
-        def __init__(self):
+        def __init__(self) -> None:
             self.b1 = B1()
 
     # First level.
@@ -177,7 +177,7 @@ def test_access_state_attributes(s) -> None:
         b1s1 = s.assign_method("b1v1", 2)
         b1s2 = s.normal_method
 
-        def __init__(self):
+        def __init__(self) -> None:
             self.a1 = A1()
 
     class C1(s.Story):
@@ -188,7 +188,7 @@ def test_access_state_attributes(s) -> None:
         c1s1 = s.assign_method("c1v1", 3)
         c1s2 = s.normal_method
 
-        def __init__(self):
+        def __init__(self) -> None:
             self.b1 = B1()
 
     # First level.
@@ -234,7 +234,7 @@ def test_propagate_exceptions(s) -> None:
         b1s1 = s.error_method("error in b1s1")
         b1s2 = s.normal_method
 
-        def __init__(self):
+        def __init__(self) -> None:
             self.a1 = A1()
 
     class C1(s.Story):
@@ -245,7 +245,7 @@ def test_propagate_exceptions(s) -> None:
         c1s1 = s.error_method("error in c1s1")
         c1s2 = s.normal_method
 
-        def __init__(self):
+        def __init__(self) -> None:
             self.b1 = B1()
 
     # First level.

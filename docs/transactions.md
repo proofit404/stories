@@ -9,57 +9,15 @@ you use.
 Ideally, stories are written with composition in mind. You'll be able to
 decorate injected function in the construction process.
 
-```pycon
-
->>> from dataclasses import dataclass
->>> from types import SimpleNamespace
->>> from typing import Callable
->>> from stories import Story, I
-
->>> @dataclass
-... class Purchase(Story):
-...     I.lock_item
-...     I.charge_money
-...     I.notify_user
-...
-...     def lock_item(self, state):
-...         self.lock_item_query()
-...
-...     def charge_money(self, state):
-...         self.charge_money_query()
-...
-...     def notify_user(self, state):
-...         self.send_notification(state.user_id)
-...
-...     lock_item_query: Callable
-...     charge_money_query: Callable
-...     send_notification: Callable
-
-```
-
 You don't need to wrap with transaction the step itself. It's better to wrap
 with transaction an injected functions.
 
-```pycon
+```python
+--8<-- "transactions_step.py"
+```
 
->>> from app.transactions import atomic
->>> from app.repositories import lock_item_query, charge_money_query
->>> from app.gateways import send_notification
-
->>> purchase = Purchase(
-...     lock_item_query=atomic(lock_item_query),
-...     charge_money_query=atomic(charge_money_query),
-...     send_notification=send_notification,
-... )
-
->>> purchase(SimpleNamespace(user_id=1))
-BEGIN TRANSACTION;
-UPDATE 'items';
-COMMIT TRANSACTION;
-BEGIN TRANSACTION;
-UPDATE 'balance';
-COMMIT TRANSACTION;
-
+```text
+--8<-- "transactions_step.log"
 ```
 
 ## Whole story

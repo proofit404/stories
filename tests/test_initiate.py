@@ -132,7 +132,7 @@ def test_deny_constructor_definition(s) -> None:
             I.a1s2
             I.a1s3
 
-            def __init__(self):
+            def __init__(self) -> None:
                 raise RuntimeError
 
     expected = "Story decorated by @initiate can not have constructor defined"

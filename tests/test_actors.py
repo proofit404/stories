@@ -24,7 +24,7 @@ def test_define_actor(s) -> None:
         b1s1 = s.normal_method
         b1s2 = s.normal_method
 
-        def __init__(self):
+        def __init__(self) -> None:
             self.a1 = A1()
 
     class C1(s.Story, User):
@@ -35,7 +35,7 @@ def test_define_actor(s) -> None:
         c1s1 = s.normal_method
         c1s2 = s.normal_method
 
-        def __init__(self):
+        def __init__(self) -> None:
             self.b1 = B1()
 
     # First level.
