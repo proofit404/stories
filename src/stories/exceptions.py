@@ -1,6 +1,4 @@
-"""A set of stories' exceptions."""
-from _stories.exceptions import StateError
-from _stories.exceptions import StoryError
+class StoryError(Exception):
+    """Base error of all stories errors."""
 
-
-__all__ = ("StoryError", "StateError")
+    pass

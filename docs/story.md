@@ -1,14 +1,4 @@
-# Story
-
-## Principles
-
-- [Story is a callable object](#story-is-a-callable-object)
-- [Steps executed in specified order](#steps-executed-in-specified-order)
-- [Steps could assign state variables](#steps-could-assign-state-variables)
-- [Story state would be available after its execution](#story-state-would-be-available-after-its-execution)
-- [Exceptions would be propagated](#exceptions-would-be-propagated)
-
-### Story is a callable object
+## Story is a callable object
 
 Story is an object which you should call if you want to execute story steps.
 When you inherit from `Story` class, you basically define `__call__` and
@@ -52,6 +42,7 @@ It's up to you whether or not to use libraries like `attrs`, `dataclasses`,
     ```pycon
 
     >>> from dataclasses import dataclass
+    >>> from types import SimpleNamespace
     >>> from typing import Callable
     >>> from stories import Story, I
 
@@ -80,6 +71,7 @@ It's up to you whether or not to use libraries like `attrs`, `dataclasses`,
 
     ```pycon
 
+    >>> from types import SimpleNamespace
     >>> from typing import Callable
     >>> from pydantic.dataclasses import dataclass
     >>> from stories import Story, I
@@ -132,10 +124,10 @@ It's up to you whether or not to use libraries like `attrs`, `dataclasses`,
 
     ```
 
-### Steps executed in specified order
+## Steps executed in specified order
 
 To call the story, you need to instantiate the class first. After that you could
-pass `State` object to the story call and story would be executed.
+pass state object to the story call and story would be executed.
 
 If methods of the story are coroutines, you need to `await` story call as well.
 The same as you do with regular coroutine methods defined on your classes.
@@ -145,8 +137,9 @@ The same as you do with regular coroutine methods defined on your classes.
     ```pycon
 
     >>> from dataclasses import dataclass
+    >>> from types import SimpleNamespace
     >>> from typing import Callable
-    >>> from stories import Story, I, State
+    >>> from stories import Story, I
     >>> from app.repositories import load_order, load_customer, create_payment
     >>> from app.tools import log
 
@@ -188,7 +181,7 @@ The same as you do with regular coroutine methods defined on your classes.
     ...     create_payment=create_payment,
     ... )
 
-    >>> state = State(order_id=1, customer_id=1)
+    >>> state = SimpleNamespace(order_id=1, customer_id=1)
 
     >>> purchase(state)
     ==> find order
@@ -204,8 +197,9 @@ The same as you do with regular coroutine methods defined on your classes.
 
     >>> import asyncio
     >>> from dataclasses import dataclass
+    >>> from types import SimpleNamespace
     >>> from typing import Coroutine
-    >>> from stories import Story, I, State
+    >>> from stories import Story, I
     >>> from aioapp.repositories import load_order, load_customer, create_payment
     >>> from aioapp.tools import log
 
@@ -247,7 +241,7 @@ The same as you do with regular coroutine methods defined on your classes.
     ...     create_payment=create_payment,
     ... )
 
-    >>> state = State(order_id=1, customer_id=1)
+    >>> state = SimpleNamespace(order_id=1, customer_id=1)
 
     >>> asyncio.run(purchase(state))
     ==> find order
@@ -257,11 +251,11 @@ The same as you do with regular coroutine methods defined on your classes.
 
     ```
 
-### Steps could assign state variables
+## Steps could assign state variables
 
 Every step could assign variable in state object. Story steps executed
 afterwards would be able to access variables assigned earlier. If you use plain
-`State` object, you could use any variable names. No restrictions applied to
+state object, you could use any variable names. No restrictions applied to
 allowed name of the variable or its value.
 
 As you could see in the example below, the `check_balance` step is able to
@@ -272,8 +266,9 @@ access `order` and `customer` variables set by previous steps.
     ```pycon
 
     >>> from dataclasses import dataclass
+    >>> from types import SimpleNamespace
     >>> from typing import Callable
-    >>> from stories import Story, I, State
+    >>> from stories import Story, I
     >>> from app.repositories import load_order, load_customer, create_payment
 
     >>> @dataclass
@@ -308,7 +303,7 @@ access `order` and `customer` variables set by previous steps.
     ...     create_payment=create_payment,
     ... )
 
-    >>> state = State(order_id=1, customer_id=1)
+    >>> state = SimpleNamespace(order_id=1, customer_id=1)
 
     >>> purchase(state)
 
@@ -320,8 +315,9 @@ access `order` and `customer` variables set by previous steps.
 
     >>> import asyncio
     >>> from dataclasses import dataclass
+    >>> from types import SimpleNamespace
     >>> from typing import Coroutine
-    >>> from stories import Story, I, State
+    >>> from stories import Story, I
     >>> from aioapp.repositories import load_order, load_customer, create_payment
 
     >>> @dataclass
@@ -356,13 +352,13 @@ access `order` and `customer` variables set by previous steps.
     ...     create_payment=create_payment,
     ... )
 
-    >>> state = State(order_id=1, customer_id=1)
+    >>> state = SimpleNamespace(order_id=1, customer_id=1)
 
     >>> asyncio.run(purchase(state))
 
     ```
 
-### Story state would be available after its execution
+## Story state would be available after its execution
 
 After story execution all state variables would be available in the same state
 object you have passed to it.
@@ -374,8 +370,9 @@ You would be able to access same objects that were assigned by story steps.
     ```pycon
 
     >>> from dataclasses import dataclass
+    >>> from types import SimpleNamespace
     >>> from typing import Callable
-    >>> from stories import Story, I, State
+    >>> from stories import Story, I
     >>> from app.repositories import load_order, load_customer, create_payment
 
     >>> @dataclass
@@ -405,7 +402,7 @@ You would be able to access same objects that were assigned by story steps.
     ...     create_payment=create_payment,
     ... )
 
-    >>> state = State(order_id=1, customer_id=1)
+    >>> state = SimpleNamespace(order_id=1, customer_id=1)
 
     >>> purchase(state)
 
@@ -429,8 +426,9 @@ You would be able to access same objects that were assigned by story steps.
 
     >>> import asyncio
     >>> from dataclasses import dataclass
+    >>> from types import SimpleNamespace
     >>> from typing import Coroutine
-    >>> from stories import Story, I, State
+    >>> from stories import Story, I
     >>> from aioapp.repositories import load_order, load_customer, create_payment
 
     >>> @dataclass
@@ -460,7 +458,7 @@ You would be able to access same objects that were assigned by story steps.
     ...     create_payment=create_payment,
     ... )
 
-    >>> state = State(order_id=1, customer_id=1)
+    >>> state = SimpleNamespace(order_id=1, customer_id=1)
 
     >>> asyncio.run(purchase(state))
 
@@ -478,7 +476,7 @@ You would be able to access same objects that were assigned by story steps.
 
     ```
 
-### Exceptions would be propagated
+## Exceptions would be propagated
 
 If exception was raised inside the step method, execution of the story would
 stop at that moment and exception would be raised to the caller code without any
@@ -489,8 +487,9 @@ changes.
     ```pycon
 
     >>> from dataclasses import dataclass
+    >>> from types import SimpleNamespace
     >>> from typing import Callable
-    >>> from stories import Story, I, State
+    >>> from stories import Story, I
     >>> from app.tools import log
 
     >>> @dataclass
@@ -517,7 +516,7 @@ changes.
 
     >>> purchase = Purchase(log=log)
 
-    >>> state = State()
+    >>> state = SimpleNamespace()
 
     >>> try:
     ...     purchase(state)
@@ -536,8 +535,9 @@ changes.
 
     >>> import asyncio
     >>> from dataclasses import dataclass
+    >>> from types import SimpleNamespace
     >>> from typing import Coroutine
-    >>> from stories import Story, I, State
+    >>> from stories import Story, I
     >>> from aioapp.tools import log
 
     >>> @dataclass
@@ -564,7 +564,7 @@ changes.
 
     >>> purchase = Purchase(log=log)
 
-    >>> state = State()
+    >>> state = SimpleNamespace()
 
     >>> try:
     ...     asyncio.run(purchase(state))
@@ -576,5 +576,3 @@ changes.
     ==> Exception('Not enough money')
 
     ```
-
-<p align="center">&mdash; ⭐ &mdash;</p>

@@ -1,13 +1,11 @@
 {
   "template": "https://github.com/proofit404/python-library-template",
-  "commit": "41476f18af4abbfe83e06539c8ab67db264a6d81",
+  "commit": "1c623d4412d871457bf2044a06f90bacf76af1b4",
   "checkout": null,
   "context": {
     "cookiecutter": {
       "project_name": "stories",
-      "public_module_name": "stories",
-      "private_module_name": "_stories",
-      "exception_name": "StoryError",
+      "module_name": "stories",
       "project_description": "Service objects designed with OOP in mind.",
       "author_name": "Josiah Kaviani",
       "author_email": "proofit404@gmail.com",
@@ -18,9 +16,8 @@
       "changelog_url": "https://proofit404.github.io/stories/changelog",
       "twitter_url": "https://twitter.com/proofit404",
       "pypi_project": "https://pypi.org/project/stories",
-      "github_workflow": "release",
       "github_workflow_url": "https://github.com/proofit404/stories/actions/workflows/release.yml?query=branch%3Arelease",
-      "github_workflow_badge_url": "https://img.shields.io/github/workflow/status/proofit404/stories/release?style=flat-square",
+      "github_workflow_badge_url": "https://img.shields.io/github/actions/workflow/status/proofit404/stories/release.yml?branch=release&style=flat-square",
       "pypi_badge_url": "https://img.shields.io/pypi/v/stories?style=flat-square",
       "danger_github_api_token": "Z2hwXzNOVkx3ZHBKbVNFWWttOUdjT2VTSmxpcWkxa3NJNTJDNTB4RAo=",
       "_template": "https://github.com/proofit404/python-library-template"

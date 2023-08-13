@@ -1,25 +1,12 @@
 [run]
+source = .
 branch = true
 parallel = true
 disable_warnings =
   module-not-imported
-source =
-  _stories
-  stories
-  aioapp
-  app
-  configuration
-  examples
-  mddoctest
-  validators
-  tests
-
-[paths]
-source =
-  src
-  .tox/*/site-packages
 
 [report]
 exclude_lines =
   pragma: no cover
   raise RuntimeError
+  return NotImplemented

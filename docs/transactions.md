@@ -1,5 +1,3 @@
-# Transaction management
-
 It's possible to handle database transactions in different ways inside stories.
 
 ## Single steps
@@ -14,8 +12,9 @@ decorate injected function in the construction process.
 ```pycon
 
 >>> from dataclasses import dataclass
+>>> from types import SimpleNamespace
 >>> from typing import Callable
->>> from stories import Story, I, State
+>>> from stories import Story, I
 
 >>> @dataclass
 ... class Purchase(Story):
@@ -53,7 +52,7 @@ with transaction an injected functions.
 ...     send_notification=send_notification,
 ... )
 
->>> purchase(State(user_id=1))
+>>> purchase(SimpleNamespace(user_id=1))
 BEGIN TRANSACTION;
 UPDATE 'items';
 COMMIT TRANSACTION;
@@ -125,7 +124,7 @@ infrastructure level that compose decorated story.
 ... )
 
 >>> try:
-...     transactional(State(user_id=1))
+...     transactional(SimpleNamespace(user_id=1))
 ... finally:
 ...     persistence.finalize()
 BEGIN TRANSACTION;
@@ -143,7 +142,7 @@ its execution.
     As you may notice, `Persistence` is a stateful object. You need to
     create a dedicated instance of the story for each call! If you
     don't like such behavior consider to redesign `Persistence` class
-    to store its flags in the `State` object.
+    to store its flags in the state object.
 
 ```pycon
 
@@ -158,7 +157,7 @@ its execution.
 ... )
 
 >>> try:
-...     transactional(State(user_id=2))
+...     transactional(SimpleNamespace(user_id=2))
 ... except Exception:
 ...     log("ERROR")
 ... finally:
@@ -170,5 +169,3 @@ ERROR
 ROLLBACK TRANSACTION;
 
 ```
-
-<p align="center">&mdash; ⭐ &mdash;</p>

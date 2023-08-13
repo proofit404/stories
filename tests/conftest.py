@@ -1,4 +1,10 @@
-"""Settings module for the Py.test tool."""
+import pytest
+from _pytest.fixtures import SubRequest
+
+from fixtures import asynchronous
+from fixtures import synchronous
 
 
-pytest_plugins = ["examples"]
+@pytest.fixture(params=[synchronous, asynchronous])
+def s(request: SubRequest):
+    return request.param
