@@ -1,41 +1,44 @@
+from collections.abc import Callable
 from typing import Protocol
 
-from stories import Actor
-from stories import initiate
-from stories import Story
+from stories import Actor as Actor
+from stories import initiate as initiate
+from stories import Story as Story
 
 
-def run(story, state):
+def run(story: Story, state: object) -> None:
     return story(state)
 
 
-def normal_method(self, state):
+def normal_method(self: object, state: object) -> None:
     ...
 
 
-def assign_method(attribute, value):
-    def method(self, state):
+def assign_method(attribute: str, value: object) -> Callable[[object, object], None]:
+    def method(self: object, state: object) -> None:
         setattr(state, attribute, value)
 
     return method
 
 
-def assert_method(attribute, value):
-    def method(self, state):
-        assert getattr(state, attribute) == value
+def assert_method(attribute: str, value: object) -> Callable[[object, object], None]:
+    def method(self: object, state: object) -> None:
+        x: object = getattr(state, attribute)
+        assert x == value
 
     return method
 
 
-def append_method(attribute, value):
-    def method(self, state):
-        getattr(state, attribute).append(value)
+def append_method(attribute: str, value: object) -> Callable[[object, object], None]:
+    def method(self: object, state: object) -> None:
+        x: list[object] = getattr(state, attribute)
+        x.append(value)
 
     return method
 
 
-def error_method(message):
-    def method(self, state):
+def error_method(message: str) -> Callable[[object, object], None]:
+    def method(self: object, state: object) -> None:
         raise StepError(message)
 
     return method
@@ -50,22 +53,34 @@ class Interface(Protocol):
     initiate: type[initiate]
     Story: type[Story]
 
-    def run(story: type[Story], state: object):
+    @staticmethod
+    def run(story: Story, state: object) -> None:
         ...
 
-    def normal_method(self, state):
+    @staticmethod
+    def normal_method(self: object, state: object) -> None:
         ...
 
-    def assign_method(attribute, value):
+    @staticmethod
+    def assign_method(
+        attribute: str, value: object
+    ) -> Callable[[object, object], None]:
         ...
 
-    def assert_method(attribute, value):
+    @staticmethod
+    def assert_method(
+        attribute: str, value: object
+    ) -> Callable[[object, object], None]:
         ...
 
-    def append_method(attribute, value):
+    @staticmethod
+    def append_method(
+        attribute: str, value: object
+    ) -> Callable[[object, object], None]:
         ...
 
-    def error_method(message):
+    @staticmethod
+    def error_method(message: str) -> Callable[[object, object], None]:
         ...
 
     StepError: type[StepError]
