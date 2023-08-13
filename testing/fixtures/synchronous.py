@@ -1,42 +1,39 @@
-from collections.abc import Callable
-from typing import Any
-
 from stories import Actor  # noqa: F401
 from stories import initiate  # noqa: F401
-from stories import Story
+from stories import Story  # noqa: F401
 
 
-def run(story: Story, state: object) -> Any:
+def run(story, state):
     return story(state)
 
 
-def normal_method(self: object, state: Story) -> None:
+def normal_method(self, state):
     ...
 
 
-def assign_method(attribute: str, value: Any) -> Callable[[object, object], None]:
-    def method(self: object, state: object) -> None:
+def assign_method(attribute, value):
+    def method(self, state):
         setattr(state, attribute, value)
 
     return method
 
 
-def assert_method(attribute: str, value: Any) -> Callable[[object, object], None]:
-    def method(self: object, state: object) -> None:
+def assert_method(attribute, value):
+    def method(self, state):
         assert getattr(state, attribute) == value
 
     return method
 
 
-def append_method(attribute: str, value: Any) -> Callable[[object, object], None]:
-    def method(self: object, state: object) -> None:
+def append_method(attribute, value):
+    def method(self, state):
         getattr(state, attribute).append(value)
 
     return method
 
 
-def error_method(message: str) -> Callable[[object, object], None]:
-    def method(self: object, state: object) -> None:
+def error_method(message):
+    def method(self, state):
         raise StepError(message)
 
     return method

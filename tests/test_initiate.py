@@ -91,7 +91,7 @@ def test_deny_functions(s) -> None:
     with pytest.raises(StoryError) as exc_info:
 
         @s.initiate
-        def a1():  # pragma: no branch
+        def a1() -> None:  # pragma: no branch
             raise RuntimeError
 
     assert str(exc_info.value) == "@initiate can decorate Story subclasses only"
