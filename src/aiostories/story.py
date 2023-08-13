@@ -1,9 +1,7 @@
-from typing import TypeVar
+from typing import ClassVar
 
 from stories.steps import Steps
 from stories.story import _StoryType
-
-T = TypeVar("T", bound=object)
 
 
 class Story(metaclass=_StoryType):
@@ -13,9 +11,8 @@ class Story(metaclass=_StoryType):
 
     """
 
-    I: Steps
+    I: ClassVar[Steps]
 
-    async def __call__(self, state: T) -> None:
-        for step in self.I.__steps__:
-            method = getattr(self, step)
+    async def __call__(self, state) -> None:
+        for method in self.I(self):
             await method(state)
