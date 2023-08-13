@@ -14,7 +14,7 @@ class Initiate:
     def __init__(self, bases: tuple[type[Story]]) -> None:
         self.bases = bases
 
-    def __call__(self, cls: Story) -> Story:
+    def __call__(self, cls: type[Story]) -> type[Story]:
         self.check_bases(cls)
         self.check_steps(cls)
         self.check_init(cls)

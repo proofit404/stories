@@ -1,8 +1,9 @@
 import asyncio
+from typing import Protocol
 
-from aiostories import Actor  # noqa: F401
-from aiostories import initiate  # noqa: F401
-from aiostories import Story  # noqa: F401
+from aiostories import Actor
+from aiostories import initiate
+from aiostories import Story
 
 
 def run(story, state):
@@ -43,3 +44,29 @@ def error_method(message):
 
 class StepError(Exception):
     ...
+
+
+class Interface(Protocol):
+    Actor: type[Actor]
+    initiate: type[initiate]
+    Story: type[Story]
+
+    def run(story: type[Story], state: object):
+        ...
+
+    async def normal_method(self, state):
+        ...
+
+    def assign_method(attribute, value):
+        ...
+
+    def assert_method(attribute, value):
+        ...
+
+    def append_method(attribute, value):
+        ...
+
+    def error_method(message):
+        ...
+
+    StepError: type[StepError]

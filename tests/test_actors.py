@@ -1,9 +1,10 @@
 from types import SimpleNamespace
 
+from fixtures import S
 from stories import I
 
 
-def test_define_actor(s) -> None:
+def test_define_actor(s: S) -> None:
     class User(s.Actor):
         ...
 
