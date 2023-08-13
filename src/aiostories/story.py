@@ -1,3 +1,6 @@
+from typing import ClassVar
+
+from stories.steps import Steps
 from stories.story import _StoryType
 
 
@@ -8,7 +11,8 @@ class Story(metaclass=_StoryType):
 
     """
 
-    async def __call__(self, state):
-        for step in self.I.__steps__:
-            method = getattr(self, step)
+    I: ClassVar[Steps]
+
+    async def __call__(self, state) -> None:
+        for method in self.I(self):
             await method(state)

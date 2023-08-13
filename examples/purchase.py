@@ -33,7 +33,7 @@ class Purchase(Story):
             raise Exception
 
     def persist_payment(self, state: State) -> None:
-        state.payment = self.create_payment(state.order_id, state.customer_id)
+        state.payment = self.create_payment(state.customer_id, state.order_id)
 
     load_order: Callable[[OrderId], Order]
     load_customer: Callable[[CustomerId], Customer]
@@ -54,4 +54,6 @@ purchase(state)
 
 
 assert_type(state.payment, Payment)
+
+
 print(state.payment.was_received())

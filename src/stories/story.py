@@ -1,8 +1,11 @@
+from typing import ClassVar
+
 from stories.steps import Steps
 
 
 class _StoryType(type):
-    def __prepare__(class_name, bases):
+    @classmethod
+    def __prepare__(cls, name, bases) -> dict[str, Steps]:
         return {"I": Steps()}
 
 
@@ -13,7 +16,8 @@ class Story(metaclass=_StoryType):
 
     """
 
-    def __call__(self, state):
-        for step in self.I.__steps__:
-            method = getattr(self, step)
+    I: ClassVar[Steps]
+
+    def __call__(self, state) -> None:
+        for method in self.I(self):
             method(state)
