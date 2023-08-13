@@ -1,10 +1,10 @@
 from typing import ClassVar
 
-from stories.steps import Steps
-from stories.story import _StoryType
+from stories.story import Steps
+from stories.story import StoryType
 
 
-class Story(metaclass=_StoryType):
+class Story(metaclass=StoryType):
     """Business process specification.
 
     Use sentences from business domain to express its steps.
