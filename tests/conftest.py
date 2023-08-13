@@ -5,5 +5,5 @@ from fixtures import synchronous
 
 
 @pytest.fixture(params=[synchronous, asynchronous])
-def s(request: SubRequest):
+def s(request: pytest.FixtureRequest):
     return request.param

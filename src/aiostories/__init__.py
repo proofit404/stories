@@ -2,7 +2,11 @@
 from aiostories.story import Story
 from stories import Actor
 from stories import I
-from stories import initiate
+from stories.initiate import Initiate
 
 
 __all__ = ("Story", "I", "initiate", "Actor")
+
+
+initiate = Initiate((Story,))
+del Initiate

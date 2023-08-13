@@ -5,33 +5,36 @@ from typing import TypeVar
 from stories.exceptions import StoryError
 from stories.story import Story
 
-
 T = TypeVar("T")
 
 
-def initiate(cls: T) -> T:
+class Initiate:
     """Create story with all steps required in constructor argument."""
-    _check_bases(cls)
-    _check_steps(cls)
-    _check_init(cls)
-    return make_dataclass(
-        cls.__name__, cls.__call__.steps, namespace={"__call__": cls.__call__}
-    )
 
+    def __init__(self, bases: tuple[type[Story]]) -> None:
+        self.bases = bases
 
-def _check_bases(cls: type[Story]) -> None:
-    if not (isclass(cls) and issubclass(cls, Story)):
-        raise StoryError("@initiate can decorate Story subclasses only")
+    def __call__(self, cls: Story) -> Story:
+        self._check_bases(cls)
+        self._check_steps(cls)
+        self._check_init(cls)
+        result = make_dataclass(cls.__name__, cls.I.__steps__)
+        cls.__init__ = result.__init__
+        return cls
 
+    def _check_bases(self, cls: type[Story]) -> None:
+        if not (isclass(cls) and issubclass(cls, self.bases)):
+            raise StoryError("@initiate can decorate Story subclasses only")
 
-def _check_steps(cls):
-    for attrname in cls.__call__.steps:
-        if attrname in cls.__dict__:
-            raise StoryError("Story decorated by @initiate can not have step methods")
+    def _check_steps(self, cls: type[Story]) -> None:
+        for attrname in cls.I.__steps__:
+            if attrname in cls.__dict__:
+                raise StoryError(
+                    "Story decorated by @initiate can not have step methods"
+                )
 
-
-def _check_init(cls):
-    if "__init__" in cls.__dict__:
-        raise StoryError(
-            "Story decorated by @initiate can not have constructor defined"
-        )
+    def _check_init(self, cls: type[Story]) -> None:
+        if "__init__" in cls.__dict__:
+            raise StoryError(
+                "Story decorated by @initiate can not have constructor defined"
+            )

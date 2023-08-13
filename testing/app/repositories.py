@@ -2,7 +2,9 @@ from datetime import datetime
 
 from app.entities import Cost
 from app.entities import Customer
+from app.entities import CustomerId
 from app.entities import Order
+from app.entities import OrderId
 from app.entities import Payment
 from app.entities import Product
 
