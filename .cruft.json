@@ -1,6 +1,6 @@
 {
   "template": "https://github.com/proofit404/python-library-template",
-  "commit": "1c623d4412d871457bf2044a06f90bacf76af1b4",
+  "commit": "ca635a391eb19122b1a208a60a9e74c19df6b1c8",
   "checkout": null,
   "context": {
     "cookiecutter": {
