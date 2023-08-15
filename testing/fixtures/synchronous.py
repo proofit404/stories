@@ -1,12 +1,11 @@
 from collections.abc import Callable
-from typing import Protocol
 
-from stories import Actor as Actor
-from stories import initiate as initiate
-from stories import Story as Story
+from stories import Actor as actor_class
+from stories import initiate
+from stories import Story as story_class
 
 
-def run(story: Story, state: object) -> None:
+def run(story: story_class, state: object) -> None:
     return story(state)
 
 
@@ -46,41 +45,3 @@ def error_method(message: str) -> Callable[[object, object], None]:
 
 class StepError(Exception):
     ...
-
-
-class Interface(Protocol):
-    Actor: type[Actor]
-    initiate: type[initiate]
-    Story: type[Story]
-
-    @staticmethod
-    def run(story: Story, state: object) -> None:
-        ...
-
-    @staticmethod
-    def normal_method(self: object, state: object) -> None:
-        ...
-
-    @staticmethod
-    def assign_method(
-        attribute: str, value: object
-    ) -> Callable[[object, object], None]:
-        ...
-
-    @staticmethod
-    def assert_method(
-        attribute: str, value: object
-    ) -> Callable[[object, object], None]:
-        ...
-
-    @staticmethod
-    def append_method(
-        attribute: str, value: object
-    ) -> Callable[[object, object], None]:
-        ...
-
-    @staticmethod
-    def error_method(message: str) -> Callable[[object, object], None]:
-        ...
-
-    StepError: type[StepError]

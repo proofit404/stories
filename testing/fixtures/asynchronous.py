@@ -1,14 +1,13 @@
 import asyncio
 from collections.abc import Awaitable
 from collections.abc import Callable
-from typing import Protocol
 
-from aiostories import Actor as Actor
-from aiostories import initiate as initiate
-from aiostories import Story as Story
+from aiostories import Actor as actor_class
+from aiostories import initiate
+from aiostories import Story as story_class
 
 
-def run(story: Story, state: object) -> None:
+def run(story: story_class, state: object) -> None:
     return asyncio.run(story(state))
 
 
@@ -54,41 +53,3 @@ def error_method(message: str) -> Callable[[object, object], Awaitable[None]]:
 
 class StepError(Exception):
     ...
-
-
-class Interface(Protocol):
-    Actor: type[Actor]
-    initiate: type[initiate]
-    Story: type[Story]
-
-    @staticmethod
-    def run(story: Story, state: object) -> None:
-        ...
-
-    @staticmethod
-    async def normal_method(self: object, state: object) -> None:
-        ...
-
-    @staticmethod
-    def assign_method(
-        attribute: str, value: object
-    ) -> Callable[[object, object], Awaitable[None]]:
-        ...
-
-    @staticmethod
-    def assert_method(
-        attribute: str, value: object
-    ) -> Callable[[object, object], Awaitable[None]]:
-        ...
-
-    @staticmethod
-    def append_method(
-        attribute: str, value: object
-    ) -> Callable[[object, object], Awaitable[None]]:
-        ...
-
-    @staticmethod
-    def error_method(message: str) -> Callable[[object, object], Awaitable[None]]:
-        ...
-
-    StepError: type[StepError]
