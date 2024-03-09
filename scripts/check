@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+. venv/bin/activate
+
+pre-commit run --all
+
+mkdocs build
+
+commitlint --from $(( git branch --show-current | grep -q develop || git branch --show-current | grep -q issue && git branch --list develop | grep -q develop ) && echo develop || echo release)

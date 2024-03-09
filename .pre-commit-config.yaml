@@ -1,0 +1,204 @@
+---
+repos:
+  - repo: local
+    hooks:
+      # pre-commit-hooks
+      - id: check-added-large-files
+        name: check-added-large-files
+        entry: check-added-large-files
+        language: system
+        require_serial: true
+        stages: [commit, push, manual]
+      - id: fix-byte-order-marker
+        name: fix-byte-order-marker
+        entry: fix-byte-order-marker
+        language: system
+        require_serial: true
+        types: [text]
+      - id: check-merge-conflict
+        name: check-merge-conflict
+        entry: check-merge-conflict
+        language: system
+        require_serial: true
+        types: [text]
+      - id: check-symlinks
+        name: check-symlinks
+        entry: check-symlinks
+        language: system
+        require_serial: true
+        types: [symlink]
+      - id: end-of-file-fixer
+        name: end-of-file-fixer
+        entry: end-of-file-fixer
+        language: system
+        require_serial: true
+        types: [text]
+        stages: [commit, push, manual]
+      - id: mixed-line-ending
+        name: mixed-line-ending
+        entry: mixed-line-ending
+        args: [--fix=lf]
+        language: system
+        require_serial: true
+        types: [text]
+      - id: trailing-whitespace-fixer
+        name: trailing-whitespace-fixer
+        entry: trailing-whitespace-fixer
+        language: system
+        require_serial: true
+        types: [text]
+        stages: [commit, push, manual]
+      - id: file-contents-sorter
+        name: file-contents-sorter
+        entry: file-contents-sorter
+        language: system
+        require_serial: true
+        files: ^(.gitignore|requirements.txt)$
+      - id: debug-statement-hook
+        name: debug-statement-hook
+        entry: debug-statement-hook
+        language: system
+        require_serial: true
+        types: [python]
+      - id: check-builtin-literals
+        name: check-builtin-literals
+        entry: check-builtin-literals
+        args: [--no-allow-dict-kwargs]
+        language: system
+        require_serial: true
+        types: [python]
+      - id: check-json
+        name: check-json
+        entry: check-json
+        language: system
+        require_serial: true
+        types: [json]
+      - id: check-toml
+        name: check-toml
+        entry: check-toml
+        language: system
+        require_serial: true
+        types: [toml]
+      - id: check-yaml
+        name: check-yaml
+        entry: check-yaml
+        args: [--unsafe]
+        language: system
+        require_serial: true
+        types: [yaml]
+      # pyupgrade
+      - id: pyupgrade
+        name: pyupgrade
+        entry: pyupgrade
+        args: [--py311-plus]
+        language: system
+        require_serial: true
+        types: [python]
+      # reorder-python-imports
+      - id: reorder-python-imports
+        name: reorder-python-imports
+        entry: reorder-python-imports
+        args: [--py311-plus, "--application-directories=src:testing"]
+        language: system
+        require_serial: true
+        types: [python]
+      # docformatter
+      - id: docformatter
+        name: docformatter
+        entry: docformatter
+        args: [--wrap-summaries=88, --wrap-descriptions=88, --blank, --in-place]
+        language: system
+        require_serial: true
+        types: [python]
+      # eradicate
+      - id: eradicate
+        name: eradicate
+        entry: eradicate
+        args: [--aggressive, --in-place, --error]
+        language: system
+        require_serial: true
+        types: [python]
+      # black
+      - id: black
+        name: black
+        entry: black
+        args: [--target-version=py311]
+        language: system
+        require_serial: true
+        types_or: [python, pyi]
+      # prettier
+      - id: prettier
+        name: prettier
+        entry: prettier
+        args: [--prose-wrap=always, --list-different, --ignore-unknown, --write]
+        language: system
+        require_serial: true
+        types: [text]
+      # flake8
+      - id: flake8
+        name: flake8
+        entry: flake8
+        language: system
+        require_serial: true
+        types: [python]
+      # yesqa
+      - id: yesqa
+        name: yesqa
+        entry: yesqa
+        language: system
+        require_serial: true
+        types: [python]
+      # mypy
+      - id: mypy
+        name: mypy
+        entry: mypy
+        args: [--extra-checks]
+        language: system
+        require_serial: true
+        types_or: [python, pyi]
+      # xenon
+      - id: xenon
+        name: xenon
+        entry: xenon
+        args: [--max-absolute=A, --max-modules=A, --max-average=A]
+        language: system
+        require_serial: true
+        types: [text]
+      # remark
+      - id: remark
+        name: remark
+        entry: remark
+        args: [--frail]
+        language: system
+        require_serial: true
+        types: [markdown]
+      # eslint
+      - id: eslint
+        name: eslint
+        entry: eslint
+        language: system
+        require_serial: true
+        types: [javascript]
+      # yamllint
+      - id: yamllint
+        name: yamllint
+        entry: yamllint
+        args: [--strict]
+        language: system
+        require_serial: true
+        types: [yaml]
+      # toml-sort
+      - id: toml-sort
+        name: toml-sort
+        entry: toml-sort
+        args: [--all, --no-header, --in-place]
+        language: system
+        require_serial: true
+        types: [toml]
+      # jscpd
+      - id: jscpd
+        name: jscpd
+        entry: jscpd
+        language: system
+        require_serial: true
+        types: [text]

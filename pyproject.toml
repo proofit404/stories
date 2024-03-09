@@ -1,0 +1,22 @@
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core"]
+
+[tool.poetry]
+authors = ["Josiah Kaviani <proofit404@gmail.com>"]
+description = "Service objects designed with OOP in mind."
+documentation = "https://proofit404.github.io/stories"
+homepage = "https://pypi.org/project/stories"
+license = "BSD-2-Clause"
+name = "stories"
+readme = "docs/index.md"
+repository = "https://github.com/proofit404/stories"
+version = "0.0.1dev0"
+
+[tool.poetry.dependencies]
+python = "*"
+
+[tool.poetry.urls]
+Changelog = "https://proofit404.github.io/stories/changelog"
+Issues = "https://github.com/proofit404/stories/issues"
+Twitter = "https://twitter.com/proofit404"

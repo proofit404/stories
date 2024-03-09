@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+. venv/bin/activate
+
+export DANGER_GITHUB_API_TOKEN=$(echo $DANGER_GITHUB_API_TOKEN | base64 --decode)
+
+danger ci
+
+cruft check
