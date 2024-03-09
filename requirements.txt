@@ -24,6 +24,7 @@ mypy
 poetry
 pre-commit
 pre-commit-hooks
+pydantic
 pytest
 pyupgrade
 reorder-python-imports
