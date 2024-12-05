@@ -1,6 +1,6 @@
 module.exports = {
   repositoryUrl: "https://github.com/proofit404/stories",
-  branches: ["release", { name: "develop", prerelease: "rc" }],
+  branches: ["release"],
   tagFormat: "${version}",
   plugins: [
     "@semantic-release/commit-analyzer",
@@ -21,7 +21,7 @@ module.exports = {
       "@semantic-release/exec",
       {
         prepareCmd:
-          "./scripts/lint && " +
+          "./scripts/check ; " +
           "poetry version ${nextRelease.version} && " +
           "npm version --no-git-tag-version ${nextRelease.version} && " +
           "poetry build",

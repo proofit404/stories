@@ -4,19 +4,11 @@ requires = ["poetry-core"]
 
 [tool.poetry]
 authors = ["Josiah Kaviani <proofit404@gmail.com>"]
-classifiers = [
-    "Programming Language :: Python :: Implementation :: CPython",
-    "Programming Language :: Python :: Implementation :: PyPy",
-]
 description = "Service objects designed with OOP in mind."
 documentation = "https://proofit404.github.io/stories"
 homepage = "https://pypi.org/project/stories"
 license = "BSD-2-Clause"
 name = "stories"
-packages = [
-    { include = "_stories", from = "src" },
-    { include = "stories", from = "src" },
-]
 readme = "docs/index.md"
 repository = "https://github.com/proofit404/stories"
 version = "5.1.0"

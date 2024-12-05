@@ -1157,5 +1157,3 @@ that error.
     Cost(at=datetime.datetime(1999, 12, 31, 0, 0), amount=7)
 
     ```
-
-<p align="center">&mdash; ⭐ &mdash;</p>

@@ -5,20 +5,22 @@
   "devDependencies": {
     "@commitlint/cli": "*",
     "@commitlint/config-conventional": "*",
+    "@eslint/js": "*",
     "@semantic-release/changelog": "*",
     "@semantic-release/exec": "*",
     "@semantic-release/git": "*",
+    "@types/eslint__js": "*",
     "@typescript-eslint/eslint-plugin": "*",
     "@typescript-eslint/parser": "*",
     "danger": "*",
     "eslint": "*",
-    "eslint-plugin-json": "*",
     "jscpd": "*",
     "prettier": "*",
     "remark-cli": "*",
     "remark-lint": "*",
     "remark-preset-lint-recommended": "*",
     "semantic-release": "*",
-    "typescript": "*"
+    "typescript": "*",
+    "typescript-eslint": "*"
   }
 }

@@ -576,5 +576,3 @@ changes.
     ==> Exception('Not enough money')
 
     ```
-
-<p align="center">&mdash; ⭐ &mdash;</p>
